@@ -1,5 +1,6 @@
 using Backend.Rules;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace BackendTests
 {
@@ -36,8 +37,11 @@ namespace BackendTests
         [TestMethod]
         public void TestValidMove()
         {
-            game.Roll = (1, 2);
-            Assert.AreEqual(0, game.ValidMoves.Count);
+            game.Roll = new int[] { 1, 2 };
+            List<Move> moves = new List<Move>();
+            game.GenerateMoves(0, moves);
+            
+            Assert.AreEqual(7, moves.Count);
         }
     }
 }

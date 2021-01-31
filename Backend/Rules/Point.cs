@@ -20,5 +20,10 @@ namespace Backend.Rules
             //Oponent has less than two chechers on the point.
             return Checkers.Count(c => c.Color != myColor) < 2;
         }
+
+        internal int GetNumber(Player.Color player)
+        {
+            return player == Player.Color.Black ? BlackNumber : WhiteNumber;
+        }
     }
 }
