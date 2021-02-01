@@ -7,6 +7,8 @@ namespace Backend.Rules
 {
     public class Dice
     {
+        public int Value { get; set; }
+        public bool Used { get; set; }
 
         private static Random Random = new Random();
 
@@ -15,9 +17,29 @@ namespace Backend.Rules
             return Random.Next(1, 7);
         }
 
-        public static (int, int) Roll()
+        public static Dice[] Roll()
         {
-            return (RollOne(), RollOne());
+            var val1 = RollOne();
+            var val2 = RollOne();
+            if (val1 == val2)
+                return new[]
+                {
+                    new Dice{Value = val1},
+                    new Dice{Value = val1},
+                    new Dice{Value = val1},
+                    new Dice{Value = val1},
+                };
+
+            return new[]
+                {
+                    new Dice{Value = val1},
+                    new Dice{Value = val2},                  
+                };
+        }
+
+        public override string ToString()
+        {
+            return Value + (Used ? " Used" : " Not used");
         }
     }
 }

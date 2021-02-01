@@ -11,5 +11,10 @@ namespace Backend.Rules
         public Player.Color Color { get; set; }
 
         public List<Move> NextMoves { get; set; } = new List<Move>();
+
+        public override string ToString()
+        {
+            return $"{Color} {From.GetNumber(Color)} -> {To.GetNumber(Color)}";
+        }
     }
 }

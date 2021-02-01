@@ -25,5 +25,11 @@ namespace Backend.Rules
         {
             return player == Player.Color.Black ? BlackNumber : WhiteNumber;
         }
+
+        public override string ToString()
+        {
+            var color = Checkers.Any() ? Checkers.First().Color.ToString() : "";
+            return $"{Checkers.Count} {color} WN = {WhiteNumber}, BN = {BlackNumber}, ";
+        }
     }
 }

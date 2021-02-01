@@ -37,11 +37,11 @@ namespace BackendTests
         [TestMethod]
         public void TestValidMove()
         {
-            game.Roll = new int[] { 1, 2 };
+            game.FakeRoll(1, 2);
             List<Move> moves = new List<Move>();
-            game.GenerateMoves(0, moves);
+            game.GenerateMoves(moves);
             
-            Assert.AreEqual(7, moves.Count);
+            Assert.AreEqual(6, moves.Count);
         }
     }
 }

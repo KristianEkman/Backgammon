@@ -16,5 +16,10 @@ namespace Backend.Rules
         }
 
         public List<Checker> Checkers = new List<Checker>();
+
+        public override string ToString()
+        {
+            return PlayerColor + " player";
+        }
     }
 }
