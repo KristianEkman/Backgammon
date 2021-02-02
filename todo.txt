@@ -1,6 +1,22 @@
 Backend
-	disallow single moves when there is an option to play both moves.
-    If there is a checker on the bar, it must be moved first.
+    Bearing off tests
 
+    Bar move tests
+
+    Hit move tests
+
+	Disallow single moves when there is an option to play both moves.
+    
     ai: Evaluate to give a score.
+
+    
+Api
+
+Database
+
+Client
+
+Ui
+
+
 

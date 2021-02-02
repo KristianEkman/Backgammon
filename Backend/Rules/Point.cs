@@ -31,5 +31,10 @@ namespace Backend.Rules
             var color = Checkers.Any() ? Checkers.First().Color.ToString() : "";
             return $"{Checkers.Count} {color} WN = {WhiteNumber}, BN = {BlackNumber}, ";
         }
+
+        public bool IsHome(Player.Color player)
+        {
+            return this.GetNumber(player) == 25;
+        }
     }
 }

@@ -36,25 +36,14 @@ namespace Backend.Rules
                 {
                     PlayerColor = Player.Color.White
                 },
-                Points = new List<Point>(new Point[25])
+                Points = new List<Point>(new Point[26]) // 24 points, 1 bar and 1 home
             };
 
-            // The bar, is shared 
-            game.Points[0] = new Point();
-            game.Points[0].BlackNumber = 0;
-            game.Points[0].WhiteNumber = 0;
-
-            for (int i = 1; i < 25; i++)
+            for (int i = 0; i < 26; i++)
             {
                 game.Points[i] = new Point();
                 game.Points[i].BlackNumber = i;
                 game.Points[i].WhiteNumber = 25 - i;
-            }
-
-            for (int i = 0; i < 15; i++)
-            {
-                game.BlackPlayer.Checkers.Add(new Checker { Color = Player.Color.Black });
-                game.WhitePlayer.Checkers.Add(new Checker { Color = Player.Color.White });
             }
 
             game.SetStartPosition();
@@ -62,53 +51,74 @@ namespace Backend.Rules
             return game;
         }
 
+        private Player.Color OtherPlayer()
+        {
+            return CurrentPlayer == Player.Color.Black ? Player.Color.White : Player.Color.Black;
+        }
+
         private void SetStartPosition()
         {
-            int checkerIdx = 0;
-            // six point
-            for (int i = 0; i < 5; i++)
-            {
-                Points.Single(p => p.BlackNumber == 6).Checkers.Add(BlackPlayer.Checkers[checkerIdx]);
-                Points.Single(p => p.WhiteNumber == 6).Checkers.Add(WhitePlayer.Checkers[checkerIdx]);
-                checkerIdx++;
-            }
+            foreach (var point in Points)
+                point.Checkers.Clear();
 
-            for (int i = 0; i < 3; i++)
-            {
-                Points.Single(p => p.BlackNumber == 8).Checkers.Add(BlackPlayer.Checkers[checkerIdx]);
-                Points.Single(p => p.WhiteNumber == 8).Checkers.Add(WhitePlayer.Checkers[checkerIdx]);
-                checkerIdx++;
-            }
+            AddCheckers(2, Player.Color.Black, 1);
+            AddCheckers(2, Player.Color.White, 1);
 
-            for (int i = 0; i < 5; i++)
-            {
-                Points.Single(p => p.BlackNumber == 13).Checkers.Add(BlackPlayer.Checkers[checkerIdx]);
-                Points.Single(p => p.WhiteNumber == 13).Checkers.Add(WhitePlayer.Checkers[checkerIdx]);
-                checkerIdx++;
-            }
+            AddCheckers(5, Player.Color.Black, 12);
+            AddCheckers(5, Player.Color.White, 12);
 
-            for (int i = 0; i < 2; i++)
-            {
-                Points.Single(p => p.BlackNumber == 24).Checkers.Add(BlackPlayer.Checkers[checkerIdx]);
-                Points.Single(p => p.WhiteNumber == 24).Checkers.Add(WhitePlayer.Checkers[checkerIdx]);
-                checkerIdx++;
-            }
+            AddCheckers(3, Player.Color.Black, 17);
+            AddCheckers(3, Player.Color.White, 17);
+
+            AddCheckers(5, Player.Color.Black, 19);
+            AddCheckers(5, Player.Color.White, 19);
+        }
+
+        public void ClearCheckers()
+        {
+            foreach (var point in Points)
+                point.Checkers.Clear();
+        }
+
+        public bool IsBearingOff(Player.Color color)
+        {
+            // Points that have checkers with the color asked all have higher number than 18
+            return Points.Where(p => p.Checkers.Any(p => p.Color == color)).All(p => p.GetNumber(color) >= 19);
+        }
+
+        public void AddCheckers(int count, Player.Color color, int point)
+        {
+            for (int i = 0; i < count; i++)
+                Points.Single(p => p.GetNumber(color) == point).Checkers.Add(new Checker { Color = color });
         }
 
         public void FakeRoll(int v1, int v2)
         {
-            Roll = new Dice[]
+            if (v1 == v2)
             {
-                new Dice{Value = v1},
-                new Dice{Value = v2}
-            };
+                Roll = new[]
+                {
+                    new Dice{Value = v1},
+                    new Dice{Value = v1},
+                    new Dice{Value = v1},
+                    new Dice{Value = v1},
+                };
+            }
+            else
+            {
+                Roll = new Dice[]
+                {
+                    new Dice{Value = v1},
+                    new Dice{Value = v2}
+                };
+            }
         }
 
         public void RollDice()
         {
             Roll = Dice.Roll();
             ClearMoves(ValidMoves);
-            GenerateMoves(ValidMoves);            
+            GenerateMoves(ValidMoves);
         }
 
         private void ClearMoves(List<Move> moves)
@@ -126,27 +136,50 @@ namespace Backend.Rules
 
         public void GenerateMoves(List<Move> moves)
         {
+            var bar = Points.Single(p => p.GetNumber(CurrentPlayer) == 0);
             foreach (var dice in Roll)
             {
                 if (dice.Used)
                     continue;
                 dice.Used = true;
-                foreach (var point in Points)
+                foreach (var fromPoint in Points.OrderBy(p => p.GetNumber(CurrentPlayer) ))
                 {
-                    if (point.Checkers.Any(c => c.Color == CurrentPlayer))
+                    var fromPointNo = fromPoint.GetNumber(CurrentPlayer);
+
+                    if (fromPoint.Checkers.Any(c => c.Color == CurrentPlayer))
                     {
-                        var fromPointNo = point.GetNumber(CurrentPlayer);
                         var toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == dice.Value + fromPointNo);
-                        
-                        if (toPoint != null && toPoint.IsOpen(CurrentPlayer))
+
+                        if (toPoint != null && toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint) 
+                            && !toPoint.IsHome(CurrentPlayer)) // no creation of bearing off moves here. See next block.
                         {
-                            var move = new Move { Color = CurrentPlayer, From = point, To = toPoint};
+                            var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
+                            moves.Add(move);
+                            var hit = MakeMove(move);
+
+                            // Bar moves must be made first.                    
+                            if (!bar.Checkers.Any())
+                                GenerateMoves(move.NextMoves);
+                            UndoMove(move, hit);
+                        }
+                    }
+
+                    if (IsBearingOff(CurrentPlayer))
+                    {
+                        // The furthest away checker can be moved beyond home.
+                        var minPoint = Points.Where(p => p.Checkers.Any(c => c.Color == CurrentPlayer)).OrderBy(p => p.GetNumber(CurrentPlayer)).First().GetNumber(CurrentPlayer);
+                        var toPointNo = fromPointNo == minPoint ? Math.Min(25, fromPointNo + dice.Value) : fromPointNo + dice.Value;
+                        var toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == toPointNo);
+                        if (toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint))
+                        {
+                            var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
                             moves.Add(move);
                             var hit = MakeMove(move);
                             GenerateMoves(move.NextMoves);
                             UndoMove(move, hit);
                         }
                     }
+
                 }
                 dice.Used = false;
             }
@@ -163,7 +196,8 @@ namespace Backend.Rules
             if (hit != null)
             {
                 move.To.Checkers.Remove(hit);
-                Points[0].Checkers.Add(hit);
+                var bar = Points.Single(p => p.GetNumber(OtherPlayer()) == 0);
+                bar.Checkers.Add(hit);
             }
             return hit;
         }
@@ -176,7 +210,8 @@ namespace Backend.Rules
             if (hitChecker != null)
             {
                 move.To.Checkers.Add(hitChecker);
-                Points[0].Checkers.Remove(hitChecker);
+                var bar = Points.Single(p => p.GetNumber(OtherPlayer()) == 0);
+                bar.Checkers.Remove(hitChecker);
             }
         }
 
