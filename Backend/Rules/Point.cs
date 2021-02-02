@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 namespace Backend.Rules
 {
     /// <summary>
+    /// Represents one of 24 a triangles where a checker can be placed.
     /// 1 to 24.
-    /// ´The bar is 0. Beared off is 25.
+    /// The bar is 0. Beared off is 25.
     /// </summary>
     public class Point
     {
@@ -17,7 +18,7 @@ namespace Backend.Rules
 
         public bool IsOpen(Player.Color myColor)
         {
-            //Oponent has less than two chechers on the point.
+            //Opponent has less than two checkers on the point.
             return Checkers.Count(c => c.Color != myColor) < 2;
         }
 

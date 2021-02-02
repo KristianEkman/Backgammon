@@ -136,32 +136,35 @@ namespace Backend.Rules
 
         public void GenerateMoves(List<Move> moves)
         {
-            var bar = Points.Single(p => p.GetNumber(CurrentPlayer) == 0);
+            var bar = Points.Where(p => p.GetNumber(CurrentPlayer) == 0);
+            var barHasCheckers = bar.First().Checkers.Any(c => c.Color == CurrentPlayer);
+            
             foreach (var dice in Roll)
             {
                 if (dice.Used)
                     continue;
                 dice.Used = true;
-                foreach (var fromPoint in Points.OrderBy(p => p.GetNumber(CurrentPlayer) ))
+            
+                var points = barHasCheckers ? bar : 
+                    Points.Where(p => p.Checkers.Any(c => c.Color == CurrentPlayer))
+                    .OrderBy(p => p.GetNumber(CurrentPlayer));
+
+                foreach (var fromPoint in points)
                 {
+                    if (!fromPoint.Checkers.Any(c => c.Color == CurrentPlayer))
+                        continue;
+
                     var fromPointNo = fromPoint.GetNumber(CurrentPlayer);
+                    var toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == dice.Value + fromPointNo);
 
-                    if (fromPoint.Checkers.Any(c => c.Color == CurrentPlayer))
+                    if (toPoint != null && toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint)
+                        && !toPoint.IsHome(CurrentPlayer)) // no creation of bearing off moves here. See next block.
                     {
-                        var toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == dice.Value + fromPointNo);
-
-                        if (toPoint != null && toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint) 
-                            && !toPoint.IsHome(CurrentPlayer)) // no creation of bearing off moves here. See next block.
-                        {
-                            var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
-                            moves.Add(move);
-                            var hit = MakeMove(move);
-
-                            // Bar moves must be made first.                    
-                            if (!bar.Checkers.Any())
-                                GenerateMoves(move.NextMoves);
-                            UndoMove(move, hit);
-                        }
+                        var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
+                        moves.Add(move);
+                        var hit = MakeMove(move);
+                        GenerateMoves(move.NextMoves);
+                        UndoMove(move, hit);
                     }
 
                     if (IsBearingOff(CurrentPlayer))
@@ -169,13 +172,13 @@ namespace Backend.Rules
                         // The furthest away checker can be moved beyond home.
                         var minPoint = Points.Where(p => p.Checkers.Any(c => c.Color == CurrentPlayer)).OrderBy(p => p.GetNumber(CurrentPlayer)).First().GetNumber(CurrentPlayer);
                         var toPointNo = fromPointNo == minPoint ? Math.Min(25, fromPointNo + dice.Value) : fromPointNo + dice.Value;
-                        var toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == toPointNo);
-                        if (toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint))
+                        toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == toPointNo);
+                        if (toPoint != null && toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint))
                         {
                             var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
                             moves.Add(move);
                             var hit = MakeMove(move);
-                            GenerateMoves(move.NextMoves);
+                            GenerateMoves(move.NextMoves);                            
                             UndoMove(move, hit);
                         }
                     }
@@ -185,7 +188,7 @@ namespace Backend.Rules
             }
         }
 
-        private Checker MakeMove(Move move)
+        public Checker MakeMove(Move move)
         {
             var checker = move.From.Checkers.FirstOrDefault();
             if (checker == null)
