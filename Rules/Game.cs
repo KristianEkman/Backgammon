@@ -16,7 +16,7 @@ namespace Backend.Rules
         public List<Point> Points { get; set; }
         public Dice[] Roll { get; set; }
         public List<Move> ValidMoves { get; set; } = new List<Move>();
-
+        public State PlayState { get; set; } = State.FirstThrow;
         public enum State
         {
             FirstThrow,

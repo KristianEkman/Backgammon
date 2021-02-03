@@ -1,9 +1,6 @@
 Backend
-    
-	Disallow single moves when there is an option to play both moves.
 
-    If you can play one number but not both, then you must play the higher one.
-    
+    First move.    
     ai: Evaluate to give a score.
     
 Api
