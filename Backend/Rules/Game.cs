@@ -134,7 +134,29 @@ namespace Backend.Rules
             }
         }
 
-        public void GenerateMoves(List<Move> moves)
+        public List<Move> GenerateMoves()
+        {
+            var moves = new List<Move>();
+                        
+            GenerateMoves(moves);
+
+            // Making sure both dice are played.
+            if (moves.Any(m => m.NextMoves.Any()))
+            {
+                moves = moves.Where(m => m.NextMoves.Any()).ToList();
+            }
+            else if (moves.Any())
+            {
+                // All moves have zero next move.
+                // Only one dice can be use and it must be the one with highest value
+                var first = moves.OrderByDescending(m => m.To.GetNumber(CurrentPlayer) - m.From.GetNumber(CurrentPlayer)).First();
+                moves.Clear();
+                moves.Add(first);
+            }
+            return moves;
+        }
+
+        private void GenerateMoves(List<Move> moves)
         {
             var bar = Points.Where(p => p.GetNumber(CurrentPlayer) == 0);
             var barHasCheckers = bar.First().Checkers.Any(c => c.Color == CurrentPlayer);
@@ -151,9 +173,6 @@ namespace Backend.Rules
 
                 foreach (var fromPoint in points)
                 {
-                    if (!fromPoint.Checkers.Any(c => c.Color == CurrentPlayer))
-                        continue;
-
                     var fromPointNo = fromPoint.GetNumber(CurrentPlayer);
                     var toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == dice.Value + fromPointNo);
 
