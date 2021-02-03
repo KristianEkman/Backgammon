@@ -176,5 +176,26 @@ namespace BackendTests
             Assert.AreEqual(1, moves.Count);
             Assert.AreEqual(6, moves.Single().To.WhiteNumber - moves.Single().From.WhiteNumber);
         }
+
+        [TestMethod]
+        public void TestFirstThrow()
+        {
+            var g = new Game();
+
+            Assert.AreEqual(Game.State.FirstThrow, g.PlayState);
+            g.FakeRoll(1, 2);
+            Assert.AreEqual(Player.Color.White, g.CurrentPlayer);
+            Assert.AreEqual(Game.State.Playing, g.PlayState);
+
+
+            g = new Game();
+            g.FakeRoll(2, 1);
+            Assert.AreEqual(Player.Color.Black, g.CurrentPlayer);
+            Assert.AreEqual(Game.State.Playing, g.PlayState);
+
+            g = new Game();
+            g.FakeRoll(3, 3);
+            Assert.AreEqual(Game.State.FirstThrow, g.PlayState);
+        }
     }
 }

@@ -1,6 +1,5 @@
 Backend
-
-    First move.    
+    Game ended.
     ai: Evaluate to give a score.
     
 Api

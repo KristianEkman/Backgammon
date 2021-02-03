@@ -21,6 +21,11 @@ namespace Backend.Rules
         {
             var val1 = RollOne();
             var val2 = RollOne();
+            return GetDices(val1, val2);
+        }
+
+        internal static Dice[] GetDices(int val1, int val2)
+        {
             if (val1 == val2)
                 return new[]
                 {
@@ -33,7 +38,7 @@ namespace Backend.Rules
             return new[]
                 {
                     new Dice{Value = val1},
-                    new Dice{Value = val2},                  
+                    new Dice{Value = val2},
                 };
         }
 

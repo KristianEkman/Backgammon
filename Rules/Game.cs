@@ -94,29 +94,28 @@ namespace Backend.Rules
 
         public void FakeRoll(int v1, int v2)
         {
-            if (v1 == v2)
+            Roll = Dice.GetDices(v1, v2);
+            SetState();
+        }
+
+        private void SetState()
+        {
+            if (PlayState == State.FirstThrow)
             {
-                Roll = new[]
-                {
-                    new Dice{Value = v1},
-                    new Dice{Value = v1},
-                    new Dice{Value = v1},
-                    new Dice{Value = v1},
-                };
-            }
-            else
-            {
-                Roll = new Dice[]
-                {
-                    new Dice{Value = v1},
-                    new Dice{Value = v2}
-                };
+                if (Roll[0].Value > Roll[1].Value)
+                    CurrentPlayer = Player.Color.Black;
+                else if (Roll[0].Value < Roll[1].Value)
+                    CurrentPlayer = Player.Color.White;
+
+                if (Roll[0].Value != Roll[1].Value)
+                    PlayState = State.Playing;
             }
         }
 
         public void RollDice()
         {
             Roll = Dice.Roll();
+            SetState();
             ClearMoves(ValidMoves);
             GenerateMoves(ValidMoves);
         }
@@ -147,7 +146,7 @@ namespace Backend.Rules
             }
             else if (moves.Any())
             {
-                // All moves have zero next move.
+                // All moves have zero next move in this block.
                 // Only one dice can be use and it must be the one with highest value
                 var first = moves.OrderByDescending(m => m.To.GetNumber(CurrentPlayer) - m.From.GetNumber(CurrentPlayer)).First();
                 moves.Clear();
