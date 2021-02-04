@@ -3,9 +3,35 @@ Backend
     ai: Evaluate to give a score.
     
 Api
+    NewOponent
+        SkapaSocket
+        New game
+        FirstThrow
+
+    NewAi
+
+    Login
+
+    Sockets:
+        Move
+        MoveReceived
+        Doubling
+        Doubling Answer
 
 Database
 
 Client
 
 Ui
+    Lobby
+
+
+ELO
+Top list
+
+Plan
+====
+Kunna spela mot AI lokalt.
+    API
+    Enkelt UI
+    Enkla AI-regler

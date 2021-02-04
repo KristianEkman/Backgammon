@@ -19,9 +19,17 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        public void Get()
+        public void NewOponentGame()
         {
-            
+            //SkapaSocket
+            //New game
+            //FirstThrow
+        }
+
+        [HttpGet]
+        public void NewAiGame()
+        {
+
         }
     }
 }
