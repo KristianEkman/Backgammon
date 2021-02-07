@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("game")]
     public class GameController : ControllerBase
     {
         private readonly ILogger<GameController> _logger;
@@ -19,7 +19,7 @@ namespace Backend.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("newopponent")]
         public void NewOponentGame()
         {
             //SkapaSocket
@@ -27,7 +27,7 @@ namespace Backend.Controllers
             //FirstThrow
         }
 
-        [HttpGet]
+        [HttpGet("newaigame")]
         public void NewAiGame()
         {
             
