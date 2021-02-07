@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { SocketsService } from 'src/services/socket-service.service';
+import { SocketsService } from 'src/services/sockets.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';

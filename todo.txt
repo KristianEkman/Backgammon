@@ -13,6 +13,11 @@ Api
     Login
 
     Sockets:
+
+        Testa едц
+        Test Form
+        Multi client
+        
         Move
         MoveReceived
         Doubling
