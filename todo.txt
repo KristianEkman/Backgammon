@@ -14,9 +14,8 @@ Api
 
     Sockets:
 
-        Testa едц
         Test Form
-        Multi client
+
         
         Move
         MoveReceived
