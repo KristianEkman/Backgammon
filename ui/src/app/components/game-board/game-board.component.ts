@@ -1,5 +1,6 @@
 import { ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
+import { Rectangle } from 'src/app/utils/rectangle';
 
 @Component({
   selector: 'app-game-board',
@@ -11,6 +12,12 @@ export class GameBoardComponent implements AfterViewInit {
 
   @Input() public width = 600;
   @Input() public height = 400;
+
+  borderWidth = 8;
+  barWidth = this.borderWidth * 2;
+  rectBase = 0;
+  rectHeight = 0;
+  rectangles: Rectangle[] = [];
 
   ngAfterViewInit(): void {
     if (!this.canvas) {
@@ -36,53 +43,82 @@ export class GameBoardComponent implements AfterViewInit {
     cx.fillRect(0, 0, this.width, this.height);
 
     cx.strokeStyle = '#000';
-
-    const borderWidth = 8;
-    const barWidth = borderWidth * 2;
-    const rectBase = (this.width - barWidth - 2 * borderWidth) / 12;
-    const rectHeight = this.height * 0.42;
+    this.rectBase = (this.width - this.barWidth - 2 * this.borderWidth) / 12;
+    this.rectHeight = this.height * 0.42;
     const colors = ['#555', '#eee'];
     let colorIdx = 0;
-    let x = borderWidth;
-    let y = borderWidth;
+    let x = this.borderWidth;
+    let y = this.borderWidth;
     for (let i = 0; i < 12; i++) {
       if (i == 6) {
-        x += barWidth;
+        x += this.barWidth;
       }
+      this.rectangles.push(
+        new Rectangle(x, y, this.rectBase, this.rectHeight, 12 - i)
+      );
+      // cx.strokeRect(x, y, this.rectBase, this.rectHeight);
+
       cx.fillStyle = colors[colorIdx];
       cx.beginPath();
       cx.moveTo(x, y);
-      x += rectBase / 2;
-      cx.lineTo(x, rectHeight);
-      x += rectBase / 2;
-      cx.lineTo(x, y);
-      cx.closePath();
-      cx.fill();
-      colorIdx = colorIdx === 0 ? 1 : 0;
-    }
-    colorIdx = colorIdx === 0 ? 1 : 0;
-    y = this.height - borderWidth;
-    x = borderWidth;
-    for (let i = 0; i < 12; i++) {
-      if (i == 6) {
-        x += barWidth;
-      }
-      cx.fillStyle = colors[colorIdx];
-      cx.beginPath();
-      cx.moveTo(x, y);
-      x += rectBase / 2;
-      cx.lineTo(x, y - rectHeight);
-      x += rectBase / 2;
+      x += this.rectBase / 2;
+      cx.lineTo(x, this.rectHeight);
+      x += this.rectBase / 2;
       cx.lineTo(x, y);
       cx.closePath();
       cx.fill();
       colorIdx = colorIdx === 0 ? 1 : 0;
     }
 
-    cx.lineWidth = borderWidth * 2;
+    //bottom
+    colorIdx = colorIdx === 0 ? 1 : 0;
+    y = this.height - this.borderWidth;
+    x = this.borderWidth;
+    for (let i = 0; i < 12; i++) {
+      if (i == 6) {
+        x += this.barWidth;
+      }
+      this.rectangles.push(
+        new Rectangle(
+          x,
+          y - this.rectHeight,
+          this.rectBase,
+          this.rectHeight,
+          i + 13
+        )
+      );
+      cx.fillStyle = colors[colorIdx];
+      cx.beginPath();
+      cx.moveTo(x, y);
+      x += this.rectBase / 2;
+      cx.lineTo(x, y - this.rectHeight);
+      x += this.rectBase / 2;
+      cx.lineTo(x, y);
+      cx.closePath();
+      cx.fill();
+      colorIdx = colorIdx === 0 ? 1 : 0;
+    }
+
+    cx.lineWidth = this.borderWidth * 2;
     cx.strokeStyle = '#888';
     cx.strokeRect(0, 0, this.width, this.height);
     cx.fillStyle = '#888';
-    cx.fillRect(this.width / 2 - barWidth / 2, 0, barWidth, this.height);
+    cx.fillRect(
+      this.width / 2 - this.barWidth / 2,
+      0,
+      this.barWidth,
+      this.height
+    );
+  }
+
+  onMouseDown(event: MouseEvent): void {
+    const { clientX, clientY } = event;
+    this.rectangles.forEach((rect) => {
+      if (
+        rect.contains(clientX - this.borderWidth, clientY - this.borderWidth)
+      ) {
+        console.log(clientX, clientY, rect.pointIdx);
+      }
+    });
   }
 }
