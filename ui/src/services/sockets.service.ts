@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketsService {
   socket: WebSocket;
-
+  url = '';
   constructor() {
     // this.socket = new WebSocket('ws://localhost:60109/ws');
-    this.socket = new WebSocket('wss://localhost:44394/ws');
+    this.url = environment.socketServiceUrl;
+    this.socket = new WebSocket(this.url);
     this.socket.onmessage = this.onMessage;
     this.socket.onerror = this.onError;
     this.socket.onopen = this.onOpen;

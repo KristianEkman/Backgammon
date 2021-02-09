@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Backend.Dto;
+using Backend.Rules;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -20,17 +22,18 @@ namespace Backend.Controllers
         }
 
         [HttpGet("newopponent")]
-        public void NewOponentGame()
+        public void NewOpponentGame()
         {
             //SkapaSocket
             //New game
             //FirstThrow
         }
 
-        [HttpGet("newaigame")]
-        public void NewAiGame()
+        [HttpGet("newai")]
+        public GameDto NewAiGame()
         {
-            
+            var game = Game.Create();
+            return game.ToDto();
         }
     }
 }

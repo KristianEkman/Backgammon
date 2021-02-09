@@ -50,6 +50,7 @@ namespace Backend.Rules
 
             return game;
         }
+        
 
         private Player.Color OtherPlayer()
         {

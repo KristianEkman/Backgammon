@@ -12,11 +12,7 @@ Api
 
     Login
 
-    Sockets:
-
-        Test Form
-
-        
+    Sockets:        
         Move
         MoveReceived
         Doubling
@@ -27,8 +23,15 @@ Database
 Client
 
 Ui
-    Lobby
+    LobbyController
+        PlayAI-Button
+    GameController
 
+    ObservableState
+        
+    Send button
+
+    Common dto-interfaces
 
 ELO
 Top list

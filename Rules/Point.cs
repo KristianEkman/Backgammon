@@ -22,7 +22,7 @@ namespace Backend.Rules
             return Checkers.Count(c => c.Color != myColor) < 2;
         }
 
-        internal int GetNumber(Player.Color player)
+        public int GetNumber(Player.Color player)
         {
             return player == Player.Color.Black ? BlackNumber : WhiteNumber;
         }
