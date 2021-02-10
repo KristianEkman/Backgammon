@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SocketsService } from 'src/services/sockets.service';
+import { SocketsService } from 'src/app/services/sockets.service';
 // import { SocketsService } from 'src/services/socket-service.service';
 
 @Component({

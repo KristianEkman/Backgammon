@@ -4,10 +4,4 @@
     {
         public PlayerColor PlayerColor { get; set; }
     }
-
-    public enum PlayerColor
-    {
-        Black,
-        White
-    }
 }

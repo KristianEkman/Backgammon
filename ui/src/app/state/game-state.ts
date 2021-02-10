@@ -1,9 +1,7 @@
-import { Game } from '../model';
 import { StateObject } from './state-object';
 
 export class AppState {
   constructor() {
-    this.game = new StateObject<Game>();
     this.busy = new StateObject<boolean>();
   }
   private static _singleton: AppState;
@@ -15,5 +13,4 @@ export class AppState {
   }
 
   busy: StateObject<boolean>;
-  game: StateObject<Game>;
 }

@@ -19,6 +19,9 @@ namespace Backend
 {
     public class Startup
     {
+        // is this realy persistent
+        static List<GameState> gameQueue = new List<GameState>();
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -68,7 +71,22 @@ namespace Backend
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await Echo(context, webSocket);
+                        //todo: pair with someone equal ranking.
+
+                        // TODO: Remove games with lost connections.
+                        var gameState = gameQueue.FirstOrDefault(g => g.Client2 == null);
+                        if (gameState == null)
+                        {
+                            gameState = new GameState(webSocket);
+                            gameQueue.Add(gameState);
+                        } else
+                        {
+                            gameQueue.Remove(gameState);
+                            gameState.Client2 = webSocket;
+                            gameState.StartGame();
+                        }
+
+                        //await Echo(context, webSocket);
                     }
                     else
                     {

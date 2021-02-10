@@ -1,17 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { GameService } from 'src/services';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.scss']
 })
-export class LobbyComponent implements OnInit {
-  constructor(private gameService: GameService) {}
-
-  ngOnInit(): void {}
-
-  playAi(): void {
-    this.gameService.NewAiGame();
+export class LobbyComponent {
+  constructor(private router: Router) {}
+  play(): void {
+    this.router.navigateByUrl('game');
   }
 }

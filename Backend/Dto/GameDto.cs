@@ -12,11 +12,4 @@ namespace Backend.Dto
         public DiceDto[] Roll { get; set; }
         public MoveDto[] ValidMoves { get; set; }
     }
-
-    public enum GameState
-    {
-        FirstThrow,
-        Playing,
-        Ended
-    }
 }
