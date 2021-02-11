@@ -3,6 +3,7 @@ namespace Backend.Dto
 {
     public class GameDto
     {
+        public string Id { get; set; }
         public PlayerDto BlackPlayer { get; set; }
         public PlayerDto WhitePlayer { get; set; }
 

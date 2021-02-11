@@ -71,22 +71,24 @@ namespace Backend
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        //await Echo(webSocket);
+
                         //todo: pair with someone equal ranking.
 
                         // TODO: Remove games with lost connections.
                         var gameState = gameQueue.FirstOrDefault(g => g.Client2 == null);
                         if (gameState == null)
                         {
-                            gameState = new GameState(webSocket);
+                            gameState = new GameState();
                             gameQueue.Add(gameState);
-                        } else
+                            await gameState.ConnectSocket(webSocket);
+                        }
+                        else
                         {
                             gameQueue.Remove(gameState);
-                            gameState.Client2 = webSocket;
-                            gameState.StartGame();
+                            await gameState.ConnectSocket(webSocket);
                         }
 
-                        //await Echo(context, webSocket);
                     }
                     else
                     {
@@ -100,9 +102,10 @@ namespace Backend
             });
         }
 
-        private async Task Echo(HttpContext context, WebSocket webSocket)
+
+        private async Task Echo(WebSocket webSocket)
         {
-            var buffer = new byte[512];
+            var buffer = new byte[1024];
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             while (!result.CloseStatus.HasValue)
             {

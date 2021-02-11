@@ -10,6 +10,7 @@ namespace Backend.Rules
 
     public class Game
     {
+        public Guid Id { get; set; }
         public Player BlackPlayer { get; set; }
         public Player WhitePlayer { get; set; }
         public Player.Color CurrentPlayer { get; set; }
@@ -28,6 +29,7 @@ namespace Backend.Rules
         {
             var game = new Game
             {
+                Id = Guid.NewGuid(),
                 BlackPlayer = new Player
                 {
                     PlayerColor = Player.Color.Black,

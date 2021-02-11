@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AppState } from 'src/app/state/game-state';
 import { finalize, map } from 'rxjs/operators';
+import { GameDto } from '../dto/gameDto';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class GameService {
   public NewAiGame(): void {
     this.http.get(`${this.url}/newai`).pipe(
       map((dto: any) => {
-        // const game = new Game(<GameDto>dto);
-        // AppState.Singleton.game.setValue(Game.FromDto(dto));
+        const game = <GameDto>dto;
+        AppState.Singleton.game.setValue(game);
       }),
       finalize(() => {
         AppState.Singleton.busy.setValue(false);

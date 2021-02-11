@@ -18,15 +18,15 @@ export class SocketsService {
   }
 
   onOpen(event: Event): void {
-    console.log(event);
+    console.log('Open', { event });
   }
 
   onMessage(message: MessageEvent<unknown>): void {
-    console.log('Message: ' + message.data);
+    console.log('Message', { message });
   }
 
   onError(event: Event): void {
-    console.error('error in my socket', event);
+    console.error('Error', { event });
   }
 
   sendMessage(message: string): void {
@@ -34,6 +34,6 @@ export class SocketsService {
   }
 
   onClose(event: CloseEvent): void {
-    console.log(event);
+    console.log('Close', { event });
   }
 }

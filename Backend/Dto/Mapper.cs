@@ -12,6 +12,7 @@ namespace Backend.Dto
         {
             var gameDto = new GameDto
             {
+                Id = game.Id.ToString(),
                 BlackPlayer = game.BlackPlayer.ToDto(),
                 WhitePlayer = game.WhitePlayer.ToDto(),
                 CurrentPlayer = (PlayerColor)game.CurrentPlayer,

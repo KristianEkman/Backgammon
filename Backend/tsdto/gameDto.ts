@@ -8,6 +8,7 @@ import { DiceDto } from "./diceDto";
 import { MoveDto } from "./moveDto";
 
 export interface GameDto {
+    id: string;
     blackPlayer: PlayerDto;
     whitePlayer: PlayerDto;
     currentPlayer: PlayerColor;
