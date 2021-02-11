@@ -1,4 +1,5 @@
-﻿using Backend.Rules;
+﻿using Backend.Dto;
+using Backend.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +24,13 @@ namespace Backend
 
         private void StartGame()
         {
-            Client1.Send(Game);
-            Client2.Send(Game);
+            var gameDto = Game.ToDto();
+            var action = new GameCreatedActionDto
+            {
+                game = gameDto
+            };
+            Client1.Send(action);
+            Client2.Send(action);
         }
 
         internal async Task ConnectSocket(WebSocket webSocket)
@@ -64,7 +70,7 @@ namespace Backend
     {
         public static async Task Send<T>(this WebSocket socket, T obj)
         {
-            var json = JsonSerializer.Serialize<T>(obj);
+            var json = JsonSerializer.Serialize<object>(obj);
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
             await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
         }

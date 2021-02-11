@@ -2,6 +2,6 @@
 {
     public class CheckerDto
     {
-        public PlayerColor Color { get; set; }
+        public PlayerColor color { get; set; }
     }
 }

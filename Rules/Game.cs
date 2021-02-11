@@ -14,8 +14,8 @@ namespace Backend.Rules
         public Player BlackPlayer { get; set; }
         public Player WhitePlayer { get; set; }
         public Player.Color CurrentPlayer { get; set; }
-        public List<Point> Points { get; set; }
-        public Dice[] Roll { get; set; }
+        public List<Point> Points { get; set; } = new List<Point>();
+        public List<Dice> Roll { get; set; } = new List<Dice>();
         public List<Move> ValidMoves { get; set; } = new List<Move>();
         public State PlayState { get; set; } = State.FirstThrow;
         public enum State
@@ -97,7 +97,7 @@ namespace Backend.Rules
 
         public void FakeRoll(int v1, int v2)
         {
-            Roll = Dice.GetDices(v1, v2);
+            Roll = new List<Dice>(Dice.GetDices(v1, v2));
             SetState();
         }
 
@@ -117,7 +117,7 @@ namespace Backend.Rules
 
         public void RollDice()
         {
-            Roll = Dice.Roll();
+            Roll = new List<Dice>(Dice.Roll());
             SetState();
             ClearMoves(ValidMoves);
             GenerateMoves(ValidMoves);

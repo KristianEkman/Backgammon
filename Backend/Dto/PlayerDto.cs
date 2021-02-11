@@ -2,6 +2,6 @@
 {
     public class PlayerDto
     {
-        public PlayerColor PlayerColor { get; set; }
+        public PlayerColor playerColor { get; set; }
     }
 }

@@ -4,9 +4,9 @@ namespace Backend.Dto
 {
     public class MoveDto
     {
-        public PlayerColor Color { get; set; }
-        public int From { get; set; }
-        public MoveDto[] NextMoves { get; set; }
-        public int To { get; set; }
+        public PlayerColor color { get; set; }
+        public int from { get; set; }
+        public MoveDto[] nextMoves { get; set; }
+        public int to { get; set; }
     }
 }

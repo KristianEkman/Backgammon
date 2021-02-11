@@ -1,5 +1,7 @@
-import { ViewChild } from '@angular/core';
+import { OnChanges, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
+import { GameDto } from 'src/app/dto/gameDto';
+import { PlayerColor } from 'src/app/dto/playerColor';
 import { Rectangle } from 'src/app/utils/rectangle';
 
 @Component({
@@ -7,29 +9,76 @@ import { Rectangle } from 'src/app/utils/rectangle';
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.scss']
 })
-export class GameBoardComponent implements AfterViewInit {
+export class GameBoardComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') public canvas: ElementRef | undefined;
 
   @Input() public width = 600;
   @Input() public height = 400;
+  @Input() game: GameDto | null = null;
 
   borderWidth = 8;
   barWidth = this.borderWidth * 2;
   rectBase = 0;
   rectHeight = 0;
   rectangles: Rectangle[] = [];
+  cx: CanvasRenderingContext2D | null = null;
+  drawDirty = false;
 
   ngAfterViewInit(): void {
     if (!this.canvas) {
       return;
     }
 
+    setInterval(() => {
+      console.log('draw', this.drawDirty);
+      if (this.drawDirty) {
+        this.draw(this.cx);
+        this.drawDirty = false;
+      }
+    }, 200);
+
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     canvasEl.width = this.width;
     canvasEl.height = this.height;
 
-    const cx = canvasEl.getContext('2d');
+    this.cx = canvasEl.getContext('2d');
+    this.drawBoard(this.cx);
+  }
+
+  ngOnChanges(): void {
+    this.drawDirty = true;
+  }
+
+  draw(cx: CanvasRenderingContext2D | null): void {
     this.drawBoard(cx);
+    this.drawCheckers(cx);
+  }
+
+  drawCheckers(cx: CanvasRenderingContext2D | null): void {
+    if (!cx) {
+      return;
+    }
+
+    if (!this.game) {
+      return;
+    }
+
+    console.log('draw checkers');
+    this.game.points.forEach((point) => {
+      const rect = this.rectangles[point.blackNumber];
+      for (let i = 0; i < point.checkers.length; i++) {
+        const checker = point.checkers[i];
+        if (checker.color === PlayerColor.black) {
+          cx.fillStyle = '#000';
+        } else {
+          cx.fillStyle = '#FFF';
+        }
+        cx.beginPath();
+        cx.ellipse(rect.x, rect.y, rect.width, rect.width, 0, 0, 360);
+        cx.closePath();
+        cx.fill();
+      }
+    });
   }
 
   drawBoard(cx: CanvasRenderingContext2D | null): void {

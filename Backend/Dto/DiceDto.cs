@@ -2,7 +2,7 @@
 {
     public class DiceDto
     {
-        public bool Used { get; set; }
-        public int Value { get; set; }
+        public bool used { get; set; }
+        public int value { get; set; }
     }
 }

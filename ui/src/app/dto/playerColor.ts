@@ -1,6 +1,6 @@
 ﻿/* Auto Generated */
 
 export enum PlayerColor {
-  black,
-  white
+  black = 0,
+  white = 1
 }

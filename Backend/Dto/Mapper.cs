@@ -12,14 +12,14 @@ namespace Backend.Dto
         {
             var gameDto = new GameDto
             {
-                Id = game.Id.ToString(),
-                BlackPlayer = game.BlackPlayer.ToDto(),
-                WhitePlayer = game.WhitePlayer.ToDto(),
-                CurrentPlayer = (PlayerColor)game.CurrentPlayer,
-                PlayState = (GameState)game.PlayState,
-                Points = game.Points.Select(p => p.ToDto()).ToArray(),
-                Roll = game.Roll.Select(r => r.ToDto()).ToArray(),
-                ValidMoves = game.ValidMoves.Select(m => m.ToDto()).ToArray(),                
+                id = game.Id.ToString(),
+                blackPlayer = game.BlackPlayer.ToDto(),
+                whitePlayer = game.WhitePlayer.ToDto(),
+                currentPlayer = (PlayerColor)game.CurrentPlayer,
+                playState = (GameState)game.PlayState,
+                points = game.Points.Select(p => p.ToDto()).ToArray(),
+                roll = game.Roll.Select(r => r.ToDto()).ToArray(),
+                validMoves = game.ValidMoves.Select(m => m.ToDto()).ToArray(),                
             };
             return gameDto;
         }
@@ -28,7 +28,7 @@ namespace Backend.Dto
         {
             var playerDto = new PlayerDto
             {
-                PlayerColor = (PlayerColor)player.PlayerColor
+                playerColor = (PlayerColor)player.PlayerColor
             };
             return playerDto;
         }
@@ -37,9 +37,9 @@ namespace Backend.Dto
         {
             var pointDto = new PointDto
             {
-                BlackNumber = point.BlackNumber,
-                WhiteNumber = point.WhiteNumber,
-                Checkers = point.Checkers.Select(c => c.ToDto()).ToArray()                
+                blackNumber = point.BlackNumber,
+                whiteNumber = point.WhiteNumber,
+                checkers = point.Checkers.Select(c => c.ToDto()).ToArray()                
             };
             return pointDto;
         }
@@ -48,7 +48,7 @@ namespace Backend.Dto
         {
             var checkerDto = new CheckerDto
             {
-                Color = (PlayerColor)checker.Color
+                color = (PlayerColor)checker.Color
             };
             return checkerDto;
         }
@@ -57,8 +57,8 @@ namespace Backend.Dto
         {
             var diceDto = new DiceDto
             {
-                Used = dice.Used,
-                Value = dice.Value
+                used = dice.Used,
+                value = dice.Value
             };
             return diceDto;
         }
@@ -67,11 +67,11 @@ namespace Backend.Dto
         {
             var moveDto = new MoveDto
             {
-                Color = (PlayerColor)move.Color,
-                From = move.From.GetNumber(move.Color),
-                To = move.To.GetNumber(move.Color),
+                color = (PlayerColor)move.Color,
+                from = move.From.GetNumber(move.Color),
+                to = move.To.GetNumber(move.Color),
                 // recursing up in move tree
-                NextMoves = move.NextMoves.Select(move => move.ToDto()).ToArray()
+                nextMoves = move.NextMoves.Select(move => move.ToDto()).ToArray()
             };
             return moveDto;
         }

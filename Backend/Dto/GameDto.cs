@@ -3,14 +3,14 @@ namespace Backend.Dto
 {
     public class GameDto
     {
-        public string Id { get; set; }
-        public PlayerDto BlackPlayer { get; set; }
-        public PlayerDto WhitePlayer { get; set; }
+        public string id { get; set; }
+        public PlayerDto blackPlayer { get; set; }
+        public PlayerDto whitePlayer { get; set; }
 
-        public PlayerColor CurrentPlayer { get; set; }
-        public GameState PlayState { get; set; }
-        public PointDto[] Points { get; set; }
-        public DiceDto[] Roll { get; set; }
-        public MoveDto[] ValidMoves { get; set; }
+        public PlayerColor currentPlayer { get; set; }
+        public GameState playState { get; set; }
+        public PointDto[] points { get; set; }
+        public DiceDto[] roll { get; set; }
+        public MoveDto[] validMoves { get; set; }
     }
 }

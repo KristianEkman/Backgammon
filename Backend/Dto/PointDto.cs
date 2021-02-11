@@ -3,8 +3,8 @@ namespace Backend.Dto
 {
     public class PointDto
     {
-        public int BlackNumber { get; set; }
-        public CheckerDto[] Checkers { get; set; }
-        public int WhiteNumber { get; set; }
+        public int blackNumber { get; set; }
+        public CheckerDto[] checkers { get; set; }
+        public int whiteNumber { get; set; }
     }
 }
