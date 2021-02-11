@@ -30,7 +30,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     setInterval(() => {
-      console.log('draw', this.drawDirty);
       if (this.drawDirty) {
         this.draw(this.cx);
         this.drawDirty = false;
@@ -63,7 +62,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
 
-    console.log('draw checkers');
     this.game.points.forEach((point) => {
       const rect = this.rectangles[point.blackNumber];
       for (let i = 0; i < point.checkers.length; i++) {
@@ -74,7 +72,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           cx.fillStyle = '#FFF';
         }
         cx.beginPath();
-        cx.ellipse(rect.x, rect.y, rect.width, rect.width, 0, 0, 360);
+        cx.ellipse(rect.x, rect.y, rect.width / 2, rect.width / 2, 0, 0, 360);
         cx.closePath();
         cx.fill();
       }

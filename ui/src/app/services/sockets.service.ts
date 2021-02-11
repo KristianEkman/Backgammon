@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Action } from 'rxjs/internal/scheduler/Action';
 import { environment } from '../../environments/environment';
 import { ActionDto } from '../dto/Actions/actionDto';
 import { ActionNames } from '../dto/Actions/actionNames';
@@ -28,24 +29,17 @@ export class SocketsService {
     console.log('Open', { event });
   }
 
-  onMessage(message: MessageEvent<ActionDto>): void {
-    console.log('Message', message.data);
-    console.log('actionName', message.data['actionName']);
+  onMessage(message: MessageEvent<string>): void {
+    const action = JSON.parse(message.data) as ActionDto;
+    switch (action.actionName) {
+      case ActionNames.gameCreated:
+        const dto = JSON.parse(message.data) as GameCreatedActionDto;
+        AppState.Singleton.game.setValue(dto.game);
+        break;
 
-    const action = <GameCreatedActionDto>message.data;
-    console.log(action);
-    AppState.Singleton.game.setValue(action.game);
-
-    // switch (message.data.actionName) {
-    //   case ActionNames.gameCreated:
-    //     const action = <GameCreatedActionDto>message.data;
-    //     console.log('Set game value');
-    //     AppState.Singleton.game.setValue(action.game);
-    //     break;
-
-    //   default:
-    //     break;
-    // }
+      default:
+        break;
+    }
   }
 
   onError(event: Event): void {
