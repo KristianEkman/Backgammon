@@ -15,11 +15,8 @@ export class StateObject<T> {
     return this._changed.asObservable();
   }
 
-  private _value: T | undefined;
-  public getValue(type: new () => T): T {
-    if (this._value === undefined) {
-      this._value = new type();
-    }
+  private _value: any;
+  public getValue(): T {
     return this._value;
   }
 

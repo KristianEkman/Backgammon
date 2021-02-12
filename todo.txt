@@ -38,7 +38,11 @@ Top list
 
 Plan
 ====
-Kunna spela mot AI lokalt.
+Kunna spela mot en motståndare lokalt.
     API
     Enkelt UI
-    Enkla AI-regler
+
+När spelet startar ska men få reda på om man är svart eller vit.
+
+Ui DiceComponent.
+Rull tärningar BE, skicka action.

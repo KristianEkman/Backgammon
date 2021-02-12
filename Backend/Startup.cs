@@ -20,7 +20,7 @@ namespace Backend
     public class Startup
     {
         // is this realy persistent
-        static List<GameState> gameQueue = new List<GameState>();
+        static List<GameManager> gameQueue = new List<GameManager>();
 
         public Startup(IConfiguration configuration)
         {
@@ -79,7 +79,7 @@ namespace Backend
                         var gameState = gameQueue.FirstOrDefault(g => g.Client2 == null);
                         if (gameState == null)
                         {
-                            gameState = new GameState();
+                            gameState = new GameManager();
                             gameQueue.Add(gameState);
                             await gameState.ConnectSocket(webSocket);
                         }

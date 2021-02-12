@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Backend
 {
-    public class GameState
+    public class GameManager
     {
-        public GameState()
+        public GameManager()
         {
             Game = Game.Create();
         }
@@ -29,8 +29,24 @@ namespace Backend
             {
                 game = gameDto
             };
+            action.game.myColor = PlayerColor.black;
             Client1.Send(action);
+            action.game.myColor = PlayerColor.white;
             Client2.Send(action);
+
+            // todo: visa på clienten även när det blir samma 
+            while (Game.PlayState == Game.State.FirstThrow)
+            {
+                Game.RollDice();
+                var rollAction = new DicesRolledActionDto
+                {
+                    dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
+                    playerToMove = (PlayerColor)Game.CurrentPlayer,
+                    validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
+                };
+                Client1.Send(rollAction);
+                Client2.Send(rollAction);
+            }
         }
 
         internal async Task ConnectSocket(WebSocket webSocket)

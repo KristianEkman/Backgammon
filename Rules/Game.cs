@@ -120,7 +120,7 @@ namespace Backend.Rules
             Roll = new List<Dice>(Dice.Roll());
             SetState();
             ClearMoves(ValidMoves);
-            GenerateMoves(ValidMoves);
+            GenerateMoves(ValidMoves);            
         }
 
         private void ClearMoves(List<Move> moves)

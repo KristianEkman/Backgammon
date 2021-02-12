@@ -1,6 +1,7 @@
 import { OnChanges, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { GameDto } from 'src/app/dto/gameDto';
+import { GameState } from 'src/app/dto/gameState';
 import { PlayerColor } from 'src/app/dto/playerColor';
 import { Rectangle } from 'src/app/utils/rectangle';
 
@@ -57,6 +58,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   draw(cx: CanvasRenderingContext2D | null): void {
     this.drawBoard(cx);
     this.drawCheckers(cx);
+    this.drawTurn(cx);
     // this.drawRects(cx);
   }
 
@@ -187,6 +189,24 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.barWidth,
       this.height
     );
+  }
+
+  drawTurn(cx: CanvasRenderingContext2D | null): void {
+    if (!cx) {
+      return;
+    }
+    let text = '';
+    cx.fillStyle = '#000';
+    cx.font = '16px Arial';
+    if (this.game?.playState == undefined) {
+      text = 'Waiting for opponent to connect';
+    } else if (this.game?.myColor == this.game?.currentPlayer) {
+      text = 'Your turn to move';
+    } else {
+      text = `Waiting for ${PlayerColor[this.game?.currentPlayer]} to move.`;
+    }
+
+    cx.fillText(text, 40, this.height / 2);
   }
 
   onMouseDown(event: MouseEvent): void {

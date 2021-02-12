@@ -9,6 +9,7 @@ import { GameBoardComponent } from './components/game-board/game-board.component
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameComponent } from './components/game/game.component';
 import { GameService } from 'src/app/services';
+import { DicesComponent } from './components/dices/dices.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { GameService } from 'src/app/services';
     MessageTestComponent,
     GameBoardComponent,
     LobbyComponent,
-    GameComponent
+    GameComponent,
+    DicesComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [SocketsService, GameService],

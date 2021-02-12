@@ -18,7 +18,6 @@ namespace Backend.Dto
                 currentPlayer = (PlayerColor)game.CurrentPlayer,
                 playState = (GameState)game.PlayState,
                 points = game.Points.Select(p => p.ToDto()).ToArray(),
-                roll = game.Roll.Select(r => r.ToDto()).ToArray(),
                 validMoves = game.ValidMoves.Select(m => m.ToDto()).ToArray(),                
             };
             return gameDto;

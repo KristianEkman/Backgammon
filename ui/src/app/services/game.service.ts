@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { AppState } from 'src/app/state/game-state';
 import { finalize, map } from 'rxjs/operators';
-import { ActionDto } from '../dto/Actions/actionDto';
 
 @Injectable({
   providedIn: 'root'

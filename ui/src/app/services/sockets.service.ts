@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Action } from 'rxjs/internal/scheduler/Action';
 import { environment } from '../../environments/environment';
 import { ActionDto } from '../dto/Actions/actionDto';
 import { ActionNames } from '../dto/Actions/actionNames';
+import { DicesRolledActionDto } from '../dto/Actions/dicesRolledActionDto';
 import { GameCreatedActionDto } from '../dto/Actions/gameCreatedActionDto';
+import { GameDto } from '../dto/gameDto';
 import { AppState } from '../state/game-state';
 
 @Injectable({
@@ -36,7 +37,17 @@ export class SocketsService {
         const dto = JSON.parse(message.data) as GameCreatedActionDto;
         AppState.Singleton.game.setValue(dto.game);
         break;
-
+      case ActionNames.dicesRolled:
+        const dicesAction = JSON.parse(message.data) as DicesRolledActionDto;
+        AppState.Singleton.dices.setValue(dicesAction.dices);
+        const game = AppState.Singleton.game.getValue();
+        const cGame = {
+          ...game,
+          validMoves: dicesAction.validMoves,
+          currentPlayer: dicesAction.playerToMove
+        };
+        AppState.Singleton.game.setValue(cGame);
+        break;
       default:
         break;
     }
