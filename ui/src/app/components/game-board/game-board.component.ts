@@ -24,6 +24,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   cx: CanvasRenderingContext2D | null = null;
   drawDirty = false;
 
+  constructor() {
+    for (let r = 0; r < 24; r++) {
+      this.rectangles.push(new Rectangle(0, 0, 0, 0, 0));
+    }
+  }
+
   ngAfterViewInit(): void {
     if (!this.canvas) {
       return;
@@ -51,6 +57,20 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   draw(cx: CanvasRenderingContext2D | null): void {
     this.drawBoard(cx);
     this.drawCheckers(cx);
+    // this.drawRects(cx);
+  }
+
+  drawRects(cx: CanvasRenderingContext2D | null): void {
+    if (!cx) {
+      return;
+    }
+    cx.lineWidth = 1;
+    cx.fillStyle = '#000';
+    for (let r = 0; r < this.rectangles.length; r++) {
+      const rect = this.rectangles[r];
+      cx?.strokeRect(rect.x, rect.y, rect.width, rect.height);
+      cx.fillText(rect.pointIdx.toString(), rect.x, rect.y);
+    }
   }
 
   drawCheckers(cx: CanvasRenderingContext2D | null): void {
@@ -61,22 +81,36 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
+    // console.log(this.game.points);
 
-    this.game.points.forEach((point) => {
-      const rect = this.rectangles[point.blackNumber];
-      for (let i = 0; i < point.checkers.length; i++) {
+    for (let p = 1; p < this.game.points.length - 1; p++) {
+      const point = this.game.points[p];
+      const checkerCount = point.checkers.length;
+      const rect = this.rectangles.filter((r) => r.pointIdx === p)[0];
+      const r = rect.width / 2;
+      const chWidth = r * 0.8;
+      const dist = Math.min(2 * chWidth, rect.height / checkerCount);
+
+      for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
+        const x = rect.x + r;
+        let y = 0;
+        if (p < 13) {
+          y = rect.y + chWidth + dist * i;
+        } else {
+          y = rect.y + rect.height - chWidth - dist * i;
+        }
         if (checker.color === PlayerColor.black) {
           cx.fillStyle = '#000';
         } else {
           cx.fillStyle = '#FFF';
         }
         cx.beginPath();
-        cx.ellipse(rect.x, rect.y, rect.width / 2, rect.width / 2, 0, 0, 360);
+        cx.ellipse(x, y, chWidth, chWidth, 0, 0, 360);
         cx.closePath();
         cx.fill();
       }
-    });
+    }
   }
 
   drawBoard(cx: CanvasRenderingContext2D | null): void {
@@ -100,9 +134,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       if (i == 6) {
         x += this.barWidth;
       }
-      this.rectangles.push(
-        new Rectangle(x, y, this.rectBase, this.rectHeight, 12 - i)
-      );
+      this.rectangles[i].set(x, y, this.rectBase, this.rectHeight, 12 - i);
       // cx.strokeRect(x, y, this.rectBase, this.rectHeight);
 
       cx.fillStyle = colors[colorIdx];
@@ -125,14 +157,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       if (i == 6) {
         x += this.barWidth;
       }
-      this.rectangles.push(
-        new Rectangle(
-          x,
-          y - this.rectHeight,
-          this.rectBase,
-          this.rectHeight,
-          i + 13
-        )
+
+      this.rectangles[i + 12].set(
+        x,
+        y - this.rectHeight,
+        this.rectBase,
+        this.rectHeight,
+        i + 13
       );
       cx.fillStyle = colors[colorIdx];
       cx.beginPath();
