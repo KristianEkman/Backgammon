@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GameComponent } from './components/game/game.component';
+import { GameContainerComponent } from './components/game/game-container.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 
 const routes: Routes = [
   {
     path: 'game',
-    component: GameComponent
+    component: GameContainerComponent
   },
   {
     path: '**',

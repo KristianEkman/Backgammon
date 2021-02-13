@@ -1,5 +1,6 @@
-import { OnChanges, ViewChild } from '@angular/core';
+import { EventEmitter, OnChanges, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
+import { MoveDto } from 'src/app/dto';
 import { GameDto } from 'src/app/dto/gameDto';
 import { PlayerColor } from 'src/app/dto/playerColor';
 import { Rectangle } from 'src/app/utils/rectangle';
@@ -15,6 +16,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() public width = 600;
   @Input() public height = 400;
   @Input() game: GameDto | null = null;
+  @Output() addMove = new EventEmitter<MoveDto>();
 
   borderWidth = 8;
   barWidth = this.borderWidth * 2;
@@ -23,7 +25,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   rectangles: Rectangle[] = [];
   cx: CanvasRenderingContext2D | null = null;
   drawDirty = false;
-
   constructor() {
     for (let r = 0; r < 24; r++) {
       this.rectangles.push(new Rectangle(0, 0, 0, 0, 0));
@@ -218,23 +219,22 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     const { clientX, clientY } = event;
-    this.rectangles.forEach((rect) => {
-      if (
-        rect.contains(clientX - this.borderWidth, clientY - this.borderWidth)
-      ) {
-        let ptIdx = rect.pointIdx;
-        if (this.game?.currentPlayer === PlayerColor.white) {
-          ptIdx = 25 - rect.pointIdx;
-        }
-        let move1 = this.game?.validMoves.find((m) => m.from === ptIdx);
-        if (move1 !== undefined) {
-          // do the move locally with the highest dice value.
-          // send it to parent
-
-          // add button in parent to commit moves.
-          console.log(clientX, clientY, rect.pointIdx);
-        }
+    for (let i = 0; i < this.rectangles.length; i++) {
+      const rect = this.rectangles[i];
+      const x = clientX - this.borderWidth;
+      const y = clientY - this.borderWidth;
+      if (!rect.contains(x, y)) {
+        continue;
       }
-    });
+      let ptIdx = rect.pointIdx;
+      if (this.game?.currentPlayer === PlayerColor.white) {
+        ptIdx = 25 - rect.pointIdx;
+      }
+      // The moves are ordered  by backend by dice value.
+      const move = this.game.validMoves.find((m) => m.from === ptIdx);
+      if (move !== undefined) {
+        this.addMove.emit(move);
+      }
+    }
   }
 }

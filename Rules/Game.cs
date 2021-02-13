@@ -163,7 +163,7 @@ namespace Backend.Rules
             var bar = Points.Where(p => p.GetNumber(CurrentPlayer) == 0);
             var barHasCheckers = bar.First().Checkers.Any(c => c.Color == CurrentPlayer);
             
-            foreach (var dice in Roll)
+            foreach (var dice in Roll.OrderByDescending(r => r.Value))
             {
                 if (dice.Used)
                     continue;

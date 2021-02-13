@@ -1,0 +1,9 @@
+<div>
+  <app-game-board
+    [game]="gameDto$ | async"
+    (addMove)="addMove($event)"
+  ></app-game-board>
+  <br />
+  <app-dices [dices]="dices$ | async"></app-dices>
+  <button (click)="sendMoves()">Send</button>
+</div>
