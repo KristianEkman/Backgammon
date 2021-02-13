@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { DiceDto } from 'src/app/dto/diceDto';
 import { GameDto } from 'src/app/dto/gameDto';
 import { SocketsService } from 'src/app/services';
-import { AppState } from 'src/app/state/game-state';
+import { AppState } from 'src/app/state/app-state';
 
 @Component({
   selector: 'app-game',

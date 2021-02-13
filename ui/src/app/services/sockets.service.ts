@@ -5,7 +5,7 @@ import { ActionNames } from '../dto/Actions/actionNames';
 import { DicesRolledActionDto } from '../dto/Actions/dicesRolledActionDto';
 import { GameCreatedActionDto } from '../dto/Actions/gameCreatedActionDto';
 import { GameDto } from '../dto/gameDto';
-import { AppState } from '../state/game-state';
+import { AppState } from '../state/app-state';
 
 @Injectable({
   providedIn: 'root'

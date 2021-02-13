@@ -1,7 +1,6 @@
 import { OnChanges, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { GameDto } from 'src/app/dto/gameDto';
-import { GameState } from 'src/app/dto/gameState';
 import { PlayerColor } from 'src/app/dto/playerColor';
 import { Rectangle } from 'src/app/utils/rectangle';
 
@@ -192,30 +191,49 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   drawTurn(cx: CanvasRenderingContext2D | null): void {
-    if (!cx) {
+    if (!cx || !this.game) {
       return;
     }
     let text = '';
     cx.fillStyle = '#000';
     cx.font = '16px Arial';
-    if (this.game?.playState == undefined) {
+    if (this.game.playState == undefined) {
       text = 'Waiting for opponent to connect';
-    } else if (this.game?.myColor == this.game?.currentPlayer) {
+    } else if (this.game.myColor == this.game.currentPlayer) {
       text = 'Your turn to move';
     } else {
-      text = `Waiting for ${PlayerColor[this.game?.currentPlayer]} to move.`;
+      text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
     }
 
     cx.fillText(text, 40, this.height / 2);
   }
 
   onMouseDown(event: MouseEvent): void {
+    if (!this.game) {
+      return;
+    }
+
+    if (this.game.myColor != this.game.currentPlayer) {
+      return;
+    }
+
     const { clientX, clientY } = event;
     this.rectangles.forEach((rect) => {
       if (
         rect.contains(clientX - this.borderWidth, clientY - this.borderWidth)
       ) {
-        console.log(clientX, clientY, rect.pointIdx);
+        let ptIdx = rect.pointIdx;
+        if (this.game?.currentPlayer === PlayerColor.white) {
+          ptIdx = 25 - rect.pointIdx;
+        }
+        let move1 = this.game?.validMoves.find((m) => m.from === ptIdx);
+        if (move1 !== undefined) {
+          // do the move locally with the highest dice value.
+          // send it to parent
+
+          // add button in parent to commit moves.
+          console.log(clientX, clientY, rect.pointIdx);
+        }
       }
     });
   }

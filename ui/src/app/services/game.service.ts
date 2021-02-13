@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { AppState } from 'src/app/state/game-state';
+import { AppState } from 'src/app/state/app-state';
 import { finalize, map } from 'rxjs/operators';
 
 @Injectable({
