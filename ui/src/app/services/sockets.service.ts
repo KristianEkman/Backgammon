@@ -42,6 +42,17 @@ export class SocketsService {
     const from = isWhite ? 25 - move.from : move.from;
     const to = isWhite ? 25 - move.to : move.to;
     const checker = <CheckerDto>gameClone.points[from].checkers.pop();
+
+    // hitting opponent checker
+    const hit = gameClone.points[to].checkers.find(
+      (c) => c.color !== move.color
+    );
+    if (hit) {
+      gameClone.points[to].checkers.pop();
+      const barIdx = isWhite ? 0 : 25;
+      gameClone.points[barIdx].checkers.push(hit);
+    }
+
     gameClone.points[to].checkers.push(checker);
     AppState.Singleton.game.setValue(gameClone);
   }
@@ -56,7 +67,20 @@ export class SocketsService {
     const isWhite = move.color === PlayerColor.white;
     const from = isWhite ? 25 - move.from : move.from;
     const to = isWhite ? 25 - move.to : move.to;
+    // remove moved checker
     const checker = <CheckerDto>gameClone.points[from].checkers.pop();
+
+    // hitting opponent checker
+    const hit = gameClone.points[to].checkers.find(
+      (c) => c.color !== move.color
+    );
+    if (hit) {
+      gameClone.points[to].checkers.pop();
+      const barIdx = isWhite ? 0 : 25;
+      gameClone.points[barIdx].checkers.push(hit);
+    }
+
+    //push checker to new point
     gameClone.points[to].checkers.push(checker);
     AppState.Singleton.game.setValue(gameClone);
 

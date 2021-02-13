@@ -1,3 +1,8 @@
+Hitting Checkers
+Mouse Over
+Display hits
+Display home checkers
+
 Backend
     Game ended.
     ai: Evaluate to give a score.

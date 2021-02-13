@@ -1,6 +1,6 @@
 import { EventEmitter, OnChanges, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
-import { GameState, MoveDto } from 'src/app/dto';
+import { MoveDto } from 'src/app/dto';
 import { GameDto } from 'src/app/dto/gameDto';
 import { PlayerColor } from 'src/app/dto/playerColor';
 import { Rectangle } from 'src/app/utils/rectangle';
@@ -26,7 +26,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   cx: CanvasRenderingContext2D | null = null;
   drawDirty = false;
   constructor() {
-    for (let r = 0; r < 24; r++) {
+    for (let r = 0; r < 26; r++) {
       this.rectangles.push(new Rectangle(0, 0, 0, 0, 0));
     }
   }
@@ -59,7 +59,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawBoard(cx);
     this.drawCheckers(cx);
     this.drawTurn(cx);
-    // this.drawRects(cx);
+    this.drawRects(cx);
   }
 
   drawRects(cx: CanvasRenderingContext2D | null): void {
@@ -68,6 +68,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
     cx.lineWidth = 1;
     cx.fillStyle = '#000';
+    cx.strokeStyle = '#F00';
+
     for (let r = 0; r < this.rectangles.length; r++) {
       const rect = this.rectangles[r];
       cx?.strokeRect(rect.x, rect.y, rect.width, rect.height);
@@ -85,12 +87,34 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
     // console.log(this.game.points);
 
+    const r = this.rectangles[0].width / 2;
+    const chWidth = r * 0.67;
+
+    // blacks bar
+    for (let i = 0; i < this.game.points[0].checkers.length; i++) {
+      cx.beginPath();
+      cx.ellipse(this.width / 2, this.height / 4, chWidth, chWidth, 0, 0, 360);
+      cx.closePath();
+      cx.fillStyle = '#000';
+      cx.fill();
+    }
+
+    // whites bar
+    for (let i = 0; i < this.game.points[25].checkers.length; i++) {
+      cx.beginPath();
+      const w = this.width / 2;
+      const h = this.height * 0.75;
+      cx.ellipse(w, h, chWidth, chWidth, 0, 0, 360);
+      cx.closePath();
+      cx.fillStyle = '#FFF';
+      cx.fill();
+    }
+
     for (let p = 1; p < this.game.points.length - 1; p++) {
       const point = this.game.points[p];
       const checkerCount = point.checkers.length;
       const rect = this.rectangles.filter((r) => r.pointIdx === p)[0];
-      const r = rect.width / 2;
-      const chWidth = r * 0.8;
+
       const dist = Math.min(2 * chWidth, rect.height / checkerCount);
 
       for (let i = 0; i < checkerCount; i++) {
@@ -132,6 +156,25 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     let colorIdx = 0;
     let x = this.borderWidth;
     let y = this.borderWidth;
+
+    //blacks bar
+    this.rectangles[24].set(
+      this.width / 2 - this.borderWidth,
+      this.rectHeight / 2,
+      this.borderWidth * 2,
+      this.rectHeight / 2 + this.borderWidth,
+      0
+    );
+
+    //blacks bar
+    this.rectangles[25].set(
+      this.width / 2 - this.borderWidth,
+      this.height / 2 + this.height * 0.08 - this.borderWidth,
+      this.borderWidth * 2,
+      this.rectHeight / 2,
+      25
+    );
+
     for (let i = 0; i < 12; i++) {
       if (i == 6) {
         x += this.barWidth;
