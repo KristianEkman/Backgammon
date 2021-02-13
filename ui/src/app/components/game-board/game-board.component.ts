@@ -201,7 +201,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (this.game.playState == undefined) {
       text = 'Waiting for opponent to connect';
     } else if (this.game.myColor == this.game.currentPlayer) {
-      text = 'Your turn to move';
+      text = `Your (${PlayerColor[this.game.currentPlayer]}) turn to move`;
     } else {
       text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
     }

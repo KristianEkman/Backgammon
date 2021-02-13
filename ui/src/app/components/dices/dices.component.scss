@@ -2,9 +2,14 @@ label {
   display: inline-block;
   width: 35px;
   height: 25px;
-  border: 1px solid #ccc;
+  border: 1px solid #555;
   border-radius: 3px;
   margin: 8px;
   text-align: center;
   padding-top: 10px;
+}
+
+.diceUsed {
+  background-color: #ccc;
+  border-color: #888;
 }

@@ -1,1 +1,3 @@
-<label *ngFor="let dice of dices">{{ dice.value}}</label>
+<label *ngFor="let dice of dices" [ngClass]="{ diceUsed: dice.used }">{{
+  dice.value
+}}</label>

@@ -27,6 +27,7 @@ export class GameContainerComponent {
 
   userMoves: MoveDto[] = [];
   gameHistory: GameDto[] = [];
+  dicesHistory: DiceDto[][] = [];
 
   sendMoves(): void {
     console.log(this.userMoves);
@@ -37,13 +38,34 @@ export class GameContainerComponent {
     const prevGame = AppState.Singleton.game.getValue();
     this.gameHistory.push(prevGame);
 
-    const clone = JSON.parse(JSON.stringify(prevGame)) as GameDto;
-    clone.validMoves = move.nextMoves;
+    const gameClone = JSON.parse(JSON.stringify(prevGame)) as GameDto;
+    gameClone.validMoves = move.nextMoves;
     const isWhite = prevGame.currentPlayer === PlayerColor.white;
     const from = isWhite ? 25 - move.from : move.from;
     const to = isWhite ? 25 - move.to : move.to;
-    const checker = <CheckerDto>clone.points[from].checkers.pop();
-    clone.points[to].checkers.push(checker);
-    AppState.Singleton.game.setValue(clone);
+    const checker = <CheckerDto>gameClone.points[from].checkers.pop();
+    gameClone.points[to].checkers.push(checker);
+    AppState.Singleton.game.setValue(gameClone);
+
+    const dices = AppState.Singleton.dices.getValue();
+    this.dicesHistory.push(dices);
+
+    const diceClone = JSON.parse(JSON.stringify(dices)) as DiceDto[];
+    const diceIdx = diceClone.findIndex(
+      (d) => !d.used && d.value === move.to - move.from
+    );
+    diceClone[diceIdx].used = true;
+    AppState.Singleton.dices.setValue(diceClone);
+  }
+
+  undoMove(): void {
+    if (this.gameHistory.length < 1) {
+      return;
+    }
+    const game = this.gameHistory.pop() as GameDto;
+    AppState.Singleton.game.setValue(game);
+
+    const dices = this.dicesHistory.pop() as DiceDto[];
+    AppState.Singleton.dices.setValue(dices);
   }
 }
