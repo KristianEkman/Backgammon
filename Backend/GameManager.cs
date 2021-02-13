@@ -1,4 +1,5 @@
 ﻿using Backend.Dto;
+using Backend.Dto.Actions;
 using Backend.Rules;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,19 @@ namespace Backend
             }
         }
 
+        private void SendNewRoll()
+        {
+            Game.RollDice();
+            var rollAction = new DicesRolledActionDto
+            {
+                dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
+                playerToMove = (PlayerColor)Game.CurrentPlayer,
+                validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
+            };
+            Client1.Send(rollAction);
+            Client2.Send(rollAction);
+        }
+
         internal async Task ConnectSocket(WebSocket webSocket)
         {
             if (Client1 == null)
@@ -72,14 +86,43 @@ namespace Backend
             while (!result.CloseStatus.HasValue)
             {
                 var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
-
-                //JsonSerializer.Deserialize(text, theType);
-                // todo, move checkers or other things
+                var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
+                var otherClient = socket == Client1 ? Client2 : Client1;                
+                DoAction(action.actionName, text, otherClient);
                 result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
             }
         }
 
+        private void DoAction(ActionNames actionName, string text, WebSocket otherClient)
+        {
+            if (actionName == ActionNames.movesMade)
+            {
+                var action = (MovesMadeActionDto)JsonSerializer.Deserialize(text, typeof(MovesMadeActionDto));
+                DoMoves(action);
+                otherClient.Send(action);
+                SendNewRoll();
+            }
+        }
+
+        private void DoMoves(MovesMadeActionDto action)
+        {
+            foreach (var moveDto in action.moves)
+            {
+                var color = (Player.Color)moveDto.color;
+                var move = new Move
+                {
+                    Color = color,
+                    From = Game.Points.Single(p => p.GetNumber(color) == moveDto.from),
+                    To = Game.Points.Single(p => p.GetNumber(color) == moveDto.to),
+                };
+                // TODO: Check these moves are valid for safety.
+                this.Game.MakeMove(move);
+            }
+            if (this.Game.CurrentPlayer == Player.Color.Black)
+                this.Game.CurrentPlayer = Player.Color.White;
+            else
+                this.Game.CurrentPlayer = Player.Color.Black;
+        }
     }
 
     public static class SocketExtentions

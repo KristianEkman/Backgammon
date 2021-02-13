@@ -1,10 +1,10 @@
 <div>
   <app-game-board
     [game]="gameDto$ | async"
-    (addMove)="addMove($event)"
+    (addMove)="doMove($event)"
   ></app-game-board>
   <br />
   <app-dices [dices]="dices$ | async"></app-dices>
-  <button (click)="sendMoves()">Send</button>
+  <button (click)="sendMoves()" [disabled]="sendDisabled">Send</button>
   <button (click)="undoMove()">Undo</button>
 </div>

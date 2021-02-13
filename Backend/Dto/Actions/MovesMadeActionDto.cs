@@ -12,9 +12,8 @@ namespace Backend.Dto.Actions
             this.actionName = ActionNames.movesMade;
         }
 
-        public MoveDto move1 { get; set; }
+        public MoveDto[] moves { get; set; }
 
-        public MoveDto move2 { get; set; }
 
     }
 }

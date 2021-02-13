@@ -1,6 +1,6 @@
 import { EventEmitter, OnChanges, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
-import { MoveDto } from 'src/app/dto';
+import { GameState, MoveDto } from 'src/app/dto';
 import { GameDto } from 'src/app/dto/gameDto';
 import { PlayerColor } from 'src/app/dto/playerColor';
 import { Rectangle } from 'src/app/utils/rectangle';
@@ -192,16 +192,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   drawTurn(cx: CanvasRenderingContext2D | null): void {
-    if (!cx || !this.game) {
+    if (!cx) {
       return;
     }
     let text = '';
     cx.fillStyle = '#000';
-    cx.font = '16px Arial';
-    if (this.game.playState == undefined) {
+    cx.font = '14px Arial';
+    if (!this.game) {
       text = 'Waiting for opponent to connect';
     } else if (this.game.myColor == this.game.currentPlayer) {
-      text = `Your (${PlayerColor[this.game.currentPlayer]}) turn to move`;
+      text = `Your turn to move.  (${PlayerColor[this.game.currentPlayer]})`;
     } else {
       text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
     }

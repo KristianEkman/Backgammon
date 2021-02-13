@@ -134,6 +134,7 @@ namespace Backend.Rules
                     move.NextMoves.Clear();
                 }
             }
+            moves.Clear();
         }
 
         public List<Move> GenerateMoves()

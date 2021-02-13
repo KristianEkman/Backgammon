@@ -1,7 +1,7 @@
 ﻿/* Auto Generated */
 
 export enum GameState {
-  firstThrow = 'firstThrow',
-  playing = 'playing',
-  ended = 'ended'
+  firstThrow = 0,
+  playing = 1,
+  ended = 2
 }
