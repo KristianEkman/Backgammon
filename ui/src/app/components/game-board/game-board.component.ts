@@ -1,9 +1,8 @@
 import { EventEmitter, OnChanges, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
-import { MoveDto } from 'src/app/dto';
-import { GameDto } from 'src/app/dto/gameDto';
-import { PlayerColor } from 'src/app/dto/playerColor';
-import { Rectangle } from 'src/app/utils/rectangle';
+import { MoveDto, GameDto, PlayerColor } from 'src/app/dto';
+import { Rectangle, Point } from 'src/app/utils';
+import { CheckerDrag } from './checker-drag';
 
 @Component({
   selector: 'app-game-board',
@@ -20,11 +19,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   borderWidth = 8;
   barWidth = this.borderWidth * 2;
+  sideBoardWidth = this.width * 0.1;
   rectBase = 0;
   rectHeight = 0;
   rectangles: Rectangle[] = [];
   cx: CanvasRenderingContext2D | null = null;
   drawDirty = false;
+  dragging: CheckerDrag | null = null;
+  cursor: Point = new Point(0, 0);
+  framerate = 25;
+
   constructor() {
     for (let r = 0; r < 26; r++) {
       this.rectangles.push(new Rectangle(0, 0, 0, 0, 0));
@@ -41,7 +45,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         this.draw(this.cx);
         this.drawDirty = false;
       }
-    }, 200);
+    }, 1000 / this.framerate);
 
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     canvasEl.width = this.width;
@@ -92,8 +96,25 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     for (let p = 0; p < this.game.points.length; p++) {
       const point = this.game.points[p];
-      const checkerCount = point.checkers.length;
+      let checkerCount = point.checkers.length;
       const rect = this.rectangles.filter((r) => r.pointIdx === p)[0];
+
+      //drawing the dragged checker
+      const drawDrag = this.dragging && this.dragging.rect == rect;
+      if (drawDrag) {
+        checkerCount--;
+        if (point.checkers[0].color === PlayerColor.black) {
+          cx.fillStyle = '#000';
+        } else {
+          cx.fillStyle = '#fff';
+        }
+        cx.strokeStyle = '#28DD2E';
+        cx.beginPath();
+        cx.ellipse(this.cursor.x, this.cursor.y, chWidth, chWidth, 0, 0, 360);
+        cx.closePath();
+        cx.fill();
+        cx.stroke();
+      }
 
       if (rect.canBeMovedTo) {
         cx.beginPath();
@@ -101,13 +122,14 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         cx.moveTo(rect.x, y);
         cx.lineTo(rect.x + rect.width, y);
         cx.closePath();
-        cx.strokeStyle = '#0FF';
+        cx.strokeStyle = '#28DD2E';
         cx.lineWidth = 2;
         cx.stroke();
       }
 
       const dist = Math.min(2 * chWidth, rect.height / checkerCount);
 
+      cx.lineWidth = 2;
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
         let x = rect.x + r;
@@ -122,15 +144,18 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         }
         if (checker.color === PlayerColor.black) {
           cx.fillStyle = '#000';
+          cx.strokeStyle = '#FFF';
         } else {
           cx.fillStyle = '#FFF';
+          cx.strokeStyle = '#000';
         }
         cx.beginPath();
         cx.ellipse(x, y, chWidth, chWidth, 0, 0, 360);
         cx.closePath();
         cx.fill();
-        if (rect.hasValidMove && i == checkerCount - 1) {
-          cx.strokeStyle = '#0FF';
+        cx.stroke();
+        if (rect.hasValidMove && i == checkerCount - 1 && !drawDrag) {
+          cx.strokeStyle = '#28DD2E';
           cx.lineWidth = 2;
           cx.stroke();
         }
@@ -149,11 +174,17 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.fillRect(0, 0, this.width, this.height);
 
     cx.strokeStyle = '#000';
-    this.rectBase = (this.width - this.barWidth - 2 * this.borderWidth) / 12;
+    this.rectBase =
+      (this.width -
+        this.barWidth -
+        2 * this.borderWidth -
+        this.sideBoardWidth * 2) /
+      12;
+
     this.rectHeight = this.height * 0.42;
     const colors = ['#555', '#eee'];
     let colorIdx = 0;
-    let x = this.borderWidth;
+    let x = this.borderWidth + this.sideBoardWidth;
     let y = this.borderWidth;
 
     //blacks bar
@@ -196,7 +227,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     //bottom
     colorIdx = colorIdx === 0 ? 1 : 0;
     y = this.height - this.borderWidth;
-    x = this.borderWidth;
+    x = this.borderWidth + this.sideBoardWidth;
     for (let i = 0; i < 12; i++) {
       if (i == 6) {
         x += this.barWidth;
@@ -221,9 +252,14 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       colorIdx = colorIdx === 0 ? 1 : 0;
     }
 
-    cx.lineWidth = this.borderWidth * 2;
+    cx.lineWidth = this.borderWidth;
     cx.strokeStyle = '#888';
-    cx.strokeRect(0, 0, this.width, this.height);
+    cx.strokeRect(
+      this.sideBoardWidth + this.borderWidth / 2,
+      this.borderWidth / 2,
+      this.width - 2 * this.sideBoardWidth - this.borderWidth,
+      this.height - this.borderWidth
+    );
     cx.fillStyle = '#888';
     cx.fillRect(
       this.width / 2 - this.barWidth / 2,
@@ -248,10 +284,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
     }
 
-    cx.fillText(text, 40, this.height / 2);
+    cx.fillText(
+      text,
+      this.sideBoardWidth + 2 * this.borderWidth + 8,
+      this.height / 2
+    );
   }
 
   onMouseDown(event: MouseEvent): void {
+    // console.log('down', event);
+
     if (!this.game) {
       return;
     }
@@ -273,18 +315,29 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       // The moves are ordered  by backend by dice value.
       const move = this.game.validMoves.find((m) => m.from === ptIdx);
       if (move !== undefined) {
-        this.addMove.emit(move);
+        this.dragging = new CheckerDrag(rect, clientX, clientY);
+        break;
       }
     }
   }
 
   onMouseMove(event: MouseEvent): void {
+    // console.log('move', event);
+
+    this.cursor.x = event.clientX;
+    this.cursor.y = event.clientY;
     if (!this.game) {
       return;
     }
     if (this.game.myColor != this.game.currentPlayer) {
       return;
     }
+    if (this.dragging) {
+      this.drawDirty = true;
+      return;
+    }
+
+    // Indicating what can be moved and where.
     const { clientX, clientY } = event;
     const isWhite = this.game.currentPlayer === PlayerColor.white;
 
@@ -317,7 +370,56 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawDirty = true;
   }
 
-  onMouseUp(event: MouseEvent): void {}
+  onMouseUp(event: MouseEvent): void {
+    // console.log('up', event);
 
-  onMouseLeave(event: MouseEvent): void {}
+    if (!this.game) {
+      return;
+    }
+    if (this.game.myColor != this.game.currentPlayer) {
+      return;
+    }
+    if (!this.dragging) {
+      return;
+    }
+    const { clientX, clientY } = event;
+    const { xDown, yDown } = this.dragging;
+    this.dragging = null;
+    // Unless the cursor has moved to far, this is a click event, and should move the move of the largest dice.
+    const isClick =
+      Math.abs(clientX - xDown) < 3 && Math.abs(clientY - yDown) < 3;
+
+    for (let i = 0; i < this.rectangles.length; i++) {
+      const rect = this.rectangles[i];
+      const x = clientX - this.borderWidth;
+      const y = clientY - this.borderWidth;
+      if (!rect.contains(x, y)) {
+        continue;
+      }
+      let ptIdx = rect.pointIdx;
+      if (this.game?.currentPlayer === PlayerColor.white) {
+        ptIdx = 25 - rect.pointIdx;
+      }
+      let move: MoveDto | undefined = undefined;
+      if (isClick) {
+        move = this.game.validMoves.find((m) => m.from === ptIdx);
+      } else {
+        move = this.game.validMoves.find((m) => m.to === ptIdx);
+      }
+
+      if (move) {
+        this.addMove.emit(move);
+        break;
+      }
+    }
+    this.drawDirty = true;
+  }
+
+  onMouseLeave(event: MouseEvent): void {
+    // console.log('leave', event);
+  }
+
+  onClick(event: MouseEvent): void {
+    // console.log('click', event);
+  }
 }

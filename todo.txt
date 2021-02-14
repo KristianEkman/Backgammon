@@ -1,19 +1,29 @@
-Hitting Checkers
-Mouse Over
-Display hits
+Nästa mål: Spela en match mot Linn
+==================================
+Spela till det tar slut, bearing off
 Display home checkers
+
+Animate
+Snällare färger för ögonen
+View opponents actions
+
+Drag and drop.
+Dices color
+Deploy, client + api
 
 Backend
     Game ended.
     ai: Evaluate to give a score.
+    points left
+    resign
+    chat
+
     
 Api
     NewOponent
         SkapaSocket
         New game
         FirstThrow
-
-    NewAi
 
     Login
 
@@ -24,19 +34,21 @@ Api
         Doubling Answer
 
 Database
-
-Client
-
+    Users
+    Games
+        Score
 Ui
-    LobbyController
-        PlayAI-Button
-    GameController
-
-    ObservableState
-        
-    Send button
-
-    Common dto-interfaces
+  
+  Resize
+  Auto send when no options
+  Auto move, when only one move.
+  View dices on board
+  Rotate board.
+  Textures
+  PlayAI-Button
+  PlayRandom
+  Play friend
+  TopList
 
 ELO
 Top list
@@ -44,10 +56,3 @@ Top list
 Plan
 ====
 Kunna spela mot en motståndare lokalt.
-    API
-    Enkelt UI
-
-När spelet startar ska men få reda på om man är svart eller vit.
-
-Ui DiceComponent.
-Rull tärningar BE, skicka action.
