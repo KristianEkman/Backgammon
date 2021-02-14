@@ -59,7 +59,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawBoard(cx);
     this.drawCheckers(cx);
     this.drawTurn(cx);
-    this.drawRects(cx);
+    // this.drawRects(cx);
   }
 
   drawRects(cx: CanvasRenderingContext2D | null): void {
@@ -90,27 +90,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const r = this.rectangles[0].width / 2;
     const chWidth = r * 0.67;
 
-    // blacks bar
-    for (let i = 0; i < this.game.points[0].checkers.length; i++) {
-      cx.beginPath();
-      cx.ellipse(this.width / 2, this.height / 4, chWidth, chWidth, 0, 0, 360);
-      cx.closePath();
-      cx.fillStyle = '#000';
-      cx.fill();
-    }
-
-    // whites bar
-    for (let i = 0; i < this.game.points[25].checkers.length; i++) {
-      cx.beginPath();
-      const w = this.width / 2;
-      const h = this.height * 0.75;
-      cx.ellipse(w, h, chWidth, chWidth, 0, 0, 360);
-      cx.closePath();
-      cx.fillStyle = '#FFF';
-      cx.fill();
-    }
-
-    for (let p = 1; p < this.game.points.length - 1; p++) {
+    for (let p = 0; p < this.game.points.length; p++) {
       const point = this.game.points[p];
       const checkerCount = point.checkers.length;
       const rect = this.rectangles.filter((r) => r.pointIdx === p)[0];
@@ -119,7 +99,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
-        const x = rect.x + r;
+        let x = rect.x + r;
+        if (p === 0 || p === 25) {
+          x = rect.x + chWidth / 2;
+        }
         let y = 0;
         if (p < 13) {
           y = rect.y + chWidth + dist * i;
