@@ -1,1 +1,7 @@
-<canvas #canvas (mousedown)="onMouseDown($event)"></canvas>
+<canvas
+  #canvas
+  (mousedown)="onMouseDown($event)"
+  (mousemove)="onMouseMove($event)"
+  (mouseup)="onMouseUp($event)"
+  (mouseleave)="onMouseLeave($event)"
+></canvas>

@@ -95,6 +95,17 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       const checkerCount = point.checkers.length;
       const rect = this.rectangles.filter((r) => r.pointIdx === p)[0];
 
+      if (rect.canBeMovedTo) {
+        cx.beginPath();
+        const y = p < 13 ? rect.y : rect.y + rect.height;
+        cx.moveTo(rect.x, y);
+        cx.lineTo(rect.x + rect.width, y);
+        cx.closePath();
+        cx.strokeStyle = '#0FF';
+        cx.lineWidth = 2;
+        cx.stroke();
+      }
+
       const dist = Math.min(2 * chWidth, rect.height / checkerCount);
 
       for (let i = 0; i < checkerCount; i++) {
@@ -118,6 +129,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         cx.ellipse(x, y, chWidth, chWidth, 0, 0, 360);
         cx.closePath();
         cx.fill();
+        if (rect.hasValidMove && i == checkerCount - 1) {
+          cx.strokeStyle = '#0FF';
+          cx.lineWidth = 2;
+          cx.stroke();
+        }
       }
     }
   }
@@ -239,11 +255,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
-
     if (this.game.myColor != this.game.currentPlayer) {
       return;
     }
-
     const { clientX, clientY } = event;
     for (let i = 0; i < this.rectangles.length; i++) {
       const rect = this.rectangles[i];
@@ -263,4 +277,47 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       }
     }
   }
+
+  onMouseMove(event: MouseEvent): void {
+    if (!this.game) {
+      return;
+    }
+    if (this.game.myColor != this.game.currentPlayer) {
+      return;
+    }
+    const { clientX, clientY } = event;
+    const isWhite = this.game.currentPlayer === PlayerColor.white;
+
+    // resetting all
+    this.rectangles.forEach((rect) => {
+      rect.canBeMovedTo = false;
+      rect.hasValidMove = false;
+    });
+
+    for (let i = 0; i < this.rectangles.length; i++) {
+      const rect = this.rectangles[i];
+      const x = clientX - this.borderWidth;
+      const y = clientY - this.borderWidth;
+      if (!rect.contains(x, y)) {
+        continue;
+      }
+      const ptIdx = isWhite ? 25 - rect.pointIdx : rect.pointIdx;
+      const moves = this.game.validMoves.filter((m) => m.from === ptIdx);
+      if (moves.length > 0) {
+        rect.hasValidMove = true;
+        moves.forEach((move) => {
+          const toIdx = isWhite ? 25 - move.to : move.to;
+          const point = this.rectangles.find((r) => r.pointIdx === toIdx);
+          if (point) {
+            point.canBeMovedTo = true;
+          }
+        });
+      }
+    }
+    this.drawDirty = true;
+  }
+
+  onMouseUp(event: MouseEvent): void {}
+
+  onMouseLeave(event: MouseEvent): void {}
 }

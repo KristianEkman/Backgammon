@@ -29,4 +29,7 @@ export class Rectangle {
       y <= this.y + this.height
     );
   }
+
+  hasValidMove = false;
+  canBeMovedTo = false;
 }
