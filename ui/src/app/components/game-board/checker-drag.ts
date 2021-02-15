@@ -4,6 +4,7 @@ export class CheckerDrag {
   constructor(
     public rect: Rectangle,
     public xDown: number,
-    public yDown: number
+    public yDown: number,
+    public fromIdx: number
   ) {}
 }

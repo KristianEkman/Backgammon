@@ -15,7 +15,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() public width = 600;
   @Input() public height = 400;
   @Input() game: GameDto | null = null;
-  @Input() myColor: PlayerColor = PlayerColor.black;
+  @Input() myColor: PlayerColor | null = PlayerColor.black;
   @Output() addMove = new EventEmitter<MoveDto>();
 
   borderWidth = 8;
@@ -347,7 +347,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       // The moves are ordered  by backend by dice value.
       const move = this.game.validMoves.find((m) => m.from === ptIdx);
       if (move !== undefined) {
-        this.dragging = new CheckerDrag(rect, clientX, clientY);
+        this.dragging = new CheckerDrag(rect, clientX, clientY, ptIdx);
         break;
       }
     }
@@ -416,7 +416,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
     const { clientX, clientY } = event;
-    const { xDown, yDown } = this.dragging;
+    const { xDown, yDown, fromIdx } = this.dragging;
+
     this.dragging = null;
     // Unless the cursor has moved to far, this is a click event, and should move the move of the largest dice.
     const isClick =
@@ -437,7 +438,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       if (isClick) {
         move = this.game.validMoves.find((m) => m.from === ptIdx);
       } else {
-        move = this.game.validMoves.find((m) => m.to === ptIdx);
+        move = this.game.validMoves.find(
+          (m) => m.to === ptIdx && fromIdx === m.from
+        );
       }
 
       if (move) {
