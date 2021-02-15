@@ -1,6 +1,6 @@
 import { EventEmitter, OnChanges, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
-import { MoveDto, GameDto, PlayerColor } from 'src/app/dto';
+import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { Rectangle, Point } from 'src/app/utils';
 import { CheckerDrag } from './checker-drag';
 
@@ -15,6 +15,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() public width = 600;
   @Input() public height = 400;
   @Input() game: GameDto | null = null;
+  @Input() myColor: PlayerColor = PlayerColor.black;
   @Output() addMove = new EventEmitter<MoveDto>();
 
   borderWidth = 8;
@@ -62,7 +63,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   draw(cx: CanvasRenderingContext2D | null): void {
     this.drawBoard(cx);
     this.drawCheckers(cx);
-    this.drawTurn(cx);
+    this.drawMessage(cx);
     // this.drawRects(cx);
   }
 
@@ -161,6 +162,31 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         }
       }
     }
+
+    // draw checkers reached home.
+    let blackCount = 0;
+    let whiteCount = 0;
+    this.game.points.forEach((point) => {
+      blackCount += point.checkers.filter((c) => c.color === PlayerColor.black)
+        .length;
+      whiteCount += point.checkers.filter((c) => c.color === PlayerColor.white)
+        .length;
+    });
+    const blackAtHome = 15 - blackCount;
+    const whiteAtHome = 15 - whiteCount;
+    let x = this.width - this.sideBoardWidth + 4;
+    let y = this.height - this.borderWidth - 4;
+    cx.fillStyle = '#000';
+    for (let i = 0; i < blackAtHome; i++) {
+      cx.fillRect(x, y - i * 6, this.sideBoardWidth / 2, 5);
+    }
+
+    x = this.width - this.sideBoardWidth + 4;
+    y = this.borderWidth + 4;
+    cx.fillStyle = '#fff';
+    for (let i = 0; i < whiteAtHome; i++) {
+      cx.fillRect(x, y + i * 6, this.sideBoardWidth / 2, 5);
+    }
   }
 
   drawBoard(cx: CanvasRenderingContext2D | null): void {
@@ -196,7 +222,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       0
     );
 
-    //blacks bar
+    //whites bar
     this.rectangles[25].set(
       this.width / 2 - this.borderWidth,
       this.height / 2 + this.height * 0.08 - this.borderWidth,
@@ -269,7 +295,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     );
   }
 
-  drawTurn(cx: CanvasRenderingContext2D | null): void {
+  drawMessage(cx: CanvasRenderingContext2D | null): void {
     if (!cx) {
       return;
     }
@@ -278,7 +304,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.font = '14px Arial';
     if (!this.game) {
       text = 'Waiting for opponent to connect';
-    } else if (this.game.myColor == this.game.currentPlayer) {
+    } else if (this.game.playState === GameState.ended) {
+      // console.log(this.myColor, this.game.winner);
+      text =
+        this.myColor === this.game.winner
+          ? 'Congrats! You won.'
+          : 'Sorry. You lost the game.';
+    } else if (this.myColor == this.game.currentPlayer) {
       text = `Your turn to move.  (${PlayerColor[this.game.currentPlayer]})`;
     } else {
       text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
@@ -297,7 +329,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
-    if (this.game.myColor != this.game.currentPlayer) {
+    if (this.myColor != this.game.currentPlayer) {
       return;
     }
     const { clientX, clientY } = event;
@@ -329,7 +361,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
-    if (this.game.myColor != this.game.currentPlayer) {
+    if (this.myColor != this.game.currentPlayer) {
       return;
     }
     if (this.dragging) {
@@ -361,7 +393,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         moves.forEach((move) => {
           const toIdx = isWhite ? 25 - move.to : move.to;
           const point = this.rectangles.find((r) => r.pointIdx === toIdx);
-          if (point) {
+          // not marking bar when checker is going home
+          if (point && move.to < 25) {
             point.canBeMovedTo = true;
           }
         });
@@ -376,7 +409,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
-    if (this.game.myColor != this.game.currentPlayer) {
+    if (this.myColor != this.game.currentPlayer) {
       return;
     }
     if (!this.dragging) {

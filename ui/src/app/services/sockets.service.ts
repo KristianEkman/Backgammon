@@ -1,11 +1,21 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { CheckerDto, DiceDto, GameDto, MoveDto, PlayerColor } from '../dto';
-import { ActionDto } from '../dto/Actions/actionDto';
-import { ActionNames } from '../dto/Actions/actionNames';
-import { DicesRolledActionDto } from '../dto/Actions/dicesRolledActionDto';
-import { GameCreatedActionDto } from '../dto/Actions/gameCreatedActionDto';
-import { MovesMadeActionDto } from '../dto/Actions/movesMadeActionDto';
+import {
+  CheckerDto,
+  DiceDto,
+  GameDto,
+  GameState,
+  MoveDto,
+  PlayerColor
+} from '../dto';
+import {
+  ActionDto,
+  ActionNames,
+  DicesRolledActionDto,
+  GameCreatedActionDto,
+  GameEndedActionDto,
+  MovesMadeActionDto
+} from '../dto/Actions';
 import { AppState } from '../state/app-state';
 
 @Injectable({
@@ -53,7 +63,9 @@ export class SocketsService {
       gameClone.points[barIdx].checkers.push(hit);
     }
 
-    gameClone.points[to].checkers.push(checker);
+    if (move.to < 25) {
+      gameClone.points[to].checkers.push(checker);
+    }
     AppState.Singleton.game.setValue(gameClone);
   }
 
@@ -80,16 +92,24 @@ export class SocketsService {
       gameClone.points[barIdx].checkers.push(hit);
     }
 
-    //push checker to new point
-    gameClone.points[to].checkers.push(checker);
+    //push checker to new point, un less its off board
+    if (move.to < 25) {
+      gameClone.points[to].checkers.push(checker);
+    }
     AppState.Singleton.game.setValue(gameClone);
 
     const dices = AppState.Singleton.dices.getValue();
     this.dicesHistory.push(dices);
 
     const diceClone = JSON.parse(JSON.stringify(dices)) as DiceDto[];
+
+    // Find a dice with equal value as the move length
+    // or if bearing off equal or larger
     const diceIdx = diceClone.findIndex(
-      (d) => !d.used && d.value === move.to - move.from
+      (d) =>
+        !d.used &&
+        (d.value === move.to - move.from ||
+          (move.to === 25 && move.to - move.from <= d.value))
     );
     const dice = diceClone[diceIdx];
     dice.used = true;
@@ -110,15 +130,17 @@ export class SocketsService {
 
   onMessage(message: MessageEvent<string>): void {
     const action = JSON.parse(message.data) as ActionDto;
+    // console.log(message.data);
+    const game = AppState.Singleton.game.getValue();
     switch (action.actionName) {
       case ActionNames.gameCreated:
         const dto = JSON.parse(message.data) as GameCreatedActionDto;
+        AppState.Singleton.myColor.setValue(dto.myColor);
         AppState.Singleton.game.setValue(dto.game);
         break;
       case ActionNames.dicesRolled:
         const dicesAction = JSON.parse(message.data) as DicesRolledActionDto;
         AppState.Singleton.dices.setValue(dicesAction.dices);
-        const game = AppState.Singleton.game.getValue();
         const cGame = {
           ...game,
           validMoves: dicesAction.validMoves,
@@ -132,6 +154,10 @@ export class SocketsService {
           const move = movesAction.moves[i];
           this.doOpponentMove(move);
         }
+        break;
+      case ActionNames.gameEnded:
+        const endedAction = JSON.parse(message.data) as GameEndedActionDto;
+        AppState.Singleton.game.setValue(endedAction.game);
         break;
       default:
         throw new Error(`Action not implemented ${action.actionName}`);

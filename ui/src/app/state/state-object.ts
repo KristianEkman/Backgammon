@@ -22,7 +22,9 @@ export class StateObject<T> {
 
   public setValue(v: T): void {
     this._value = v;
-    StateObject.deepFreeze(this._value);
+    if (v) {
+      StateObject.deepFreeze(this._value);
+    }
     this._changed.next(v);
   }
 

@@ -16,5 +16,7 @@ namespace Backend.Dto
         public DiceDto[] dices { get; set; }
         public PlayerColor playerToMove { get; set; }
         public MoveDto[] validMoves { get; set; }
+
+        // todo: maybe rewrite to have a relation between dice and move
     }
 }

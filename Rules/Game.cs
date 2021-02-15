@@ -64,17 +64,17 @@ namespace Backend.Rules
             foreach (var point in Points)
                 point.Checkers.Clear();
 
-            AddCheckers(2, Player.Color.Black, 1);
-            AddCheckers(2, Player.Color.White, 1);
+            //AddCheckers(2, Player.Color.Black,20);
+            //AddCheckers(2, Player.Color.White, 20);
+            
+            //AddCheckers(5, Player.Color.Black, 21);
+            //AddCheckers(5, Player.Color.White, 21);
 
-            AddCheckers(5, Player.Color.Black, 12);
-            AddCheckers(5, Player.Color.White, 12);
+            AddCheckers(2, Player.Color.Black, 24);
+            AddCheckers(2, Player.Color.White, 24);
 
-            AddCheckers(3, Player.Color.Black, 17);
-            AddCheckers(3, Player.Color.White, 17);
-
-            AddCheckers(5, Player.Color.Black, 19);
-            AddCheckers(5, Player.Color.White, 19);
+            AddCheckers(13, Player.Color.Black, 25);
+            AddCheckers(13, Player.Color.White, 25);
         }
 
         public void ClearCheckers()
@@ -159,6 +159,11 @@ namespace Backend.Rules
             return moves;
         }
 
+        public Point GetHome(Player.Color color)
+        {
+            return Points.Single(p => p.GetNumber(color) == 25);
+        }
+
         private void GenerateMoves(List<Move> moves)
         {
             var bar = Points.Where(p => p.GetNumber(CurrentPlayer) == 0);
@@ -239,8 +244,6 @@ namespace Backend.Rules
                 bar.Checkers.Remove(hitChecker);
             }
         }
-
-
 
     }
 }

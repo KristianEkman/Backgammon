@@ -1,3 +1,4 @@
+import { PlayerColor } from '../dto';
 import { DiceDto } from '../dto/diceDto';
 import { GameDto } from '../dto/gameDto';
 import { StateObject } from './state-object';
@@ -6,6 +7,8 @@ export class AppState {
   constructor() {
     this.busy = new StateObject<boolean>();
     this.game = new StateObject<GameDto>();
+    this.myColor = new StateObject<PlayerColor>();
+    this.myColor.setValue(PlayerColor.neither);
     this.dices = new StateObject<DiceDto[]>();
     this.dices.setValue([]);
   }
@@ -19,5 +22,6 @@ export class AppState {
 
   busy: StateObject<boolean>;
   game: StateObject<GameDto>;
+  myColor: StateObject<PlayerColor>;
   dices: StateObject<DiceDto[]>;
 }

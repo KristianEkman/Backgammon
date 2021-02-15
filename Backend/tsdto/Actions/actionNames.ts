@@ -4,4 +4,5 @@ export enum ActionNames {
     gameCreated,
     dicesRolled,
     movesMade,
+    gameEnded,
 }

@@ -1,15 +1,19 @@
 Nästa mål: Spela en match mot Linn
 ==================================
 Spela till det tar slut, bearing off
-Display home checkers
+Winner
+Drog drop on home.
+Hitta dropp bug
+
+Klicka på Roll button
 
 Animate
-Snällare färger för ögonen
 View opponents actions
 
-Drag and drop.
 Dices color
 Deploy, client + api
+
+notifiera motståndare om connection gått ner
 
 Backend
     Game ended.
@@ -38,7 +42,7 @@ Database
     Games
         Score
 Ui
-  
+  Tidskontroll
   Resize
   Auto send when no options
   Auto move, when only one move.

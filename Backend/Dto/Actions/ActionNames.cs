@@ -9,6 +9,7 @@ namespace Backend.Dto
     {
         gameCreated,
         dicesRolled,
-        movesMade
+        movesMade,
+        gameEnded
     }
 }

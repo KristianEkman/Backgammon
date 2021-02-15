@@ -30,9 +30,9 @@ namespace Backend
             {
                 game = gameDto
             };
-            action.game.myColor = PlayerColor.black;
+            action.myColor = PlayerColor.black;
             Client1.Send(action);
-            action.game.myColor = PlayerColor.white;
+            action.myColor = PlayerColor.white;
             Client2.Send(action);
 
             // todo: visa på clienten även när det blir samma 
@@ -100,7 +100,31 @@ namespace Backend
                 var action = (MovesMadeActionDto)JsonSerializer.Deserialize(text, typeof(MovesMadeActionDto));
                 DoMoves(action);
                 otherClient.Send(action);
-                SendNewRoll();
+                PlayerColor? winner = null;
+
+                if (this.Game.CurrentPlayer == Player.Color.Black)
+                {
+                    this.Game.CurrentPlayer = Player.Color.White;
+                    if (this.Game.GetHome(Player.Color.Black).Checkers.Count == 15)
+                    {
+                        this.Game.PlayState = Game.State.Ended;
+                        winner = PlayerColor.black;
+                    }
+                }
+                else
+                {
+                    this.Game.CurrentPlayer = Player.Color.Black;
+                    if (this.Game.GetHome(Player.Color.White).Checkers.Count == 15)
+                    {
+                        this.Game.PlayState = Game.State.Ended;
+                        winner = PlayerColor.white;
+                        SendWinner(PlayerColor.white);
+                    }
+                }
+                if (winner.HasValue)
+                    SendWinner(winner.Value);
+                else
+                    SendNewRoll();
             }
         }
 
@@ -117,11 +141,19 @@ namespace Backend
                 };
                 // TODO: Check these moves are valid for safety.
                 this.Game.MakeMove(move);
-            }
-            if (this.Game.CurrentPlayer == Player.Color.Black)
-                this.Game.CurrentPlayer = Player.Color.White;
-            else
-                this.Game.CurrentPlayer = Player.Color.Black;
+            }            
+        }
+
+        private void SendWinner(PlayerColor color)
+        {
+            var game = this.Game.ToDto();
+            game.winner = color;
+            var gameEndedAction = new GameEndedActionDto
+            {
+                game = game
+            };
+            Client1.Send(gameEndedAction);
+            Client2.Send(gameEndedAction);
         }
     }
 

@@ -13,5 +13,7 @@ namespace Backend.Dto
         }
         
         public GameDto game { get; set; }
+
+        public PlayerColor myColor { get; set; }
     }
 }

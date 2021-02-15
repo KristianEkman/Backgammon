@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DiceDto, GameDto, MoveDto } from 'src/app/dto';
+import { DiceDto, GameDto, MoveDto, PlayerColor } from 'src/app/dto';
 import { SocketsService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 
@@ -13,11 +13,13 @@ export class GameContainerComponent {
   constructor(private service: SocketsService) {
     this.gameDto$ = AppState.Singleton.game.changed;
     this.dices$ = AppState.Singleton.dices.changed;
+    this.playerColor$ = AppState.Singleton.myColor.changed;
     service.connect();
   }
 
   gameDto$: Observable<GameDto>;
   dices$: Observable<DiceDto[]>;
+  playerColor$: Observable<PlayerColor>;
 
   sendDisabled = true;
 

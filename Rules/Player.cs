@@ -12,7 +12,8 @@ namespace Backend.Rules
         public enum Color
         {
             Black,
-            White
+            White,
+            Neither
         }
 
         public override string ToString()

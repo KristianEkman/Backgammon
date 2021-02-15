@@ -2,5 +2,6 @@
 
 export enum PlayerColor {
   black,
-  white
+  white,
+  neither
 }

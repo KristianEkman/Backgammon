@@ -6,5 +6,5 @@ import { PlayerColor } from './../playerColor';
 
 export interface GameCreatedActionDto extends ActionDto {
   game: GameDto;
-  clientColor: PlayerColor;
+  myColor: PlayerColor;
 }
