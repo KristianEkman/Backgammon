@@ -157,6 +157,8 @@ export class SocketsService {
         break;
       case ActionNames.gameEnded:
         const endedAction = JSON.parse(message.data) as GameEndedActionDto;
+        console.log('game ended', endedAction.game.winner);
+
         AppState.Singleton.game.setValue(endedAction.game);
         break;
       default:

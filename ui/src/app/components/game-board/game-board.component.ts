@@ -131,8 +131,17 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       const dist = Math.min(2 * chWidth, rect.height / checkerCount);
 
       cx.lineWidth = 2;
+
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
+        // skipping checkers att home.
+        if (
+          (p === 0 && checker.color === PlayerColor.white) ||
+          (p === 25 && checker.color === PlayerColor.black)
+        ) {
+          continue;
+        }
+
         let x = rect.x + r;
         if (p === 0 || p === 25) {
           x = rect.x + chWidth / 2;
@@ -164,27 +173,20 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     // draw checkers reached home.
-    let blackCount = 0;
-    let whiteCount = 0;
-    this.game.points.forEach((point) => {
-      blackCount += point.checkers.filter((c) => c.color === PlayerColor.black)
-        .length;
-      whiteCount += point.checkers.filter((c) => c.color === PlayerColor.white)
-        .length;
-    });
-    const blackAtHome = 15 - blackCount;
-    const whiteAtHome = 15 - whiteCount;
+    const blackCount = this.game.points[25].checkers.length;
+    const whiteCount = this.game.points[0].checkers.length;
+
     let x = this.width - this.sideBoardWidth + 4;
     let y = this.height - this.borderWidth - 4;
     cx.fillStyle = '#000';
-    for (let i = 0; i < blackAtHome; i++) {
+    for (let i = 0; i < blackCount; i++) {
       cx.fillRect(x, y - i * 6, this.sideBoardWidth / 2, 5);
     }
 
     x = this.width - this.sideBoardWidth + 4;
     y = this.borderWidth + 4;
     cx.fillStyle = '#fff';
-    for (let i = 0; i < whiteAtHome; i++) {
+    for (let i = 0; i < whiteCount; i++) {
       cx.fillRect(x, y + i * 6, this.sideBoardWidth / 2, 5);
     }
   }
@@ -329,6 +331,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
+    if (this.game.playState === GameState.ended) {
+      return;
+    }
     if (this.myColor != this.game.currentPlayer) {
       return;
     }
@@ -407,6 +412,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     // console.log('up', event);
 
     if (!this.game) {
+      return;
+    }
+    if (this.game.playState === GameState.ended) {
       return;
     }
     if (this.myColor != this.game.currentPlayer) {

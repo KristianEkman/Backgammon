@@ -1,9 +1,8 @@
 Nästa mål: Spela en match mot Linn
 ==================================
-Spela till det tar slut, bearing off
-Winner
+Inga giltiga drag
 Drog drop on home.
-Hitta dropp bug
+Inte kunna flytta from osynligt home.
 
 Klicka på Roll button
 
