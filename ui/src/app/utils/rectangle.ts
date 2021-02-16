@@ -35,6 +35,26 @@ export class Rectangle {
     cx.fillText(this.pointIdx.toString(), this.x, this.y);
   }
 
+  drawTop(cx: CanvasRenderingContext2D): void {
+    cx.beginPath();
+    const y = this.y;
+    cx.moveTo(this.x, y);
+    cx.lineTo(this.x + this.width, y);
+    cx.closePath();
+    cx.strokeStyle = '#28DD2E';
+    cx.lineWidth = 2;
+    cx.stroke();
+  }
+
+  drawBottom(cx: CanvasRenderingContext2D): void {
+    const y = this.y + this.height;
+    cx.moveTo(this.x, y);
+    cx.lineTo(this.x + this.width, y);
+    cx.closePath();
+    cx.strokeStyle = '#28DD2E';
+    cx.lineWidth = 2;
+    cx.stroke();
+  }
   hasValidMove = false;
   canBeMovedTo = false;
 }

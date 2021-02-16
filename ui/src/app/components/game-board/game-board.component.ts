@@ -200,33 +200,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     //draw homes if can be moved to
     if (this.blackHome.canBeMovedTo) {
-      console.log('black home', this.blackHome);
-      this.blackHome.draw(cx);
-      // const rectB = this.blackHome;
-      // console.log(rectB);
-      // cx.beginPath();
-      // const y = rectB.y;
-      // cx.moveTo(rectB.x, y);
-      // cx.lineTo(rectB.x + rectB.width, y);
-      // cx.closePath();
-      // cx.strokeStyle = '#28DD2E';
-      // cx.lineWidth = 2;
-      // cx.stroke();
+      this.blackHome.drawBottom(cx);
     }
 
     if (this.whiteHome.canBeMovedTo) {
-      console.log('white home', this.whiteHome);
-      this.whiteHome.draw(cx);
-      // const rectW = this.whiteHome;
-      // console.log(rectW);
-      // cx.beginPath();
-      // const y = rectW.y;
-      // cx.moveTo(rectW.x, y);
-      // cx.lineTo(rectW.x + rectW.width, y);
-      // cx.closePath();
-      // cx.strokeStyle = '#28DD2E';
-      // cx.lineWidth = 2;
-      // cx.stroke();
+      this.whiteHome.drawTop(cx);
     }
   }
 
@@ -466,11 +444,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           if (pointRect && move.to < 25) {
             pointRect.canBeMovedTo = true;
           }
-          if (move.to === 0) {
-            this.whiteHome.canBeMovedTo = true;
-          }
+
           if (move.to === 25) {
-            this.blackHome.canBeMovedTo = true;
+            if (move.color === PlayerColor.white) {
+              this.whiteHome.canBeMovedTo = true;
+            } else {
+              this.blackHome.canBeMovedTo = true;
+            }
           }
         });
       }
@@ -501,8 +481,15 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const isClick =
       Math.abs(clientX - xDown) < 3 && Math.abs(clientY - yDown) < 3;
 
-    for (let i = 0; i < this.rectangles.length; i++) {
-      const rect = this.rectangles[i];
+    const allRects: Rectangle[] = [...this.rectangles];
+    if (this.game.currentPlayer === PlayerColor.black) {
+      allRects.push(this.blackHome);
+    } else {
+      allRects.push(this.whiteHome);
+    }
+
+    for (let i = 0; i < allRects.length; i++) {
+      const rect = allRects[i];
       const x = clientX - this.borderWidth;
       const y = clientY - this.borderWidth;
       if (!rect.contains(x, y)) {
