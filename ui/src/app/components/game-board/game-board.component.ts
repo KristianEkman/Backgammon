@@ -24,6 +24,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   rectBase = 0;
   rectHeight = 0;
   rectangles: Rectangle[] = [];
+  blackHome: Rectangle = new Rectangle(0, 0, 0, 0, 25);
+  whiteHome: Rectangle = new Rectangle(0, 0, 0, 0, 0);
+
   cx: CanvasRenderingContext2D | null = null;
   drawDirty = false;
   dragging: CheckerDrag | null = null;
@@ -76,10 +79,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.strokeStyle = '#F00';
 
     for (let r = 0; r < this.rectangles.length; r++) {
-      const rect = this.rectangles[r];
-      cx?.strokeRect(rect.x, rect.y, rect.width, rect.height);
-      cx.fillText(rect.pointIdx.toString(), rect.x, rect.y);
+      this.rectangles[r].draw(cx);
     }
+
+    this.blackHome.draw(cx);
+    this.whiteHome.draw(cx);
   }
 
   drawCheckers(cx: CanvasRenderingContext2D | null): void {
@@ -166,15 +170,19 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         cx.stroke();
         if (rect.hasValidMove && i == checkerCount - 1 && !drawDrag) {
           cx.strokeStyle = '#28DD2E';
-          cx.lineWidth = 2;
+          cx.lineWidth = 1.5;
           cx.stroke();
         }
       }
     }
 
     // draw checkers reached home.
-    const blackCount = this.game.points[25].checkers.length;
-    const whiteCount = this.game.points[0].checkers.length;
+    const blackCount = this.game.points[25].checkers.filter(
+      (c) => c.color === PlayerColor.black
+    ).length;
+    const whiteCount = this.game.points[0].checkers.filter(
+      (c) => c.color === PlayerColor.white
+    ).length;
 
     let x = this.width - this.sideBoardWidth + 4;
     let y = this.height - this.borderWidth - 4;
@@ -189,8 +197,40 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     for (let i = 0; i < whiteCount; i++) {
       cx.fillRect(x, y + i * 6, this.sideBoardWidth / 2, 5);
     }
+
+    //draw homes if can be moved to
+    if (this.blackHome.canBeMovedTo) {
+      console.log('black home', this.blackHome);
+      this.blackHome.draw(cx);
+      // const rectB = this.blackHome;
+      // console.log(rectB);
+      // cx.beginPath();
+      // const y = rectB.y;
+      // cx.moveTo(rectB.x, y);
+      // cx.lineTo(rectB.x + rectB.width, y);
+      // cx.closePath();
+      // cx.strokeStyle = '#28DD2E';
+      // cx.lineWidth = 2;
+      // cx.stroke();
+    }
+
+    if (this.whiteHome.canBeMovedTo) {
+      console.log('white home', this.whiteHome);
+      this.whiteHome.draw(cx);
+      // const rectW = this.whiteHome;
+      // console.log(rectW);
+      // cx.beginPath();
+      // const y = rectW.y;
+      // cx.moveTo(rectW.x, y);
+      // cx.lineTo(rectW.x + rectW.width, y);
+      // cx.closePath();
+      // cx.strokeStyle = '#28DD2E';
+      // cx.lineWidth = 2;
+      // cx.stroke();
+    }
   }
 
+  //Draws the background and also set shape of all rectangles used for interaction.
   drawBoard(cx: CanvasRenderingContext2D | null): void {
     if (!cx) {
       return;
@@ -233,8 +273,27 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       25
     );
 
+    //blacks home
+    this.blackHome.set(
+      this.width - this.sideBoardWidth + 4,
+      this.height - this.height * 0.44 - this.borderWidth - 4,
+      this.sideBoardWidth / 2,
+      this.height * 0.44,
+      25
+    );
+
+    //white home
+    this.whiteHome.set(
+      this.width - this.sideBoardWidth + 4,
+      this.borderWidth + 4,
+      this.sideBoardWidth / 2,
+      this.height * 0.44,
+      0
+    );
+
+    //Top triangles
     for (let i = 0; i < 12; i++) {
-      if (i == 6) {
+      if (i === 6) {
         x += this.barWidth;
       }
       this.rectangles[i].set(x, y, this.rectBase, this.rectHeight, 12 - i);
@@ -280,6 +339,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       colorIdx = colorIdx === 0 ? 1 : 0;
     }
 
+    // the border
     cx.lineWidth = this.borderWidth;
     cx.strokeStyle = '#888';
     cx.strokeRect(
@@ -288,6 +348,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.width - 2 * this.sideBoardWidth - this.borderWidth,
       this.height - this.borderWidth
     );
+
+    //the bar
     cx.fillStyle = '#888';
     cx.fillRect(
       this.width / 2 - this.barWidth / 2,
@@ -312,7 +374,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         this.myColor === this.game.winner
           ? 'Congrats! You won.'
           : 'Sorry. You lost the game.';
-    } else if (this.myColor == this.game.currentPlayer) {
+    } else if (this.myColor === this.game.currentPlayer) {
       text = `Your turn to move.  (${PlayerColor[this.game.currentPlayer]})`;
     } else {
       text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
@@ -382,6 +444,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.rectangles.forEach((rect) => {
       rect.canBeMovedTo = false;
       rect.hasValidMove = false;
+      this.whiteHome.canBeMovedTo = false;
+      this.blackHome.canBeMovedTo = false;
     });
 
     for (let i = 0; i < this.rectangles.length; i++) {
@@ -397,10 +461,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         rect.hasValidMove = true;
         moves.forEach((move) => {
           const toIdx = isWhite ? 25 - move.to : move.to;
-          const point = this.rectangles.find((r) => r.pointIdx === toIdx);
+          const pointRect = this.rectangles.find((r) => r.pointIdx === toIdx);
           // not marking bar when checker is going home
-          if (point && move.to < 25) {
-            point.canBeMovedTo = true;
+          if (pointRect && move.to < 25) {
+            pointRect.canBeMovedTo = true;
+          }
+          if (move.to === 0) {
+            this.whiteHome.canBeMovedTo = true;
+          }
+          if (move.to === 25) {
+            this.blackHome.canBeMovedTo = true;
           }
         });
       }

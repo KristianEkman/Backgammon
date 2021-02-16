@@ -64,24 +64,77 @@ namespace Backend.Rules
             foreach (var point in Points)
                 point.Checkers.Clear();
 
-            AddCheckers(2, Player.Color.Black, 1);
-            AddCheckers(2, Player.Color.White, 1);
+            //AddCheckers(2, Player.Color.Black, 1);
+            //AddCheckers(2, Player.Color.White, 1);
 
-            AddCheckers(5, Player.Color.Black, 12);
-            AddCheckers(5, Player.Color.White, 12);
+            //AddCheckers(5, Player.Color.Black, 12);
+            //AddCheckers(5, Player.Color.White, 12);
 
-            AddCheckers(3, Player.Color.Black, 17);
-            AddCheckers(3, Player.Color.White, 17);
+            //AddCheckers(3, Player.Color.Black, 17);
+            //AddCheckers(3, Player.Color.White, 17);
 
-            AddCheckers(5, Player.Color.Black, 19);
-            AddCheckers(5, Player.Color.White, 19);
+            //AddCheckers(5, Player.Color.Black, 19);
+            //AddCheckers(5, Player.Color.White, 19);
 
+            //OneMoveToVictory();
 
-            //AddCheckers(13, Player.Color.Black, 25);
-            //AddCheckers(13, Player.Color.White, 25);
+            //DebugBlocked();
 
-            //AddCheckers(2, Player.Color.Black, 24);
-            //AddCheckers(2, Player.Color.White, 24);
+            DebugBearingOff();
+        }
+
+        private void OneMoveToVictory()
+        {
+            //Only one move to victory
+            AddCheckers(13, Player.Color.Black, 25);
+            AddCheckers(13, Player.Color.White, 25);
+
+            AddCheckers(2, Player.Color.Black, 24);
+            AddCheckers(2, Player.Color.White, 24);
+        }
+
+        private void DebugBlocked()
+        {
+            //Both players blocket, can not happen in a real game
+            AddCheckers(3, Player.Color.Black, 20);
+            AddCheckers(3, Player.Color.White, 20);
+
+            AddCheckers(3, Player.Color.Black, 21);
+            AddCheckers(3, Player.Color.White, 21);
+
+            AddCheckers(3, Player.Color.Black, 22);
+            AddCheckers(3, Player.Color.White, 22);
+
+            AddCheckers(3, Player.Color.Black, 23);
+            AddCheckers(3, Player.Color.White, 23);
+
+            AddCheckers(2, Player.Color.Black, 24);
+            AddCheckers(2, Player.Color.White, 24);
+
+            AddCheckers(1, Player.Color.Black, 0);
+            AddCheckers(1, Player.Color.White, 0);
+        }
+
+        private void DebugBearingOff()
+        {
+            //Both players blocket, can not happen in a real game
+            AddCheckers(3, Player.Color.Black, 20);
+            AddCheckers(3, Player.Color.White, 20);
+
+            AddCheckers(3, Player.Color.Black, 21);
+            AddCheckers(3, Player.Color.White, 21);
+
+            AddCheckers(3, Player.Color.Black, 22);
+            AddCheckers(3, Player.Color.White, 22);
+
+            AddCheckers(3, Player.Color.Black, 23);
+            AddCheckers(3, Player.Color.White, 23);
+
+            AddCheckers(2, Player.Color.Black, 24);
+            AddCheckers(2, Player.Color.White, 24);
+
+            AddCheckers(1, Player.Color.Black, 19);
+            AddCheckers(1, Player.Color.White, 19);
         }
 
         public void ClearCheckers()

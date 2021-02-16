@@ -4,8 +4,8 @@ Drog drop on home.
 
 När man inte kan göra drag tänd sänd.
 
-hit checker visas som hemma.
-
+Kolla på server att rätt spelare skickar
+och att draget är giltigt.
 
 Deploy, client + api
 

@@ -30,6 +30,11 @@ export class Rectangle {
     );
   }
 
+  draw(cx: CanvasRenderingContext2D): void {
+    cx.strokeRect(this.x, this.y, this.width, this.height);
+    cx.fillText(this.pointIdx.toString(), this.x, this.y);
+  }
+
   hasValidMove = false;
   canBeMovedTo = false;
 }

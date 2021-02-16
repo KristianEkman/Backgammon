@@ -14,7 +14,9 @@ export class GameContainerComponent implements OnDestroy {
     this.gameDto$ = AppState.Singleton.game.changed;
     this.dices$ = AppState.Singleton.dices.changed;
     this.playerColor$ = AppState.Singleton.myColor.changed;
-    this.gameSubs = AppState.Singleton.game.changed.subscribe(this.gameChanged);
+    this.gameSubs = AppState.Singleton.game.changed.subscribe(
+      this.gameChanged.bind(this)
+    );
     service.connect();
   }
   gameDto$: Observable<GameDto>;
@@ -22,26 +24,28 @@ export class GameContainerComponent implements OnDestroy {
   playerColor$: Observable<PlayerColor>;
   gameSubs: Subscription;
 
-  sendDisabled = true;
+  sendHidden = true;
 
   sendMoves(): void {
-    this.sendDisabled = true;
+    this.sendHidden = true;
     this.service.sendMoves();
   }
 
   doMove(move: MoveDto): void {
     this.service.doMove(move);
-    this.sendDisabled = move.nextMoves && move.nextMoves.length > 0;
+    this.sendHidden = move.nextMoves && move.nextMoves.length > 0;
   }
 
   undoMove(): void {
     this.service.undoMove();
-    this.sendDisabled = true;
+    this.sendHidden = true;
   }
 
   gameChanged(dto: GameDto): void {
     // todo: auto send here.
-    this.sendDisabled = dto.validMoves && dto.validMoves.length > 0;
+    this.sendHidden =
+      (dto.validMoves && dto.validMoves.length > 0) ||
+      AppState.Singleton.myColor.getValue() !== dto.currentPlayer;
   }
 
   ngOnDestroy(): void {

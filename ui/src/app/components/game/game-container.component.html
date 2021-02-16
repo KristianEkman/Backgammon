@@ -6,6 +6,6 @@
   ></app-game-board>
   <br />
   <app-dices [dices]="dices$ | async"></app-dices>
-  <button (click)="sendMoves()" [disabled]="sendDisabled">Send</button>
+  <button (click)="sendMoves()" *ngIf="!sendHidden">Send</button>
   <button (click)="undoMove()">Undo</button>
 </div>

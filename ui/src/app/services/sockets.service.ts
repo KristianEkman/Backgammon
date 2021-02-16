@@ -63,9 +63,8 @@ export class SocketsService {
       gameClone.points[barIdx].checkers.push(hit);
     }
 
-    if (move.to < 25) {
-      gameClone.points[to].checkers.push(checker);
-    }
+    gameClone.points[to].checkers.push(checker);
+
     AppState.Singleton.game.setValue(gameClone);
   }
 
@@ -92,10 +91,8 @@ export class SocketsService {
       gameClone.points[barIdx].checkers.push(hit);
     }
 
-    //push checker to new point, un less its off board
-    if (move.to < 25) {
-      gameClone.points[to].checkers.push(checker);
-    }
+    //push checker to new point
+    gameClone.points[to].checkers.push(checker);
     AppState.Singleton.game.setValue(gameClone);
 
     const dices = AppState.Singleton.dices.getValue();
