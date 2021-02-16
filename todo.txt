@@ -1,18 +1,26 @@
 Nästa mål: Spela en match mot Linn
 ==================================
-Inga giltiga drag
 Drog drop on home.
-Inte kunna flytta from osynligt home.
+
+När man inte kan göra drag tänd sänd.
+
+hit checker visas som hemma.
+
+
+Deploy, client + api
 
 Klicka på Roll button
 
 Animate
+
 View opponents actions
 
 Dices color
-Deploy, client + api
 
-notifiera motståndare om connection gått ner
+Notifiera motståndare om connection gått ner
+
+Återansluta
+
 
 Backend
     Game ended.
@@ -20,7 +28,6 @@ Backend
     points left
     resign
     chat
-
     
 Api
     NewOponent

@@ -15,7 +15,11 @@
     <ProjectReference Include="..\Rules\Rules.csproj" />
   </ItemGroup>
 
-  <Target Name="Convert" BeforeTargets="PrepareForBuild"  >
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <Target Name="Convert" BeforeTargets="PrepareForBuild">
     <ConvertMain WorkingDirectory="Dto/" ConvertDirectory="tsdto/" />
   </Target>
 

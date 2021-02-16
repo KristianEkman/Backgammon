@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.WebSockets;
 using System.Threading;
@@ -62,6 +63,8 @@ namespace Backend
             });
 
             app.UseWebSockets();
+
+            app.UseDefaultFiles();
             
 
             app.Use(async (context, next) =>
@@ -98,8 +101,35 @@ namespace Backend
                 else
                 {
                     await next();
+
+                    //if (context.Request.Path.ToString().Contains("index.html") || SinglePageAppRequestCheck(context))
+                    //{
+                        // add config cookie
+                        //var webConfig = new WebConfigModel();
+                        //Configuration.Bind(webConfig);
+                        //var jsonSettings = new JsonSerializerSettings()
+                        //{
+                        //    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                        //};
+                        //context.Response.Cookies.Append("ldmeConfig", JsonConvert.SerializeObject(webConfig, Formatting.None, jsonSettings));
+                    //}
+
+                    // If there's no available file and the request doesn't contain an extension, we're probably trying to access a page.
+                    // Rewrite request to use app root
+                    if (SinglePageAppRequestCheck(context))
+                    {
+                        context.Request.Path = "/index.html";
+                        await next();
+                    }
                 }
             });
+
+            app.UseStaticFiles();
+        }
+
+        private static bool SinglePageAppRequestCheck(HttpContext context)
+        {
+            return context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value);
         }
 
 

@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  socketServiceUrl: '',
-  apiServiceUrl: ''
+  socketServiceUrl: 'wss://localhost:44394/ws',
+  apiServiceUrl: 'https://localhost:44394'
 };

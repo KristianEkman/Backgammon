@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace Backend.Controllers
 {
     [ApiController]
-    [Route("game")]
+    //[Route("game")]
     public class GameController : ControllerBase
     {
         private readonly ILogger<GameController> _logger;
