@@ -115,7 +115,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         }
         cx.strokeStyle = '#28DD2E';
         cx.beginPath();
-        cx.ellipse(this.cursor.x, this.cursor.y, chWidth, chWidth, 0, 0, 360);
+        cx.ellipse(this.cursor.x - chWidth / 2, this.cursor.y - chWidth / 2, chWidth, chWidth, 0, 0, 360);
         cx.closePath();
         cx.fill();
         cx.stroke();

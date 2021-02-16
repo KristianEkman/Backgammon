@@ -13,6 +13,9 @@ export class GameContainerComponent implements OnDestroy {
   constructor(private service: SocketsService) {
     this.gameDto$ = AppState.Singleton.game.changed;
     this.dices$ = AppState.Singleton.dices.changed;
+    this.diceSubs = AppState.Singleton.dices.changed.subscribe(
+      this.diceChanged.bind(this)
+    );
     this.playerColor$ = AppState.Singleton.myColor.changed;
     this.gameSubs = AppState.Singleton.game.changed.subscribe(
       this.gameChanged.bind(this)
@@ -23,8 +26,10 @@ export class GameContainerComponent implements OnDestroy {
   dices$: Observable<DiceDto[]>;
   playerColor$: Observable<PlayerColor>;
   gameSubs: Subscription;
+  diceSubs: Subscription;
 
   sendHidden = true;
+  undoVisible = false;
 
   sendMoves(): void {
     this.sendHidden = true;
@@ -48,7 +53,12 @@ export class GameContainerComponent implements OnDestroy {
       AppState.Singleton.myColor.getValue() !== dto.currentPlayer;
   }
 
+  diceChanged(dto: DiceDto[]): void {
+    this.undoVisible = dto.filter(d => d.used).length > 0;
+  }
+
   ngOnDestroy(): void {
     this.gameSubs.unsubscribe();
+    this.diceSubs.unsubscribe();
   }
 }

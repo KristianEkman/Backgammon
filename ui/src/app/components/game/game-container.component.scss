@@ -1,3 +1,15 @@
 button {
   margin: 8px;
+  height: 50px;
+  border: 1px solid black;
+  color: black;
+  font-size: large;
+}
+
+.sendButton {
+  background-color: #28DD2E;
+}
+
+.cancelButton {
+  background-color: #dd8928;
 }

@@ -4,7 +4,6 @@ import {
   CheckerDto,
   DiceDto,
   GameDto,
-  GameState,
   MoveDto,
   PlayerColor
 } from '../dto';
@@ -102,12 +101,15 @@ export class SocketsService {
 
     // Find a dice with equal value as the move length
     // or if bearing off equal or larger
-    const diceIdx = diceClone.findIndex(
-      (d) =>
-        !d.used &&
-        (d.value === move.to - move.from ||
-          (move.to === 25 && move.to - move.from <= d.value))
+    let diceIdx = diceClone.findIndex(
+      (d) => !d.used && d.value === move.to - move.from
     );
+
+    if (diceIdx < 0) {
+      diceIdx = diceClone.findIndex(
+        (d) => move.to === 25 && move.to - move.from <= d.value
+      );
+    }
     const dice = diceClone[diceIdx];
     dice.used = true;
     AppState.Singleton.dices.setValue(diceClone);
