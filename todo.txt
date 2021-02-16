@@ -1,13 +1,13 @@
 Nästa mål: Spela en match mot Linn
 ==================================
-Drog drop on home.
+Deploy, client + api
 
-När man inte kan göra drag tänd sänd.
+Bugg när svart har 1, 3 och kan flytta hem.
+
 
 Kolla på server att rätt spelare skickar
 och att draget är giltigt.
 
-Deploy, client + api
 
 Klicka på Roll button
 
