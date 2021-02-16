@@ -2,8 +2,6 @@ Nästa mål: Spela en match mot Linn
 ==================================
 Deploy, client + api
 
-Bugg när svart har 1, 3 och kan flytta hem.
-
 
 Kolla på server att rätt spelare skickar
 och att draget är giltigt.
