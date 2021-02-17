@@ -1,11 +1,10 @@
 Nästa mål: Spela en match mot Linn
 ==================================
-Deploy, client + api
 
+Rensa upp klienter, vi spel klart eller.
 
 Kolla på server att rätt spelare skickar
 och att draget är giltigt.
-
 
 Klicka på Roll button
 
@@ -56,11 +55,5 @@ Ui
   PlayAI-Button
   PlayRandom
   Play friend
-  TopList
+  TopList, ELO
 
-ELO
-Top list
-
-Plan
-====
-Kunna spela mot en motståndare lokalt.
