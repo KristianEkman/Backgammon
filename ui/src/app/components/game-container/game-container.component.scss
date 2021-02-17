@@ -13,3 +13,12 @@ button {
 .cancelButton {
   background-color: #dd8928;
 }
+
+app-game-board {
+  animation: fadein 2s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

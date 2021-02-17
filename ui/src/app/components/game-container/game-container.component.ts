@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { DiceDto, GameDto, MoveDto, PlayerColor } from 'src/app/dto';
 import { SocketsService } from 'src/app/services';
@@ -9,7 +9,7 @@ import { AppState } from 'src/app/state/app-state';
   templateUrl: './game-container.component.html',
   styleUrls: ['./game-container.component.scss']
 })
-export class GameContainerComponent implements OnDestroy {
+export class GameContainerComponent implements OnDestroy, AfterViewInit {
   constructor(private service: SocketsService) {
     this.gameDto$ = AppState.Singleton.game.changed;
     this.dices$ = AppState.Singleton.dices.changed;
@@ -22,6 +22,7 @@ export class GameContainerComponent implements OnDestroy {
     );
     service.connect();
   }
+
   gameDto$: Observable<GameDto>;
   dices$: Observable<DiceDto[]>;
   playerColor$: Observable<PlayerColor>;
@@ -30,6 +31,8 @@ export class GameContainerComponent implements OnDestroy {
 
   sendHidden = true;
   undoVisible = false;
+  width = 450;
+  height = 450;
 
   sendMoves(): void {
     this.sendHidden = true;
@@ -54,11 +57,21 @@ export class GameContainerComponent implements OnDestroy {
   }
 
   diceChanged(dto: DiceDto[]): void {
-    this.undoVisible = dto.filter(d => d.used).length > 0;
+    this.undoVisible = dto.filter((d) => d.used).length > 0;
   }
 
   ngOnDestroy(): void {
     this.gameSubs.unsubscribe();
     this.diceSubs.unsubscribe();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(): void {
+    this.width = Math.min(window.innerWidth, 800);
+    this.height = Math.min(window.innerHeight, this.width * 0.6);
+  }
+
+  ngAfterViewInit(): void {
+    this.onResize();
   }
 }

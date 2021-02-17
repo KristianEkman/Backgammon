@@ -53,19 +53,26 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }, 1000 / this.framerate);
 
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    canvasEl.width = this.width;
-    canvasEl.height = this.height;
-
     this.cx = canvasEl.getContext('2d');
-    this.drawBoard(this.cx);
+    this.drawDirty = true;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (!this.canvas) {
+      return;
+    }
+
     this.drawDirty = true;
-    console.log(changes);
   }
 
   draw(cx: CanvasRenderingContext2D | null): void {
+    if (!this.canvas) {
+      return;
+    }
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+    canvasEl.width = this.width;
+    canvasEl.height = this.height;
+
     this.drawBoard(cx);
     this.drawCheckers(cx);
     this.drawMessage(cx);

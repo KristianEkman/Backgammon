@@ -1,5 +1,7 @@
 <div>
   <app-game-board
+    [width]="width"
+    [height]="height"
     [game]="gameDto$ | async"
     [myColor]="playerColor$ | async"
     (addMove)="doMove($event)"
