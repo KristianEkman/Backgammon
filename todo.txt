@@ -9,6 +9,9 @@ och att draget är giltigt.
 Klicka på Roll button
 
 Animate
+    State moveAnimations array, shift.
+
+Visa dubblar vid första drag.
 
 View opponents actions
 
@@ -27,11 +30,6 @@ Backend
     chat
     
 Api
-    NewOponent
-        SkapaSocket
-        New game
-        FirstThrow
-
     Login
 
     Sockets:        

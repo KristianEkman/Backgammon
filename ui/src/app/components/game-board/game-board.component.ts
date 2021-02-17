@@ -1,3 +1,4 @@
+import { SimpleChanges } from '@angular/core';
 import { EventEmitter, OnChanges, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
@@ -59,8 +60,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawBoard(this.cx);
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.drawDirty = true;
+    console.log(changes);
   }
 
   draw(cx: CanvasRenderingContext2D | null): void {
