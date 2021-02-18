@@ -1,2 +1,3 @@
 export * from './point';
-export * from './rectangle';
+export * from './checker-area';
+export * from './checker';

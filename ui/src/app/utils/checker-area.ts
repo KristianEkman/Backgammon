@@ -1,4 +1,6 @@
-export class Rectangle {
+import { Checker } from '.';
+
+export class CheckerArea {
   constructor(
     public x: number,
     public y: number,
@@ -30,7 +32,12 @@ export class Rectangle {
     );
   }
 
-  draw(cx: CanvasRenderingContext2D): void {
+  // private _checkers: Checker[] = [];
+  // get checkers(): Checker[] {
+  //   return this._checkers;
+  // }
+
+  drawBorder(cx: CanvasRenderingContext2D): void {
     cx.strokeRect(this.x, this.y, this.width, this.height);
     cx.fillText(this.pointIdx.toString(), this.x, this.y);
   }

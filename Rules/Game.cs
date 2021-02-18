@@ -80,7 +80,7 @@ namespace Backend.Rules
 
             //DebugBlocked();
 
-            //DebugBearingOff();
+            // DebugBearingOff();
         }
 
         private void OneMoveToVictory()
