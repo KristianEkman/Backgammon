@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import {
-  CheckerDto,
-  DiceDto,
-  GameDto,
-  MoveDto,
-  PlayerColor
-} from '../dto';
+import { CheckerDto, DiceDto, GameDto, MoveDto, PlayerColor } from '../dto';
 import {
   ActionDto,
   ActionNames,
@@ -26,10 +20,6 @@ export class SocketsService {
   userMoves: MoveDto[] = [];
   gameHistory: GameDto[] = [];
   dicesHistory: DiceDto[][] = [];
-
-  constructor() {
-    // this.socket = new WebSocket('ws://localhost:60109/ws');
-  }
 
   connect(): void {
     this.url = environment.socketServiceUrl;
@@ -113,6 +103,12 @@ export class SocketsService {
     const dice = diceClone[diceIdx];
     dice.used = true;
     AppState.Singleton.dices.setValue(diceClone);
+    if (move.animate) {
+      const clone = [...AppState.Singleton.moveAnimations.getValue()];
+      console.log('pushing next animation');
+      clone.push(move);
+      AppState.Singleton.moveAnimations.setValue(clone);
+    }
   }
 
   undoMove(): void {
@@ -188,5 +184,12 @@ export class SocketsService {
     this.userMoves = [];
     this.dicesHistory = [];
     this.gameHistory = [];
+  }
+
+  shiftMoveAnimationsQueue(): void {
+    // console.log('shiftin animation queue');
+    const clone = [...AppState.Singleton.moveAnimations.getValue()];
+    clone.shift();
+    AppState.Singleton.moveAnimations.setValue(clone);
   }
 }

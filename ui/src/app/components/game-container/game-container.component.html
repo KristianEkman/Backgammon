@@ -5,6 +5,7 @@
     [game]="gameDto$ | async"
     [myColor]="playerColor$ | async"
     (addMove)="doMove($event)"
+    (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>
   <br />
   <app-dices [dices]="dices$ | async"></app-dices>

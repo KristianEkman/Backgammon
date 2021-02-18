@@ -1,7 +1,7 @@
 Nästa mål: Spela en match mot Linn
 ==================================
 
-Rensa upp klienter, vi spel klart eller.
+Rensa upp klienter, vid spel klart eller.
 
 Kolla på server att rätt spelare skickar
 och att draget är giltigt.

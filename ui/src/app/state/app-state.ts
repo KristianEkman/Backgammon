@@ -1,4 +1,4 @@
-import { PlayerColor } from '../dto';
+import { MoveDto, PlayerColor } from '../dto';
 import { DiceDto } from '../dto/diceDto';
 import { GameDto } from '../dto/gameDto';
 import { StateObject } from './state-object';
@@ -11,6 +11,8 @@ export class AppState {
     this.myColor.setValue(PlayerColor.neither);
     this.dices = new StateObject<DiceDto[]>();
     this.dices.setValue([]);
+    this.moveAnimations = new StateObject<MoveDto[]>();
+    this.moveAnimations.setValue([]);
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -24,4 +26,5 @@ export class AppState {
   game: StateObject<GameDto>;
   myColor: StateObject<PlayerColor>;
   dices: StateObject<DiceDto[]>;
+  moveAnimations: StateObject<MoveDto[]>;
 }

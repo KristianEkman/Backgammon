@@ -7,12 +7,12 @@ import { Observable, ReplaySubject } from 'rxjs';
 */
 export class StateObject<T> {
   constructor() {
-    this._changed = new ReplaySubject<T>();
+    this._replaySubject = new ReplaySubject<T>();
   }
 
-  private _changed: ReplaySubject<T>;
-  public get changed(): Observable<T> {
-    return this._changed.asObservable();
+  private _replaySubject: ReplaySubject<T>;
+  public observe(): Observable<T> {
+    return this._replaySubject.asObservable();
   }
 
   private _value: any;
@@ -25,7 +25,7 @@ export class StateObject<T> {
     if (v) {
       StateObject.deepFreeze(this._value);
     }
-    this._changed.next(v);
+    this._replaySubject.next(v);
   }
 
   private static deepFreeze(obj: any): any {

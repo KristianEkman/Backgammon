@@ -1,9 +1,11 @@
-import { SimpleChanges } from '@angular/core';
 import { EventEmitter, OnChanges, Output, ViewChild } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
+import { AppState } from 'src/app/state/app-state';
 import { Rectangle, Point } from 'src/app/utils';
 import { CheckerDrag } from './checker-drag';
+import { MoveAnimation } from './move-animation';
 
 @Component({
   selector: 'app-game-board',
@@ -18,6 +20,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() game: GameDto | null = null;
   @Input() myColor: PlayerColor | null = PlayerColor.black;
   @Output() addMove = new EventEmitter<MoveDto>();
+  @Output() moveAnimFinished = new EventEmitter<void>();
 
   borderWidth = 8;
   barWidth = this.borderWidth * 2;
@@ -33,11 +36,32 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   dragging: CheckerDrag | null = null;
   cursor: Point = new Point(0, 0);
   framerate = 25;
+  animatedMove: MoveAnimation | undefined = undefined;
+  animationSubscription: Subscription;
 
   constructor() {
     for (let r = 0; r < 26; r++) {
       this.rectangles.push(new Rectangle(0, 0, 0, 0, 0));
     }
+
+    this.animationSubscription = AppState.Singleton.moveAnimations
+      .observe()
+      .subscribe((moves: MoveDto[]) => {
+        if (moves.length > 0 && this.animatedMove === undefined) {
+          console.log('starting animation ');
+          this.animatedMove = new MoveAnimation(
+            moves[0],
+            this.getMoveStartPoint(moves[0]),
+            this.getMoveEndPoint(moves[0]),
+            () => {
+              this.animatedMove = undefined;
+              this.drawDirty = true;
+              console.log('finished moved animation');
+              this.moveAnimFinished.emit();
+            }
+          );
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -46,7 +70,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     setInterval(() => {
-      if (this.drawDirty) {
+      if ((this.drawDirty || this.animatedMove) && this.cx) {
+        // console.log('drawing');
         this.draw(this.cx);
         this.drawDirty = false;
       }
@@ -57,15 +82,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawDirty = true;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (!this.canvas) {
-      return;
-    }
-
+  ngOnChanges(): void {
     this.drawDirty = true;
   }
 
-  draw(cx: CanvasRenderingContext2D | null): void {
+  draw(cx: CanvasRenderingContext2D): void {
     if (!this.canvas) {
       return;
     }
@@ -76,6 +97,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawBoard(cx);
     this.drawCheckers(cx);
     this.drawMessage(cx);
+    if (this.animatedMove) {
+      this.animatedMove.draw(cx, this.getCheckerWidth());
+    }
     // this.drawRects(cx);
   }
 
@@ -95,6 +119,57 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.whiteHome.draw(cx);
   }
 
+  getMoveEndPoint(moveDto: MoveDto): Point {
+    let rect: Rectangle | undefined = undefined;
+    if (moveDto.color === PlayerColor.black) {
+      rect = this.rectangles.find((r) => r.pointIdx === moveDto.to);
+      if (moveDto.to === 25) {
+        rect = this.blackHome;
+      }
+    } else {
+      rect = this.rectangles.find((r) => r.pointIdx === 25 - moveDto.to);
+      if (moveDto.to === 0) {
+        rect = this.whiteHome;
+      }
+    }
+    if (rect) {
+      const y = rect.y + rect.height / 2;
+      const x = rect.x + this.getCheckerWidth();
+      return new Point(x, y);
+    }
+
+    return new Point(0, 0);
+  }
+
+  getMoveStartPoint(moveDto: MoveDto): Point {
+    if (!this.game) {
+      return new Point(0, 0);
+    }
+    let pointIdx = 0;
+
+    if (moveDto.color === PlayerColor.black) {
+      pointIdx = moveDto.from;
+    } else {
+      pointIdx = 25 - moveDto.from;
+    }
+    const rect = this.rectangles.find((r) => r.pointIdx === pointIdx);
+    if (rect) {
+      const y = rect.y + rect.height / 2;
+      const x = rect.x + this.getCheckerWidth();
+      return new Point(x, y);
+    }
+
+    return new Point(0, 0);
+  }
+
+  getCheckerRadius(): number {
+    return this.rectangles[0].width / 2;
+  }
+
+  getCheckerWidth(): number {
+    return this.getCheckerRadius() * 0.67;
+  }
+
   drawCheckers(cx: CanvasRenderingContext2D | null): void {
     if (!cx) {
       return;
@@ -105,8 +180,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
     // console.log(this.game.points);
 
-    const r = this.rectangles[0].width / 2;
-    const chWidth = r * 0.67;
+    const r = this.getCheckerRadius();
+    const chWidth = this.getCheckerWidth();
 
     for (let p = 0; p < this.game.points.length; p++) {
       const point = this.game.points[p];
@@ -124,7 +199,15 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         }
         cx.strokeStyle = '#28DD2E';
         cx.beginPath();
-        cx.ellipse(this.cursor.x - chWidth / 2, this.cursor.y - chWidth / 2, chWidth, chWidth, 0, 0, 360);
+        cx.ellipse(
+          this.cursor.x - chWidth / 2,
+          this.cursor.y - chWidth / 2,
+          chWidth,
+          chWidth,
+          0,
+          0,
+          360
+        );
         cx.closePath();
         cx.fill();
         cx.stroke();
@@ -144,6 +227,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       const dist = Math.min(2 * chWidth, rect.height / checkerCount);
 
       cx.lineWidth = 2;
+      const dragAnimationTo =
+        this.animatedMove &&
+        ((this.animatedMove?.move.color === PlayerColor.black &&
+          this.animatedMove.move.to == p) ||
+          (this.animatedMove?.move.color === PlayerColor.white &&
+            this.animatedMove.move.to == 25 - p));
+
+      if (dragAnimationTo) {
+        checkerCount--;
+      }
 
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
@@ -485,7 +578,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const { clientX, clientY } = event;
     const { xDown, yDown, fromIdx } = this.dragging;
 
-    this.dragging = null;
     // Unless the cursor has moved to far, this is a click event, and should move the move of the largest dice.
     const isClick =
       Math.abs(clientX - xDown) < 3 && Math.abs(clientY - yDown) < 3;
@@ -516,13 +608,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           (m) => m.to === ptIdx && fromIdx === m.from
         );
       }
-
       if (move) {
-        this.addMove.emit(move);
+        this.addMove.emit({ ...move, animate: isClick });
         break;
       }
     }
     this.drawDirty = true;
+    this.dragging = null;
   }
 
   onMouseLeave(event: MouseEvent): void {

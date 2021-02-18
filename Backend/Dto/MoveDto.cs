@@ -8,5 +8,6 @@ namespace Backend.Dto
         public int from { get; set; }
         public MoveDto[] nextMoves { get; set; }
         public int to { get; set; }
+        public bool animate { get; set; }
     }
 }

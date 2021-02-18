@@ -1,4 +1,9 @@
-import { AfterViewInit, Component, HostListener, OnDestroy } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  HostListener,
+  OnDestroy
+} from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { DiceDto, GameDto, MoveDto, PlayerColor } from 'src/app/dto';
 import { SocketsService } from 'src/app/services';
@@ -11,15 +16,16 @@ import { AppState } from 'src/app/state/app-state';
 })
 export class GameContainerComponent implements OnDestroy, AfterViewInit {
   constructor(private service: SocketsService) {
-    this.gameDto$ = AppState.Singleton.game.changed;
-    this.dices$ = AppState.Singleton.dices.changed;
-    this.diceSubs = AppState.Singleton.dices.changed.subscribe(
-      this.diceChanged.bind(this)
-    );
-    this.playerColor$ = AppState.Singleton.myColor.changed;
-    this.gameSubs = AppState.Singleton.game.changed.subscribe(
-      this.gameChanged.bind(this)
-    );
+    this.gameDto$ = AppState.Singleton.game.observe();
+    this.dices$ = AppState.Singleton.dices.observe();
+    this.diceSubs = AppState.Singleton.dices
+      .observe()
+      .subscribe(this.diceChanged.bind(this));
+    this.playerColor$ = AppState.Singleton.myColor.observe();
+    this.gameSubs = AppState.Singleton.game
+      .observe()
+      .subscribe(this.gameChanged.bind(this));
+
     service.connect();
   }
 
@@ -65,6 +71,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.diceSubs.unsubscribe();
   }
 
+  moveAnimFinished(): void {
+    this.service.shiftMoveAnimationsQueue();
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize(): void {
     this.width = Math.min(window.innerWidth, 800);
@@ -72,6 +82,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.onResize();
+    setTimeout(() => {
+      this.onResize();
+    }, 0);
   }
 }

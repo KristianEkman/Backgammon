@@ -7,4 +7,5 @@ export interface MoveDto {
   from: number;
   nextMoves: MoveDto[];
   to: number;
+  animate: boolean;
 }
