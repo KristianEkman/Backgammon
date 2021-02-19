@@ -95,7 +95,6 @@ namespace Backend.Rules
 
         private void DebugBlocked()
         {
-            //Both players blocket, can not happen in a real game
             AddCheckers(3, Player.Color.Black, 20);
             AddCheckers(3, Player.Color.White, 20);
 
@@ -117,7 +116,6 @@ namespace Backend.Rules
 
         private void DebugBearingOff()
         {
-            //Both players blocket, can not happen in a real game
             AddCheckers(3, Player.Color.Black, 20);
             AddCheckers(3, Player.Color.White, 20);
 
@@ -185,7 +183,7 @@ namespace Backend.Rules
 
         private void ClearMoves(List<Move> moves)
         {
-            // This will probably make it alot easier for GC, and might even prevent memory leaks.
+            // This will probably make it a lot easier for GC, and might even prevent memory leaks.
             foreach (var move in moves)
             {
                 if (move.NextMoves != null && move.NextMoves.Any())

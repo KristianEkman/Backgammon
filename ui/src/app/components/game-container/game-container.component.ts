@@ -47,12 +47,18 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   doMove(move: MoveDto): void {
     this.service.doMove(move);
+    this.service.sendMove(move);
     this.sendHidden = move.nextMoves && move.nextMoves.length > 0;
   }
 
   undoMove(): void {
     this.service.undoMove();
+    this.service.sendUndo();
     this.sendHidden = true;
+  }
+
+  myTurn(): boolean {
+    return AppState.Singleton.myTurn();
   }
 
   gameChanged(dto: GameDto): void {
@@ -63,7 +69,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   diceChanged(dto: DiceDto[]): void {
-    this.undoVisible = dto.filter((d) => d.used).length > 0;
+    this.undoVisible = dto.filter((d) => d.used).length > 0 && this.myTurn();
   }
 
   ngOnDestroy(): void {

@@ -10,6 +10,8 @@ namespace Backend.Dto
         gameCreated,
         dicesRolled,
         movesMade,
-        gameEnded
+        gameEnded,
+        opponentMove,
+        undoMove
     }
 }

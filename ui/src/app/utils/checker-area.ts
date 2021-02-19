@@ -1,5 +1,3 @@
-import { Checker } from '.';
-
 export class CheckerArea {
   constructor(
     public x: number,

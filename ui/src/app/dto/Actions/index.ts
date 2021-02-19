@@ -4,3 +4,5 @@ export * from './dicesRolledActionDto';
 export * from './gameCreatedActionDto';
 export * from './gameEndedActionDto';
 export * from './movesMadeActionDto';
+export * from './opponentMoveActionDto';
+export * from './undoActionDto';

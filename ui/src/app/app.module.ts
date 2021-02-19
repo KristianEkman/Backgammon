@@ -8,7 +8,7 @@ import { MessageTestComponent } from './components/message-test/message-test.com
 import { GameBoardComponent } from './components/game-board/game-board.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameContainerComponent } from './components/game-container/game-container.component';
-import { GameService } from 'src/app/services';
+import { AccountService } from 'src/app/services';
 import { DicesComponent } from './components/dices/dices.component';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { DicesComponent } from './components/dices/dices.component';
     DicesComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
-  providers: [SocketsService, GameService],
+  providers: [SocketsService, AccountService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

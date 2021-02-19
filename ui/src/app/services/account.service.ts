@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { AppState } from 'src/app/state/app-state';
 import { finalize, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class GameService {
+export class AccountService {
   url: string;
   constructor(private http: HttpClient) {
     this.url = `${environment.apiServiceUrl}/game`;
   }
 
-  public NewAiGame(): void {
-    this.http.get(`${this.url}/newai`).pipe(
+  public Login(): void {
+    this.http.get(`${this.url}/login`).pipe(
       map((dto: unknown) => {
         console.log({ dto });
       }),
-      finalize(() => {
-        AppState.Singleton.busy.setValue(false);
-      })
+      finalize(() => {})
     );
   }
 }

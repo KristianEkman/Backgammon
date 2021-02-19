@@ -7,7 +7,9 @@ import {
   DicesRolledActionDto,
   GameCreatedActionDto,
   GameEndedActionDto,
-  MovesMadeActionDto
+  MovesMadeActionDto,
+  OpponentMoveActionDto,
+  UndoActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
 
@@ -105,7 +107,7 @@ export class SocketsService {
     AppState.Singleton.dices.setValue(diceClone);
     if (move.animate) {
       const clone = [...AppState.Singleton.moveAnimations.getValue()];
-      console.log('pushing next animation');
+      // console.log('pushing next animation');
       clone.push(move);
       AppState.Singleton.moveAnimations.setValue(clone);
     }
@@ -115,12 +117,20 @@ export class SocketsService {
     if (this.gameHistory.length < 1) {
       return;
     }
-    this.userMoves.pop();
+    const move = this.userMoves.pop();
+    if (!move) {
+      return;
+    }
     const game = this.gameHistory.pop() as GameDto;
     AppState.Singleton.game.setValue(game);
 
     const dices = this.dicesHistory.pop() as DiceDto[];
     AppState.Singleton.dices.setValue(dices);
+
+    const clone = [...AppState.Singleton.moveAnimations.getValue()];
+    // console.log('pushing next animation');
+    clone.push({ ...move, from: move.to, to: move.from });
+    AppState.Singleton.moveAnimations.setValue(clone);
   }
 
   onMessage(message: MessageEvent<string>): void {
@@ -128,12 +138,13 @@ export class SocketsService {
     // console.log(message.data);
     const game = AppState.Singleton.game.getValue();
     switch (action.actionName) {
-      case ActionNames.gameCreated:
+      case ActionNames.gameCreated: {
         const dto = JSON.parse(message.data) as GameCreatedActionDto;
         AppState.Singleton.myColor.setValue(dto.myColor);
         AppState.Singleton.game.setValue(dto.game);
         break;
-      case ActionNames.dicesRolled:
+      }
+      case ActionNames.dicesRolled: {
         const dicesAction = JSON.parse(message.data) as DicesRolledActionDto;
         AppState.Singleton.dices.setValue(dicesAction.dices);
         const cGame = {
@@ -143,19 +154,31 @@ export class SocketsService {
         };
         AppState.Singleton.game.setValue(cGame);
         break;
-      case ActionNames.movesMade:
-        const movesAction = JSON.parse(message.data) as MovesMadeActionDto;
-        for (let i = 0; i < movesAction.moves.length; i++) {
-          const move = movesAction.moves[i];
-          this.doOpponentMove(move);
-        }
+      }
+      case ActionNames.movesMade: {
+        // const movesAction = JSON.parse(message.data) as MovesMadeActionDto;
+        // for (let i = 0; i < movesAction.moves.length; i++) {
+        //   const move = movesAction.moves[i];
+        //   this.doOpponentMove(move);
+        // }
         break;
-      case ActionNames.gameEnded:
+      }
+      case ActionNames.gameEnded: {
         const endedAction = JSON.parse(message.data) as GameEndedActionDto;
-        console.log('game ended', endedAction.game.winner);
-
+        // console.log('game ended', endedAction.game.winner);
         AppState.Singleton.game.setValue(endedAction.game);
         break;
+      }
+      case ActionNames.opponentMove: {
+        const action = JSON.parse(message.data) as OpponentMoveActionDto;
+        this.doMove(action.move);
+        break;
+      }
+      case ActionNames.undoMove: {
+        // const action = JSON.parse(message.data) as UndoActionDto;
+        this.undoMove();
+        break;
+      }
       default:
         throw new Error(`Action not implemented ${action.actionName}`);
     }
@@ -187,9 +210,24 @@ export class SocketsService {
   }
 
   shiftMoveAnimationsQueue(): void {
-    // console.log('shiftin animation queue');
+    // console.log('shifting animation queue');
     const clone = [...AppState.Singleton.moveAnimations.getValue()];
     clone.shift();
     AppState.Singleton.moveAnimations.setValue(clone);
+  }
+
+  sendMove(move: MoveDto): void {
+    const action: OpponentMoveActionDto = {
+      actionName: ActionNames.opponentMove,
+      move: { ...move, animate: true }
+    };
+    this.sendMessage(JSON.stringify(action));
+  }
+
+  sendUndo(): void {
+    const action: UndoActionDto = {
+      actionName: ActionNames.undoMove
+    };
+    this.sendMessage(JSON.stringify(action));
   }
 }

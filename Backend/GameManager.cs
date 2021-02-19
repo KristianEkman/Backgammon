@@ -87,7 +87,7 @@ namespace Backend
             {
                 var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                 var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
-                var otherClient = socket == Client1 ? Client2 : Client1;                
+                var otherClient = socket == Client1 ? Client2 : Client1;
                 DoAction(action.actionName, text, otherClient);
                 result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
@@ -126,6 +126,18 @@ namespace Backend
                 else
                     SendNewRoll();
             }
+            else if (actionName == ActionNames.opponentMove)
+            {
+                //No need to update the state because all moves will be sent
+                var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(text, typeof(OpponentMoveActionDto));                
+                otherClient.Send(action);
+            }
+            else if (actionName == ActionNames.undoMove)
+            {
+                //No need to update the state because all moves will be sent
+                var action = (UndoActionDto)JsonSerializer.Deserialize(text, typeof(UndoActionDto));
+                otherClient.Send(action);
+            }
         }
 
         private void DoMoves(MovesMadeActionDto action)
@@ -141,7 +153,7 @@ namespace Backend
                 };
                 // TODO: Check these moves are valid for safety.
                 this.Game.MakeMove(move);
-            }            
+            }
         }
 
         private void SendWinner(PlayerColor color)

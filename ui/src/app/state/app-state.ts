@@ -27,4 +27,8 @@ export class AppState {
   myColor: StateObject<PlayerColor>;
   dices: StateObject<DiceDto[]>;
   moveAnimations: StateObject<MoveDto[]>;
+
+  myTurn(): boolean {
+    return this.game.getValue().currentPlayer === this.myColor.getValue();
+  }
 }

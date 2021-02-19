@@ -54,7 +54,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       .observe()
       .subscribe((moves: MoveDto[]) => {
         if (moves.length > 0 && this.animatedMove === undefined) {
-          console.log('starting animation ');
+          // console.log('starting animation ');
           this.animatedMove = new MoveAnimation(
             moves[0],
             this.getMoveStartPoint(moves[0]),
@@ -183,7 +183,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     canvasEl.height = this.height;
 
     this.drawBoard(cx);
-    this.drawRects(cx);
+    // this.drawRects(cx); // debug
     this.drawCheckers(cx);
     this.drawMessage(cx);
     if (this.animatedMove) {
