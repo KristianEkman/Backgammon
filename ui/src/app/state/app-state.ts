@@ -29,6 +29,9 @@ export class AppState {
   moveAnimations: StateObject<MoveDto[]>;
 
   myTurn(): boolean {
-    return this.game.getValue().currentPlayer === this.myColor.getValue();
+    return (
+      this.game.getValue() &&
+      this.game.getValue().currentPlayer === this.myColor.getValue()
+    );
   }
 }

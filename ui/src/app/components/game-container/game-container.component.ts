@@ -39,6 +39,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   undoVisible = false;
   width = 450;
   height = 450;
+  showRollButton = false;
 
   sendMoves(): void {
     this.sendHidden = true;
@@ -66,6 +67,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.sendHidden =
       (dto.validMoves && dto.validMoves.length > 0) ||
       AppState.Singleton.myColor.getValue() !== dto.currentPlayer;
+    this.showRollButton = this.myTurn();
   }
 
   diceChanged(dto: DiceDto[]): void {

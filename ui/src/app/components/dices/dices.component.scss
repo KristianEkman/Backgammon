@@ -8,10 +8,15 @@ label {
   margin: 8px;
   text-align: center;
   padding-top: 10px;
+  font-weight: 600;
 }
 
 .diceUsed {
   background-color: #ccc;
   border-color: #888;
   color: #888;
+}
+
+.rollButton {
+  background-color: #28DD2E;
 }

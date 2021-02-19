@@ -8,7 +8,14 @@
     (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>
   <br />
-  <app-dices [dices]="dices$ | async"></app-dices>
-  <button (click)="undoMove()" *ngIf="undoVisible" class="cancelButton">Undo</button>
-  <button (click)="sendMoves()" *ngIf="!sendHidden" class="sendButton">Send</button>
+  <app-dices
+    [dices]="dices$ | async"
+    [showRollButton]="showRollButton"
+  ></app-dices>
+  <button (click)="undoMove()" *ngIf="undoVisible" class="cancelButton">
+    Undo
+  </button>
+  <button (click)="sendMoves()" *ngIf="!sendHidden" class="sendButton">
+    Send
+  </button>
 </div>
