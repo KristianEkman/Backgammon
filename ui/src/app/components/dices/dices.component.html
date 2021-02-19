@@ -1,12 +1,3 @@
-<div *ngIf="!showRollButton">
-  <label *ngFor="let dice of dices" [ngClass]="{ diceUsed: dice.used }">{{
-    dice.value
-  }}</label>
-</div>
-<button
-  *ngIf="showRollButton"
-  (click)="showRollButton = false"
-  class="rollButton"
->
-  Roll
-</button>
+<label *ngFor="let dice of dices" [ngClass]="{ diceUsed: dice.used }">{{
+  dice.value
+}}</label>

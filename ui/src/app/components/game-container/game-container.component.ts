@@ -35,27 +35,23 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   gameSubs: Subscription;
   diceSubs: Subscription;
 
-  sendHidden = true;
-  undoVisible = false;
   width = 450;
   height = 450;
-  showRollButton = false;
+  rollButtonClicked = false;
 
   sendMoves(): void {
-    this.sendHidden = true;
     this.service.sendMoves();
+    this.rollButtonClicked = false;
   }
 
   doMove(move: MoveDto): void {
     this.service.doMove(move);
     this.service.sendMove(move);
-    this.sendHidden = move.nextMoves && move.nextMoves.length > 0;
   }
 
   undoMove(): void {
     this.service.undoMove();
     this.service.sendUndo();
-    this.sendHidden = true;
   }
 
   myTurn(): boolean {
@@ -63,15 +59,17 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   gameChanged(dto: GameDto): void {
-    // todo: auto send here.
-    this.sendHidden =
-      (dto.validMoves && dto.validMoves.length > 0) ||
-      AppState.Singleton.myColor.getValue() !== dto.currentPlayer;
-    this.showRollButton = this.myTurn();
+    this.setRollButtonVisible();
+    this.setDicesVisible();
+    this.setSendVisible();
+    this.setUndoVisible();
   }
 
   diceChanged(dto: DiceDto[]): void {
-    this.undoVisible = dto.filter((d) => d.used).length > 0 && this.myTurn();
+    this.setRollButtonVisible();
+    this.setDicesVisible();
+    this.setSendVisible();
+    this.setUndoVisible();
   }
 
   ngOnDestroy(): void {
@@ -93,5 +91,53 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     setTimeout(() => {
       this.onResize();
     }, 0);
+  }
+
+  rollButtonVisible = false;
+  sendVisible = false;
+  undoVisible = false;
+  dicesVisible = false;
+
+  rollButtonClick(): void {
+    this.rollButtonClicked = true;
+    this.setRollButtonVisible();
+    this.setDicesVisible();
+    this.setSendVisible();
+  }
+
+  setRollButtonVisible(): void {
+    if (!this.myTurn()) {
+      this.rollButtonVisible = false;
+      return;
+    }
+
+    this.rollButtonVisible = !this.rollButtonClicked;
+  }
+
+  setSendVisible(): void {
+    if (!this.myTurn() || !this.rollButtonClicked) {
+      this.sendVisible = false;
+      return;
+    }
+
+    const game = AppState.Singleton.game.getValue();
+    this.sendVisible = !game || game.validMoves.length == 0;
+  }
+
+  setUndoVisible(): void {
+    if (!this.myTurn()) {
+      this.undoVisible = false;
+      return;
+    }
+    const dices = AppState.Singleton.dices.getValue();
+    this.undoVisible = dices && dices.filter((d) => d.used).length > 0;
+  }
+
+  setDicesVisible(): void {
+    if (!this.myTurn()) {
+      this.dicesVisible = true;
+      return;
+    }
+    this.dicesVisible = !this.rollButtonVisible;
   }
 }

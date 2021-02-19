@@ -7,5 +7,4 @@ import { DiceDto } from 'src/app/dto/diceDto';
 })
 export class DicesComponent {
   @Input() dices: DiceDto[] | null = [];
-  @Input() showRollButton = false;
 }

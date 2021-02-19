@@ -64,21 +64,21 @@ namespace Backend.Rules
             foreach (var point in Points)
                 point.Checkers.Clear();
 
-            AddCheckers(2, Player.Color.Black, 1);
-            AddCheckers(2, Player.Color.White, 1);
+            //AddCheckers(2, Player.Color.Black, 1);
+            //AddCheckers(2, Player.Color.White, 1);
 
-            AddCheckers(5, Player.Color.Black, 12);
-            AddCheckers(5, Player.Color.White, 12);
+            //AddCheckers(5, Player.Color.Black, 12);
+            //AddCheckers(5, Player.Color.White, 12);
 
-            AddCheckers(3, Player.Color.Black, 17);
-            AddCheckers(3, Player.Color.White, 17);
+            //AddCheckers(3, Player.Color.Black, 17);
+            //AddCheckers(3, Player.Color.White, 17);
 
-            AddCheckers(5, Player.Color.Black, 19);
-            AddCheckers(5, Player.Color.White, 19);
+            //AddCheckers(5, Player.Color.Black, 19);
+            //AddCheckers(5, Player.Color.White, 19);
 
             //OneMoveToVictory();
 
-            //DebugBlocked();
+            DebugBlocked();
 
             // DebugBearingOff();
         }
