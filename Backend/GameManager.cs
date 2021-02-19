@@ -78,18 +78,28 @@ namespace Backend
             }
         }
 
+        private async Task<string> ReceiveText(WebSocket socket)
+        {
+            var buffer = new byte[512];
+            var sb = new StringBuilder();
+            WebSocketReceiveResult result = null;
+            while (result == null || (!result.EndOfMessage && !result.CloseStatus.HasValue))
+            {
+                result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
+                sb.Append(text);
+            }
+            return sb.ToString();
+        }
+
         private async Task ListenOn(WebSocket socket)
         {
-            var buffer = new byte[1024];
-            WebSocketReceiveResult result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-
-            while (!result.CloseStatus.HasValue)
+            while (socket.State != WebSocketState.Closed && socket.State != WebSocketState.Aborted)
             {
-                var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
+                var text = await ReceiveText(socket);
                 var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
                 var otherClient = socket == Client1 ? Client2 : Client1;
-                DoAction(action.actionName, text, otherClient);
-                result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                DoAction(action.actionName, text, otherClient);                
             }
         }
 
@@ -99,7 +109,7 @@ namespace Backend
             {
                 var action = (MovesMadeActionDto)JsonSerializer.Deserialize(text, typeof(MovesMadeActionDto));
                 DoMoves(action);
-                otherClient.Send(action);
+                //otherClient.Send(action);
                 PlayerColor? winner = null;
 
                 if (this.Game.CurrentPlayer == Player.Color.Black)
