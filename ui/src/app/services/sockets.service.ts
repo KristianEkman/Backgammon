@@ -152,6 +152,7 @@ export class SocketsService {
           validMoves: dicesAction.validMoves,
           currentPlayer: dicesAction.playerToMove
         };
+        // console.log(dicesAction.validMoves);
         AppState.Singleton.game.setValue(cGame);
         break;
       }
@@ -199,9 +200,11 @@ export class SocketsService {
   }
 
   sendMoves(): void {
+    const myColor = AppState.Singleton.myColor.getValue();
+    // Opponent moves are also stored in userMoves but we cant send them back.
     const action: MovesMadeActionDto = {
       actionName: ActionNames.movesMade,
-      moves: this.userMoves
+      moves: this.userMoves.filter((m) => m.color === myColor)
     };
     this.sendMessage(JSON.stringify(action));
     this.userMoves = [];
