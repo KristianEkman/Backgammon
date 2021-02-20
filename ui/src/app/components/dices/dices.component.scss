@@ -4,11 +4,23 @@ label {
   height: 25px;
   border: 1px solid #555;
   color: #555;
-  border-radius: 3px;
-  margin: 8px;
+  border-radius: 4px;
+  margin: 4px;
   text-align: center;
   padding-top: 10px;
   font-weight: 600;
+}
+
+.black {
+  background-color: #000;
+  border-color: #FFF;
+  color: #FFF;
+}
+
+.white {
+  background-color: #FFF;
+  border-color: #000;
+  color: #000;
 }
 
 .diceUsed {

@@ -10,6 +10,7 @@ import { LobbyComponent } from './components/lobby/lobby.component';
 import { GameContainerComponent } from './components/game-container/game-container.component';
 import { AccountService } from 'src/app/services';
 import { DicesComponent } from './components/dices/dices.component';
+import { BoardButtonsComponent } from './components/board-buttons/board-buttons.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { DicesComponent } from './components/dices/dices.component';
     GameBoardComponent,
     GameContainerComponent,
     LobbyComponent,
-    DicesComponent
+    DicesComponent,
+    BoardButtonsComponent
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [SocketsService, AccountService],

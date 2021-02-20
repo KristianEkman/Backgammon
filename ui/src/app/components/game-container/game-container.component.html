@@ -1,4 +1,4 @@
-<div>
+<div class="game-container">
   <app-game-board
     [width]="width"
     [height]="height"
@@ -7,19 +7,21 @@
     (addMove)="doMove($event)"
     (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>
-  <br />
-  <app-dices *ngIf="dicesVisible" [dices]="dices$ | async"></app-dices>
-  <button (click)="undoMove()" *ngIf="undoVisible" class="cancelButton">
-    Undo
-  </button>
-  <button (click)="sendMoves()" *ngIf="sendVisible" class="sendButton">
-    Send
-  </button>
-  <button
-    *ngIf="rollButtonVisible"
-    (click)="rollButtonClick()"
-    class="rollButton"
-  >
-    Roll
-  </button>
+  <div class="dices" #dices>
+    <app-dices
+      *ngIf="dicesVisible"
+      [dices]="dices$ | async"
+      [color]="diceColor"
+    ></app-dices>
+  </div>
+  <div class="board-buttons" #boardButtons>
+    <app-board-buttons
+      [undoVisible]="undoVisible"
+      [sendVisible]="sendVisible"
+      [rollButtonVisible]="rollButtonVisible"
+      (onUndoMove)="undoMove()"
+      (onSendMoves)="sendMoves()"
+      (onRoll)="rollButtonClick()"
+    ></app-board-buttons>
+  </div>
 </div>

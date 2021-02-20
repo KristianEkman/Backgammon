@@ -1,12 +1,3 @@
-.sendButton,
-.rollButton {
-  background-color: #28DD2E;
-}
-
-.cancelButton {
-  background-color: #dd8928;
-}
-
 app-game-board {
   animation: fadein 2s;
 }
@@ -19,4 +10,19 @@ app-game-board {
   to {
     opacity: 1;
   }
+}
+
+.game-container {
+  position: relative;
+  max-width: 800px;
+}
+
+.board-buttons {
+  display: inline-block;
+  position: absolute;
+}
+
+.dices {
+  display: inline-block;
+  position: absolute;
 }

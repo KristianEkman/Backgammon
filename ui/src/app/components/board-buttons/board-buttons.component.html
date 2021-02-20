@@ -1,0 +1,13 @@
+<button (click)="sendMoves()" *ngIf="sendVisible" class="sendButton">
+  Send
+</button>
+<button (click)="undoMove()" *ngIf="undoVisible" class="undoButton">
+  Undo
+</button>
+<button
+  *ngIf="rollButtonVisible"
+  (click)="rollButtonClick()"
+  class="rollButton"
+>
+  Roll
+</button>
