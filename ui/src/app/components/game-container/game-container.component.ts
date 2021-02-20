@@ -58,6 +58,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     return AppState.Singleton.myTurn();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   gameChanged(dto: GameDto): void {
     this.setRollButtonVisible();
     this.setDicesVisible();
@@ -65,6 +66,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setUndoVisible();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   diceChanged(dto: DiceDto[]): void {
     this.setRollButtonVisible();
     this.setDicesVisible();

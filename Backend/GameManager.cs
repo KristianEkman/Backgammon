@@ -94,12 +94,30 @@ namespace Backend
 
         private async Task ListenOn(WebSocket socket)
         {
-            while (socket.State != WebSocketState.Closed && socket.State != WebSocketState.Aborted)
+            var otherClient = socket == Client1 ? Client2 : Client1;
+            try
             {
-                var text = await ReceiveText(socket);
-                var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
-                var otherClient = socket == Client1 ? Client2 : Client1;
-                DoAction(action.actionName, text, otherClient);                
+                while (socket.State != WebSocketState.Closed && socket.State != WebSocketState.Aborted)
+                {
+                    var text = await ReceiveText(socket);
+                    var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
+                    DoAction(action.actionName, text, otherClient);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            finally
+            {
+                if (otherClient != null)
+                {
+                    otherClient.Send(new ConnectionInfoActionDto
+                    {
+                        connection = new ConnectionDto{connected = false}
+                    }); ;
+
+                }
             }
         }
 
@@ -139,13 +157,18 @@ namespace Backend
             else if (actionName == ActionNames.opponentMove)
             {
                 //No need to update the state because all moves will be sent
-                var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(text, typeof(OpponentMoveActionDto));                
+                var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(text, typeof(OpponentMoveActionDto));
                 otherClient.Send(action);
             }
             else if (actionName == ActionNames.undoMove)
             {
                 //No need to update the state because all moves will be sent
                 var action = (UndoActionDto)JsonSerializer.Deserialize(text, typeof(UndoActionDto));
+                otherClient.Send(action);
+            }
+            else if (actionName == ActionNames.connectionInfo)
+            {
+                var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(text, typeof(ConnectionInfoActionDto));
                 otherClient.Send(action);
             }
         }
@@ -183,6 +206,11 @@ namespace Backend
     {
         public static async Task Send<T>(this WebSocket socket, T obj)
         {
+            if (socket == null)
+            {
+                Console.WriteLine("Cannot send to socket, it was lost.");
+                return;
+            }
             var json = JsonSerializer.Serialize<object>(obj);
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
             await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);

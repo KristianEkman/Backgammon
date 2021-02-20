@@ -1,6 +1,8 @@
 Nästa mål: Spela en match mot Linn
 ==================================
 
+Inte kunna flytta innan roll.
+
 Rensa upp klienter, vid spel klart eller.
 
 Kolla på server att rätt spelare skickar
@@ -23,7 +25,7 @@ Notifiera motståndare om connection gått ner
 
 
 Backend
-    Game ended.
+    Ordentlig loggning, info, warning, errors
     ai: Evaluate to give a score.
     points left
     resign

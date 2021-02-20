@@ -7,4 +7,5 @@ export enum ActionNames {
     gameEnded,
     opponentMove,
     undoMove,
+    connectionInfo,
 }

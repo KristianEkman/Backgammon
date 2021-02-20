@@ -6,3 +6,4 @@ export * from './gameEndedActionDto';
 export * from './movesMadeActionDto';
 export * from './opponentMoveActionDto';
 export * from './undoActionDto';
+export * from './connectionInfoActionDto';

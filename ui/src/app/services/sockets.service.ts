@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { CheckerDto, DiceDto, GameDto, MoveDto, PlayerColor } from '../dto';
 import {
@@ -11,17 +11,20 @@ import {
   OpponentMoveActionDto,
   UndoActionDto
 } from '../dto/Actions';
+import { ConnectionInfoActionDto } from '../dto/Actions/connectionInfoActionDto';
 import { AppState } from '../state/app-state';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SocketsService {
+export class SocketsService implements OnDestroy {
   socket: WebSocket | undefined;
   url = '';
   userMoves: MoveDto[] = [];
   gameHistory: GameDto[] = [];
   dicesHistory: DiceDto[][] = [];
+
+  connectTime = new Date();
 
   connect(): void {
     this.url = environment.socketServiceUrl;
@@ -34,6 +37,21 @@ export class SocketsService {
 
   onOpen(event: Event): void {
     console.log('Open', { event });
+    const now = new Date();
+    const ping = now.getTime() - this.connectTime.getTime();
+    AppState.Singleton.myConnection.setValue({ connected: true, pingMs: ping });
+  }
+
+  onError(event: Event): void {
+    console.error('Error', { event });
+    const cnn = AppState.Singleton.myConnection.getValue();
+    AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
+  }
+
+  onClose(event: CloseEvent): void {
+    console.log('Close', { event });
+    const cnn = AppState.Singleton.myConnection.getValue();
+    AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
   }
 
   doOpponentMove(move: MoveDto): void {
@@ -180,23 +198,28 @@ export class SocketsService {
         this.undoMove();
         break;
       }
+      case ActionNames.connectionInfo: {
+        const action = JSON.parse(message.data) as ConnectionInfoActionDto;
+        if (!action.connection.connected) {
+          console.log('Opponent disconnected');
+        }
+        const cnn = AppState.Singleton.opponentConnection.getValue();
+        AppState.Singleton.opponentConnection.setValue({
+          ...cnn,
+          connected: action.connection.connected
+        });
+        break;
+      }
+
       default:
         throw new Error(`Action not implemented ${action.actionName}`);
     }
-  }
-
-  onError(event: Event): void {
-    console.error('Error', { event });
   }
 
   sendMessage(message: string): void {
     if (this.socket) {
       this.socket.send(message);
     }
-  }
-
-  onClose(event: CloseEvent): void {
-    console.log('Close', { event });
   }
 
   sendMoves(): void {
@@ -230,6 +253,14 @@ export class SocketsService {
   sendUndo(): void {
     const action: UndoActionDto = {
       actionName: ActionNames.undoMove
+    };
+    this.sendMessage(JSON.stringify(action));
+  }
+
+  ngOnDestroy(): void {
+    const action: ConnectionInfoActionDto = {
+      actionName: ActionNames.connectionInfo,
+      connection: { pingMs: 0, connected: false }
     };
     this.sendMessage(JSON.stringify(action));
   }

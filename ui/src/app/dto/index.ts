@@ -1,5 +1,3 @@
-import { from } from 'rxjs';
-
 export * from './checkerDto';
 export * from './diceDto';
 export * from './gameState';
@@ -8,3 +6,4 @@ export * from './moveDto';
 export * from './playerColor';
 export * from './playerDto';
 export * from './pointDto';
+export * from './connectionDto';

@@ -646,12 +646,4 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawDirty = true;
     this.dragging = null;
   }
-
-  onMouseLeave(event: MouseEvent): void {
-    // console.log('leave', event);
-  }
-
-  onClick(event: MouseEvent): void {
-    // console.log('click', event);
-  }
 }
