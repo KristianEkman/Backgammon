@@ -7,3 +7,4 @@ export * from './playerColor';
 export * from './playerDto';
 export * from './pointDto';
 export * from './connectionDto';
+export * from './gameCookieDto';

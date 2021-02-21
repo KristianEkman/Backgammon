@@ -1,6 +1,7 @@
 ﻿using Backend.Dto;
 using Backend.Dto.Actions;
 using Backend.Rules;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,22 @@ namespace Backend
 {
     public class GameManager
     {
-        public GameManager()
+        public GameManager(ILogger<Startup> logger)
         {
             Game = Game.Create();
+            Created = DateTime.Now;
+            Logger = logger;
         }
 
         public WebSocket Client1 { get; set; }
         public WebSocket Client2 { get; set; }
         public Game Game { get; set; }
 
-        private void StartGame()
+        public DateTime Created { get; private set; }
+        public bool SearchingOpponent { get; set; }
+        public ILogger<Startup> Logger { get; }
+
+        internal void StartGame()
         {
             var gameDto = Game.ToDto();
             var action = new GameCreatedActionDto
@@ -31,9 +38,9 @@ namespace Backend
                 game = gameDto
             };
             action.myColor = PlayerColor.black;
-            Client1.Send(action);
+            _ = Send(Client1, action);
             action.myColor = PlayerColor.white;
-            Client2.Send(action);
+            _ = Send(Client2, action);
 
             // todo: visa på clienten även när det blir samma 
             while (Game.PlayState == Game.State.FirstThrow)
@@ -45,8 +52,8 @@ namespace Backend
                     playerToMove = (PlayerColor)Game.CurrentPlayer,
                     validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
                 };
-                Client1.Send(rollAction);
-                Client2.Send(rollAction);
+                _ = Send(Client1, rollAction);
+                _ = Send(Client2, rollAction);
             }
         }
 
@@ -59,13 +66,13 @@ namespace Backend
                 playerToMove = (PlayerColor)Game.CurrentPlayer,
                 validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
             };
-            Client1.Send(rollAction);
-            Client2.Send(rollAction);
+            _ = Send(Client1, rollAction);
+            _ = Send(Client2, rollAction);
         }
 
-        internal async Task ConnectSocket(WebSocket webSocket)
+        internal async Task ConnectAndListen(WebSocket webSocket, Rules.Player.Color color)
         {
-            if (Client1 == null)
+            if (color == Player.Color.Black)
             {
                 Client1 = webSocket;
                 await ListenOn(webSocket);
@@ -85,44 +92,62 @@ namespace Backend
             WebSocketReceiveResult result = null;
             while (result == null || (!result.EndOfMessage && !result.CloseStatus.HasValue))
             {
-                result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
-                sb.Append(text);
+                try
+                {
+                    result = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                    var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
+                    sb.Append(text);
+                }
+                catch (WebSocketException exc)
+                {
+                    Logger.LogInformation($"Cant receive data from socket, it was closed. ErrorCode: {exc.ErrorCode}");
+                    return "";
+                }                
             }
             return sb.ToString();
         }
 
+        internal async Task Restore(PlayerColor color, WebSocket socket)
+        {
+            var gameDto = Game.ToDto();
+            var action = new GameRestoreActionDto
+            {
+                game = gameDto,
+                color = color,
+                dices = Game.Roll.Select(r => r.ToDto()).ToArray()
+            };
+
+            if (color == PlayerColor.black)
+                Client1 = socket;
+            else
+                Client2 = socket;
+
+            await Send(socket, action);
+            await ListenOn(socket);
+        }
+
         private async Task ListenOn(WebSocket socket)
         {
-            var otherClient = socket == Client1 ? Client2 : Client1;
-            try
+            WebSocket otherClient = null;
+            while (socket.State != WebSocketState.Closed && socket.State != WebSocketState.Aborted && socket.State != WebSocketState.CloseReceived)
             {
-                while (socket.State != WebSocketState.Closed && socket.State != WebSocketState.Aborted)
+                var text = await ReceiveText(socket);
+                if (text != null && text.Length > 0)
                 {
-                    var text = await ReceiveText(socket);
+                    Logger.LogInformation($"Received: {text}");
                     var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
+                    otherClient = socket == Client1 ? Client2 : Client1;
                     DoAction(action.actionName, text, otherClient);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            finally
-            {
-                if (otherClient != null)
-                {
-                    otherClient.Send(new ConnectionInfoActionDto
-                    {
-                        connection = new ConnectionDto{connected = false}
-                    }); ;
 
-                }
-            }
+            if (otherClient != null && otherClient.State == WebSocketState.Open)
+                _ = Send(otherClient, new ConnectionInfoActionDto { connection = new ConnectionDto { connected = false } });
         }
 
         private void DoAction(ActionNames actionName, string text, WebSocket otherClient)
         {
+            Logger.LogInformation($"Doing action: {actionName}");
             if (actionName == ActionNames.movesMade)
             {
                 var action = (MovesMadeActionDto)JsonSerializer.Deserialize(text, typeof(MovesMadeActionDto));
@@ -158,18 +183,18 @@ namespace Backend
             {
                 //No need to update the state because all moves will be sent
                 var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(text, typeof(OpponentMoveActionDto));
-                otherClient.Send(action);
+                _ = Send(otherClient, action);
             }
             else if (actionName == ActionNames.undoMove)
             {
                 //No need to update the state because all moves will be sent
                 var action = (UndoActionDto)JsonSerializer.Deserialize(text, typeof(UndoActionDto));
-                otherClient.Send(action);
+                _ = Send(otherClient, action);
             }
             else if (actionName == ActionNames.connectionInfo)
             {
                 var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(text, typeof(ConnectionInfoActionDto));
-                otherClient.Send(action);
+                _ = Send(otherClient, action);
             }
         }
 
@@ -197,23 +222,28 @@ namespace Backend
             {
                 game = game
             };
-            Client1.Send(gameEndedAction);
-            Client2.Send(gameEndedAction);
+            _ = Send(Client1, gameEndedAction);
+            _ = Send(Client2, gameEndedAction);
         }
-    }
 
-    public static class SocketExtentions
-    {
-        public static async Task Send<T>(this WebSocket socket, T obj)
+        private async Task Send<T>(WebSocket socket, T obj)
         {
             if (socket == null)
             {
-                Console.WriteLine("Cannot send to socket, it was lost.");
+                Logger.LogInformation("Cannot send to socket, connection was lost.");
                 return;
             }
             var json = JsonSerializer.Serialize<object>(obj);
+            Logger.LogInformation($"Sending to client ${json}");
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
-            await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+            try
+            {
+                await socket.SendAsync(buffer, WebSocketMessageType.Text, true, CancellationToken.None);
+            }
+            catch (Exception exc)
+            {
+                Logger.LogError($"Failed to send socket data. Exception: {exc}");
+            }
         }
     }
 }

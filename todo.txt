@@ -1,5 +1,10 @@
 Nästa mål: Spela en match mot Linn
 ==================================
+Förhindra två samtidiga spel med samma webläsare. Cookie krock.
+
+Kunna refresha efter ett move innan send. (Uppdatera state hela tiden)
+
+Inte skicka next valid moves från klient.
 
 Inte kunna flytta innan roll.
 

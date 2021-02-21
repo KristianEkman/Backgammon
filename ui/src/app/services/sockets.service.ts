@@ -1,6 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { CheckerDto, DiceDto, GameDto, MoveDto, PlayerColor } from '../dto';
+import {
+  CheckerDto,
+  DiceDto,
+  GameDto,
+  MoveDto,
+  PlayerColor,
+  GameCookieDto
+} from '../dto';
+import { CookieService } from 'ngx-cookie-service';
 import {
   ActionDto,
   ActionNames,
@@ -9,9 +17,10 @@ import {
   GameEndedActionDto,
   MovesMadeActionDto,
   OpponentMoveActionDto,
-  UndoActionDto
+  UndoActionDto,
+  ConnectionInfoActionDto,
+  GameRestoreActionDto
 } from '../dto/Actions';
-import { ConnectionInfoActionDto } from '../dto/Actions/connectionInfoActionDto';
 import { AppState } from '../state/app-state';
 
 @Injectable({
@@ -23,8 +32,8 @@ export class SocketsService implements OnDestroy {
   userMoves: MoveDto[] = [];
   gameHistory: GameDto[] = [];
   dicesHistory: DiceDto[][] = [];
-
   connectTime = new Date();
+  constructor(private cookieService: CookieService) {}
 
   connect(): void {
     this.url = environment.socketServiceUrl;
@@ -160,6 +169,11 @@ export class SocketsService implements OnDestroy {
         const dto = JSON.parse(message.data) as GameCreatedActionDto;
         AppState.Singleton.myColor.setValue(dto.myColor);
         AppState.Singleton.game.setValue(dto.game);
+
+        const cookie: GameCookieDto = { id: dto.game.id, color: dto.myColor };
+        this.cookieService.deleteAll('backgammon-game-id');
+        console.log('Settings cookie', cookie);
+        this.cookieService.set('backgammon-game-id', JSON.stringify(cookie), 2);
         break;
       }
       case ActionNames.dicesRolled: {
@@ -208,6 +222,13 @@ export class SocketsService implements OnDestroy {
           ...cnn,
           connected: action.connection.connected
         });
+        break;
+      }
+      case ActionNames.gameRestore: {
+        const dto = JSON.parse(message.data) as GameRestoreActionDto;
+        AppState.Singleton.myColor.setValue(dto.color);
+        AppState.Singleton.game.setValue(dto.game);
+        AppState.Singleton.dices.setValue(dto.dices);
         break;
       }
 
