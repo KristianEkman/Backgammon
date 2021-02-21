@@ -16,5 +16,11 @@ namespace Backend.Rules
         {
             return $"{Color} {From.GetNumber(Color)} -> {To.GetNumber(Color)}";
         }
+
+        public override bool Equals(object obj)
+        {
+            var move = (Move)obj;
+            return move.From == From && move.To == To && move.Color == Color;
+        }
     }
 }

@@ -264,9 +264,10 @@ export class SocketsService implements OnDestroy {
   }
 
   sendMove(move: MoveDto): void {
+    // removing next moves to decrease bytes.
     const action: OpponentMoveActionDto = {
       actionName: ActionNames.opponentMove,
-      move: { ...move, animate: true }
+      move: { ...move, nextMoves: [], animate: true }
     };
     this.sendMessage(JSON.stringify(action));
   }

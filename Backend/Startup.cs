@@ -24,7 +24,6 @@ namespace Backend
     public class Startup
     {
         // is this realy persistent
-        static List<GameManager> AllGames = new List<GameManager>();
 
         public Startup(IConfiguration configuration)
         {
@@ -45,15 +44,13 @@ namespace Backend
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<GameManager> logger)
         {
-            logger.LogInformation($"Configure startup.");
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backgammon Backend v1"));
             }
 
             app.UseHttpsRedirection();
@@ -71,7 +68,6 @@ namespace Backend
 
             app.UseDefaultFiles();
 
-
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path == "/ws")
@@ -79,48 +75,8 @@ namespace Backend
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         logger.LogInformation($"New web socket request.");
-
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-
-                        // find existing game to reconnect to.
-                        var cookies = context.Request.Cookies;
-                        var cookieKey = "backgammon-game-id";
-                        if (cookies.Any(c => (c.Key == cookieKey)))
-                        {
-                            var cookie = GameCookieDto.TryParse(cookies[cookieKey]);
-                            if (cookie != null)
-                            {
-                                var game = AllGames.SingleOrDefault(g => g.Game.Id.ToString().Equals(cookie.id));
-                                if (game != null)
-                                {
-                                    logger.LogInformation($"Restoring game {cookie.id}");
-                                    await game.Restore(cookie.color, webSocket);
-                                    //This is end of connection
-                                    return;
-                                }
-                            }
-                        }
-
-                        //todo: pair with someone equal ranking.
-                        var gameMananger = AllGames.OrderBy(g => g.Created)
-                            .FirstOrDefault(g => g.Client2 == null && g.SearchingOpponent);
-
-                        if (gameMananger == null)
-                        {
-                            gameMananger = new GameManager(logger);
-                            AllGames.Add(gameMananger);
-                            gameMananger.SearchingOpponent = true;
-                            logger.LogInformation($"Added a new game and waiting for opponent. Game id {gameMananger.Game.Id}");
-                            await gameMananger.ConnectAndListen(webSocket, Rules.Player.Color.Black);
-                            //This is end of connection
-                        }
-                        else
-                        {
-                            gameMananger.SearchingOpponent = false;
-                            logger.LogInformation($"Found a game and added a second player. Game id {gameMananger.Game.Id}");
-                            await gameMananger.ConnectAndListen(webSocket, Rules.Player.Color.White);
-                            //This is end of connection
-                        }
+                        await GameManager.Connect(webSocket, context, logger);                        
                     }
                     else
                     {
@@ -129,21 +85,9 @@ namespace Backend
                 }
                 else
                 {
-                    await next();
+                    await next();                    
 
-                    //if (context.Request.Path.ToString().Contains("index.html") || SinglePageAppRequestCheck(context))
-                    //{
-                    // add config cookie
-                    //var webConfig = new WebConfigModel();
-                    //Configuration.Bind(webConfig);
-                    //var jsonSettings = new JsonSerializerSettings()
-                    //{
-                    //    ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    //};
-                    //context.Response.Cookies.Append("ldmeConfig", JsonConvert.SerializeObject(webConfig, Formatting.None, jsonSettings));
-                    //}
-
-                    // This enables angular routing to function side on the same app as the web socket.
+                    // This enables angular routing to function on the same app as the web socket.
                     // If there's no available file and the request doesn't contain an extension, we're probably trying to access a page.
                     // Rewrite request to use app root
                     if (SinglePageAppRequestCheck(context))
