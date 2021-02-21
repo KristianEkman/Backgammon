@@ -1,40 +1,26 @@
-Nästa mål: Spela en match mot Linn
-==================================
+Nästa delmål, release till azure.
+=================================
+
+Kolla på server att rätt spelare skickar och att draget är giltigt.
+
+Snygga upp storlek av knappar och placering av text.
+
 Förhindra två samtidiga spel med samma webläsare. Cookie krock.
 
-Kunna refresha efter ett move innan send. (Uppdatera state hela tiden)
-
-Inte skicka next valid moves från klient.
-
-Inte kunna flytta innan roll.
-
-Rensa upp klienter, vid spel klart eller.
-
-Kolla på server att rätt spelare skickar
-och att draget är giltigt.
-
-Klicka på Roll button
-
-Animate
-    State moveAnimations array, shift.
+Rensa upp klienter, vid spel klart eller, båda avbrutna.
 
 Visa dubblar vid första drag.
 
-View opponents actions
+Points left
 
-Dices color
+Resign
 
-Notifiera motståndare om connection gått ner
-
-Återansluta
-
+Chat
 
 Backend
-    Ordentlig loggning, info, warning, errors
+    Ordentlig loggning, info, warning, errors   
+
     ai: Evaluate to give a score.
-    points left
-    resign
-    chat
     
 Api
     Login
@@ -51,7 +37,6 @@ Database
         Score
 Ui
   Tidskontroll
-  Resize
   Auto send when no options
   Auto move, when only one move.
   View dices on board
