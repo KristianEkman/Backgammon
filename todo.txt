@@ -1,13 +1,13 @@
 Nästa delmål, release till azure.
 =================================
 
-Kolla på server att rätt spelare skickar och att draget är giltigt.
-
 Snygga upp storlek av knappar och placering av text.
 
-Förhindra två samtidiga spel med samma webläsare. Cookie krock.
+Mobile app.
 
 Rensa upp klienter, vid spel klart eller, båda avbrutna.
+
+Förhindra två samtidiga spel med samma webläsare. Cookie krock.
 
 Visa dubblar vid första drag.
 
@@ -17,7 +17,15 @@ Resign
 
 Chat
 
+Ljud
+
+Olika teman, ljus, mörk, marble, wood.
+
+En meny
+
 Backend
+    Försök spara games innan WebApi går ner.
+
     Ordentlig loggning, info, warning, errors   
 
     ai: Evaluate to give a score.
@@ -46,4 +54,3 @@ Ui
   PlayRandom
   Play friend
   TopList, ELO
-

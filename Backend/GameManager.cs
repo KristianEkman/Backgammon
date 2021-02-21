@@ -258,17 +258,27 @@ namespace Backend
 
         private void DoMoves(MovesMadeActionDto action)
         {
-            foreach (var moveDto in action.moves)
+            var firstMove = action.moves[0].ToMove(Game);
+            var validMove = Game.ValidMoves.SingleOrDefault(m => firstMove.Equals(m));
+
+            for (int i = 0; i < action.moves.Length; i++)
             {
-                var color = (Player.Color)moveDto.color;
-                var move = new Move
+                var moveDto = action.moves[i];                
+                if (validMove == null)
                 {
-                    Color = color,
-                    From = Game.Points.Single(p => p.GetNumber(color) == moveDto.from),
-                    To = Game.Points.Single(p => p.GetNumber(color) == moveDto.to),
-                };
-                // TODO: Check these moves are valid for safety.
-                this.Game.MakeMove(move);
+                    // Preventing invalid moves to enter the state. Should not happen unless someones hacking the socket or serious bugs.
+                    throw new ApplicationException("An attempt ta make an invalid move was made");
+                }
+                else if (i < action.moves.Length - 1)
+                {
+                    var nextMove = action.moves[i + 1].ToMove(Game);
+                    // Going up the valid moves tree one step for every sent move.
+                    validMove = validMove.NextMoves.SingleOrDefault(m => nextMove.Equals(m));
+                }
+
+                var color = (Player.Color)moveDto.color;
+                var move = moveDto.ToMove(Game);
+                Game.MakeMove(move);
             }
         }
 

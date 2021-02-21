@@ -74,5 +74,16 @@ namespace Backend.Dto
             };
             return moveDto;
         }
+
+        public static Move ToMove(this MoveDto dto, Game game)
+        {
+            var color = (Player.Color)dto.color;
+            return new Move
+            {
+                Color = (Player.Color)dto.color,
+                From = game.Points.Single(p => p.GetNumber(color) == dto.from),
+                To = game.Points.Single(p => p.GetNumber(color) == dto.to),
+            };      
+        }
     }
 }
