@@ -1,4 +1,4 @@
-import { ConnectionDto, MoveDto, PlayerColor } from '../dto';
+import { ConnectionDto, GameState, MoveDto, PlayerColor } from '../dto';
 import { DiceDto } from '../dto/diceDto';
 import { GameDto } from '../dto/gameDto';
 import { StateObject } from './state-object';
@@ -33,9 +33,12 @@ export class AppState {
   opponentConnection: StateObject<ConnectionDto>;
 
   myTurn(): boolean {
+    const game = this.game.getValue();
+
     return (
-      this.game.getValue() &&
-      this.game.getValue().currentPlayer === this.myColor.getValue()
+      game &&
+      game.playState !== GameState.ended &&
+      game.currentPlayer === this.myColor.getValue()
     );
   }
 }

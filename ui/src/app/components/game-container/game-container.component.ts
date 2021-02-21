@@ -7,7 +7,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { DiceDto, GameDto, MoveDto, PlayerColor } from 'src/app/dto';
+import { DiceDto, GameDto, GameState, MoveDto, PlayerColor } from 'src/app/dto';
 import { SocketsService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 
@@ -164,6 +164,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       this.undoVisible = false;
       return;
     }
+
     const dices = AppState.Singleton.dices.getValue();
     this.undoVisible = dices && dices.filter((d) => d.used).length > 0;
   }

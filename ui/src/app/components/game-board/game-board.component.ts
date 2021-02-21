@@ -25,6 +25,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() public height = 400;
   @Input() game: GameDto | null = null;
   @Input() myColor: PlayerColor | null = PlayerColor.black;
+  @Input() dicesVisible: boolean | null = false;
+
   @Output() addMove = new EventEmitter<MoveDto>();
   @Output() moveAnimFinished = new EventEmitter<void>();
 
@@ -503,12 +505,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
-    if (this.game.playState === GameState.ended) {
+
+    if (!this.canMove()) {
       return;
     }
-    if (this.myColor != this.game.currentPlayer) {
-      return;
-    }
+
     const { clientX, clientY } = event;
     for (let i = 0; i < this.checkerAreas.length; i++) {
       const rect = this.checkerAreas[i];
@@ -530,17 +531,38 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
   }
 
+  canMove(): boolean {
+    if (!this.game) {
+      return false;
+    }
+    if (this.myColor != this.game.currentPlayer) {
+      return false;
+    }
+    if (!this.dicesVisible) {
+      return false;
+    }
+
+    if (this.game.playState === GameState.ended) {
+      return false;
+    }
+
+    return true;
+  }
+
   onMouseMove(event: MouseEvent): void {
     // console.log('move', event);
 
     this.cursor.x = event.clientX;
     this.cursor.y = event.clientY;
+
     if (!this.game) {
       return;
     }
-    if (this.myColor != this.game.currentPlayer) {
+
+    if (!this.canMove()) {
       return;
     }
+
     if (this.dragging) {
       this.drawDirty = true;
       return;
@@ -596,12 +618,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
-    if (this.game.playState === GameState.ended) {
+
+    if (!this.canMove()) {
       return;
     }
-    if (this.myColor != this.game.currentPlayer) {
-      return;
-    }
+
     if (!this.dragging) {
       return;
     }
