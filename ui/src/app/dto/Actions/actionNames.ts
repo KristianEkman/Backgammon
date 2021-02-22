@@ -8,5 +8,6 @@ export enum ActionNames {
   opponentMove,
   undoMove,
   connectionInfo,
-  gameRestore
+  gameRestore,
+  abortGame
 }

@@ -176,4 +176,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     }
     this.dicesVisible = !this.rollButtonVisible;
   }
+
+  abortGame(): void {
+    this.service.abortGame();
+  }
 }

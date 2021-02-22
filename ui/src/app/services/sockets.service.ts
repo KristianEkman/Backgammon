@@ -19,7 +19,8 @@ import {
   OpponentMoveActionDto,
   UndoActionDto,
   ConnectionInfoActionDto,
-  GameRestoreActionDto
+  GameRestoreActionDto,
+  AbortGameActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
 
@@ -283,6 +284,14 @@ export class SocketsService implements OnDestroy {
     const action: ConnectionInfoActionDto = {
       actionName: ActionNames.connectionInfo,
       connection: { pingMs: 0, connected: false }
+    };
+    this.sendMessage(JSON.stringify(action));
+  }
+
+  abortGame(): void {
+    const action: AbortGameActionDto = {
+      actionName: ActionNames.abortGame,
+      gameId: AppState.Singleton.game.getValue().id
     };
     this.sendMessage(JSON.stringify(action));
   }

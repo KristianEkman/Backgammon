@@ -517,7 +517,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   onMouseDown(event: MouseEvent): void {
     // console.log('down', event);
+    const { clientX, clientY } = event;
 
+    this.handleDown(clientX, clientY);
+  }
+
+  handleDown(clientX: number, clientY: number): void {
     if (!this.game) {
       return;
     }
@@ -526,7 +531,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
 
-    const { clientX, clientY } = event;
     for (let i = 0; i < this.checkerAreas.length; i++) {
       const rect = this.checkerAreas[i];
       const x = clientX - this.borderWidth;
@@ -567,9 +571,14 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   onMouseMove(event: MouseEvent): void {
     // console.log('move', event);
+    const { clientX, clientY } = event;
 
-    this.cursor.x = event.clientX;
-    this.cursor.y = event.clientY;
+    this.handleMove(clientX, clientY);
+  }
+
+  handleMove(clientX: number, clientY: number): void {
+    this.cursor.x = clientX;
+    this.cursor.y = clientY;
 
     if (!this.game) {
       return;
@@ -585,7 +594,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     // Indicating what can be moved and where.
-    const { clientX, clientY } = event;
     const isWhite = this.game.currentPlayer === PlayerColor.white;
 
     // resetting all
@@ -630,7 +638,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   onMouseUp(event: MouseEvent): void {
     // console.log('up', event);
+    const { clientX, clientY } = event;
 
+    this.handleUp(clientX, clientY);
+  }
+
+  handleUp(clientX: number, clientY: number): void {
     if (!this.game) {
       return;
     }
@@ -642,7 +655,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.dragging) {
       return;
     }
-    const { clientX, clientY } = event;
+
     const { xDown, yDown, fromIdx } = this.dragging;
 
     // Unless the cursor has moved to far, this is a click event, and should move the move of the largest dice.
@@ -682,5 +695,29 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
     this.drawDirty = true;
     this.dragging = null;
+  }
+
+  onTouchStart(event: TouchEvent): void {
+    if (event.touches.length != 1) {
+      return;
+    }
+    const touch = event.touches[0];
+    this.handleDown(touch.clientX, touch.clientY);
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    if (event.touches.length != 1) {
+      return;
+    }
+    const touch = event.touches[0];
+    this.handleUp(touch.clientX, touch.clientY);
+  }
+
+  onTouchMove(event: TouchEvent): void {
+    if (event.touches.length != 1) {
+      return;
+    }
+    const touch = event.touches[0];
+    this.handleMove(touch.clientX, touch.clientY);
   }
 }

@@ -25,71 +25,15 @@ namespace Backend
 
         private static List<GameManager> AllGames = new List<GameManager>();
 
-
         public WebSocket Client1 { get; set; }
         public WebSocket Client2 { get; set; }
         public Game Game { get; set; }
 
         public DateTime Created { get; private set; }
-        public bool SearchingOpponent { get; set; }
-        public ILogger<GameManager> Logger { get; }
+        private bool SearchingOpponent { get; set; }
+        private ILogger<GameManager> Logger { get; }
 
-        internal void StartGame()
-        {
-            var gameDto = Game.ToDto();
-            var action = new GameCreatedActionDto
-            {
-                game = gameDto
-            };
-            action.myColor = PlayerColor.black;
-            _ = Send(Client1, action);
-            action.myColor = PlayerColor.white;
-            _ = Send(Client2, action);
-
-            // todo: visa på clienten även när det blir samma 
-            while (Game.PlayState == Game.State.FirstThrow)
-            {
-                Game.RollDice();
-                var rollAction = new DicesRolledActionDto
-                {
-                    dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
-                    playerToMove = (PlayerColor)Game.CurrentPlayer,
-                    validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
-                };
-                _ = Send(Client1, rollAction);
-                _ = Send(Client2, rollAction);
-            }
-        }
-
-        private void SendNewRoll()
-        {
-            Game.RollDice();
-            var rollAction = new DicesRolledActionDto
-            {
-                dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
-                playerToMove = (PlayerColor)Game.CurrentPlayer,
-                validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
-            };
-            _ = Send(Client1, rollAction);
-            _ = Send(Client2, rollAction);
-        }
-
-        internal async Task ConnectAndListen(WebSocket webSocket, Rules.Player.Color color)
-        {
-            if (color == Player.Color.Black)
-            {
-                Client1 = webSocket;
-                await ListenOn(webSocket);
-            }
-            else
-            {
-                Client2 = webSocket;
-                StartGame();
-                await ListenOn(webSocket);
-            }
-        }
-
-        internal static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger)
+        public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger)
         {
             // find existing game to reconnect to.
             var cookies = context.Request.Cookies;
@@ -132,6 +76,61 @@ namespace Backend
             }
         }
 
+        private void StartGame()
+        {
+            var gameDto = Game.ToDto();
+            var action = new GameCreatedActionDto
+            {
+                game = gameDto
+            };
+            action.myColor = PlayerColor.black;
+            _ = Send(Client1, action);
+            action.myColor = PlayerColor.white;
+            _ = Send(Client2, action);
+
+            // todo: visa på clienten även när det blir samma 
+            while (Game.PlayState == Game.State.FirstThrow)
+            {
+                Game.RollDice();
+                var rollAction = new DicesRolledActionDto
+                {
+                    dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
+                    playerToMove = (PlayerColor)Game.CurrentPlayer,
+                    validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
+                };
+                _ = Send(Client1, rollAction);
+                _ = Send(Client2, rollAction);
+            }
+        }
+
+        private void SendNewRoll()
+        {
+            Game.RollDice();
+            var rollAction = new DicesRolledActionDto
+            {
+                dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
+                playerToMove = (PlayerColor)Game.CurrentPlayer,
+                validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
+            };
+            _ = Send(Client1, rollAction);
+            _ = Send(Client2, rollAction);
+        }
+
+        private async Task ConnectAndListen(WebSocket webSocket, Rules.Player.Color color)
+        {
+            if (color == Player.Color.Black)
+            {
+                Client1 = webSocket;
+                await ListenOn(webSocket);
+            }
+            else
+            {
+                Client2 = webSocket;
+                StartGame();
+                await ListenOn(webSocket);
+            }
+        }
+                
         private async Task<string> ReceiveText(WebSocket socket)
         {
             var buffer = new byte[512];
@@ -206,54 +205,95 @@ namespace Backend
                 _ = Send(otherClient, new ConnectionInfoActionDto { connection = new ConnectionDto { connected = false } });
         }
 
-        private void DoAction(ActionNames actionName, string text, WebSocket otherClient)
+        private void DoAction(ActionNames actionName, string text, WebSocket socket)
         {
             Logger.LogInformation($"Doing action: {actionName}");
             if (actionName == ActionNames.movesMade)
             {
                 var action = (MovesMadeActionDto)JsonSerializer.Deserialize(text, typeof(MovesMadeActionDto));
                 DoMoves(action);
-
-                PlayerColor? winner = null;
-                if (this.Game.CurrentPlayer == Player.Color.Black)
-                {
-                    this.Game.CurrentPlayer = Player.Color.White;
-                    if (this.Game.GetHome(Player.Color.Black).Checkers.Count == 15)
-                    {
-                        this.Game.PlayState = Game.State.Ended;
-                        winner = PlayerColor.black;
-                    }
-                }
-                else
-                {
-                    this.Game.CurrentPlayer = Player.Color.Black;
-                    if (this.Game.GetHome(Player.Color.White).Checkers.Count == 15)
-                    {
-                        this.Game.PlayState = Game.State.Ended;
-                        winner = PlayerColor.white;
-                        SendWinner(PlayerColor.white);
-                    }
-                }
+                PlayerColor? winner = GetWinner();
                 if (winner.HasValue)
-                    SendWinner(winner.Value);
+                    _ = SendWinner(winner.Value);
                 else
                     SendNewRoll();
             }
             else if (actionName == ActionNames.opponentMove)
             {
                 var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(text, typeof(OpponentMoveActionDto));
-                _ = Send(otherClient, action);
+                _ = Send(socket, action);
             }
             else if (actionName == ActionNames.undoMove)
             {   
                 var action = (UndoActionDto)JsonSerializer.Deserialize(text, typeof(UndoActionDto));
-                _ = Send(otherClient, action);
+                _ = Send(socket, action);
             }
             else if (actionName == ActionNames.connectionInfo)
             {
                 var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(text, typeof(ConnectionInfoActionDto));
-                _ = Send(otherClient, action);
+                _ = Send(socket, action);
             }
+            else if (actionName == ActionNames.abortGame)
+            {
+                var action = (AbortGameActionDto)JsonSerializer.Deserialize(text, typeof(AbortGameActionDto));
+                var winner = Client1 == socket ? PlayerColor.black : PlayerColor.white;
+                _ = AbortGame(action.gameId, winner);                
+            }
+        }
+
+        private async Task AbortGame(string gameId, PlayerColor winner)
+        {
+            if (Game.Id.ToString() != gameId)
+            {
+                Logger.LogWarning("A client is trying to abort a game that it is not connected to.");
+                return;
+            }
+
+            Game.PlayState = Game.State.Ended;
+            await SendWinner(winner);
+            _ = CloseConnections();
+            AllGames.Remove(this);
+            Logger.LogInformation($"Game {gameId} removed.");
+        }
+
+        private async Task CloseConnections()
+        {
+            if (Client1 != null)
+            {
+                await Client1.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
+                Client1.Dispose();
+            }
+            if (Client2 != null)
+            {
+                await Client2.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
+                Client2.Dispose();
+            }
+        }
+
+        private PlayerColor? GetWinner()
+        {
+            PlayerColor? winner = null;
+            if (Game.CurrentPlayer == Player.Color.Black)
+            {
+                Game.CurrentPlayer = Player.Color.White;
+                if (Game.GetHome(Player.Color.Black).Checkers.Count == 15)
+                {
+                    Game.PlayState = Game.State.Ended;
+                    winner = PlayerColor.black;
+                }
+            }
+            else
+            {
+                Game.CurrentPlayer = Player.Color.Black;
+                if (Game.GetHome(Player.Color.White).Checkers.Count == 15)
+                {
+                    Game.PlayState = Game.State.Ended;
+                    winner = PlayerColor.white;
+                    SendWinner(PlayerColor.white);
+                }
+            }
+
+            return winner;
         }
 
         private void DoMoves(MovesMadeActionDto action)
@@ -281,29 +321,17 @@ namespace Backend
                 Game.MakeMove(move);
             }
         }
-
-        private void DoMove(MoveDto moveDto)
+        
+        private async Task SendWinner(PlayerColor color)
         {
-            var color = (Player.Color)moveDto.color;
-            var move = new Move
-            {
-                Color = color,
-                From = Game.Points.Single(p => p.GetNumber(color) == moveDto.from),
-                To = Game.Points.Single(p => p.GetNumber(color) == moveDto.to),
-            };
-            this.Game.MakeMove(move);
-        }
-
-        private void SendWinner(PlayerColor color)
-        {
-            var game = this.Game.ToDto();
+            var game = Game.ToDto();
             game.winner = color;
             var gameEndedAction = new GameEndedActionDto
             {
                 game = game
             };
-            _ = Send(Client1, gameEndedAction);
-            _ = Send(Client2, gameEndedAction);
+            await Send(Client1, gameEndedAction);
+            await Send(Client2, gameEndedAction);
         }
 
         private async Task Send<T>(WebSocket socket, T obj)

@@ -14,6 +14,7 @@ namespace Backend.Dto
         opponentMove,
         undoMove,
         connectionInfo,
-        gameRestore
+        gameRestore,
+        abortGame
     }
 }
