@@ -44,7 +44,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   drawDirty = false;
   dragging: CheckerDrag | null = null;
   cursor: Point = new Point(0, 0);
-  framerate = 25;
+  framerate = 60;
   animatedMove: MoveAnimation | undefined = undefined;
   animationSubscription: Subscription;
 
@@ -300,6 +300,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           0,
           360
         );
+        // console.log('draw drag', this.cursor);
+
         cx.closePath();
         cx.fill();
         cx.stroke();
@@ -517,6 +519,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   onMouseDown(event: MouseEvent): void {
     // console.log('down', event);
+    // console.log('mousedown');
     const { clientX, clientY } = event;
 
     this.handleDown(clientX, clientY);
@@ -546,6 +549,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       const move = this.game.validMoves.find((m) => m.from === ptIdx);
       if (move !== undefined) {
         this.dragging = new CheckerDrag(rect, clientX, clientY, ptIdx);
+        // console.log('dragging', this.dragging);
         break;
       }
     }
@@ -593,6 +597,14 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
 
+    this.setCanBeMovedTo(clientX, clientY);
+  }
+
+  setCanBeMovedTo(clientX: number, clientY: number): void {
+    if (!this.game) {
+      return;
+    }
+
     // Indicating what can be moved and where.
     const isWhite = this.game.currentPlayer === PlayerColor.white;
 
@@ -637,7 +649,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   onMouseUp(event: MouseEvent): void {
-    // console.log('up', event);
+    console.log('mouse up', event);
     const { clientX, clientY } = event;
 
     this.handleUp(clientX, clientY);
@@ -694,30 +706,40 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       }
     }
     this.drawDirty = true;
+    // console.log('dragging null');
     this.dragging = null;
   }
 
   onTouchStart(event: TouchEvent): void {
-    if (event.touches.length != 1) {
+    if (event.touches.length !== 1) {
       return;
     }
     const touch = event.touches[0];
+    this.lastTouch = touch;
+    this.cursor.x = touch.clientX;
+    this.cursor.y = touch.clientY;
+    // console.log('touchstart', touch.clientX, touch.clientY);
+
     this.handleDown(touch.clientX, touch.clientY);
+    this.setCanBeMovedTo(touch.clientX, touch.clientY);
   }
 
-  onTouchEnd(event: TouchEvent): void {
-    if (event.touches.length != 1) {
-      return;
+  onTouchEnd(): void {
+    console.log('touchend');
+    if (this.lastTouch != undefined) {
+      this.handleUp(this.lastTouch.clientX, this.lastTouch.clientY);
     }
-    const touch = event.touches[0];
-    this.handleUp(touch.clientX, touch.clientY);
+    this.lastTouch = undefined;
   }
 
+  lastTouch: Touch | undefined = undefined;
   onTouchMove(event: TouchEvent): void {
-    if (event.touches.length != 1) {
+    // console.log('touchmove');
+    if (event.touches.length !== 1) {
       return;
     }
     const touch = event.touches[0];
+    this.lastTouch = touch;
     this.handleMove(touch.clientX, touch.clientY);
   }
 }

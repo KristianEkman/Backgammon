@@ -1,19 +1,19 @@
 Nästa delmål, release till azure.
 =================================
 
-Snygga upp storlek av knappar och placering av text.
-
 Mobile app.
+    fixa touch
 
-Rensa upp klienter, vid spel klart eller, båda avbrutna.
+Rensa upp klienter, vid spel klart.
 
-Förhindra två samtidiga spel med samma webläsare. Cookie krock.
+Två samtidiga spel med samma webläsare.
+    Avbryt den första
 
 Visa dubblar vid första drag.
 
 Points left
 
-Resign
+Rotate board
 
 Chat
 
@@ -22,6 +22,8 @@ Ljud
 Olika teman, ljus, mörk, marble, wood.
 
 En meny
+
+Doubling
 
 Backend
     Försök spara games innan WebApi går ner.
@@ -32,7 +34,6 @@ Backend
     
 Api
     Login
-
     Sockets:        
         Move
         MoveReceived
@@ -44,12 +45,11 @@ Database
     Games
         Score
 Ui
+  Felmeddelanden
   Tidskontroll
   Auto send when no options
   Auto move, when only one move.
   View dices on board
-  Rotate board.
-  Textures
   PlayAI-Button
   PlayRandom
   Play friend
