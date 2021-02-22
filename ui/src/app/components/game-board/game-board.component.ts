@@ -35,6 +35,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   sideBoardWidth = 0;
   rectBase = 0;
   rectHeight = 0;
+  headerHeight = 0;
   checkerAreas: CheckerArea[] = [];
   blackHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 25);
   whiteHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 0);
@@ -101,13 +102,14 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.borderWidth = this.width * 0.01;
     this.barWidth = this.borderWidth * 2;
     this.sideBoardWidth = this.width * 0.1;
+    this.headerHeight = this.borderWidth * 1.5;
     this.rectBase =
       (this.width -
         this.barWidth -
         2 * this.borderWidth -
         this.sideBoardWidth * 2) /
       12;
-    this.rectHeight = this.height * 0.42;
+    this.rectHeight = (this.height - this.headerHeight) * 0.42;
 
     //blacks bar
     this.checkerAreas[24].set(
@@ -146,7 +148,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     );
 
     let x = this.borderWidth + this.sideBoardWidth;
-    let y = this.borderWidth;
+    let y = this.borderWidth + this.headerHeight;
 
     //Top triangles
     for (let i = 0; i < 12; i++) {
@@ -411,6 +413,15 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.fillStyle = '#ccc';
     cx.fillRect(0, 0, this.width, this.height);
 
+    // header
+    cx.fillStyle = '#888';
+    cx.fillRect(
+      this.sideBoardWidth,
+      0,
+      this.width - this.sideBoardWidth * 2,
+      this.headerHeight * 2
+    );
+
     cx.strokeStyle = '#000';
     const colors = ['#555', '#eee'];
     let colorIdx = 0;
@@ -425,7 +436,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       cx.beginPath();
       cx.moveTo(x, y);
       x += area.width / 2;
-      cx.lineTo(x, area.height);
+      cx.lineTo(x, area.height + this.headerHeight);
       x += area.width / 2;
       cx.lineTo(x, y);
       cx.closePath();
@@ -476,8 +487,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
     let text = '';
-    cx.fillStyle = '#000';
-    cx.font = '14px Arial';
     if (!this.game) {
       text = 'Waiting for opponent to connect';
     } else if (this.game.playState === GameState.ended) {
@@ -491,11 +500,18 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     } else {
       text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
     }
-
+    cx.fillStyle = '#AFAB57';
+    cx.font = 'bold 15px Arial';
     cx.fillText(
       text,
       this.sideBoardWidth + 2 * this.borderWidth + 8,
-      this.height / 2
+      this.headerHeight + 3
+    );
+    cx.fillStyle = '#000';
+    cx.fillText(
+      text,
+      this.sideBoardWidth + 2 * this.borderWidth + 8 + 1,
+      this.headerHeight + 3 + 1
     );
   }
 

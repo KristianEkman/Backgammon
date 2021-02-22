@@ -1,9 +1,11 @@
-<label
-  *ngFor="let dice of dices"
-  [ngClass]="{
-    diceUsed: dice.used,
-    black: color === PlayerColor.black,
-    white: color === PlayerColor.white
-  }"
-  >{{ dice.value }}</label
->
+<div class="dices">
+  <label
+    *ngFor="let dice of dices"
+    [ngClass]="{
+      diceUsed: dice.used,
+      black: color === PlayerColor.black,
+      white: color === PlayerColor.white
+    }"
+    >{{ dice.value }}</label
+  >
+</div>

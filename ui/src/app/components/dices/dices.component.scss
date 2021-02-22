@@ -1,3 +1,8 @@
+.dices {
+  display: inline-block;
+  max-width: 100px;
+}
+
 label {
   display: inline-block;
   width: 35px;
@@ -5,7 +10,7 @@ label {
   border: 1px solid #555;
   color: #555;
   border-radius: 4px;
-  margin: 4px;
+  margin: 2px;
   text-align: center;
   padding-top: 10px;
   font-weight: 600;

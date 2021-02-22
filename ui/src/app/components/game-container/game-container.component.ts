@@ -94,23 +94,23 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(): void {
-    this.width = Math.min(window.innerWidth, 800);
-    this.height = Math.min(window.innerHeight, this.width * 0.6);
+    this.width = Math.min(window.innerWidth - 20, 800);
+    this.height = Math.min(window.innerHeight - 20, this.width * 0.6);
 
     const buttons = this.boardButtons?.nativeElement as HTMLElement;
     if (buttons) {
       buttons.style.top = `${this.height / 2 - buttons.clientHeight / 2}px`;
-      buttons.style.right = `${this.width * 0.1}px`;
+      buttons.style.right = `${this.width * 0.11}px`;
     }
 
     const dices = this.dices?.nativeElement as HTMLElement;
     if (dices) {
       // put the dices on right board if its my turn.
       if (this.myTurn()) {
-        dices.style.left = `${this.width / 2 + this.width * 0.015}px`;
+        dices.style.left = `${this.width / 2 + 10}px`;
         dices.style.right = '';
       } else {
-        dices.style.right = `${this.width / 2}px`;
+        dices.style.right = `${this.width / 2 + 10}px`;
         dices.style.left = '';
       }
       dices.style.top = `${this.height / 2 - dices.clientHeight / 2}px`;
