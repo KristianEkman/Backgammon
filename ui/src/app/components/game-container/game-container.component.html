@@ -21,9 +21,11 @@
       [undoVisible]="undoVisible"
       [sendVisible]="sendVisible"
       [rollButtonVisible]="rollButtonVisible"
+      [newVisible]="newVisible"
       (onUndoMove)="undoMove()"
       (onSendMoves)="sendMoves()"
       (onRoll)="rollButtonClick()"
+      (onNew)="newGame()"
     ></app-board-buttons>
   </div>
 </div>

@@ -1,27 +1,26 @@
 Nästa delmål, release till azure.
 =================================
 
-Mobile app.
-    fixa touch
-
-Rensa upp klienter, vid spel klart.
-
 Två samtidiga spel med samma webläsare.
     Avbryt den första
+
+ios
+
+MessageComponent
+
+En meny
+
+Rotate board
 
 Visa dubblar vid första drag.
 
 Points left
-
-Rotate board
 
 Chat
 
 Ljud
 
 Olika teman, ljus, mörk, marble, wood.
-
-En meny
 
 Doubling
 
@@ -45,7 +44,6 @@ Database
     Games
         Score
 Ui
-  Felmeddelanden
   Tidskontroll
   Auto send when no options
   Auto move, when only one move.

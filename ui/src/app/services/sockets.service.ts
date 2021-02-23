@@ -37,6 +37,10 @@ export class SocketsService implements OnDestroy {
   constructor(private cookieService: CookieService) {}
 
   connect(): void {
+    if (this.socket) {
+      this.socket.close();
+    }
+
     this.url = environment.socketServiceUrl;
     this.socket = new WebSocket(this.url);
     this.socket.onmessage = this.onMessage.bind(this);
@@ -286,6 +290,7 @@ export class SocketsService implements OnDestroy {
       connection: { pingMs: 0, connected: false }
     };
     this.sendMessage(JSON.stringify(action));
+    this.socket?.close();
   }
 
   abortGame(): void {

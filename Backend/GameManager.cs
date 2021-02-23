@@ -189,7 +189,9 @@ namespace Backend
         private async Task ListenOn(WebSocket socket)
         {
             WebSocket otherClient = null;
-            while (socket.State != WebSocketState.Closed && socket.State != WebSocketState.Aborted && socket.State != WebSocketState.CloseReceived)
+            while (socket.State != WebSocketState.Closed && 
+                socket.State != WebSocketState.Aborted && 
+                socket.State != WebSocketState.CloseReceived)
             {
                 var text = await ReceiveText(socket);
                 if (text != null && text.Length > 0)
@@ -197,15 +199,12 @@ namespace Backend
                     Logger.LogInformation($"Received: {text}");
                     var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
                     otherClient = socket == Client1 ? Client2 : Client1;
-                    DoAction(action.actionName, text, otherClient);
+                    await DoAction(action.actionName, text, otherClient);
                 }
             }
-
-            if (otherClient != null && otherClient.State == WebSocketState.Open)
-                _ = Send(otherClient, new ConnectionInfoActionDto { connection = new ConnectionDto { connected = false } });
         }
 
-        private void DoAction(ActionNames actionName, string text, WebSocket socket)
+        private async Task DoAction(ActionNames actionName, string text, WebSocket socket)
         {
             Logger.LogInformation($"Doing action: {actionName}");
             if (actionName == ActionNames.movesMade)
@@ -214,7 +213,12 @@ namespace Backend
                 DoMoves(action);
                 PlayerColor? winner = GetWinner();
                 if (winner.HasValue)
-                    _ = SendWinner(winner.Value);
+                {
+                    Logger.LogInformation($"Player {winner} won the game");
+                    await SendWinner(winner.Value);
+                    _ = CloseConnections();
+                    AllGames.Remove(this);
+                }
                 else
                     SendNewRoll();
             }
@@ -260,11 +264,13 @@ namespace Backend
         {
             if (Client1 != null)
             {
+                Logger.LogInformation("Closing client 1");
                 await Client1.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
                 Client1.Dispose();
             }
             if (Client2 != null)
             {
+                Logger.LogInformation("Closing client 2");
                 await Client2.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
                 Client2.Dispose();
             }

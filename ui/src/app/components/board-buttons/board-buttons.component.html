@@ -1,5 +1,5 @@
 <button (click)="sendMoves()" *ngIf="sendVisible" class="sendButton">
-  Send
+  Done
 </button>
 <button (click)="undoMove()" *ngIf="undoVisible" class="undoButton">
   Undo
@@ -11,3 +11,4 @@
 >
   Roll
 </button>
+<button (click)="newGame()" *ngIf="newVisible" class="newButton">New</button>

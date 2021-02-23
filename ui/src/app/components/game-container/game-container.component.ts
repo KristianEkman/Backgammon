@@ -72,6 +72,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setUndoVisible();
     this.diceColor = dto.currentPlayer;
     this.fireResize();
+    this.newVisible = dto.playState === GameState.ended;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -131,6 +132,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   sendVisible = false;
   undoVisible = false;
   dicesVisible = false;
+  newVisible = false;
 
   rollButtonClick(): void {
     this.rollButtonClicked = true;
@@ -179,5 +181,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   abortGame(): void {
     this.service.abortGame();
+  }
+
+  newGame(): void {
+    this.newVisible = false;
+    this.service.connect();
   }
 }

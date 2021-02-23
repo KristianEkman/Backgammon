@@ -9,10 +9,12 @@ export class BoardButtonsComponent {
   @Input() undoVisible = false;
   @Input() sendVisible = false;
   @Input() rollButtonVisible = false;
+  @Input() newVisible = false;
 
   @Output() onUndoMove = new EventEmitter<void>();
   @Output() onSendMoves = new EventEmitter<void>();
   @Output() onRoll = new EventEmitter<void>();
+  @Output() onNew = new EventEmitter<void>();
 
   undoMove(): void {
     this.onUndoMove.emit();
@@ -24,5 +26,9 @@ export class BoardButtonsComponent {
 
   rollButtonClick(): void {
     this.onRoll.emit();
+  }
+
+  newGame(): void {
+    this.onNew.emit();
   }
 }
