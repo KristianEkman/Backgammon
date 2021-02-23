@@ -47,6 +47,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   framerate = 60;
   animatedMove: MoveAnimation | undefined = undefined;
   animationSubscription: Subscription;
+  hasTouch = false;
 
   constructor() {
     for (let r = 0; r < 26; r++) {
@@ -518,8 +519,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   onMouseDown(event: MouseEvent): void {
-    // console.log('down', event);
     // console.log('mousedown');
+    if (this.hasTouch) {
+      return;
+    }
     const { clientX, clientY } = event;
 
     this.handleDown(clientX, clientY);
@@ -574,7 +577,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   onMouseMove(event: MouseEvent): void {
-    // console.log('move', event);
+    // console.log('mousemove', event);
     const { clientX, clientY } = event;
 
     this.handleMove(clientX, clientY);
@@ -649,9 +652,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   onMouseUp(event: MouseEvent): void {
-    console.log('mouse up', event);
+    // console.log('mouse up', event);
+    if (this.hasTouch) {
+      return;
+      // on mobile there is a mouse up event if the mouse hasn't been moved.
+    }
     const { clientX, clientY } = event;
-
     this.handleUp(clientX, clientY);
   }
 
@@ -711,6 +717,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   onTouchStart(event: TouchEvent): void {
+    // console.log('touch start', event);
+    this.hasTouch = true;
     if (event.touches.length !== 1) {
       return;
     }
@@ -724,8 +732,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.setCanBeMovedTo(touch.clientX, touch.clientY);
   }
 
-  onTouchEnd(): void {
-    console.log('touchend');
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onTouchEnd(event: TouchEvent): void {
+    // console.log('touchend', event);
+
     if (this.lastTouch != undefined) {
       this.handleUp(this.lastTouch.clientX, this.lastTouch.clientY);
     }
