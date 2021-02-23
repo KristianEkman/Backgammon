@@ -1,19 +1,17 @@
-Nästa delmål, release till azure.
+Nï¿½sta delmï¿½l, release till azure.
 =================================
 
 En meny
 
 Rotate board
 
-MessageComponent
-
-Två samtidiga spel med samma webläsare.
-    Avbryt den första
+Tvï¿½ samtidiga spel med samma weblï¿½sare.
+    Avbryt den fï¿½rsta
 
 ios
 
 
-Visa dubblar vid första drag.
+Visa dubblar vid fï¿½rsta drag.
 
 Points left
 
@@ -21,12 +19,12 @@ Chat
 
 Ljud
 
-Olika teman, ljus, mörk, marble, wood.
+Olika teman, ljus, mï¿½rk, marble, wood.
 
 Doubling
 
 Backend
-    Försök spara games innan WebApi går ner.
+    Fï¿½rsï¿½k spara games innan WebApi gï¿½r ner.
 
     Ordentlig loggning, info, warning, errors   
 

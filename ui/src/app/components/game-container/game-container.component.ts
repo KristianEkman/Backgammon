@@ -41,9 +41,12 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   height = 450;
   rollButtonClicked = false;
   diceColor: PlayerColor | null = PlayerColor.neither;
+  message = '';
+  messageCenter = 0;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
+  @ViewChild('messages') messages: ElementRef | undefined;
 
   sendMoves(): void {
     this.service.sendMoves();
@@ -73,6 +76,24 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.diceColor = dto.currentPlayer;
     this.fireResize();
     this.newVisible = dto.playState === GameState.ended;
+    this.setTextMessage(dto);
+  }
+
+  setTextMessage(game: GameDto): void {
+    const myColor = AppState.Singleton.myColor.getValue();
+    if (!game) {
+      this.message = 'Waiting for opponent to connect';
+    } else if (game.playState === GameState.ended) {
+      // console.log(this.myColor, this.game.winner);
+      this.message =
+        myColor === game.winner
+          ? 'Congrats! You won.'
+          : 'Sorry. You lost the game.';
+    } else if (myColor === game.currentPlayer) {
+      this.message = `Your turn to move.  (${PlayerColor[game.currentPlayer]})`;
+    } else {
+      this.message = `Waiting for ${PlayerColor[game.currentPlayer]} to move.`;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -96,6 +117,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   onResize(): void {
     this.width = Math.min(window.innerWidth - 20, 800);
+    const span = this.messages?.nativeElement as Element;
+    const spanWidth = span.getElementsByTagName('span')[0].clientWidth;
+    this.messageCenter = this.width / 2 - spanWidth / 2;
+
     this.height = Math.min(window.innerHeight - 20, this.width * 0.6);
 
     const buttons = this.boardButtons?.nativeElement as HTMLElement;

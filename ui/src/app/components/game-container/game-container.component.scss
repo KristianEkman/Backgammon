@@ -12,6 +12,10 @@ app-game-board {
   }
 }
 
+.messages {
+  display: inline-block;
+}
+
 .game-container {
   position: relative;
   max-width: 800px;

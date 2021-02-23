@@ -1,4 +1,11 @@
 <div class="game-container">
+  <div class="messages" #messages>
+    <app-messages
+      [initial]="width"
+      [shown]="messageCenter"
+      [message]="message"
+    ></app-messages>
+  </div>
   <button class="abort-button" (click)="abortGame()">Abort</button>
   <app-game-board
     [width]="width"

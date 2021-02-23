@@ -190,7 +190,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawBoard(cx);
     // this.drawRects(cx); // debug
     this.drawCheckers(cx);
-    this.drawMessage(cx);
     if (this.animatedMove) {
       this.animatedMove.draw(cx, this.getCheckerWidth());
     }
@@ -482,39 +481,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       0,
       this.barWidth,
       this.height
-    );
-  }
-
-  drawMessage(cx: CanvasRenderingContext2D | null): void {
-    if (!cx) {
-      return;
-    }
-    let text = '';
-    if (!this.game) {
-      text = 'Waiting for opponent to connect';
-    } else if (this.game.playState === GameState.ended) {
-      // console.log(this.myColor, this.game.winner);
-      text =
-        this.myColor === this.game.winner
-          ? 'Congrats! You won.'
-          : 'Sorry. You lost the game.';
-    } else if (this.myColor === this.game.currentPlayer) {
-      text = `Your turn to move.  (${PlayerColor[this.game.currentPlayer]})`;
-    } else {
-      text = `Waiting for ${PlayerColor[this.game.currentPlayer]} to move.`;
-    }
-    cx.fillStyle = '#AFAB57';
-    cx.font = 'bold 15px Arial';
-    cx.fillText(
-      text,
-      this.sideBoardWidth + 2 * this.borderWidth + 8,
-      this.headerHeight + 3
-    );
-    cx.fillStyle = '#000';
-    cx.fillText(
-      text,
-      this.sideBoardWidth + 2 * this.borderWidth + 8 + 1,
-      this.headerHeight + 3 + 1
     );
   }
 
