@@ -1,16 +1,17 @@
 Nästa delmål, release till azure.
 =================================
 
+En meny
+
+Rotate board
+
+MessageComponent
+
 Två samtidiga spel med samma webläsare.
     Avbryt den första
 
 ios
 
-MessageComponent
-
-En meny
-
-Rotate board
 
 Visa dubblar vid första drag.
 
