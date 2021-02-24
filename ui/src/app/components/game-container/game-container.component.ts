@@ -43,6 +43,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   diceColor: PlayerColor | null = PlayerColor.neither;
   message = '';
   messageCenter = 0;
+  flipped = false;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;

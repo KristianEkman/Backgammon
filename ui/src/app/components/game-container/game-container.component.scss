@@ -1,6 +1,9 @@
 .game-container {
   animation: fadein 2s;
   margin: auto;
+  position: relative;
+  max-width: 1024px;
+  background: #aaa;
 }
 
 @keyframes fadein {
@@ -17,14 +20,14 @@
   position: absolute;
 }
 
+.game-board {
+  display: inline-block;
+  padding-top: 20px;
+}
+
 .messages {
   position: absolute;
   display: inline-block;
-}
-
-.game-container {
-  position: relative;
-  max-width: 1024px;
 }
 
 .abort-button {

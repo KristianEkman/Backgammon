@@ -7,13 +7,15 @@
     ></app-messages>
   </div>
   <button class="abort-button" (click)="abortGame()">Resign</button>
-  <app-menu class="app-menu"></app-menu>
+  <app-menu class="app-menu" (flip)="this.flipped = !this.flipped"></app-menu>
   <app-game-board
+    class="game-board"
     [width]="width"
     [height]="height"
     [game]="gameDto$ | async"
     [myColor]="playerColor$ | async"
     [dicesVisible]="dicesVisible"
+    [flipped]="flipped"
     (addMove)="doMove($event)"
     (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>

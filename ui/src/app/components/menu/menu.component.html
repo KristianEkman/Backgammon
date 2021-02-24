@@ -10,7 +10,7 @@
       &times;
     </button>
     <div *ngIf="open" class="overlay-content">
-      <button>Rotate</button><br />
+      <button (click)="flipClick()">Rotate</button><br />
       <button>Change theme</button><br />
       <button>Log out</button><br />
     </div>

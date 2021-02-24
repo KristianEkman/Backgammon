@@ -1,6 +1,7 @@
 <canvas
-  class="border"
   #canvas
+  class="game-board"
+  [ngClass]="{ flipped: flipped }"
   (mousedown)="onMouseDown($event)"
   (mousemove)="onMouseMove($event)"
   (mouseup)="onMouseUp($event)"

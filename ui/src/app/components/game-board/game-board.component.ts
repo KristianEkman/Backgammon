@@ -26,6 +26,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() game: GameDto | null = null;
   @Input() myColor: PlayerColor | null = PlayerColor.black;
   @Input() dicesVisible: boolean | null = false;
+  @Input() flipped = false;
 
   @Output() addMove = new EventEmitter<MoveDto>();
   @Output() moveAnimFinished = new EventEmitter<void>();
@@ -35,7 +36,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   sideBoardWidth = 0;
   rectBase = 0;
   rectHeight = 0;
-  headerHeight = 0;
   checkerAreas: CheckerArea[] = [];
   blackHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 25);
   whiteHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 0);
@@ -103,14 +103,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.borderWidth = this.width * 0.01;
     this.barWidth = this.borderWidth * 2;
     this.sideBoardWidth = this.width * 0.1;
-    this.headerHeight = this.borderWidth * 1.5;
     this.rectBase =
       (this.width -
         this.barWidth -
         2 * this.borderWidth -
         this.sideBoardWidth * 2) /
       12;
-    this.rectHeight = (this.height - this.headerHeight) * 0.42;
+    this.rectHeight = this.height * 0.42;
 
     //blacks bar
     this.checkerAreas[24].set(
@@ -149,7 +148,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     );
 
     let x = this.borderWidth + this.sideBoardWidth;
-    let y = this.borderWidth + this.headerHeight;
+    let y = this.borderWidth;
 
     //Top triangles
     for (let i = 0; i < 12; i++) {
@@ -412,17 +411,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     // color and line width
     cx.lineWidth = 1;
-    cx.fillStyle = '#ccc';
+    cx.fillStyle = '#aaa';
     cx.fillRect(0, 0, this.width, this.height);
-
-    // header
-    cx.fillStyle = '#888';
-    cx.fillRect(
-      this.sideBoardWidth,
-      0,
-      this.width - this.sideBoardWidth * 2,
-      this.headerHeight * 2
-    );
 
     cx.strokeStyle = '#000';
     const colors = ['#555', '#eee'];
@@ -438,7 +428,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       cx.beginPath();
       cx.moveTo(x, y);
       x += area.width / 2;
-      cx.lineTo(x, area.height + this.headerHeight);
+      cx.lineTo(x, area.height);
       x += area.width / 2;
       cx.lineTo(x, y);
       cx.closePath();
@@ -489,9 +479,28 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (this.hasTouch) {
       return;
     }
-    const { clientX, clientY } = event;
+    const point = this.getPoint(event);
 
-    this.handleDown(clientX, clientY);
+    this.handleDown(point.x, point.y);
+  }
+
+  getPoint(event: MouseEvent): Point {
+    // if (this.flipped) {
+    //   return { x: event.offsetX, y: event.offsetY };
+    // }
+    // Cool that offsets are also rotated. Is that true on all browsers?
+    return { x: event.offsetX, y: event.offsetY };
+  }
+
+  getTouchPoint(touch: Touch): Point {
+    if (this.flipped) {
+      return {
+        x: this.width - touch.clientX + 10,
+        y: this.height - touch.clientY + 25
+        // todo, figure out this offset.
+      };
+    }
+    return { x: touch.clientX, y: touch.clientY };
   }
 
   handleDown(clientX: number, clientY: number): void {
@@ -544,9 +553,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   onMouseMove(event: MouseEvent): void {
     // console.log('mousemove', event);
-    const { clientX, clientY } = event;
-
-    this.handleMove(clientX, clientY);
+    const point = this.getPoint(event);
+    this.handleMove(point.x, point.y);
   }
 
   handleMove(clientX: number, clientY: number): void {
@@ -623,8 +631,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
       // on mobile there is a mouse up event if the mouse hasn't been moved.
     }
-    const { clientX, clientY } = event;
-    this.handleUp(clientX, clientY);
+    const point = this.getPoint(event);
+    this.handleUp(point.x, point.y);
   }
 
   handleUp(clientX: number, clientY: number): void {
@@ -689,13 +697,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
     const touch = event.touches[0];
-    this.lastTouch = touch;
-    this.cursor.x = touch.clientX;
-    this.cursor.y = touch.clientY;
-    // console.log('touchstart', touch.clientX, touch.clientY);
+    const { x, y } = this.getTouchPoint(touch);
+    this.lastTouch = { x, y };
 
-    this.handleDown(touch.clientX, touch.clientY);
-    this.setCanBeMovedTo(touch.clientX, touch.clientY);
+    this.cursor.x = x;
+    this.cursor.y = y;
+
+    // console.log('touchstart', x, y);
+
+    this.handleDown(x, y);
+    this.setCanBeMovedTo(x, y);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -703,19 +714,22 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     // console.log('touchend', event);
 
     if (this.lastTouch != undefined) {
-      this.handleUp(this.lastTouch.clientX, this.lastTouch.clientY);
+      this.handleUp(this.lastTouch.x, this.lastTouch.y);
     }
     this.lastTouch = undefined;
   }
 
-  lastTouch: Touch | undefined = undefined;
+  lastTouch: Point | undefined = undefined;
   onTouchMove(event: TouchEvent): void {
     // console.log('touchmove');
     if (event.touches.length !== 1) {
       return;
     }
     const touch = event.touches[0];
-    this.lastTouch = touch;
-    this.handleMove(touch.clientX, touch.clientY);
+    const { x, y } = this.getTouchPoint(touch);
+
+    this.lastTouch = { x, y };
+
+    this.handleMove(x, y);
   }
 }

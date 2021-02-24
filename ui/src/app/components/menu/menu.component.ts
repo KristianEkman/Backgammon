@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-menu',
@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
+  @Output() flip = new EventEmitter<void>();
   open = false;
 
   openClick(): void {
@@ -15,5 +16,9 @@ export class MenuComponent {
 
   closeClick(): void {
     this.open = false;
+  }
+
+  flipClick(): void {
+    this.flip.emit();
   }
 }
