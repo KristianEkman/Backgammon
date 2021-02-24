@@ -13,6 +13,7 @@ import { AccountService } from 'src/app/services';
 import { DicesComponent } from './components/dices/dices.component';
 import { BoardButtonsComponent } from './components/board-buttons/board-buttons.component';
 import { MessagesComponent } from './components/messages/messages.component';
+import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { MessagesComponent } from './components/messages/messages.component';
     LobbyComponent,
     DicesComponent,
     BoardButtonsComponent,
-    MessagesComponent
+    MessagesComponent,
+    MenuComponent
   ],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
   providers: [SocketsService, AccountService],

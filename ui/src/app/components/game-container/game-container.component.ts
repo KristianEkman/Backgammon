@@ -116,7 +116,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(): void {
-    this.width = Math.min(window.innerWidth - 20, 800);
+    this.width = Math.min(window.innerWidth - 20, 1024);
     const span = this.messages?.nativeElement as Element;
     const spanWidth = span.getElementsByTagName('span')[0].clientWidth;
     this.messageCenter = this.width / 2 - spanWidth / 2;

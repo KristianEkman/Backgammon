@@ -1,5 +1,6 @@
-app-game-board {
+.game-container {
   animation: fadein 2s;
+  margin: auto;
 }
 
 @keyframes fadein {
@@ -12,17 +13,23 @@ app-game-board {
   }
 }
 
+.app-menu {
+  position: absolute;
+}
+
 .messages {
+  position: absolute;
   display: inline-block;
 }
 
 .game-container {
   position: relative;
-  max-width: 800px;
+  max-width: 1024px;
 }
 
 .abort-button {
   position: absolute;
+  right: 0;
 }
 
 .board-buttons {

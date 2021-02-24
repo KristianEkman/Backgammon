@@ -1,9 +1,7 @@
 N�sta delm�l, release till azure.
 =================================
 
-Visa mesg waiting for other player to connect.
-
-En meny
+Visa msg waiting for other player to connect.
 
 Rotate board
 

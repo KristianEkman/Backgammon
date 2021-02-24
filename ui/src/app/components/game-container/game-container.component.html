@@ -6,7 +6,8 @@
       [message]="message"
     ></app-messages>
   </div>
-  <button class="abort-button" (click)="abortGame()">Abort</button>
+  <button class="abort-button" (click)="abortGame()">Resign</button>
+  <app-menu class="app-menu"></app-menu>
   <app-game-board
     [width]="width"
     [height]="height"
