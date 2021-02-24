@@ -188,7 +188,6 @@ namespace Backend
 
         private async Task ListenOn(WebSocket socket)
         {
-            WebSocket otherClient = null;
             while (socket.State != WebSocketState.Closed && 
                 socket.State != WebSocketState.Aborted && 
                 socket.State != WebSocketState.CloseReceived)
@@ -198,7 +197,7 @@ namespace Backend
                 {
                     Logger.LogInformation($"Received: {text}");
                     var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
-                    otherClient = socket == Client1 ? Client2 : Client1;
+                    var otherClient = socket == Client1 ? Client2 : Client1;
                     await DoAction(action.actionName, text, otherClient);
                 }
             }

@@ -1,4 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import {
   trigger,
   state,
@@ -42,7 +48,7 @@ import {
     ])
   ]
 })
-export class MessagesComponent implements OnChanges {
+export class MessagesComponent implements OnChanges, AfterViewInit {
   @Input() message = '';
   // changing the coordinates will affect all animations coordinates.
   @Input() initial = 0;
@@ -51,13 +57,21 @@ export class MessagesComponent implements OnChanges {
   state = 'initial';
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['message']) {
-      this.state = 'hidden';
-      setTimeout(() => {
-        this.state = 'initial';
-        setTimeout(() => {
-          this.state = 'shown';
-        }, 100);
-      }, 500);
+      this.animate();
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.animate();
+  }
+
+  animate(): void {
+    this.state = 'hidden';
+    setTimeout(() => {
+      this.state = 'initial';
+      setTimeout(() => {
+        this.state = 'shown';
+      }, 100);
+    }, 500);
   }
 }

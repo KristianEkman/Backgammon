@@ -40,7 +40,6 @@ export class SocketsService implements OnDestroy {
     if (this.socket) {
       this.socket.close();
     }
-
     this.url = environment.socketServiceUrl;
     this.socket = new WebSocket(this.url);
     this.socket.onmessage = this.onMessage.bind(this);
@@ -177,7 +176,7 @@ export class SocketsService implements OnDestroy {
 
         const cookie: GameCookieDto = { id: dto.game.id, color: dto.myColor };
         this.cookieService.deleteAll('backgammon-game-id');
-        console.log('Settings cookie', cookie);
+        // console.log('Settings cookie', cookie);
         this.cookieService.set('backgammon-game-id', JSON.stringify(cookie), 2);
         break;
       }
