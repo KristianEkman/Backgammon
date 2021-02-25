@@ -1,9 +1,11 @@
 N�sta delm�l, release till azure.
 =================================
 
-Visa msg waiting for other player to connect.
+Inloggning, facebook, anonym, facebook
 
-Rotate board
+Databas
+
+Visa msg waiting for other player to connect.
 
 Tv� samtidiga spel med samma webl�sare.
     Avbryt den f�rsta

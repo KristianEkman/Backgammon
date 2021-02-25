@@ -9,6 +9,7 @@ button {
 
 .open-button {
   font-size: 30px;
+  position: absolute;
 
   &:hover {
     -webkit-box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
@@ -22,7 +23,7 @@ button {
   //   height: 100%;
   width: 0;
   height: 100%;
-  position: fixed;
+  position: absolute;
   z-index: 1;
   left: 0;
   top: 0;
@@ -74,11 +75,10 @@ button {
   /* Centered text/links */
   margin-top: 50px;
 
-  /* 30px top margin to avoid conflict with the close button on smaller screens */
   button {
     padding: 8px;
     text-decoration: none;
-    font-size: 36px;
+    font-size: 28px;
     color: white;
     background: none;
     border: none;

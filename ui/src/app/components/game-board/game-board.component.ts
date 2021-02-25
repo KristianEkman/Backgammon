@@ -411,8 +411,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     // color and line width
     cx.lineWidth = 1;
-    cx.fillStyle = '#aaa';
-    cx.fillRect(0, 0, this.width, this.height);
 
     cx.strokeStyle = '#000';
     const colors = ['#555', '#eee'];
