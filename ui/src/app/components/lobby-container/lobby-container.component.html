@@ -1,3 +1,11 @@
-<app-login-buttons (onLogin)="login($event)"></app-login-buttons>
-
-<div class="lobby"><button (click)="play()">Play as guest</button><br /></div>
+<div class="lobby-container">
+  <div class="title-container">
+    <h1>Backgammon</h1>
+  </div>
+  <app-login-buttons (onLogin)="login($event)"></app-login-buttons>
+  <div class="lobby">
+    <button class="guest-play-button" (click)="playAsGuest()">
+      Play as guest
+    </button>
+  </div>
+</div>

@@ -1,0 +1,37 @@
+@import '../../../styles.scss';
+
+.lobby-container {
+
+  .title-container {
+    position: relative;
+    display: block;
+  }
+
+  text-align: center;
+
+  h1 {
+    color: white;
+    font-family: 'Bebas Neue';
+    font-size: 80px;
+    margin-bottom: 140px;
+  }
+
+  h1:before {
+    content: 'Backgammon';
+    position: absolute;
+    top: -52px;
+
+    transform-origin: bottom;
+    transform: rotateX(180deg);
+    background: linear-gradient(0deg, #fff 0, transparent 80%);
+    background-clip: text;
+    color: transparent;
+    opacity: 0.5;
+
+  }
+
+  .guest-play-button {
+    @include button;
+    font-size: 16px;
+  }
+}

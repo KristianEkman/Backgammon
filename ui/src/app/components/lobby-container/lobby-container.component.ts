@@ -35,7 +35,7 @@ export class LobbyContainerComponent implements OnInit {
     this.authService.signIn(provider);
   }
 
-  play(): void {
+  playAsGuest(): void {
     this.router.navigateByUrl('game');
   }
 }

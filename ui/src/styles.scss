@@ -1,7 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas%20Neue&display=swap');
+
 .debug-border {
   border: 1px solid red;
 }
 
 body {
   background-color: black;
+}
+
+@mixin button {
+  background: none;
+  border: 1px solid rgb(63, 63, 63);
+  border-radius: 4px;
+  padding: 10px;
+  color: white;
+  font-size: 22px;
+  margin-bottom: 8px;
+
+  &:hover,
+  &:focus {
+    -webkit-box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+    -moz-box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+    box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+  }
 }

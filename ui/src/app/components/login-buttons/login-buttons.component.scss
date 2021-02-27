@@ -1,3 +1,18 @@
+@import '../../../styles.scss';
+
 .loggin-buttons {
-  margin: 8px
+  margin: 8px;
+}
+
+button {
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  img {
+    margin-right: 8px;
+  }
+
+  @include button;
 }
