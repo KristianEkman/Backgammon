@@ -15,15 +15,15 @@ import { SocketsService } from 'src/app/services/sockets.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { GameBoardComponent } from './components/game-board/game-board.component';
-import { LobbyComponent } from './components/lobby/lobby.component';
-import { GameContainerComponent } from './components/game-container/game-container.component';
+import { GameBoardComponent } from './components/game/game-board/game-board.component';
+import { LobbyContainerComponent } from './components/lobby-container/lobby-container.component';
+import { GameContainerComponent } from './components/game/game-container/game-container.component';
 import { AccountService } from 'src/app/services';
-import { DicesComponent } from './components/dices/dices.component';
-import { BoardButtonsComponent } from './components/board-buttons/board-buttons.component';
-import { MessagesComponent } from './components/messages/messages.component';
-import { MenuComponent } from './components/menu/menu.component';
-import { LoginComponent } from './components/login/login.component';
+import { DicesComponent } from './components/game/dices/dices.component';
+import { BoardButtonsComponent } from './components/game/board-buttons/board-buttons.component';
+import { MessagesComponent } from './components/game/messages/messages.component';
+import { MenuComponent } from './components/game/menu/menu.component';
+import { LoginButtonsComponent } from './components/login-buttons/login-buttons.component';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
@@ -31,12 +31,12 @@ import { HttpClientModule } from '@angular/common/http';
     AppComponent,
     GameBoardComponent,
     GameContainerComponent,
-    LobbyComponent,
+    LobbyContainerComponent,
     DicesComponent,
     BoardButtonsComponent,
     MessagesComponent,
     MenuComponent,
-    LoginComponent
+    LoginButtonsComponent
   ],
   imports: [
     BrowserModule,

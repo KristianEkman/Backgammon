@@ -1,19 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  FacebookLoginProvider,
-  GoogleLoginProvider,
-  SocialAuthService
-} from 'angularx-social-login';
+import { Router } from '@angular/router';
+import { SocialAuthService } from 'angularx-social-login';
 import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector: 'app-lobby-container',
+  templateUrl: './lobby-container.component.html',
+  styleUrls: ['./lobby-container.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LobbyContainerComponent implements OnInit {
   constructor(
+    private router: Router,
     private authService: SocialAuthService,
     private accountService: AccountService
   ) {}
@@ -33,11 +31,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  facebookLogin(): void {
-    this.authService.signIn(FacebookLoginProvider.PROVIDER_ID);
+  login(provider: string): void {
+    this.authService.signIn(provider);
   }
 
-  googleLogin(): void {
-    this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  play(): void {
+    this.router.navigateByUrl('game');
   }
 }

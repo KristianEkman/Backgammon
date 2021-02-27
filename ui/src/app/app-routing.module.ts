@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GameContainerComponent } from './components/game-container/game-container.component';
-import { LobbyComponent } from './components/lobby/lobby.component';
-import { LoginComponent } from './components/login/login.component';
+import { GameContainerComponent } from './components/game/game-container/game-container.component';
+import { LobbyContainerComponent } from './components/lobby-container/lobby-container.component';
+import { LoginButtonsComponent } from './components/login-buttons/login-buttons.component';
 
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginButtonsComponent
   },
   {
     path: 'game',
@@ -15,7 +15,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    component: LobbyComponent
+    component: LobbyContainerComponent
   }
 ];
 

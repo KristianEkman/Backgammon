@@ -21,7 +21,6 @@ export class AccountService {
       .post<UserDto>(`${this.url}/signin`, userDto, options)
       .pipe(
         map((data) => {
-          console.log(data);
           return data;
         })
       )
