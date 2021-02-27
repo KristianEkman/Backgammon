@@ -4,6 +4,7 @@ import {
   GoogleLoginProvider,
   SocialAuthService
 } from 'angularx-social-login';
+import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
 
 @Component({
@@ -19,9 +20,16 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.authState.subscribe((user) => {
-      console.log(user);
+      // console.log(user);
       // send user, store secret user id
-      this.accountService.SignIn(user.idToken);
+      const userDto = {
+        name: user.name, // todo: What about first name and last name. Should I use them if one is missing?
+        email: user.email,
+        socialProviderId: user.id,
+        socialProvider: user.provider,
+        photoUrl: user.photoUrl
+      } as UserDto;
+      this.accountService.SignIn(userDto, user.idToken);
     });
   }
 

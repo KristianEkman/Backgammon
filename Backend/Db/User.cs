@@ -16,7 +16,5 @@ namespace Backend.Db
         public string SocialProvider { get; set; }
 
         public ICollection<Player> Players { get; set; }
-
-
     }
 }

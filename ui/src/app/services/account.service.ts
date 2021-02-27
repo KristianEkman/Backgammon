@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { finalize, map } from 'rxjs/operators';
-import { pipe } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { UserDto } from '../dto/userDto';
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +13,12 @@ export class AccountService {
     this.url = `${environment.apiServiceUrl}`;
   }
 
-  public SignIn(idToken: string): void {
+  public SignIn(userDto: UserDto, idToken: string): void {
     const options = {
       headers: { Authorization: idToken }
     };
-
     this.http
-      .get(`${this.url}/signin`, options)
+      .post<UserDto>(`${this.url}/signin`, userDto, options)
       .pipe(
         map((data) => {
           console.log(data);

@@ -8,3 +8,4 @@ export * from './playerDto';
 export * from './pointDto';
 export * from './connectionDto';
 export * from './gameCookieDto';
+export * from './userDto';
