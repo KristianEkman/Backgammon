@@ -89,6 +89,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
+    if (this.cx) {
+      this.cx.translate(-0.5, -0.5);
+    }
     this.drawDirty = true;
   }
 
@@ -258,7 +261,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   getCheckerWidth(): number {
-    return this.getCheckerRadius() * 0.67;
+    return this.getCheckerRadius() * 0.87;
   }
 
   drawCheckers(cx: CanvasRenderingContext2D | null): void {
@@ -273,6 +276,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     const r = this.getCheckerRadius();
     const chWidth = this.getCheckerWidth();
+    cx.lineWidth = 2;
 
     for (let p = 0; p < this.game.points.length; p++) {
       const point = this.game.points[p];
@@ -319,7 +323,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
       const dist = Math.min(2 * chWidth, area.height / checkerCount);
 
-      cx.lineWidth = 2;
+      cx.lineWidth = 1;
       const dragAnimationTo =
         this.animatedMove &&
         ((this.animatedMove?.move.color === PlayerColor.black &&
@@ -353,10 +357,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         }
         if (checker.color === PlayerColor.black) {
           cx.fillStyle = '#000';
-          cx.strokeStyle = '#FFF';
+          cx.strokeStyle = '#777';
         } else {
           cx.fillStyle = '#FFF';
-          cx.strokeStyle = '#000';
+          cx.strokeStyle = '#777';
         }
         cx.beginPath();
         cx.ellipse(x, y, chWidth, chWidth, 0, 0, 360);
