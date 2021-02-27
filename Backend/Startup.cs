@@ -1,5 +1,6 @@
 using Backend.Dto;
 using Backend.Dto.Actions;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +36,7 @@ namespace Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -53,10 +55,17 @@ namespace Backend
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backgammon Backend v1"));
             }
 
+            app.UseCors(options => options.WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowAnyOrigin()
+            );
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -76,7 +85,7 @@ namespace Backend
                     {
                         logger.LogInformation($"New web socket request.");
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await GameManager.Connect(webSocket, context, logger);                        
+                        await GameManager.Connect(webSocket, context, logger);
                     }
                     else
                     {
@@ -85,7 +94,7 @@ namespace Backend
                 }
                 else
                 {
-                    await next();                    
+                    await next();
 
                     // This enables angular routing to function on the same app as the web socket.
                     // If there's no available file and the request doesn't contain an extension, we're probably trying to access a page.
@@ -96,6 +105,11 @@ namespace Backend
                         await next();
                     }
                 }
+            });
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
 
             app.UseStaticFiles();
