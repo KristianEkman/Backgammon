@@ -2,8 +2,7 @@ N�sta delm�l, release till azure.
 =================================
 
 Inloggning, facebook, anonym, facebook
-    Spara cookie
-    Spara i state
+    busy indicator
     Spela som user
     Spara resultat
 
