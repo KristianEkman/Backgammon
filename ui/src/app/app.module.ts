@@ -25,6 +25,7 @@ import { MessagesComponent } from './components/game/messages/messages.component
 import { MenuComponent } from './components/game/menu/menu.component';
 import { LoginButtonsComponent } from './components/login-buttons/login-buttons.component';
 import { HttpClientModule } from '@angular/common/http';
+import { AccountComponent } from './components/account/account.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import { HttpClientModule } from '@angular/common/http';
     BoardButtonsComponent,
     MessagesComponent,
     MenuComponent,
-    LoginButtonsComponent
+    LoginButtonsComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,

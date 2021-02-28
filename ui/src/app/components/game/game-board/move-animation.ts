@@ -1,5 +1,5 @@
 import { MoveDto, PlayerColor } from 'src/app/dto';
-import { Point } from 'src/app/utils';
+import { Point } from './';
 
 export class MoveAnimation {
   constructor(

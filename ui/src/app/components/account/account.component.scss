@@ -1,0 +1,13 @@
+@import '../../../styles.scss';
+
+.app-account {
+  &__menu-panel {
+    display: inline-block;
+  }
+}
+
+button {
+  @include button;
+  font-size: 16px;
+  border: none;
+}

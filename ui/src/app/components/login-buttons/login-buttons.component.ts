@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   FacebookLoginProvider,
   GoogleLoginProvider
@@ -11,6 +11,7 @@ import {
 })
 export class LoginButtonsComponent {
   @Output() onLogin = new EventEmitter<string>();
+  @Input() isLoggedIn: boolean | undefined = false;
 
   facebookLoginClick(): void {
     this.onLogin.emit(FacebookLoginProvider.PROVIDER_ID);

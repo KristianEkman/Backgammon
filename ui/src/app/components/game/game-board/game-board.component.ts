@@ -9,9 +9,7 @@ import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
-import { CheckerArea, Point } from 'src/app/utils';
-import { CheckerDrag } from './checker-drag';
-import { MoveAnimation } from './move-animation';
+import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
 
 @Component({
   selector: 'app-game-board',

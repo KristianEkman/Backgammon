@@ -28,6 +28,11 @@ export class StateObject<T> {
     this._replaySubject.next(v);
   }
 
+  public clearValue(): void {
+    this._value = undefined;
+    this._replaySubject.next(undefined);
+  }
+
   private static deepFreeze(obj: any): any {
     Object.freeze(obj);
     if (obj === undefined) {

@@ -23,6 +23,7 @@ import {
   AbortGameActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
+import { Cookies } from '../utils';
 
 @Injectable({
   providedIn: 'root'
@@ -175,9 +176,9 @@ export class SocketsService implements OnDestroy {
         AppState.Singleton.game.setValue(dto.game);
 
         const cookie: GameCookieDto = { id: dto.game.id, color: dto.myColor };
-        this.cookieService.deleteAll('backgammon-game-id');
+        this.cookieService.deleteAll(Cookies.gameIdKey);
         // console.log('Settings cookie', cookie);
-        this.cookieService.set('backgammon-game-id', JSON.stringify(cookie), 2);
+        this.cookieService.set(Cookies.gameIdKey, JSON.stringify(cookie), 2);
         break;
       }
       case ActionNames.dicesRolled: {

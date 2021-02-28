@@ -2,10 +2,16 @@
   <div class="title-container">
     <h1>Backgammon</h1>
   </div>
-  <app-login-buttons (onLogin)="login($event)"></app-login-buttons>
+  <app-login-buttons
+    (onLogin)="login($event)"
+    [isLoggedIn]="!!(user$ | async)"
+  ></app-login-buttons>
   <div class="lobby">
     <button class="guest-play-button" (click)="playAsGuest()">
       Play as guest
     </button>
+  </div>
+  <div class="account">
+    <app-account [user]="user$ | async" (logout)="logout()"></app-account>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { CheckerArea } from 'src/app/utils/checker-area';
+import { CheckerArea } from './';
 
 export class CheckerDrag {
   constructor(
