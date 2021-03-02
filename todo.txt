@@ -6,6 +6,15 @@ Inloggning, facebook, anonym, facebook
     Spela som user
     Spara resultat
 
+Förhindra spel mot sig själv
+Points left
+Tidskontroll
+TopList, ELO
+Ljud
+
+PlayRandom
+Play friend
+
 Databas
     password azure as secret
 
@@ -14,46 +23,33 @@ Visa msg waiting for other player to connect.
 Tv� samtidiga spel med samma webl�sare.
     Avbryt den f�rsta
 
-ios
 
+Språk
+
+ios
 
 Visa dubblar vid f�rsta drag.
 
-Points left
-
 Chat
 
-Ljud
 
 Olika teman, ljus, m�rk, marble, wood.
 
 Doubling
 
-Backend
-    F�rs�k spara games innan WebApi g�r ner.
+F�rs�k spara games innan WebApi g�r ner.
 
-    Ordentlig loggning, info, warning, errors   
+Ordentlig loggning, info, warning, errors   
 
     ai: Evaluate to give a score.
     
-Api
-    Login
-    Sockets:        
-        Move
-        MoveReceived
-        Doubling
-        Doubling Answer
 
 Database
     Users
     Games
         Score
 Ui
-  Tidskontroll
   Auto send when no options
   Auto move, when only one move.
   View dices on board
   PlayAI-Button
-  PlayRandom
-  Play friend
-  TopList, ELO
