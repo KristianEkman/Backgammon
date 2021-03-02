@@ -27,15 +27,16 @@ namespace Backend
 
         public WebSocket Client1 { get; set; }
         public WebSocket Client2 { get; set; }
-        public Game Game { get; set; }
+        public Rules.Game Game { get; set; }
 
         public DateTime Created { get; private set; }
         private bool SearchingOpponent { get; set; }
         private ILogger<GameManager> Logger { get; }
 
-        public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger)
+        public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId)
         {
             // find existing game to reconnect to.
+            var dbUser = GetDbUser(userId);
             var cookies = context.Request.Cookies;
             var cookieKey = "backgammon-game-id";
             if (cookies.Any(c => (c.Key == cookieKey)))
@@ -46,6 +47,7 @@ namespace Backend
                     var game = AllGames.SingleOrDefault(g => g.Game.Id.ToString().Equals(cookie.id));
                     if (game != null)
                     {
+                        AssertUserIds( game, dbUser, cookie.color);
                         logger.LogInformation($"Restoring game {cookie.id}");
                         await game.Restore(cookie.color, webSocket);
                         //This is end of connection
@@ -55,24 +57,45 @@ namespace Backend
             }
 
             //todo: pair with someone equal ranking.
-            var gameMananger = AllGames.OrderBy(g => g.Created)
+            var manager = AllGames.OrderBy(g => g.Created)
                 .FirstOrDefault(g => g.Client2 == null && g.SearchingOpponent);
 
-            if (gameMananger == null)
+            if (manager == null)
             {
-                gameMananger = new GameManager(logger);
-                AllGames.Add(gameMananger);
-                gameMananger.SearchingOpponent = true;
-                logger.LogInformation($"Added a new game and waiting for opponent. Game id {gameMananger.Game.Id}");
-                await gameMananger.ConnectAndListen(webSocket, Rules.Player.Color.Black);
+                manager = new GameManager(logger);                                   
+
+                AllGames.Add(manager);
+                manager.SearchingOpponent = true;
+                logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
+                await manager.ConnectAndListen(webSocket, Rules.Player.Color.Black, dbUser);
                 //This is end of connection
             }
             else
             {
-                gameMananger.SearchingOpponent = false;
-                logger.LogInformation($"Found a game and added a second player. Game id {gameMananger.Game.Id}");
-                await gameMananger.ConnectAndListen(webSocket, Rules.Player.Color.White);
+                manager.SearchingOpponent = false;
+                logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
+                await manager.ConnectAndListen(webSocket, Rules.Player.Color.White, dbUser);
                 //This is end of connection
+            }
+        }
+
+        private static void AssertUserIds(GameManager manager, Db.User dbUser, PlayerColor color)
+        {
+            var player = manager.Game.BlackPlayer;
+            if (color == PlayerColor.white)
+                player = manager.Game.WhitePlayer;
+
+            if (dbUser != null && dbUser.Id != player.Id)
+                throw new ApplicationException("UserId and playerId missmatch. The should always be the same.");
+        }
+
+        private static Db.User GetDbUser(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return null;
+            using (var db = new Db.BgDbContext())
+            {
+                return db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
             }
         }
 
@@ -116,21 +139,64 @@ namespace Backend
             _ = Send(Client2, rollAction);
         }
 
-        private async Task ConnectAndListen(WebSocket webSocket, Rules.Player.Color color)
+        private async Task ConnectAndListen(WebSocket webSocket, Rules.Player.Color color, Db.User dbUser)
         {
             if (color == Player.Color.Black)
             {
                 Client1 = webSocket;
+                Game.BlackPlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
+                Game.BlackPlayer.Name = dbUser != null ? dbUser.Name : "Guest";
                 await ListenOn(webSocket);
             }
             else
             {
                 Client2 = webSocket;
+                Game.WhitePlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
+                Game.WhitePlayer.Name = dbUser != null ? dbUser.Name : "Guest";
+                CreateDbGame();
                 StartGame();
                 await ListenOn(webSocket);
             }
         }
-                
+
+        private void CreateDbGame()
+        {
+            using (var db = new Db.BgDbContext())
+            {
+                var blackUser = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
+                var black = new Db.Player
+                {
+                    Id = Guid.NewGuid(), // A player is not the same as a user.
+                    Color = Db.Color.Black,
+                    User = blackUser
+                };
+                blackUser.Players.Add(black);
+
+                var whiteUser = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
+                var white = new Db.Player
+                {
+                    Id = Guid.NewGuid(), 
+                    Color = Db.Color.White,
+                    User = whiteUser                   
+                };
+                whiteUser.Players.Add(white);
+
+                var game = new Db.Game
+                {
+                    Id = Game.Id,
+                    Started = DateTime.Now,                    
+                };
+
+                black.Game = game;
+                white.Game = game;
+
+                game.Players.Add(black);
+                game.Players.Add(white);
+                db.Games.Add(game);
+                db.SaveChanges();
+            }
+        }
+
         private async Task<string> ReceiveText(WebSocket socket)
         {
             var buffer = new byte[512];
@@ -214,6 +280,7 @@ namespace Backend
                 if (winner.HasValue)
                 {
                     Logger.LogInformation($"Player {winner} won the game");
+                    SaveWinner(winner.Value);
                     await SendWinner(winner.Value);
                     _ = CloseConnections();
                     AllGames.Remove(this);
@@ -241,6 +308,16 @@ namespace Backend
                 var action = (AbortGameActionDto)JsonSerializer.Deserialize(text, typeof(AbortGameActionDto));
                 var winner = Client1 == socket ? PlayerColor.black : PlayerColor.white;
                 _ = AbortGame(action.gameId, winner);                
+            }
+        }
+
+        private void SaveWinner(PlayerColor color)
+        {
+            using (var db = new Db.BgDbContext())
+            {
+                var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
+                dbGame.Winner = color;
+                db.SaveChanges();
             }
         }
 
@@ -294,7 +371,6 @@ namespace Backend
                 {
                     Game.PlayState = Game.State.Ended;
                     winner = PlayerColor.white;
-                    SendWinner(PlayerColor.white);
                 }
             }
 
@@ -303,6 +379,9 @@ namespace Backend
 
         private void DoMoves(MovesMadeActionDto action)
         {
+            if (action.moves == null || action.moves.Length == 0)
+                return;
+
             var firstMove = action.moves[0].ToMove(Game);
             var validMove = Game.ValidMoves.SingleOrDefault(m => firstMove.Equals(m));
 

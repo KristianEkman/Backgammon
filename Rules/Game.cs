@@ -18,6 +18,8 @@ namespace Backend.Rules
         public List<Dice> Roll { get; set; } = new List<Dice>();
         public List<Move> ValidMoves { get; set; } = new List<Move>();
         public State PlayState { get; set; } = State.FirstThrow;
+        public DateTime Created { get; set; }
+
         public enum State
         {
             FirstThrow,
@@ -33,12 +35,15 @@ namespace Backend.Rules
                 BlackPlayer = new Player
                 {
                     PlayerColor = Player.Color.Black,
+                    Name = "Guest"
                 },
                 WhitePlayer = new Player
                 {
-                    PlayerColor = Player.Color.White
+                    PlayerColor = Player.Color.White,
+                    Name = "Guest"
                 },
-                Points = new List<Point>(new Point[26]) // 24 points, 1 bar and 1 home
+                Points = new List<Point>(new Point[26]), // 24 points, 1 bar and 1 home,
+                Created = DateTime.Now
             };
 
             for (int i = 0; i < 26; i++)
@@ -86,11 +91,11 @@ namespace Backend.Rules
         private void OneMoveToVictory()
         {
             //Only one move to victory
-            AddCheckers(13, Player.Color.Black, 25);
-            AddCheckers(13, Player.Color.White, 25);
+            AddCheckers(14, Player.Color.Black, 25);
+            AddCheckers(14, Player.Color.White, 25);
 
-            AddCheckers(2, Player.Color.Black, 24);
-            AddCheckers(2, Player.Color.White, 24);
+            AddCheckers(1, Player.Color.Black, 24);
+            AddCheckers(1, Player.Color.White, 24);
         }
 
         private void DebugBlocked()
@@ -240,6 +245,8 @@ namespace Backend.Rules
                 foreach (var fromPoint in points)
                 {
                     var fromPointNo = fromPoint.GetNumber(CurrentPlayer);
+                    if (fromPointNo == 25)
+                        continue;
                     var toPoint = Points.SingleOrDefault(p => p.GetNumber(CurrentPlayer) == dice.Value + fromPointNo);
 
                     if (toPoint != null && toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint)

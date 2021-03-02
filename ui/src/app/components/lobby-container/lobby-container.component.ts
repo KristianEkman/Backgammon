@@ -37,14 +37,11 @@ export class LobbyContainerComponent implements OnInit {
       this.accountService.signIn(userDto, user.idToken);
     });
 
-    const sUser = this.cookieService.get(Cookies.loginKey);
-    if (sUser) {
-      const userDto = JSON.parse(sUser) as UserDto;
-      AppState.Singleton.user.setValue(userDto);
-    }
+    this.accountService.repair();
   }
 
   login(provider: string): void {
+    AppState.Singleton.busy.setValue(true);
     this.authService.signIn(provider);
   }
 
@@ -52,7 +49,7 @@ export class LobbyContainerComponent implements OnInit {
     this.accountService.signOut();
   }
 
-  playAsGuest(): void {
+  playRandom(): void {
     this.router.navigateByUrl('game');
   }
 }

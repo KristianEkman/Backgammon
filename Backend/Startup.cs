@@ -85,7 +85,8 @@ namespace Backend
                     {
                         logger.LogInformation($"New web socket request.");
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await GameManager.Connect(webSocket, context, logger);
+                        var userId = context.Request.Query.FirstOrDefault(q => q.Key == "userId").Value;
+                        await GameManager.Connect(webSocket, context, logger, userId);
                     }
                     else
                     {

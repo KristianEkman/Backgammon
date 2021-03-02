@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Backend.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace Backend.Db
         public Guid Id { get; set; }
         public DateTime Started { get; set; }
 
-        public ICollection<Player> Players { get; set; }
+        public ICollection<Player> Players { get; set; } = new List<Player>();
+        public PlayerColor? Winner { get; set; }
     }
 }

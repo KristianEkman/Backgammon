@@ -15,6 +15,6 @@ namespace Backend.Db
         public string PhotoUrl { get; set; }
         public string SocialProvider { get; set; }
 
-        public ICollection<Player> Players { get; set; }
+        public ICollection<Player> Players { get; set; } = new List<Player>();
     }
 }

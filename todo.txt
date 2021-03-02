@@ -1,24 +1,32 @@
 N�sta delm�l, release till azure.
 =================================
 
-Inloggning, facebook, anonym, facebook
-    busy indicator
-    Spela som user
-    Spara resultat
 
-Förhindra spel mot sig själv
-Points left
-Tidskontroll
-TopList, ELO
-Ljud
+password azure as secret
 
-PlayRandom
-Play friend
-
-Databas
-    password azure as secret
+Skriva ut namn  board
 
 Visa msg waiting for other player to connect.
+
+PLacering av checker på bar
+
+Tillbaka animering från hem.
+    Smartare beräkning av animering till och från.
+
+Inloggning, facebook
+
+Points left
+
+Tidskontroll
+
+TopList, ELO
+
+Ljud
+
+Förhindra spel mot sig själv
+
+Play friend
+
 
 Tv� samtidiga spel med samma webl�sare.
     Avbryt den f�rsta
@@ -31,7 +39,6 @@ ios
 Visa dubblar vid f�rsta drag.
 
 Chat
-
 
 Olika teman, ljus, m�rk, marble, wood.
 

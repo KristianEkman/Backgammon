@@ -42,7 +42,9 @@ export class SocketsService implements OnDestroy {
       this.socket.close();
     }
     this.url = environment.socketServiceUrl;
-    this.socket = new WebSocket(this.url);
+    const user = AppState.Singleton.user.getValue();
+    const userId = user ? user.id : null;
+    this.socket = new WebSocket(this.url + (userId ? `?userId=${userId}` : ''));
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
     this.socket.onopen = this.onOpen.bind(this);

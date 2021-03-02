@@ -7,8 +7,8 @@
     [isLoggedIn]="!!(user$ | async)"
   ></app-login-buttons>
   <div class="lobby">
-    <button class="guest-play-button" (click)="playAsGuest()">
-      Play as guest
+    <button class="guest-play-button" (click)="playRandom()">
+      Play {{ (user$ | async) ? ' random opponent' : 'as guest' }}
     </button>
   </div>
   <div class="account">

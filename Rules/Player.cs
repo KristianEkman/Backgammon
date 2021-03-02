@@ -7,7 +7,13 @@ namespace Backend.Rules
 {
     public class Player
     {
+        public string Name { get; set; }
         public Color PlayerColor { get; set; }
+        
+        /// <summary>
+        /// Do not mapp this to the dto. Opponnents id should never be revealed to anyone else.
+        /// </summary>
+        public Guid Id { get; set; }
 
         public enum Color
         {

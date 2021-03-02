@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { DiceDto, GameDto, GameState, MoveDto, PlayerColor } from 'src/app/dto';
-import { SocketsService } from 'src/app/services';
+import { AccountService, SocketsService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 
 @Component({
@@ -17,7 +17,10 @@ import { AppState } from 'src/app/state/app-state';
   styleUrls: ['./game-container.component.scss']
 })
 export class GameContainerComponent implements OnDestroy, AfterViewInit {
-  constructor(private service: SocketsService) {
+  constructor(
+    private service: SocketsService,
+    private accountService: AccountService
+  ) {
     this.gameDto$ = AppState.Singleton.game.observe();
     this.dices$ = AppState.Singleton.dices.observe();
     this.diceSubs = AppState.Singleton.dices
@@ -27,6 +30,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.gameSubs = AppState.Singleton.game
       .observe()
       .subscribe(this.gameChanged.bind(this));
+
+    // if game page is refreshed, restore user from login cookie
+    if (!AppState.Singleton.user.getValue()) {
+      this.accountService.repair();
+    }
 
     service.connect();
   }
