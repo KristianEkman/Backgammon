@@ -35,9 +35,11 @@ export class CheckerArea {
   //   return this._checkers;
   // }
 
-  drawBorder(cx: CanvasRenderingContext2D): void {
+  drawBorder(cx: CanvasRenderingContext2D, text: boolean): void {
     cx.strokeRect(this.x, this.y, this.width, this.height);
-    cx.fillText(this.pointIdx.toString(), this.x, this.y);
+    if (text) {
+      cx.fillText(this.pointIdx.toString(), this.x, this.y);
+    }
   }
 
   drawTop(cx: CanvasRenderingContext2D): void {

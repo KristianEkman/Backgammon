@@ -6,8 +6,11 @@
       [message]="message"
     ></app-messages>
   </div>
-  <button class="abort-button" (click)="abortGame()">Resign</button>
-  <app-menu class="app-menu" (flip)="this.flipped = !this.flipped"></app-menu>
+  <app-menu
+    class="app-menu"
+    (flip)="this.flipped = !this.flipped"
+    (resign)="abortGame()"
+  ></app-menu>
   <app-game-board
     class="game-board"
     [width]="width"
@@ -38,4 +41,5 @@
       (onNew)="newGame()"
     ></app-board-buttons>
   </div>
+  <div class="game-id small-shadow-text">{{ (gameDto$ | async)?.id }}</div>
 </div>

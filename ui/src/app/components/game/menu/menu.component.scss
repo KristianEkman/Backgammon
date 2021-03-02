@@ -1,21 +1,13 @@
-button {
-  background: none;
-  border: none;
+@import '../../../../styles.scss';
 
-  &:focus {
-    outline: none;
-  }
-}
 
 .open-button {
+  @include button;
+  color: black;
   font-size: 30px;
+  border: none;
   position: absolute;
 
-  &:hover {
-    -webkit-box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
-    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
-  }
 }
 
 .overlay {
@@ -76,16 +68,7 @@ button {
   margin-top: 50px;
 
   button {
-    padding: 8px;
-    text-decoration: none;
-    font-size: 28px;
-    color: white;
-    background: none;
-    border: none;
-
-    &:hover {
-      text-shadow: 1px 1px yellow;
-    }
+    @include button;
   }
 }
 

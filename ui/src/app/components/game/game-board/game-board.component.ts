@@ -46,6 +46,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   animatedMove: MoveAnimation | undefined = undefined;
   animationSubscription: Subscription;
   hasTouch = false;
+  whitesName = '';
+  blacksName = '';
 
   constructor() {
     for (let r = 0; r < 26; r++) {
@@ -88,7 +90,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
     if (this.cx) {
-      this.cx.translate(-0.5, -0.5);
+      // this.cx.translate(-0.5, -0.5);
     }
     this.drawDirty = true;
   }
@@ -98,6 +100,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.recalculateGeometry();
     }
     this.drawDirty = true;
+    this.blacksName = this.game ? this.game.blackPlayer.name : '';
+    this.whitesName = this.game ? this.game.whitePlayer.name : '';
   }
 
   recalculateGeometry(): void {
@@ -204,11 +208,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.strokeStyle = '#F00';
 
     for (let r = 0; r < this.checkerAreas.length; r++) {
-      this.checkerAreas[r].drawBorder(cx);
+      this.checkerAreas[r].drawBorder(cx, true);
     }
 
-    this.blackHome.drawBorder(cx);
-    this.whiteHome.drawBorder(cx);
+    this.blackHome.drawBorder(cx, true);
+    this.whiteHome.drawBorder(cx, true);
   }
 
   getMoveEndPoint(moveDto: MoveDto): Point {
@@ -453,6 +457,24 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       cx.fill();
       colorIdx = colorIdx === 0 ? 1 : 0;
     }
+
+    cx.strokeStyle = '#888';
+    cx.lineWidth = 2;
+    this.whiteHome.drawBorder(cx, false);
+    this.blackHome.drawBorder(cx, false);
+    cx.font = 'bold 18px Arial';
+    cx.fillStyle = '#333';
+    cx.save();
+    cx.translate(this.blackHome.x, this.blackHome.y);
+    cx.rotate(Math.PI / 2);
+    cx.fillText(this.blacksName, 0, -this.blackHome.width - 3);
+    cx.restore();
+
+    cx.save();
+    cx.translate(this.whiteHome.x, this.whiteHome.y);
+    cx.rotate(Math.PI / 2);
+    cx.fillText(this.whitesName, 0, -this.whiteHome.width - 3);
+    cx.restore();
 
     // the border
     cx.lineWidth = this.borderWidth;

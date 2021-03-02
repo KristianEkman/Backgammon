@@ -26,11 +26,6 @@
   display: inline-block;
 }
 
-.abort-button {
-  position: absolute;
-  right: 0;
-}
-
 .board-buttons {
   display: inline-block;
   position: absolute;
@@ -39,4 +34,11 @@
 .dices {
   display: inline-block;
   position: absolute;
+}
+
+.game-id {
+  position: absolute;
+  bottom: -3px;
+  text-align: center;
+  width: 100%;
 }

@@ -7,6 +7,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class MenuComponent {
   @Output() flip = new EventEmitter<void>();
+  @Output() resign = new EventEmitter<void>();
   open = false;
 
   openClick(): void {
@@ -20,5 +21,9 @@ export class MenuComponent {
 
   flipClick(): void {
     this.flip.emit();
+  }
+
+  resignClick(): void {
+    this.resign.emit();
   }
 }

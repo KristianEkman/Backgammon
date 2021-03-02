@@ -24,3 +24,10 @@ body {
     box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
   }
 }
+
+.small-shadow-text {
+  text-shadow: 1px 1px rgb(214, 214, 214);
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  white-space: nowrap;
+}

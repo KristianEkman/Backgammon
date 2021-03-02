@@ -35,7 +35,7 @@ namespace Backend
 
         public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId)
         {
-            // find existing game to reconnect to.
+            // Find existing game to reconnect to.
             var dbUser = GetDbUser(userId);
             var cookies = context.Request.Cookies;
             var cookieKey = "backgammon-game-id";
@@ -48,7 +48,7 @@ namespace Backend
                     if (game != null)
                     {
                         AssertUserIds( game, dbUser, cookie.color);
-                        logger.LogInformation($"Restoring game {cookie.id}");
+                        logger.LogInformation($"Restoring game {cookie.id} for {cookie.color}");
                         await game.Restore(cookie.color, webSocket);
                         //This is end of connection
                         return;
@@ -69,13 +69,23 @@ namespace Backend
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
                 await manager.ConnectAndListen(webSocket, Rules.Player.Color.Black, dbUser);
                 //This is end of connection
+
+                logger.LogInformation("Black player disconnected.");
+                manager.Client1.Abort();
+                manager.Client1.Dispose();
+                manager.Client1 = null;
             }
             else
             {
                 manager.SearchingOpponent = false;
                 logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
                 await manager.ConnectAndListen(webSocket, Rules.Player.Color.White, dbUser);
+                logger.LogInformation("White player disconnected.");
                 //This is end of connection
+                
+                manager.Client2.Abort();
+                manager.Client2.Dispose();
+                manager.Client2 = null;
             }
         }
 
@@ -86,7 +96,7 @@ namespace Backend
                 player = manager.Game.WhitePlayer;
 
             if (dbUser != null && dbUser.Id != player.Id)
-                throw new ApplicationException("UserId and playerId missmatch. The should always be the same.");
+                throw new ApplicationException("UserId and playerId missmatch. They should always be the same.");
         }
 
         private static Db.User GetDbUser(string userId)
@@ -243,7 +253,7 @@ namespace Backend
 
             await Send(socket, action);
             //Also send the state to the other client in case it has made moves.
-            if (otherSocket.State == WebSocketState.Open)
+            if (otherSocket != null && otherSocket.State == WebSocketState.Open)
             {
                 action.color = color == PlayerColor.black ? PlayerColor.white : PlayerColor.black;
                 await Send(otherSocket, action);

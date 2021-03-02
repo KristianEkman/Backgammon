@@ -1,14 +1,14 @@
 N�sta delm�l, release till azure.
 =================================
-
-
-password azure as secret
-
-Skriva ut namn  board
+Man loggas ut när man avbryter och skapar nytt.
 
 Visa msg waiting for other player to connect.
 
-PLacering av checker på bar
+Placering av checker på bar.
+
+Inte ansluta till games med disconnected opponent client.
+
+Claim winner om inte reconnect sker.
 
 Tillbaka animering från hem.
     Smartare beräkning av animering till och från.
