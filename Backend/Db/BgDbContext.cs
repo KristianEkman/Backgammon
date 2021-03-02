@@ -14,7 +14,7 @@ namespace Backend.Db
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var pw = File.ReadAllText("pw.txt");
+            var pw = Secrets.GetPw();
             options.UseSqlServer($"Data Source=ekmandbs.database.windows.net;Initial Catalog=backgammon-db;User ID=kristian;Password={pw};Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)

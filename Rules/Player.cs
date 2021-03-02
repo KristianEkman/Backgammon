@@ -11,7 +11,7 @@ namespace Backend.Rules
         public Color PlayerColor { get; set; }
         
         /// <summary>
-        /// Do not mapp this to the dto. Opponnents id should never be revealed to anyone else.
+        /// Do not map this to the dto. Opponnents id should never be revealed to anyone else.
         /// </summary>
         public Guid Id { get; set; }
 
