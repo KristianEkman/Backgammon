@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SocialAuthService } from 'angularx-social-login';
-import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
-import { Cookies } from 'src/app/utils';
 
 @Component({
   selector: 'app-lobby-container',
@@ -17,8 +15,7 @@ export class LobbyContainerComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: SocialAuthService,
-    private accountService: AccountService,
-    private cookieService: CookieService
+    private accountService: AccountService
   ) {}
 
   user$: Observable<UserDto> = AppState.Singleton.user.observe();

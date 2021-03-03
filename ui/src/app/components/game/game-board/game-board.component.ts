@@ -102,8 +102,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.recalculateGeometry();
     }
     this.drawDirty = true;
-    this.blacksName = this.game ? this.game.blackPlayer.name : '';
-    this.whitesName = this.game ? this.game.whitePlayer.name : '';
+    const bName =
+      this.myColor === PlayerColor.black ? 'You' : this.game?.blackPlayer.name;
+    const wName =
+      this.myColor === PlayerColor.white ? 'You' : this.game?.whitePlayer.name;
+
+    this.blacksName = this.game ? `${bName} (black)` : '';
+    this.whitesName = this.game ? `${wName} (white)` : '';
     // console.log(this.game?.playState);
   }
 
@@ -445,7 +450,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       colorIdx = colorIdx === 0 ? 1 : 0;
     }
 
-    //bottom
+    //Bottom triangles
     colorIdx = colorIdx === 0 ? 1 : 0;
     for (let i = 0; i < 12; i++) {
       const area = this.checkerAreas[i + 12];

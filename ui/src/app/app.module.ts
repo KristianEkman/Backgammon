@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { StorageServiceModule } from 'ngx-webstorage-service';
 import {
   SocialLoginModule,
   SocialAuthServiceConfig
@@ -45,7 +45,8 @@ import { AccountComponent } from './components/account/account.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     SocialLoginModule,
-    HttpClientModule
+    HttpClientModule,
+    StorageServiceModule
   ],
   providers: [
     SocketsService,

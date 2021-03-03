@@ -1,13 +1,9 @@
 N�sta delm�l, release till azure.
 =================================
 
-Bugg: Första draget går ej att flytta.
+Ljus skuggning på border.
 
-Loggar ut när man går ur game.
-
-Start om spel ger korrupt state.
-
-Varför loggas webläsaren ut när man startar om servern?
+Ljust tema.
 
 Placering av checker på bar.
 
@@ -42,6 +38,9 @@ Språk
 ios
 
 Visa dubblar vid f�rsta drag.
+
+Visa motståndarens tärningskast.
+
 
 Chat
 
