@@ -22,6 +22,7 @@ namespace Backend.Rules
 
         public enum State
         {
+            OpponentConnectWaiting,
             FirstThrow,
             Playing,
             Ended
@@ -43,7 +44,8 @@ namespace Backend.Rules
                     Name = "Guest"
                 },
                 Points = new List<Point>(new Point[26]), // 24 points, 1 bar and 1 home,
-                Created = DateTime.Now
+                Created = DateTime.Now,
+                PlayState = State.OpponentConnectWaiting
             };
 
             for (int i = 0; i < 26; i++)
@@ -57,7 +59,7 @@ namespace Backend.Rules
 
             return game;
         }
-        
+
 
         private Player.Color OtherPlayer()
         {
@@ -161,29 +163,25 @@ namespace Backend.Rules
         public void FakeRoll(int v1, int v2)
         {
             Roll = new List<Dice>(Dice.GetDices(v1, v2));
-            SetState();
+            SetFirstRollWinner();
         }
 
-        private void SetState()
+        public void SetFirstRollWinner()
         {
-            if (PlayState == State.FirstThrow)
-            {
-                if (Roll[0].Value > Roll[1].Value)
-                    CurrentPlayer = Player.Color.Black;
-                else if (Roll[0].Value < Roll[1].Value)
-                    CurrentPlayer = Player.Color.White;
+            if (Roll[0].Value > Roll[1].Value)
+                CurrentPlayer = Player.Color.Black;
+            else if (Roll[0].Value < Roll[1].Value)
+                CurrentPlayer = Player.Color.White;
 
-                if (Roll[0].Value != Roll[1].Value)
-                    PlayState = State.Playing;
-            }
+            if (Roll[0].Value != Roll[1].Value)
+                PlayState = State.Playing;
         }
 
         public void RollDice()
         {
-            Roll = new List<Dice>(Dice.Roll());
-            SetState();
+            Roll = new List<Dice>(Dice.Roll());            
             ClearMoves(ValidMoves);
-            GenerateMoves(ValidMoves);            
+            GenerateMoves(ValidMoves);
         }
 
         private void ClearMoves(List<Move> moves)
@@ -203,7 +201,7 @@ namespace Backend.Rules
         public List<Move> GenerateMoves()
         {
             var moves = new List<Move>();
-                        
+
             GenerateMoves(moves);
 
             // Making sure both dice are played.
@@ -231,14 +229,14 @@ namespace Backend.Rules
         {
             var bar = Points.Where(p => p.GetNumber(CurrentPlayer) == 0);
             var barHasCheckers = bar.First().Checkers.Any(c => c.Color == CurrentPlayer);
-            
+
             foreach (var dice in Roll.OrderByDescending(r => r.Value))
             {
                 if (dice.Used)
                     continue;
                 dice.Used = true;
-            
-                var points = barHasCheckers ? bar : 
+
+                var points = barHasCheckers ? bar :
                     Points.Where(p => p.Checkers.Any(c => c.Color == CurrentPlayer))
                     .OrderBy(p => p.GetNumber(CurrentPlayer));
 
@@ -270,7 +268,7 @@ namespace Backend.Rules
                             var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
                             moves.Add(move);
                             var hit = MakeMove(move);
-                            GenerateMoves(move.NextMoves);                            
+                            GenerateMoves(move.NextMoves);
                             UndoMove(move, hit);
                         }
                     }

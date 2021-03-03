@@ -15,6 +15,7 @@ namespace Backend.Dto
         undoMove,
         connectionInfo,
         gameRestore,
-        abortGame
+        resign,
+        exitGame
     }
 }

@@ -1,8 +1,13 @@
 N�sta delm�l, release till azure.
 =================================
-Varför loggas webläsaren ut när man startar om servern?
 
-Visa msg waiting for other player to connect.
+Bugg: Första draget går ej att flytta.
+
+Loggar ut när man går ur game.
+
+Start om spel ger korrupt state.
+
+Varför loggas webläsaren ut när man startar om servern?
 
 Placering av checker på bar.
 

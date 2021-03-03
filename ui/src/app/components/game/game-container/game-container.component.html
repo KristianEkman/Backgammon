@@ -9,7 +9,7 @@
   <app-menu
     class="app-menu"
     (flip)="this.flipped = !this.flipped"
-    (resign)="abortGame()"
+    (resign)="resignGame()"
   ></app-menu>
   <app-game-board
     class="game-board"
@@ -35,10 +35,12 @@
       [sendVisible]="sendVisible"
       [rollButtonVisible]="rollButtonVisible"
       [newVisible]="newVisible"
+      [exitVisible]="exitVisible"
       (onUndoMove)="undoMove()"
       (onSendMoves)="sendMoves()"
       (onRoll)="rollButtonClick()"
       (onNew)="newGame()"
+      (onExit)="exitGame()"
     ></app-board-buttons>
   </div>
   <div class="game-id">{{ (gameDto$ | async)?.id }}</div>

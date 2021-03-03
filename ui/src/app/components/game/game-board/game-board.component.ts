@@ -104,6 +104,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawDirty = true;
     this.blacksName = this.game ? this.game.blackPlayer.name : '';
     this.whitesName = this.game ? this.game.whitePlayer.name : '';
+    // console.log(this.game?.playState);
   }
 
   recalculateGeometry(): void {

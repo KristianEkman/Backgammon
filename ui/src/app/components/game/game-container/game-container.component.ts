@@ -6,6 +6,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { DiceDto, GameDto, GameState, MoveDto, PlayerColor } from 'src/app/dto';
 import { AccountService, SocketsService } from 'src/app/services';
@@ -19,7 +20,8 @@ import { AppState } from 'src/app/state/app-state';
 export class GameContainerComponent implements OnDestroy, AfterViewInit {
   constructor(
     private service: SocketsService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private router: Router
   ) {
     this.gameDto$ = AppState.Singleton.game.observe();
     this.dices$ = AppState.Singleton.dices.observe();
@@ -49,7 +51,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   height = 450;
   rollButtonClicked = false;
   diceColor: PlayerColor | null = PlayerColor.neither;
-  message = '';
+  message = 'Waiting for opponent to connect';
   messageCenter = 0;
   flipped = false;
 
@@ -85,6 +87,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.diceColor = dto.currentPlayer;
     this.fireResize();
     this.newVisible = dto.playState === GameState.ended;
+    this.exitVisible = dto.playState === GameState.ended;
     this.setTextMessage(dto);
   }
 
@@ -167,6 +170,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   undoVisible = false;
   dicesVisible = false;
   newVisible = false;
+  exitVisible = false;
 
   rollButtonClick(): void {
     this.rollButtonClicked = true;
@@ -213,12 +217,20 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.dicesVisible = !this.rollButtonVisible;
   }
 
-  abortGame(): void {
-    this.service.abortGame();
+  resignGame(): void {
+    this.service.resignGame();
   }
 
   newGame(): void {
+    this.message = 'Waiting for opponent to connect';
     this.newVisible = false;
+
+    // todo: man vill säkert spela mot samma igen.
     this.service.connect();
+  }
+
+  exitGame(): void {
+    this.service.exitGame();
+    this.router.navigateByUrl('/lobby');
   }
 }

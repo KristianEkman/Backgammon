@@ -19,8 +19,7 @@ import {
   OpponentMoveActionDto,
   UndoActionDto,
   ConnectionInfoActionDto,
-  GameRestoreActionDto,
-  AbortGameActionDto
+  GameRestoreActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
 import { Cookies } from '../utils';
@@ -295,10 +294,16 @@ export class SocketsService implements OnDestroy {
     this.socket?.close();
   }
 
-  abortGame(): void {
-    const action: AbortGameActionDto = {
-      actionName: ActionNames.abortGame,
-      gameId: AppState.Singleton.game.getValue().id
+  resignGame(): void {
+    const action: ActionDto = {
+      actionName: ActionNames.resign
+    };
+    this.sendMessage(JSON.stringify(action));
+  }
+
+  exitGame(): void {
+    const action: ActionDto = {
+      actionName: ActionNames.exitGame
     };
     this.sendMessage(JSON.stringify(action));
   }

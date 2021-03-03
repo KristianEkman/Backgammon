@@ -67,6 +67,7 @@ namespace Backend
                 AllGames.Add(manager);
                 manager.SearchingOpponent = true;
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
+                
                 await manager.ConnectAndListen(webSocket, Rules.Player.Color.Black, dbUser);
                 //This is end of connection
 
@@ -110,7 +111,7 @@ namespace Backend
         }
 
         private void StartGame()
-        {
+        {   
             var gameDto = Game.ToDto();
             var action = new GameCreatedActionDto
             {
@@ -120,11 +121,12 @@ namespace Backend
             _ = Send(Client1, action);
             action.myColor = PlayerColor.white;
             _ = Send(Client2, action);
-
+            Game.PlayState = Game.State.FirstThrow;
             // todo: visa på clienten även när det blir samma 
             while (Game.PlayState == Game.State.FirstThrow)
             {
                 Game.RollDice();
+                Game.SetFirstRollWinner();
                 var rollAction = new DicesRolledActionDto
                 {
                     dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
@@ -292,7 +294,6 @@ namespace Backend
                     Logger.LogInformation($"Player {winner} won the game");
                     SaveWinner(winner.Value);
                     await SendWinner(winner.Value);
-                    _ = CloseConnections();
                     AllGames.Remove(this);
                 }
                 else
@@ -313,11 +314,14 @@ namespace Backend
                 var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(text, typeof(ConnectionInfoActionDto));
                 _ = Send(socket, action);
             }
-            else if (actionName == ActionNames.abortGame)
+            else if (actionName == ActionNames.resign)
             {
-                var action = (AbortGameActionDto)JsonSerializer.Deserialize(text, typeof(AbortGameActionDto));
                 var winner = Client1 == socket ? PlayerColor.black : PlayerColor.white;
-                _ = AbortGame(action.gameId, winner);                
+                _ = Resign(winner);                
+            }
+            else if (actionName == ActionNames.exitGame)
+            {
+                _ = CloseConnections();
             }
         }
 
@@ -331,19 +335,12 @@ namespace Backend
             }
         }
 
-        private async Task AbortGame(string gameId, PlayerColor winner)
+        private async Task Resign(PlayerColor winner)
         {
-            if (Game.Id.ToString() != gameId)
-            {
-                Logger.LogWarning("A client is trying to abort a game that it is not connected to.");
-                return;
-            }
-
             Game.PlayState = Game.State.Ended;
             await SendWinner(winner);
-            _ = CloseConnections();
             AllGames.Remove(this);
-            Logger.LogInformation($"Game {gameId} removed.");
+            Logger.LogInformation($"{winner} won game Game {Game.Id} by resignition.");
         }
 
         private async Task CloseConnections()
