@@ -1,6 +1,6 @@
 N�sta delm�l, release till azure.
 =================================
-Man loggas ut när man avbryter och skapar nytt.
+Varför loggas webläsaren ut när man startar om servern?
 
 Visa msg waiting for other player to connect.
 

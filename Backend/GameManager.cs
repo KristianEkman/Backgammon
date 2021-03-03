@@ -352,13 +352,15 @@ namespace Backend
             {
                 Logger.LogInformation("Closing client 1");
                 await Client1.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
-                Client1.Dispose();
+                if (Client1 != null)
+                    Client1.Dispose();
             }
             if (Client2 != null)
             {
                 Logger.LogInformation("Closing client 2");
                 await Client2.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
-                Client2.Dispose();
+                if (Client2 != null)
+                    Client2.Dispose();
             }
         }
 

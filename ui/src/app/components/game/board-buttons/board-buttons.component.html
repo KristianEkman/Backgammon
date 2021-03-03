@@ -1,14 +1,16 @@
-<button (click)="sendMoves()" *ngIf="sendVisible" class="sendButton">
+<button (click)="sendMoves()" *ngIf="sendVisible" class="sendButton glass">
   Done
 </button>
-<button (click)="undoMove()" *ngIf="undoVisible" class="undoButton">
+<button (click)="undoMove()" *ngIf="undoVisible" class="undoButton glass">
   Undo
 </button>
 <button
   *ngIf="rollButtonVisible"
   (click)="rollButtonClick()"
-  class="rollButton"
+  class="rollButton glass"
 >
   Roll
 </button>
-<button (click)="newGame()" *ngIf="newVisible" class="newButton">New</button>
+<button (click)="newGame()" *ngIf="newVisible" class="newButton glass">
+  New
+</button>

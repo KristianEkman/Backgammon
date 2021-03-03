@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
+import { DarkTheme, IThemes } from './themes';
 
 @Component({
   selector: 'app-game-board',
@@ -48,6 +49,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   hasTouch = false;
   whitesName = '';
   blacksName = '';
+  theme: IThemes = new DarkTheme();
 
   constructor() {
     for (let r = 0; r < 26; r++) {
@@ -106,7 +108,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   recalculateGeometry(): void {
     this.borderWidth = this.width * 0.01;
-    this.barWidth = this.borderWidth * 2;
+    this.barWidth = this.getCheckerWidth();
     this.sideBoardWidth = this.width * 0.1;
     this.rectBase =
       (this.width -
@@ -136,18 +138,18 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     //blacks home
     this.blackHome.set(
-      this.width - this.sideBoardWidth + 4,
-      this.height - this.height * 0.44 - this.borderWidth - 4,
-      this.sideBoardWidth / 2,
+      this.width - this.sideBoardWidth - this.borderWidth / 2,
+      this.height - this.height * 0.44 - this.borderWidth / 2,
+      this.getCheckerWidth() * 2 + this.borderWidth + 2,
       this.height * 0.44,
       25
     );
 
     //white home
     this.whiteHome.set(
-      this.width - this.sideBoardWidth + 4,
-      this.borderWidth + 4,
-      this.sideBoardWidth / 2,
+      this.width - this.sideBoardWidth - this.borderWidth / 2,
+      this.borderWidth / 2,
+      this.getCheckerWidth() * 2 + this.borderWidth + 2,
       this.height * 0.44,
       0
     );
@@ -199,12 +201,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
   }
 
-  drawRects(cx: CanvasRenderingContext2D | null): void {
+  drawDebugRects(cx: CanvasRenderingContext2D | null): void {
     if (!cx) {
       return;
     }
     cx.lineWidth = 1;
-    cx.fillStyle = '#000';
     cx.strokeStyle = '#F00';
 
     for (let r = 0; r < this.checkerAreas.length; r++) {
@@ -263,7 +264,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   getCheckerWidth(): number {
-    return this.getCheckerRadius() * 0.87;
+    return this.getCheckerRadius() * 0.8;
   }
 
   drawCheckers(cx: CanvasRenderingContext2D | null): void {
@@ -289,27 +290,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       const drawDrag = this.dragging && this.dragging.checkerArea == area;
       if (drawDrag) {
         checkerCount--;
-        if (point.checkers[0].color === PlayerColor.black) {
-          cx.fillStyle = '#000';
-        } else {
-          cx.fillStyle = '#fff';
-        }
-        cx.strokeStyle = '#28DD2E';
-        cx.beginPath();
-        cx.ellipse(
-          this.cursor.x - chWidth / 2,
-          this.cursor.y - chWidth / 2,
-          chWidth,
-          chWidth,
-          0,
-          0,
-          360
-        );
-        // console.log('draw drag', this.cursor);
-
-        cx.closePath();
-        cx.fill();
-        cx.stroke();
       }
 
       if (area.canBeMovedTo) {
@@ -318,7 +298,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         cx.moveTo(area.x, y);
         cx.lineTo(area.x + area.width, y);
         cx.closePath();
-        cx.strokeStyle = '#28DD2E';
+        cx.strokeStyle = this.theme.highLight;
         cx.lineWidth = 3;
         cx.stroke();
       }
@@ -357,12 +337,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         } else {
           y = area.y + area.height - chWidth - dist * i;
         }
+
+        cx.strokeStyle = this.theme.checkerBorder;
         if (checker.color === PlayerColor.black) {
-          cx.fillStyle = '#000';
-          cx.strokeStyle = '#777';
+          cx.fillStyle = this.theme.blackChecker;
         } else {
-          cx.fillStyle = '#FFF';
-          cx.strokeStyle = '#777';
+          cx.fillStyle = this.theme.whiteChecker;
         }
         cx.beginPath();
         cx.ellipse(x, y, chWidth, chWidth, 0, 0, 360);
@@ -370,10 +350,34 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         cx.fill();
         cx.stroke();
         if (area.hasValidMove && i == checkerCount - 1 && !drawDrag) {
-          cx.strokeStyle = '#28DD2E';
+          cx.strokeStyle = this.theme.highLight;
           cx.lineWidth = 1.5;
           cx.stroke();
         }
+      }
+
+      if (drawDrag) {
+        if (point.checkers[0].color === PlayerColor.black) {
+          cx.fillStyle = this.theme.blackChecker;
+        } else {
+          cx.fillStyle = this.theme.whiteChecker;
+        }
+        cx.strokeStyle = this.theme.highLight;
+        cx.beginPath();
+        cx.ellipse(
+          this.cursor.x - chWidth / 2,
+          this.cursor.y - chWidth / 2,
+          chWidth,
+          chWidth,
+          0,
+          0,
+          360
+        );
+        // console.log('draw drag', this.cursor);
+
+        cx.closePath();
+        cx.fill();
+        cx.stroke();
       }
     }
 
@@ -387,14 +391,14 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     let x = this.width - this.sideBoardWidth + 4;
     let y = this.height - this.borderWidth - 4;
-    cx.fillStyle = '#000';
+    cx.fillStyle = this.theme.blackChecker;
     for (let i = 0; i < blackCount; i++) {
       cx.fillRect(x, y - i * 6, this.sideBoardWidth / 2, 5);
     }
 
     x = this.width - this.sideBoardWidth + 4;
     y = this.borderWidth + 4;
-    cx.fillStyle = '#fff';
+    cx.fillStyle = this.theme.whiteChecker;
     for (let i = 0; i < whiteCount; i++) {
       cx.fillRect(x, y + i * 6, this.sideBoardWidth / 2, 5);
     }
@@ -415,11 +419,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
 
+    cx.fillStyle = this.theme.boardBackground;
+    cx.fillRect(0, 0, this.width, this.height);
     // color and line width
     cx.lineWidth = 1;
-
-    cx.strokeStyle = '#000';
-    const colors = ['#555', '#eee'];
+    const colors = [this.theme.blackTriangle, this.theme.whiteTriangle];
     let colorIdx = 0;
 
     //Top triangles
@@ -458,27 +462,28 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       colorIdx = colorIdx === 0 ? 1 : 0;
     }
 
-    cx.strokeStyle = '#888';
-    cx.lineWidth = 2;
+    cx.strokeStyle = this.theme.border;
+    cx.lineWidth = this.borderWidth;
     this.whiteHome.drawBorder(cx, false);
     this.blackHome.drawBorder(cx, false);
-    cx.font = 'bold 18px Arial';
-    cx.fillStyle = '#333';
+    cx.font = '20px Arial';
+    cx.fillStyle = this.theme.textColor;
     cx.save();
     cx.translate(this.blackHome.x, this.blackHome.y);
     cx.rotate(Math.PI / 2);
-    cx.fillText(this.blacksName, 0, -this.blackHome.width - 3);
+    cx.fillStyle = this.theme.textColor;
+    cx.fillText(this.blacksName, 0, -this.blackHome.width - 5);
     cx.restore();
 
     cx.save();
     cx.translate(this.whiteHome.x, this.whiteHome.y);
     cx.rotate(Math.PI / 2);
-    cx.fillText(this.whitesName, 0, -this.whiteHome.width - 3);
+    cx.fillStyle = this.theme.textColor;
+    cx.fillText(this.whitesName, 0, -this.whiteHome.width - 5);
     cx.restore();
 
     // the border
     cx.lineWidth = this.borderWidth;
-    cx.strokeStyle = '#888';
     cx.strokeRect(
       this.sideBoardWidth + this.borderWidth / 2,
       this.borderWidth / 2,
@@ -487,7 +492,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     );
 
     //the bar
-    cx.fillStyle = '#888';
+    cx.fillStyle = this.theme.border;
     cx.fillRect(
       this.width / 2 - this.barWidth / 2,
       0,

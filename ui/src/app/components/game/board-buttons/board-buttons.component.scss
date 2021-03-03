@@ -1,40 +1,16 @@
-.sendButton,
-.rollButton {
-  background-color: #28DD2E;
-  border-color: #146816;
-  color: #0d420e;
+button {
+  margin: 4px;
+}
 
-  &:focus {
-    background-color: #1d9e22;
-  }
+.sendButton,
+.rollButton,
+.newButton {
+  background-image: linear-gradient(rgb(31, 71, 38), rgb(53, 121, 66));
+  color: #Fff;
 }
 
 .undoButton {
-  background-color: #dd8928;
-  border-color: #794a15;
-  color: #42290c;
+  background-image: linear-gradient(#5d3910, #a16520);
 
-  &:focus {
-    background-color: #af6c20;
-  }
-}
-
-
-button {
-  margin: 4px;
-  padding: 6px;
-  border: 2px solid black;
-  font-size: 20px;
-  border-radius: 25%;
-
-  &:hover {
-    -webkit-box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
-    -moz-box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
-    box-shadow: 0px 0px 6px 1px rgba(0, 0, 0, 0.3);
-  }
-
-  &:focus {
-    outline: none;
-  }
-
+  color: #d3c9be;
 }

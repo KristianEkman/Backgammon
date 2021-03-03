@@ -20,10 +20,12 @@ export class MenuComponent {
   }
 
   flipClick(): void {
+    this.open = false;
     this.flip.emit();
   }
 
   resignClick(): void {
+    this.open = false;
     this.resign.emit();
   }
 }

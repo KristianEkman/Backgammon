@@ -60,11 +60,11 @@ import { AccountComponent } from './components/account/account.component';
             provider: new GoogleLoginProvider(
               '296204915760-builmppcda4nq2t6gh3rgtiq5o4v6976.apps.googleusercontent.com'
             )
-          },
-          {
-            id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider('548694169142603')
           }
+          // {
+          //   id: FacebookLoginProvider.PROVIDER_ID,
+          //   provider: new FacebookLoginProvider('548694169142603')
+          // }
         ]
       } as SocialAuthServiceConfig
     }

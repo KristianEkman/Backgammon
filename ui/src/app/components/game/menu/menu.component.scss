@@ -3,11 +3,12 @@
 
 .open-button {
   @include button;
-  color: black;
-  font-size: 30px;
+  color: #ddd;
+  font-size: 20px;
   border: none;
   position: absolute;
-
+  top: 20px;
+  z-index: 1;
 }
 
 .overlay {
@@ -80,5 +81,5 @@
   font-size: 40px;
   border: none;
   background: none;
-  color: white;
+  color: #ddd;
 }
