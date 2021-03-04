@@ -168,18 +168,23 @@ namespace Backend.Rules
 
         public void SetFirstRollWinner()
         {
-            if (Roll[0].Value > Roll[1].Value)
-                CurrentPlayer = Player.Color.Black;
-            else if (Roll[0].Value < Roll[1].Value)
-                CurrentPlayer = Player.Color.White;
+            if (this.PlayState == State.FirstThrow)
+            {
+                if (Roll[0].Value > Roll[1].Value)
+                    CurrentPlayer = Player.Color.Black;
+                else if (Roll[0].Value < Roll[1].Value)
+                    CurrentPlayer = Player.Color.White;
 
-            if (Roll[0].Value != Roll[1].Value)
-                PlayState = State.Playing;
+                if (Roll[0].Value != Roll[1].Value)
+                    PlayState = State.Playing;
+            }
         }
 
         public void RollDice()
         {
-            Roll = new List<Dice>(Dice.Roll());            
+            Roll = new List<Dice>(Dice.Roll());
+            SetFirstRollWinner();
+
             ClearMoves(ValidMoves);
             GenerateMoves(ValidMoves);
         }

@@ -126,7 +126,6 @@ namespace Backend
             while (Game.PlayState == Game.State.FirstThrow)
             {
                 Game.RollDice();
-                Game.SetFirstRollWinner();
                 var rollAction = new DicesRolledActionDto
                 {
                     dices = Game.Roll.Select(d => d.ToDto()).ToArray(),

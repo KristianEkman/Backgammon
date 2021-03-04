@@ -39,6 +39,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   checkerAreas: CheckerArea[] = [];
   blackHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 25);
   whiteHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 0);
+  blackBar: CheckerArea = new CheckerArea(0, 0, 0, 0, 0);
+  whiteBar: CheckerArea = new CheckerArea(0, 0, 0, 0, 25);
 
   cx: CanvasRenderingContext2D | null = null;
   drawDirty = false;
@@ -131,6 +133,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.rectHeight / 2 + this.borderWidth,
       0
     );
+    this.blackBar = this.checkerAreas[24];
 
     //whites bar
     this.checkerAreas[25].set(
@@ -140,6 +143,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.rectHeight / 2,
       25
     );
+
+    this.whiteBar = this.checkerAreas[25];
 
     //blacks home
     this.blackHome.set(
@@ -242,7 +247,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         return this.blackHome.getCenter();
       }
       if (pointIdx === 0) {
-        return this.checkerAreas[24].getCenter();
+        return this.blackBar.getCenter();
         // black bar
       }
     } else {
@@ -252,7 +257,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         return this.whiteHome.getCenter();
       }
       if (pointIdx === 0) {
-        return this.checkerAreas[25].getCenter();
+        return this.whiteBar.getCenter();
       }
     }
 
@@ -283,14 +288,14 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         return this.blackHome.getCenter();
       }
       if (pointIdx === 0) {
-        return this.checkerAreas[24].getCenter();
+        return this.blackBar.getCenter();
         // black bar
       }
     } else {
       // white move
       pointIdx = 25 - moveDto.from;
       if (pointIdx === 25) {
-        return this.checkerAreas[25].getCenter();
+        return this.whiteBar.getCenter();
       }
       if (pointIdx === 0) {
         return this.whiteHome.getCenter();
