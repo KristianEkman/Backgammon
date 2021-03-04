@@ -1,11 +1,12 @@
 <div class="dices">
-  <label
+  <div
     *ngFor="let dice of dices"
     [ngClass]="{
       diceUsed: dice.used,
       black: color === PlayerColor.black,
       white: color === PlayerColor.white
     }"
-    >{{ dice.value }}</label
   >
+    <i [ngClass]="faClass[dice.value - 1]"></i>
+  </div>
 </div>

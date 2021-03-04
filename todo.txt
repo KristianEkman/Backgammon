@@ -1,17 +1,14 @@
 N�sta delm�l, release till azure.
 =================================
-
-Bättre From to animation coordinater.
-
-Fixa felet med att man kan flytta motståndarens checkers.
-
 Connection status och felmeddeladen.
 
-Tärningsprickar. fa mix-blend-mode
+
+Bättre From to animation coordinater, bugg för vit bar, och kanske även home.
+
 
 Ljust tema. (default)
 
-Placering av checker på bar och home.
+Placering av checker på bar och home. Lite snett.
 
 Inte ansluta till games med disconnected opponent client.
 
