@@ -1,17 +1,21 @@
 N�sta delm�l, release till azure.
 =================================
+
+Bättre From to animation coordinater.
+
 Fixa felet med att man kan flytta motståndarens checkers.
 
-Ljust tema.
+Connection status och felmeddeladen.
+
+Tärningsprickar. fa mix-blend-mode
+
+Ljust tema. (default)
 
 Placering av checker på bar och home.
 
 Inte ansluta till games med disconnected opponent client.
 
 Claim winner om inte reconnect sker.
-
-Tillbaka animering från hem.
-    Smartare beräkning av animering till och från.
 
 Inloggning, facebook
 
@@ -23,23 +27,18 @@ TopList, ELO
 
 Ljud
 
-Förhindra spel mot sig själv
+Förhindra spel mot sig själv?
 
 Play friend
 
-
 Tv� samtidiga spel med samma webl�sare.
     Avbryt den f�rsta
-
 
 Språk
 
 ios
 
 Visa dubblar vid f�rsta drag.
-
-Visa motståndarens tärningskast.
-
 
 Chat
 

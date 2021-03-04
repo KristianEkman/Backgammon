@@ -128,12 +128,12 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(): void {
-    this.width = Math.min(window.innerWidth - 20, 1024);
+    this.width = Math.min(window.innerWidth, 1024);
     const span = this.messages?.nativeElement as Element;
     const spanWidth = span.getElementsByTagName('span')[0].clientWidth;
     this.messageCenter = this.width / 2 - spanWidth / 2;
 
-    this.height = Math.min(window.innerHeight - 20, this.width * 0.6);
+    this.height = Math.min(window.innerHeight - 40, this.width * 0.6);
 
     const buttons = this.boardButtons?.nativeElement as HTMLElement;
     const btnsOffset = 5; //Cheating. Could not get the height.

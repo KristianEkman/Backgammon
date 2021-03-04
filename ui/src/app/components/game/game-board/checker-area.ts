@@ -1,3 +1,5 @@
+import { Point } from '.';
+
 export class CheckerArea {
   constructor(
     public x: number,
@@ -6,6 +8,9 @@ export class CheckerArea {
     public height: number,
     public pointIdx: number
   ) {}
+
+  hasValidMove = false;
+  canBeMovedTo = false;
 
   set(
     x: number,
@@ -70,6 +75,8 @@ export class CheckerArea {
     cx.lineWidth = 2;
     cx.stroke();
   }
-  hasValidMove = false;
-  canBeMovedTo = false;
+
+  getCenter(): Point {
+    return { x: this.x + this.width / 2, y: this.y + this.height / 2 };
+  }
 }
