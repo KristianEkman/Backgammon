@@ -1,11 +1,10 @@
 N�sta delm�l, release till azure.
 =================================
-
-Ljus skuggning på border.
+Fixa felet med att man kan flytta motståndarens checkers.
 
 Ljust tema.
 
-Placering av checker på bar.
+Placering av checker på bar och home.
 
 Inte ansluta till games med disconnected opponent client.
 
