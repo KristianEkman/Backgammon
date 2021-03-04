@@ -114,14 +114,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   recalculateGeometry(): void {
     this.borderWidth = this.width * 0.01;
-    this.barWidth = this.getCheckerWidth();
+    this.barWidth = this.borderWidth * 3;
     this.sideBoardWidth = this.width * 0.1;
-    this.rectBase =
-      (this.width -
-        this.barWidth -
-        2 * this.borderWidth -
-        this.sideBoardWidth * 2) /
-      12;
+    this.rectBase = this.getRectBase();
+
     this.rectHeight = this.height * 0.42;
 
     //blacks bar
@@ -189,6 +185,15 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       );
       x += this.rectBase;
     }
+  }
+  getRectBase(): number {
+    return (
+      (this.width -
+        this.barWidth -
+        this.borderWidth * 2 -
+        this.sideBoardWidth * 2) /
+      12
+    );
   }
 
   draw(cx: CanvasRenderingContext2D): void {
@@ -266,7 +271,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   getCheckerRadius(): number {
-    return this.checkerAreas[0].width / 2;
+    return this.getRectBase() / 2;
   }
 
   getCheckerWidth(): number {
@@ -323,6 +328,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         checkerCount--;
       }
 
+      // main draw checkers loop
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
         // skipping checkers att home.
@@ -339,9 +345,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         }
         let y = 0;
         if (p < 13) {
-          y = area.y + chWidth + dist * i;
+          y = area.y + chWidth + dist * i + 2;
         } else {
-          y = area.y + area.height - chWidth - dist * i;
+          y = area.y + area.height - chWidth - dist * i - 2;
         }
 
         cx.strokeStyle = this.theme.checkerBorder;
@@ -351,14 +357,37 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           cx.fillStyle = this.theme.whiteChecker;
         }
         cx.beginPath();
-        cx.ellipse(x, y, chWidth, chWidth, 0, 0, 360);
+        cx.ellipse(x, y, chWidth, chWidth, 0, 0, 2 * Math.PI);
         cx.closePath();
         cx.fill();
-        cx.stroke();
+        // cx.stroke();
+
         if (area.hasValidMove && i == checkerCount - 1 && !drawDrag) {
           cx.strokeStyle = this.theme.highLight;
           cx.lineWidth = 1.5;
           cx.stroke();
+        }
+
+        // clossy checker
+        const glossyW = chWidth * 0.9;
+        if (!this.flipped) {
+          const glossy = cx.createLinearGradient(x, y - chWidth / 2, x, y);
+          glossy.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
+          glossy.addColorStop(1, 'rgba(255, 255, 255, 0');
+          cx.fillStyle = glossy;
+          cx.beginPath();
+          cx.ellipse(x, y, glossyW, glossyW, 0, Math.PI, 2 * Math.PI);
+          cx.closePath();
+          cx.fill();
+        } else {
+          const glossy = cx.createLinearGradient(x, y, x, y + chWidth / 2);
+          glossy.addColorStop(0, 'rgba(255, 255, 255, 0)');
+          glossy.addColorStop(1, 'rgba(255, 255, 255, 0.2');
+          cx.fillStyle = glossy;
+          cx.beginPath();
+          cx.ellipse(x, y, glossyW, glossyW, 0, 2 * Math.PI, Math.PI);
+          cx.closePath();
+          cx.fill();
         }
       }
 
@@ -426,7 +455,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     cx.fillStyle = this.theme.boardBackground;
-    cx.fillRect(0, 0, this.width, this.height);
+    cx.fillRect(
+      this.sideBoardWidth,
+      0,
+      this.width - this.sideBoardWidth * 2,
+      this.height
+    );
     // color and line width
     cx.lineWidth = 1;
     const colors = [this.theme.blackTriangle, this.theme.whiteTriangle];
@@ -468,24 +502,41 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       colorIdx = colorIdx === 0 ? 1 : 0;
     }
 
+    this.drawBorders(cx);
+
+    //the bar
+    cx.fillStyle = this.theme.border;
+    cx.fillRect(
+      this.width / 2 - this.barWidth / 2,
+      2,
+      this.barWidth,
+      this.height - 4
+    );
+  }
+
+  drawBorders(cx: CanvasRenderingContext2D): void {
     cx.strokeStyle = this.theme.border;
     cx.lineWidth = this.borderWidth;
+    this.whiteHome.fill(cx, this.theme.boardBackground);
     this.whiteHome.drawBorder(cx, false);
+    this.blackHome.fill(cx, this.theme.boardBackground);
     this.blackHome.drawBorder(cx, false);
-    cx.font = '20px Arial';
+
+    // names of players
+    cx.font = '18px Arial';
     cx.fillStyle = this.theme.textColor;
     cx.save();
     cx.translate(this.blackHome.x, this.blackHome.y);
     cx.rotate(Math.PI / 2);
     cx.fillStyle = this.theme.textColor;
-    cx.fillText(this.blacksName, 0, -this.blackHome.width - 5);
+    cx.fillText(this.blacksName, 0, -this.blackHome.width - 11);
     cx.restore();
 
     cx.save();
     cx.translate(this.whiteHome.x, this.whiteHome.y);
     cx.rotate(Math.PI / 2);
     cx.fillStyle = this.theme.textColor;
-    cx.fillText(this.whitesName, 0, -this.whiteHome.width - 5);
+    cx.fillText(this.whitesName, 0, -this.whiteHome.width - 11);
     cx.restore();
 
     // the border
@@ -497,14 +548,67 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.height - this.borderWidth
     );
 
-    //the bar
-    cx.fillStyle = this.theme.border;
-    cx.fillRect(
-      this.width / 2 - this.barWidth / 2,
-      0,
-      this.barWidth,
-      this.height
-    );
+    // 3d effect of borders
+    const sbw = this.sideBoardWidth;
+    const bow = this.borderWidth;
+    const hbw = bow / 2;
+    cx.beginPath();
+    cx.strokeStyle = !this.flipped ? '#444' : '#222';
+    cx.lineWidth = 2;
+    cx.moveTo(sbw, this.height);
+    cx.lineTo(sbw, 1);
+
+    cx.lineTo(sbw + this.width - this.blackHome.width * 2 - bow * 2, 1);
+    cx.moveTo(sbw + bow, this.height - bow);
+    cx.lineTo(this.width - sbw - bow, this.height - bow);
+    cx.moveTo(this.width / 2 - this.barWidth / 2 - 1, bow);
+    cx.lineTo(this.width / 2 - this.barWidth / 2 - 1, this.height - bow);
+    cx.moveTo(this.width - sbw - bow, bow);
+    cx.lineTo(this.width - sbw - bow, this.height - bow);
+
+    const wh = this.whiteHome;
+    cx.moveTo(wh.x + wh.width - hbw, wh.y + hbw);
+    cx.lineTo(wh.x + wh.width - hbw, wh.y + wh.height - hbw - 1);
+    cx.lineTo(wh.x + hbw, wh.y + wh.height - hbw - 1);
+
+    const bh = this.blackHome;
+    cx.moveTo(bh.x + bh.width - hbw, bh.y + hbw);
+    cx.lineTo(bh.x + bh.width - hbw, bh.y + bh.height - hbw - 1);
+    cx.lineTo(bh.x + hbw, bh.y + bh.height - hbw - 1);
+    cx.moveTo(bh.x + hbw, bh.y - hbw);
+    cx.lineTo(bh.x + bh.width + hbw, bh.y - hbw);
+
+    cx.stroke();
+
+    // dark 3d effect
+    cx.beginPath();
+    cx.strokeStyle = !this.flipped ? '#222' : '#444';
+    cx.lineWidth = 2;
+    cx.moveTo(sbw + bow, this.height - bow);
+    cx.lineTo(sbw + bow, bow);
+
+    cx.lineTo(this.width - sbw - bow, bow);
+    cx.moveTo(this.width / 2 + this.barWidth / 2 + 1, bow);
+    cx.lineTo(this.width / 2 + this.barWidth / 2 + 1, this.height - bow);
+    cx.moveTo(sbw, this.height - 1);
+    const rightEdge = this.width - sbw / 2 + bow + 1;
+    cx.lineTo(rightEdge, this.height - 1);
+    cx.moveTo(rightEdge, 1); // top right
+    cx.lineTo(rightEdge, wh.height + bow);
+    cx.lineTo(this.width - sbw, wh.height + bow);
+    cx.lineTo(this.width - sbw, bh.y - hbw);
+    cx.moveTo(rightEdge, bh.y - hbw);
+    cx.lineTo(rightEdge, this.height);
+
+    cx.moveTo(wh.x + wh.width - hbw, wh.y + hbw);
+    cx.lineTo(wh.x + hbw, wh.y + hbw);
+    cx.lineTo(wh.x + hbw, wh.y + wh.height - hbw - 1);
+
+    cx.moveTo(bh.x + bh.width - hbw, bh.y + hbw);
+    cx.lineTo(bh.x + hbw, bh.y + hbw);
+    cx.lineTo(bh.x + hbw, bh.y + bh.height - hbw - 1);
+
+    cx.stroke();
   }
 
   onMouseDown(event: MouseEvent): void {

@@ -15,7 +15,7 @@ export class DarkTheme implements IThemes {
   border = '#333';
   whiteTriangle = '#666';
   blackTriangle = '#333';
-  whiteChecker = '#aaa';
+  whiteChecker = '#888';
   blackChecker = '#000';
   textColor = '#ddd';
   highLight = '#28DD2E';

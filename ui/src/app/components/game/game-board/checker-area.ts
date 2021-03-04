@@ -42,6 +42,14 @@ export class CheckerArea {
     }
   }
 
+  fill(
+    cx: CanvasRenderingContext2D,
+    fillStyle: string | CanvasGradient | CanvasPattern
+  ): void {
+    cx.fillStyle = fillStyle;
+    cx.fillRect(this.x, this.y, this.width, this.height);
+  }
+
   drawTop(cx: CanvasRenderingContext2D): void {
     cx.beginPath();
     const y = this.y;
