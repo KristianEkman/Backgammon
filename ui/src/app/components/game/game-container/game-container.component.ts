@@ -136,8 +136,9 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.height = Math.min(window.innerHeight - 20, this.width * 0.6);
 
     const buttons = this.boardButtons?.nativeElement as HTMLElement;
+    const btnsOffset = 5; //Cheating. Could not get the height.
     if (buttons) {
-      buttons.style.top = `${this.height / 2 - buttons.clientHeight / 2}px`;
+      buttons.style.top = `${this.height / 2 - btnsOffset}px`;
       buttons.style.right = `${this.width * 0.11}px`;
     }
 
@@ -145,13 +146,13 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     if (dices) {
       // put the dices on right board if its my turn.
       if (this.myTurn()) {
-        dices.style.left = `${this.width / 2 + 10}px`;
+        dices.style.left = `${this.width / 2 + 20}px`;
         dices.style.right = '';
       } else {
-        dices.style.right = `${this.width / 2 + 10}px`;
+        dices.style.right = `${this.width / 2 + 20}px`;
         dices.style.left = '';
       }
-      dices.style.top = `${this.height / 2 - dices.clientHeight / 2}px`;
+      dices.style.top = `${this.height / 2 - btnsOffset}px`;
     }
   }
 

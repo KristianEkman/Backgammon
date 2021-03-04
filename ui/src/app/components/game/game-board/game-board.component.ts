@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
+import { Checker } from './checker';
 import { DarkTheme, IThemes } from './themes';
 
 @Component({
@@ -65,6 +66,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
             moves[0],
             this.getMoveStartPoint(moves[0]),
             this.getMoveEndPoint(moves[0]),
+            this.theme,
+            this.flipped,
             () => {
               // finished callback
               this.animatedMove = undefined;
@@ -349,71 +352,32 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         } else {
           y = area.y + area.height - chWidth - dist * i - 2;
         }
-
-        cx.strokeStyle = this.theme.checkerBorder;
-        if (checker.color === PlayerColor.black) {
-          cx.fillStyle = this.theme.blackChecker;
-        } else {
-          cx.fillStyle = this.theme.whiteChecker;
-        }
-        cx.beginPath();
-        cx.ellipse(x, y, chWidth, chWidth, 0, 0, 2 * Math.PI);
-        cx.closePath();
-        cx.fill();
-        // cx.stroke();
-
-        if (area.hasValidMove && i == checkerCount - 1 && !drawDrag) {
-          cx.strokeStyle = this.theme.highLight;
-          cx.lineWidth = 1.5;
-          cx.stroke();
-        }
-
-        // clossy checker
-        const glossyW = chWidth * 0.9;
-        if (!this.flipped) {
-          const glossy = cx.createLinearGradient(x, y - chWidth / 2, x, y);
-          glossy.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
-          glossy.addColorStop(1, 'rgba(255, 255, 255, 0');
-          cx.fillStyle = glossy;
-          cx.beginPath();
-          cx.ellipse(x, y, glossyW, glossyW, 0, Math.PI, 2 * Math.PI);
-          cx.closePath();
-          cx.fill();
-        } else {
-          const glossy = cx.createLinearGradient(x, y, x, y + chWidth / 2);
-          glossy.addColorStop(0, 'rgba(255, 255, 255, 0)');
-          glossy.addColorStop(1, 'rgba(255, 255, 255, 0.2');
-          cx.fillStyle = glossy;
-          cx.beginPath();
-          cx.ellipse(x, y, glossyW, glossyW, 0, 2 * Math.PI, Math.PI);
-          cx.closePath();
-          cx.fill();
-        }
-      }
-
-      if (drawDrag) {
-        if (point.checkers[0].color === PlayerColor.black) {
-          cx.fillStyle = this.theme.blackChecker;
-        } else {
-          cx.fillStyle = this.theme.whiteChecker;
-        }
-        cx.strokeStyle = this.theme.highLight;
-        cx.beginPath();
-        cx.ellipse(
-          this.cursor.x - chWidth / 2,
-          this.cursor.y - chWidth / 2,
+        const highLight =
+          area.hasValidMove && i == checkerCount - 1 && !drawDrag;
+        Checker.draw(
+          cx,
+          { x, y },
           chWidth,
-          chWidth,
-          0,
-          0,
-          360
+          this.theme,
+          checker.color,
+          highLight,
+          false,
+          this.flipped
         );
-        // console.log('draw drag', this.cursor);
-
-        cx.closePath();
-        cx.fill();
-        cx.stroke();
       }
+    }
+
+    if (this.dragging) {
+      Checker.draw(
+        cx,
+        this.cursor,
+        chWidth,
+        this.theme,
+        this.dragging.color,
+        false,
+        true,
+        this.flipped
+      );
     }
 
     // draw checkers reached home.
@@ -552,19 +516,21 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const sbw = this.sideBoardWidth;
     const bow = this.borderWidth;
     const hbw = bow / 2;
+    const h = this.height;
+    const w = this.width;
     cx.beginPath();
     cx.strokeStyle = !this.flipped ? '#444' : '#222';
     cx.lineWidth = 2;
-    cx.moveTo(sbw, this.height);
+    cx.moveTo(sbw, h);
     cx.lineTo(sbw, 1);
 
-    cx.lineTo(sbw + this.width - this.blackHome.width * 2 - bow * 2, 1);
-    cx.moveTo(sbw + bow, this.height - bow);
-    cx.lineTo(this.width - sbw - bow, this.height - bow);
-    cx.moveTo(this.width / 2 - this.barWidth / 2 - 1, bow);
-    cx.lineTo(this.width / 2 - this.barWidth / 2 - 1, this.height - bow);
-    cx.moveTo(this.width - sbw - bow, bow);
-    cx.lineTo(this.width - sbw - bow, this.height - bow);
+    cx.lineTo(sbw + w - this.blackHome.width * 2 - bow * 2, 1);
+    cx.moveTo(sbw + bow, h - bow);
+    cx.lineTo(w - sbw - bow, h - bow);
+    cx.moveTo(w / 2 - this.barWidth / 2 - 1, bow);
+    cx.lineTo(w / 2 - this.barWidth / 2 - 1, h - bow);
+    cx.moveTo(w - sbw - bow, bow);
+    cx.lineTo(w - sbw - bow, h - bow);
 
     const wh = this.whiteHome;
     cx.moveTo(wh.x + wh.width - hbw, wh.y + hbw);
@@ -584,21 +550,21 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.beginPath();
     cx.strokeStyle = !this.flipped ? '#222' : '#444';
     cx.lineWidth = 2;
-    cx.moveTo(sbw + bow, this.height - bow);
+    cx.moveTo(sbw + bow, h - bow);
     cx.lineTo(sbw + bow, bow);
 
-    cx.lineTo(this.width - sbw - bow, bow);
-    cx.moveTo(this.width / 2 + this.barWidth / 2 + 1, bow);
-    cx.lineTo(this.width / 2 + this.barWidth / 2 + 1, this.height - bow);
-    cx.moveTo(sbw, this.height - 1);
-    const rightEdge = this.width - sbw / 2 + bow + 1;
-    cx.lineTo(rightEdge, this.height - 1);
+    cx.lineTo(w - sbw - bow, bow);
+    cx.moveTo(w / 2 + this.barWidth / 2 + 1, bow);
+    cx.lineTo(w / 2 + this.barWidth / 2 + 1, h - bow);
+    cx.moveTo(sbw, h - 1);
+    const rightEdge = w - sbw / 2 + bow + 1;
+    cx.lineTo(rightEdge, h - 1);
     cx.moveTo(rightEdge, 1); // top right
     cx.lineTo(rightEdge, wh.height + bow);
-    cx.lineTo(this.width - sbw, wh.height + bow);
-    cx.lineTo(this.width - sbw, bh.y - hbw);
+    cx.lineTo(w - sbw, wh.height + bow);
+    cx.lineTo(w - sbw, bh.y - hbw);
     cx.moveTo(rightEdge, bh.y - hbw);
-    cx.lineTo(rightEdge, this.height);
+    cx.lineTo(rightEdge, h);
 
     cx.moveTo(wh.x + wh.width - hbw, wh.y + hbw);
     cx.lineTo(wh.x + hbw, wh.y + hbw);
@@ -663,7 +629,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       // The moves are ordered  by backend by dice value.
       const move = this.game.validMoves.find((m) => m.from === ptIdx);
       if (move !== undefined) {
-        this.dragging = new CheckerDrag(rect, clientX, clientY, ptIdx);
+        this.dragging = new CheckerDrag(
+          rect,
+          clientX,
+          clientY,
+          ptIdx,
+          move.color
+        );
         // console.log('dragging', this.dragging);
         break;
       }

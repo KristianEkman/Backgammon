@@ -1,3 +1,4 @@
+import { PlayerColor } from 'src/app/dto';
 import { CheckerArea } from './';
 
 export class CheckerDrag {
@@ -5,6 +6,7 @@ export class CheckerDrag {
     public checkerArea: CheckerArea,
     public xDown: number,
     public yDown: number,
-    public fromIdx: number
+    public fromIdx: number,
+    public color: PlayerColor
   ) {}
 }

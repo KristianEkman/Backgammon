@@ -7,7 +7,7 @@ label {
   display: inline-block;
   width: 35px;
   height: 25px;
-  border: 1px solid #555;
+  border: 2px solid #555;
   color: #555;
   border-radius: 4px;
   margin: 2px;
@@ -18,8 +18,8 @@ label {
 
 .black {
   background-color: #000;
-  border-color: #aaa;
-  color: #aaa;
+  border-color: rgb(109, 109, 109);
+  color: rgb(133, 133, 133);
 }
 
 .white {
