@@ -67,6 +67,7 @@ export class CheckerArea {
   }
 
   drawBottom(cx: CanvasRenderingContext2D): void {
+    cx.beginPath();
     const y = this.y + this.height;
     cx.moveTo(this.x, y);
     cx.lineTo(this.x + this.width, y);

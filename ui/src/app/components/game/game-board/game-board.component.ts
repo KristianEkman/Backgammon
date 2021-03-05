@@ -34,8 +34,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   borderWidth = 0;
   barWidth = 0;
   sideBoardWidth = 0;
-  rectBase = 0;
-  rectHeight = 0;
   checkerAreas: CheckerArea[] = [];
   blackHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 25);
   whiteHome: CheckerArea = new CheckerArea(0, 0, 0, 0, 0);
@@ -121,26 +119,25 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.borderWidth = this.width * 0.01;
     this.barWidth = this.borderWidth * 3;
     this.sideBoardWidth = this.width * 0.1;
-    this.rectBase = this.getRectBase();
 
-    this.rectHeight = this.height * 0.42;
+    const rectH = this.height * 0.42;
 
     //blacks bar
     this.checkerAreas[24].set(
-      this.width / 2 - this.borderWidth,
-      this.rectHeight / 2,
-      this.borderWidth * 2,
-      this.rectHeight / 2 + this.borderWidth,
+      this.width / 2 - this.borderWidth * 1.5,
+      rectH / 2,
+      this.borderWidth * 3,
+      rectH / 2 + this.borderWidth,
       0
     );
     this.blackBar = this.checkerAreas[24];
 
     //whites bar
     this.checkerAreas[25].set(
-      this.width / 2 - this.borderWidth,
+      this.width / 2 - this.borderWidth * 1.5,
       this.height / 2 + this.height * 0.08 - this.borderWidth,
-      this.borderWidth * 2,
-      this.rectHeight / 2,
+      this.borderWidth * 3,
+      rectH / 2,
       25
     );
 
@@ -166,32 +163,27 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     let x = this.borderWidth + this.sideBoardWidth;
     let y = this.borderWidth;
+    const rectBase = this.getRectBase();
 
     //Top triangles
     for (let i = 0; i < 12; i++) {
       if (i === 6) {
         x += this.barWidth;
       }
-      this.checkerAreas[i].set(x, y, this.rectBase, this.rectHeight, 12 - i);
-      x += this.rectBase;
+      this.checkerAreas[i].set(x, y, rectBase, rectH, 12 - i);
+      x += rectBase;
     }
 
-    //bottom
+    //bottom triangles
     x = this.borderWidth + this.sideBoardWidth;
-    y = this.height - this.borderWidth - this.rectHeight;
+    y = this.height - this.borderWidth - rectH;
     for (let i = 0; i < 12; i++) {
       if (i === 6) {
         x += this.barWidth;
       }
 
-      this.checkerAreas[i + 12].set(
-        x,
-        y,
-        this.rectBase,
-        this.rectHeight,
-        i + 13
-      );
-      x += this.rectBase;
+      this.checkerAreas[i + 12].set(x, y, rectBase, rectH, i + 13);
+      x += rectBase;
     }
   }
   getRectBase(): number {
@@ -213,7 +205,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     canvasEl.height = this.height;
 
     this.drawBoard(cx);
-    // this.drawRects(cx); // debug
+    // this.drawDebugRects(cx);
     this.drawCheckers(cx);
     if (this.animatedMove) {
       this.animatedMove.draw(cx, this.getCheckerWidth());
@@ -225,7 +217,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
     cx.lineWidth = 1;
-    cx.strokeStyle = '#F00';
+    cx.strokeStyle = '#850';
+    cx.fillStyle = '#850';
 
     for (let r = 0; r < this.checkerAreas.length; r++) {
       this.checkerAreas[r].drawBorder(cx, true);
@@ -242,23 +235,27 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     let pointIdx = 0;
 
     if (moveDto.color === PlayerColor.black) {
-      pointIdx = moveDto.to;
-      if (pointIdx === 25) {
-        return this.blackHome.getCenter();
-      }
-      if (pointIdx === 0) {
+      if (moveDto.to === 0) {
         return this.blackBar.getCenter();
+      }
+      if (moveDto.to === 25) {
+        return this.blackHome.getCenter();
         // black bar
       }
     } else {
-      // white move
-      pointIdx = 25 - moveDto.to;
-      if (pointIdx === 25) {
-        return this.whiteHome.getCenter();
-      }
-      if (pointIdx === 0) {
+      if (moveDto.to === 0) {
         return this.whiteBar.getCenter();
       }
+      if (moveDto.to === 25) {
+        return this.whiteHome.getCenter();
+      }
+    }
+
+    if (moveDto.color === PlayerColor.black) {
+      pointIdx = moveDto.to;
+    } else {
+      // white move
+      pointIdx = 25 - moveDto.to;
     }
 
     const rect = this.checkerAreas.find((r) => r.pointIdx === pointIdx);
@@ -283,23 +280,27 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     let pointIdx = 0;
 
     if (moveDto.color === PlayerColor.black) {
-      pointIdx = moveDto.from;
-      if (pointIdx === 25) {
-        return this.blackHome.getCenter();
-      }
-      if (pointIdx === 0) {
+      if (moveDto.from === 0) {
         return this.blackBar.getCenter();
+      }
+      if (moveDto.from === 25) {
+        return this.blackHome.getCenter();
         // black bar
       }
     } else {
-      // white move
-      pointIdx = 25 - moveDto.from;
-      if (pointIdx === 25) {
+      if (moveDto.from === 0) {
         return this.whiteBar.getCenter();
       }
-      if (pointIdx === 0) {
+      if (moveDto.from === 25) {
         return this.whiteHome.getCenter();
       }
+    }
+
+    if (moveDto.color === PlayerColor.black) {
+      pointIdx = moveDto.from;
+    } else {
+      // white move
+      pointIdx = 25 - moveDto.from;
     }
     const rect = this.checkerAreas.find((r) => r.pointIdx === pointIdx);
     const checkCount = this.game.points[pointIdx].checkers.length;
@@ -336,7 +337,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     const r = this.getCheckerRadius();
     const chWidth = this.getCheckerWidth();
-    cx.lineWidth = 2;
 
     for (let p = 0; p < this.game.points.length; p++) {
       const point = this.game.points[p];
@@ -350,17 +350,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       }
 
       if (area.canBeMovedTo) {
-        cx.beginPath();
         const y = p < 13 ? area.y - 3 : area.y + area.height + 3;
-        cx.moveTo(area.x, y);
-        cx.lineTo(area.x + area.width, y);
+        cx.moveTo(area.x + 5, y);
+        cx.beginPath();
+
+        cx.lineTo(area.x + area.width - 10, y);
         cx.closePath();
         cx.strokeStyle = this.theme.highLight;
         cx.lineWidth = 3;
         cx.stroke();
       }
-
-      const dist = Math.min(2 * chWidth, area.height / checkerCount);
 
       cx.lineWidth = 1;
       const dragAnimationTo =
@@ -374,6 +373,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         checkerCount--;
       }
 
+      // distance between checkers on a point
+      const dist = Math.min(2 * chWidth, area.height / checkerCount);
       // main draw checkers loop
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
@@ -390,9 +391,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           x = area.x + chWidth / 2;
         }
         let y = 0;
-        if (p < 13) {
+        if ((p > 0 && p < 13) || p === 25) {
+          // blacks bar and top triangles are drawn bottom down.
           y = area.y + chWidth + dist * i + 2;
         } else {
+          // whites bar and top triangles are drawn bottom down.
           y = area.y + area.height - chWidth - dist * i - 2;
         }
         const highLight =
@@ -431,18 +434,18 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       (c) => c.color === PlayerColor.white
     ).length;
 
-    let x = this.width - this.sideBoardWidth + 4;
-    let y = this.height - this.borderWidth - 4;
+    let x = this.blackHome.x + this.borderWidth;
+    let y = this.blackHome.y + this.blackHome.height - this.borderWidth * 2;
     cx.fillStyle = this.theme.blackChecker;
     for (let i = 0; i < blackCount; i++) {
-      cx.fillRect(x, y - i * 6, this.sideBoardWidth / 2, 5);
+      cx.fillRect(x, y - i * 6, this.sideBoardWidth / 2 - this.borderWidth, 5);
     }
 
-    x = this.width - this.sideBoardWidth + 4;
-    y = this.borderWidth + 4;
+    x = this.whiteHome.x + this.borderWidth;
+    y = this.whiteHome.y + this.borderWidth;
     cx.fillStyle = this.theme.whiteChecker;
     for (let i = 0; i < whiteCount; i++) {
-      cx.fillRect(x, y + i * 6, this.sideBoardWidth / 2, 5);
+      cx.fillRect(x, y + i * 6, this.sideBoardWidth / 2 - this.borderWidth, 5);
     }
 
     //draw homes if can be moved to
