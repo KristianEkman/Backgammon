@@ -2,25 +2,21 @@ N�sta delm�l, release till azure.
 =================================
 Connection status och felmeddeladen.
 
-
-Bättre From to animation coordinater, bugg för vit bar, och kanske även home.
-
-
-Ljust tema. (default)
-
-Placering av checker på bar och home. Lite snett.
-
-Inte ansluta till games med disconnected opponent client.
-
-Claim winner om inte reconnect sker.
-
-Inloggning, facebook
+Crash bugg efter new game.
 
 Points left
 
 Tidskontroll
 
 TopList, ELO
+
+Ljust tema. (default)
+
+Inte ansluta till games med disconnected opponent client.
+
+Claim winner om inte reconnect sker.
+
+Inloggning, facebook
 
 Ljud
 

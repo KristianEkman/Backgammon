@@ -425,36 +425,54 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         this.flipped
       );
     }
+    this.drawHomes(cx);
+  }
 
-    // draw checkers reached home.
+  drawHomes(cx: CanvasRenderingContext2D): void {
+    // draw checkers at  home.
+    if (!this.game) {
+      return;
+    }
+    // black
     const blackCount = this.game.points[25].checkers.filter(
       (c) => c.color === PlayerColor.black
     ).length;
+    const bw = this.borderWidth;
+
+    let x = this.blackHome.x + bw;
+    let y = this.blackHome.y + this.blackHome.height - bw * 1.5;
+    cx.fillStyle = this.theme.blackChecker;
+
+    const maxHblack = (this.blackHome.height - 2 * bw) / blackCount - 1;
+    const chb = Math.min(5, maxHblack);
+
+    for (let i = 0; i < blackCount; i++) {
+      cx.fillRect(x, y - i * (chb + 1), this.sideBoardWidth / 2 - bw, chb);
+    }
+
+    // white
     const whiteCount = this.game.points[0].checkers.filter(
       (c) => c.color === PlayerColor.white
     ).length;
 
-    let x = this.blackHome.x + this.borderWidth;
-    let y = this.blackHome.y + this.blackHome.height - this.borderWidth * 2;
-    cx.fillStyle = this.theme.blackChecker;
-    for (let i = 0; i < blackCount; i++) {
-      cx.fillRect(x, y - i * 6, this.sideBoardWidth / 2 - this.borderWidth, 5);
-    }
-
-    x = this.whiteHome.x + this.borderWidth;
-    y = this.whiteHome.y + this.borderWidth;
+    x = this.whiteHome.x + bw;
+    y = this.whiteHome.y + bw;
     cx.fillStyle = this.theme.whiteChecker;
+
+    const maxHwhite = (this.whiteHome.height - 2 * bw) / whiteCount - 1;
+    const chw = Math.min(5, maxHwhite);
+
     for (let i = 0; i < whiteCount; i++) {
-      cx.fillRect(x, y + i * 6, this.sideBoardWidth / 2 - this.borderWidth, 5);
+      cx.fillRect(x, y + i * (chw + 1), this.sideBoardWidth / 2 - bw, chw);
     }
 
     //draw homes if can be moved to
     if (this.blackHome.canBeMovedTo) {
-      this.blackHome.drawBottom(cx);
+      this.blackHome.highLightBottom(cx);
     }
 
     if (this.whiteHome.canBeMovedTo) {
-      this.whiteHome.drawTop(cx);
+      this.whiteHome.highLightTop(cx);
     }
   }
 

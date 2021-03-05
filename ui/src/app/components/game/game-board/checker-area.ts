@@ -55,7 +55,7 @@ export class CheckerArea {
     cx.fillRect(this.x, this.y, this.width, this.height);
   }
 
-  drawTop(cx: CanvasRenderingContext2D): void {
+  highLightTop(cx: CanvasRenderingContext2D): void {
     cx.beginPath();
     const y = this.y;
     cx.moveTo(this.x, y);
@@ -66,7 +66,7 @@ export class CheckerArea {
     cx.stroke();
   }
 
-  drawBottom(cx: CanvasRenderingContext2D): void {
+  highLightBottom(cx: CanvasRenderingContext2D): void {
     cx.beginPath();
     const y = this.y + this.height;
     cx.moveTo(this.x, y);
