@@ -351,8 +351,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
       if (area.canBeMovedTo) {
         const y = p < 13 ? area.y - 3 : area.y + area.height + 3;
-        cx.moveTo(area.x + 5, y);
         cx.beginPath();
+        cx.moveTo(area.x + 5, y);
 
         cx.lineTo(area.x + area.width - 10, y);
         cx.closePath();

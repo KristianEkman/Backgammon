@@ -1,23 +1,21 @@
 Nästa delmål. Testmatch med, Linn, Patrik, Shane
 =================================
 
-Crash bugg efter new game.
+lokala fa svg:er.
 
 Inte kunna göra något när en connection ligger nere.
 
-Kan båda koppla ner och sen återansluta?
-
 Försök spara games state innan WebApi går ner.
 
-Connection status och felmeddeladen.
-    - Ohanterade fel? Ska de visas.
+Visa när motståndaren kastar.
 
+- Ohanterade fel? Ska de visas.
 
 Points left.
 
 Progressbar på klienten. Tidskontroll på server.
 
-
+Flytta flera drag på ett klick.
 
 TopList, ELO
 
