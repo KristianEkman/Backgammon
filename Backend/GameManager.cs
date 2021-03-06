@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +17,12 @@ namespace Backend
 {
     public class GameManager
     {
-        public GameManager(ILogger<GameManager> logger)
+        public GameManager()
+        {
+
+        }
+
+        internal GameManager(ILogger<GameManager> logger)
         {
             Game = Game.Create();
             Created = DateTime.Now;
@@ -25,13 +31,13 @@ namespace Backend
 
         private static List<GameManager> AllGames = new List<GameManager>();
 
-        public WebSocket Client1 { get; set; }
-        public WebSocket Client2 { get; set; }
+        private WebSocket Client1 { get; set; }
+        private WebSocket Client2 { get; set; }
         public Rules.Game Game { get; set; }
 
         public DateTime Created { get; private set; }
         private bool SearchingOpponent { get; set; }
-        private ILogger<GameManager> Logger { get; }
+        private ILogger<GameManager> Logger { get; set; }
 
         public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId)
         {
@@ -49,7 +55,7 @@ namespace Backend
                         .SingleOrDefault(g => g.Game.Id.ToString().Equals(cookie.id) && g.Game.PlayState != Game.State.Ended);
                     if (gameManager != null)
                     {
-                        AssertUserIds( gameManager, dbUser, color);
+                        AssertUserIds(gameManager, dbUser, color);
                         logger.LogInformation($"Restoring game {cookie.id} for {color}");
                         await gameManager.Restore(color, webSocket);
                         var otherColor = color == PlayerColor.black ?
@@ -66,12 +72,12 @@ namespace Backend
 
             if (manager == null)
             {
-                manager = new GameManager(logger);                                   
+                manager = new GameManager(logger);
 
                 AllGames.Add(manager);
                 manager.SearchingOpponent = true;
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
-                
+
                 await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser);
                 _ = SendConnectionLost(PlayerColor.white, manager);
                 //This is end of connection
@@ -116,6 +122,23 @@ namespace Backend
                 throw new ApplicationException("UserId and playerId missmatch. They should always be the same.");
         }
 
+        internal static void SaveState()
+        {
+
+            var state = JsonSerializer.Serialize<List<GameManager>>(AllGames);
+            System.IO.File.WriteAllText("SavedGames.json", state);
+        }
+
+        internal static void RestoreState(ILogger<GameManager> logger)
+        {
+            var state = System.IO.File.ReadAllBytes("SavedGames.json");
+            AllGames = JsonSerializer.Deserialize<List<GameManager>>(state);
+            foreach (var game in AllGames)
+            {
+                game.Logger = logger;
+            }
+        }
+
         private static Db.User GetDbUser(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
@@ -127,7 +150,7 @@ namespace Backend
         }
 
         private void StartGame()
-        {   
+        {
             var gameDto = Game.ToDto();
             var action = new GameCreatedActionDto
             {
@@ -202,16 +225,16 @@ namespace Backend
                 var whiteUser = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
                 var white = new Db.Player
                 {
-                    Id = Guid.NewGuid(), 
+                    Id = Guid.NewGuid(),
                     Color = Db.Color.White,
-                    User = whiteUser                   
+                    User = whiteUser
                 };
                 whiteUser.Players.Add(white);
 
                 var game = new Db.Game
                 {
                     Id = Game.Id,
-                    Started = DateTime.Now,                    
+                    Started = DateTime.Now,
                 };
 
                 black.Game = game;
@@ -246,7 +269,7 @@ namespace Backend
             return sb.ToString();
         }
 
-        internal async Task Restore(PlayerColor color, WebSocket socket)
+        private async Task Restore(PlayerColor color, WebSocket socket)
         {
             var gameDto = Game.ToDto();
             var action = new GameRestoreActionDto
@@ -274,15 +297,15 @@ namespace Backend
             {
                 action.color = color == PlayerColor.black ? PlayerColor.white : PlayerColor.black;
                 await Send(otherSocket, action);
-            }            
+            }
 
             await ListenOn(socket);
         }
 
         private async Task ListenOn(WebSocket socket)
         {
-            while (socket.State != WebSocketState.Closed && 
-                socket.State != WebSocketState.Aborted && 
+            while (socket.State != WebSocketState.Closed &&
+                socket.State != WebSocketState.Aborted &&
                 socket.State != WebSocketState.CloseReceived)
             {
                 var text = await ReceiveText(socket);
@@ -320,7 +343,7 @@ namespace Backend
                 _ = Send(socket, action);
             }
             else if (actionName == ActionNames.undoMove)
-            {   
+            {
                 var action = (UndoActionDto)JsonSerializer.Deserialize(text, typeof(UndoActionDto));
                 _ = Send(socket, action);
             }
@@ -332,7 +355,7 @@ namespace Backend
             else if (actionName == ActionNames.resign)
             {
                 var winner = Client1 == socket ? PlayerColor.black : PlayerColor.white;
-                _ = Resign(winner);                
+                _ = Resign(winner);
             }
             else if (actionName == ActionNames.exitGame)
             {
@@ -411,7 +434,7 @@ namespace Backend
 
             for (int i = 0; i < action.moves.Length; i++)
             {
-                var moveDto = action.moves[i];                
+                var moveDto = action.moves[i];
                 if (validMove == null)
                 {
                     // Preventing invalid moves to enter the state. Should not happen unless someones hacking the socket or serious bugs.
@@ -429,7 +452,7 @@ namespace Backend
                 Game.MakeMove(move);
             }
         }
-        
+
         private async Task SendWinner(PlayerColor color)
         {
             var game = Game.ToDto();
@@ -461,5 +484,6 @@ namespace Backend
                 Logger.LogError($"Failed to send socket data. Exception: {exc}");
             }
         }
+
     }
 }

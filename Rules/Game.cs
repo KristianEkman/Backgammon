@@ -10,6 +10,7 @@ namespace Backend.Rules
 
     public class Game
     {
+        
         public Guid Id { get; set; }
         public Player BlackPlayer { get; set; }
         public Player WhitePlayer { get; set; }

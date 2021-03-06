@@ -24,8 +24,6 @@ namespace Backend
 {
     public class Startup
     {
-        // is this realy persistent
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -46,7 +44,7 @@ namespace Backend
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<GameManager> logger)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<GameManager> logger, IHostApplicationLifetime applicationLifetime)
         {
             if (env.IsDevelopment())
             {
@@ -55,6 +53,10 @@ namespace Backend
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backgammon Backend v1"));
             }
 
+            TryRestoreState(logger);
+
+            applicationLifetime.ApplicationStopping.Register(() => { OnShutdown(logger); });
+
             app.UseCors(options => options.WithOrigins("http://localhost:4200")
             .AllowAnyMethod()
             .AllowAnyHeader()
@@ -62,21 +64,15 @@ namespace Backend
             );
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
             app.UseWebSockets();
-
             app.UseDefaultFiles();
-
             app.Use(async (context, next) =>
             {
                 if (context.Request.Path == "/ws")
@@ -116,26 +112,33 @@ namespace Backend
             app.UseStaticFiles();
         }
 
+        private void TryRestoreState(ILogger<GameManager> logger)
+        {
+            try
+            {
+                GameManager.RestoreState(logger);                
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.ToString());
+            }
+        }
+
         private static bool SinglePageAppRequestCheck(HttpContext context)
         {
             return context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value);
         }
 
-
-        private async Task Echo(WebSocket webSocket)
+        private void OnShutdown(ILogger<GameManager> logger)
         {
-            var buffer = new byte[1024];
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            while (!result.CloseStatus.HasValue)
+            try
             {
-                var text = $"Från sörver: {DateTime.Now.ToString("sss.ffffff") } ";
-                var list = new List<byte>(System.Text.Encoding.UTF8.GetBytes(text));
-                list.AddRange(buffer.Take(result.Count));
-                buffer = list.ToArray();
-                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, buffer.Length), result.MessageType, result.EndOfMessage, CancellationToken.None);
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+                GameManager.SaveState();
             }
-            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+            catch (Exception e)
+            {
+                logger.LogError(e.ToString());
+            }
         }
     }
 }
