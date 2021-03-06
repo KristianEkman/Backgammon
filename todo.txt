@@ -1,12 +1,19 @@
-N�sta delm�l, release till azure.
+Nästa delmål. Testmatch med, Linn, Patrik, Shane
 =================================
-Connection status och felmeddeladen.
 
 Crash bugg efter new game.
 
-Points left
+Försök spara games state innan WebApi går ner.
 
-Tidskontroll
+Connection status och felmeddeladen.
+    - Ohanterade fel? Ska de visas.
+
+
+Points left.
+
+Progressbar på klienten. Tidskontroll på server.
+
+
 
 TopList, ELO
 
@@ -24,32 +31,37 @@ Förhindra spel mot sig själv?
 
 Play friend
 
-Tv� samtidiga spel med samma webl�sare.
-    Avbryt den f�rsta
+Repution: noob, beginner, amature, skilled, expert, elite, grand master
+    - låsa upp features efter hand.
+
+Två samtidiga spel med samma webläsare.
+    Avbryt den första?
 
 Språk
 
 ios
 
-Visa dubblar vid f�rsta drag.
+Visa dubblar vid första drag.
 
 Chat
 
-Olika teman, ljus, m�rk, marble, wood.
+Olika teman, ljus, marble, wood.
 
 Doubling
 
-F�rs�k spara games innan WebApi g�r ner.
+Två olika hastigheter. 10s, resp 35s. Inte som gäst. Infinite?
+
+
 
 Ordentlig loggning, info, warning, errors   
 
     ai: Evaluate to give a score.
     
-
 Database
     Users
     Games
         Score
+
 Ui
   Auto send when no options
   Auto move, when only one move.
