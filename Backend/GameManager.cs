@@ -42,15 +42,19 @@ namespace Backend
             if (cookies.Any(c => (c.Key == cookieKey)))
             {
                 var cookie = GameCookieDto.TryParse(cookies[cookieKey]);
+                var color = cookie.color;
                 if (cookie != null)
                 {
-                    var game = AllGames.SingleOrDefault(g => g.Game.Id.ToString().Equals(cookie.id));
-                    if (game != null)
+                    var gameManager = AllGames
+                        .SingleOrDefault(g => g.Game.Id.ToString().Equals(cookie.id) && g.Game.PlayState != Game.State.Ended);
+                    if (gameManager != null)
                     {
-                        AssertUserIds( game, dbUser, cookie.color);
-                        logger.LogInformation($"Restoring game {cookie.id} for {cookie.color}");
-                        await game.Restore(cookie.color, webSocket);
-                        //This is end of connection
+                        AssertUserIds( gameManager, dbUser, color);
+                        logger.LogInformation($"Restoring game {cookie.id} for {color}");
+                        await gameManager.Restore(color, webSocket);
+                        var otherColor = color == PlayerColor.black ?
+                            PlayerColor.white : PlayerColor.black;
+                        _ = SendConnectionLost(otherColor, gameManager);
                         return;
                     }
                 }
@@ -68,13 +72,10 @@ namespace Backend
                 manager.SearchingOpponent = true;
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
                 
-                await manager.ConnectAndListen(webSocket, Rules.Player.Color.Black, dbUser);
+                await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser);
+                _ = SendConnectionLost(PlayerColor.white, manager);
                 //This is end of connection
 
-                logger.LogInformation("Black player disconnected.");
-                manager.Client1.Abort();
-                manager.Client1.Dispose();
-                manager.Client1 = null;
             }
             else
             {
@@ -82,11 +83,26 @@ namespace Backend
                 logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
                 await manager.ConnectAndListen(webSocket, Rules.Player.Color.White, dbUser);
                 logger.LogInformation("White player disconnected.");
+                _ = SendConnectionLost(PlayerColor.black, manager);
                 //This is end of connection
-                
-                manager.Client2.Abort();
-                manager.Client2.Dispose();
-                manager.Client2 = null;
+            }
+        }
+
+        private static async Task SendConnectionLost(PlayerColor color, GameManager manager)
+        {
+            var socket = manager.Client1;
+            if (color == PlayerColor.white)
+                socket = manager.Client2;
+            if (socket != null && socket.State == WebSocketState.Open)
+            {
+                var action = new Dto.Actions.ConnectionInfoActionDto
+                {
+                    connection = new ConnectionDto
+                    {
+                        connected = false
+                    }
+                };
+                await manager.Send(socket, action);
             }
         }
 

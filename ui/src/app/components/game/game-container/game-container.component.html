@@ -3,7 +3,7 @@
     <app-messages
       [initial]="width"
       [shown]="messageCenter"
-      [message]="message"
+      [message]="message$ | async"
     ></app-messages>
   </div>
   <app-menu

@@ -1,3 +1,4 @@
+import { StatusMessage } from '../dto/local/status-message';
 import {
   ConnectionDto,
   GameState,
@@ -22,6 +23,7 @@ export class AppState {
     this.myConnection = new StateObject<ConnectionDto>();
     this.opponentConnection = new StateObject<ConnectionDto>();
     this.user = new StateObject<UserDto>();
+    this.statusMessage = new StateObject<StatusMessage>();
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -39,6 +41,7 @@ export class AppState {
   myConnection: StateObject<ConnectionDto>;
   opponentConnection: StateObject<ConnectionDto>;
   user: StateObject<UserDto>;
+  statusMessage: StateObject<StatusMessage>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

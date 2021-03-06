@@ -4,9 +4,17 @@
   border: 1px solid red;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   background-color: #111;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 }
 
 @mixin button {

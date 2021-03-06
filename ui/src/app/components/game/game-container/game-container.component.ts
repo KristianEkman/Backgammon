@@ -11,6 +11,7 @@ import { Observable, Subscription } from 'rxjs';
 import { DiceDto, GameDto, GameState, MoveDto, PlayerColor } from 'src/app/dto';
 import { AccountService, SocketsService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
+import { StatusMessage } from 'src/app/dto/local/status-message';
 
 @Component({
   selector: 'app-game',
@@ -32,6 +33,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.gameSubs = AppState.Singleton.game
       .observe()
       .subscribe(this.gameChanged.bind(this));
+    this.message$ = AppState.Singleton.statusMessage.observe();
 
     // if game page is refreshed, restore user from login cookie
     if (!AppState.Singleton.user.getValue()) {
@@ -44,6 +46,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   gameDto$: Observable<GameDto>;
   dices$: Observable<DiceDto[]>;
   playerColor$: Observable<PlayerColor>;
+  message$: Observable<StatusMessage>;
   gameSubs: Subscription;
   diceSubs: Subscription;
 
@@ -51,7 +54,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   height = 450;
   rollButtonClicked = false;
   diceColor: PlayerColor | null = PlayerColor.neither;
-  message = 'Waiting for opponent to connect';
   messageCenter = 0;
   flipped = false;
 
@@ -88,24 +90,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.fireResize();
     this.newVisible = dto.playState === GameState.ended;
     this.exitVisible = dto.playState === GameState.ended;
-    this.setTextMessage(dto);
-  }
-
-  setTextMessage(game: GameDto): void {
-    const myColor = AppState.Singleton.myColor.getValue();
-    if (!game) {
-      this.message = 'Waiting for opponent to connect';
-    } else if (game.playState === GameState.ended) {
-      // console.log(this.myColor, this.game.winner);
-      this.message =
-        myColor === game.winner
-          ? 'Congrats! You won.'
-          : 'Sorry. You lost the game.';
-    } else if (myColor === game.currentPlayer) {
-      this.message = `Your turn to move.  (${PlayerColor[game.currentPlayer]})`;
-    } else {
-      this.message = `Waiting for ${PlayerColor[game.currentPlayer]} to move.`;
-    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -144,7 +128,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
     const dices = this.dices?.nativeElement as HTMLElement;
     if (dices) {
-      // put the dices on right board if its my turn.
+      // Puts the dices on right side if its my turn.
       if (this.myTurn()) {
         dices.style.left = `${this.width / 2 + 20}px`;
         dices.style.right = '';
@@ -223,10 +207,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   newGame(): void {
-    this.message = 'Waiting for opponent to connect';
     this.newVisible = false;
-
-    // todo: man vill säkert spela mot samma igen.
     this.service.connect();
   }
 

@@ -1,4 +1,6 @@
 <span
+  class="message"
   [@showHide]="{ value: state, params: { shown: shown, initial: initial } }"
-  >{{ message }}</span
->
+  >{{ message?.text }}<i [ngClass]="getIcon()"></i>
+  <!-- <span *ngIf="timeLeft > 0">{{ timeLeft }}</span> -->
+</span>

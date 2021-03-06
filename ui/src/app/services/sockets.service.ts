@@ -23,6 +23,7 @@ import {
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
 import { Keys } from '../utils';
+import { StatusMessageService } from './status-message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,10 @@ export class SocketsService implements OnDestroy {
   gameHistory: GameDto[] = [];
   dicesHistory: DiceDto[][] = [];
   connectTime = new Date();
-  constructor(private cookieService: CookieService) {}
+  constructor(
+    private cookieService: CookieService,
+    private statusMessageService: StatusMessageService
+  ) {}
 
   connect(): void {
     if (this.socket) {
@@ -61,12 +65,14 @@ export class SocketsService implements OnDestroy {
     console.error('Error', { event });
     const cnn = AppState.Singleton.myConnection.getValue();
     AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
+    this.statusMessageService.setMyConnectionLost();
   }
 
   onClose(event: CloseEvent): void {
     console.log('Close', { event });
     const cnn = AppState.Singleton.myConnection.getValue();
     AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
+    this.statusMessageService.setMyConnectionLost();
   }
 
   doOpponentMove(move: MoveDto): void {
@@ -192,6 +198,7 @@ export class SocketsService implements OnDestroy {
         };
         // console.log(dicesAction.validMoves);
         AppState.Singleton.game.setValue(cGame);
+        this.statusMessageService.setTextMessage(cGame);
         break;
       }
       case ActionNames.movesMade: {
@@ -206,6 +213,7 @@ export class SocketsService implements OnDestroy {
         const endedAction = JSON.parse(message.data) as GameEndedActionDto;
         // console.log('game ended', endedAction.game.winner);
         AppState.Singleton.game.setValue(endedAction.game);
+        this.statusMessageService.setTextMessage(endedAction.game);
         break;
       }
       case ActionNames.opponentMove: {
@@ -222,6 +230,7 @@ export class SocketsService implements OnDestroy {
         const action = JSON.parse(message.data) as ConnectionInfoActionDto;
         if (!action.connection.connected) {
           console.log('Opponent disconnected');
+          this.statusMessageService.setOpponentConnectionLost();
         }
         const cnn = AppState.Singleton.opponentConnection.getValue();
         AppState.Singleton.opponentConnection.setValue({
@@ -235,6 +244,7 @@ export class SocketsService implements OnDestroy {
         AppState.Singleton.myColor.setValue(dto.color);
         AppState.Singleton.game.setValue(dto.game);
         AppState.Singleton.dices.setValue(dto.dices);
+        this.statusMessageService.setTextMessage(dto.game);
         break;
       }
 
@@ -286,11 +296,6 @@ export class SocketsService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    const action: ConnectionInfoActionDto = {
-      actionName: ActionNames.connectionInfo,
-      connection: { pingMs: 0, connected: false }
-    };
-    this.sendMessage(JSON.stringify(action));
     this.socket?.close();
   }
 

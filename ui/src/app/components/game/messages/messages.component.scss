@@ -1,8 +1,20 @@
-span {
+.message {
   color: #bbb;
   position: absolute;
   top: 2px;
   font-family: Helvetica, Arial, sans-serif;
   font-weight: 600;
   white-space: nowrap;
+
+  * {
+    margin-left: 8px;
+  }
+}
+
+.red {
+  color: red;
+}
+
+.yellow {
+  color: yellow;
 }
