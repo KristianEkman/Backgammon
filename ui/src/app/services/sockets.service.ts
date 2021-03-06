@@ -58,7 +58,10 @@ export class SocketsService implements OnDestroy {
     console.log('Open', { event });
     const now = new Date();
     const ping = now.getTime() - this.connectTime.getTime();
+    this.statusMessageService.setWaitingForConnect();
     AppState.Singleton.myConnection.setValue({ connected: true, pingMs: ping });
+    AppState.Singleton.game.clearValue();
+    AppState.Singleton.dices.clearValue();
   }
 
   onError(event: Event): void {
@@ -73,6 +76,85 @@ export class SocketsService implements OnDestroy {
     const cnn = AppState.Singleton.myConnection.getValue();
     AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
     this.statusMessageService.setMyConnectionLost();
+  }
+
+  // Messages received from server.
+  onMessage(message: MessageEvent<string>): void {
+    const action = JSON.parse(message.data) as ActionDto;
+    // console.log(message.data);
+    const game = AppState.Singleton.game.getValue();
+    switch (action.actionName) {
+      case ActionNames.gameCreated: {
+        const dto = JSON.parse(message.data) as GameCreatedActionDto;
+        AppState.Singleton.myColor.setValue(dto.myColor);
+        AppState.Singleton.game.setValue(dto.game);
+
+        const cookie: GameCookieDto = { id: dto.game.id, color: dto.myColor };
+        this.cookieService.deleteAll(Keys.gameIdKey);
+        // console.log('Settings cookie', cookie);
+        this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
+        this.statusMessageService.setTextMessage(dto.game);
+        break;
+      }
+      case ActionNames.dicesRolled: {
+        const dicesAction = JSON.parse(message.data) as DicesRolledActionDto;
+        AppState.Singleton.dices.setValue(dicesAction.dices);
+        const cGame = {
+          ...game,
+          validMoves: dicesAction.validMoves,
+          currentPlayer: dicesAction.playerToMove
+        };
+        // console.log(dicesAction.validMoves);
+        AppState.Singleton.game.setValue(cGame);
+        this.statusMessageService.setTextMessage(cGame);
+        break;
+      }
+      case ActionNames.movesMade: {
+        // Action is only sent from server.
+        break;
+      }
+      case ActionNames.gameEnded: {
+        const endedAction = JSON.parse(message.data) as GameEndedActionDto;
+        // console.log('game ended', endedAction.game.winner);
+        AppState.Singleton.game.setValue(endedAction.game);
+        this.statusMessageService.setTextMessage(endedAction.game);
+        break;
+      }
+      case ActionNames.opponentMove: {
+        const action = JSON.parse(message.data) as OpponentMoveActionDto;
+        this.doMove(action.move);
+        break;
+      }
+      case ActionNames.undoMove: {
+        // const action = JSON.parse(message.data) as UndoActionDto;
+        this.undoMove();
+        break;
+      }
+      case ActionNames.connectionInfo: {
+        const action = JSON.parse(message.data) as ConnectionInfoActionDto;
+        if (!action.connection.connected) {
+          console.log('Opponent disconnected');
+          this.statusMessageService.setOpponentConnectionLost();
+        }
+        const cnn = AppState.Singleton.opponentConnection.getValue();
+        AppState.Singleton.opponentConnection.setValue({
+          ...cnn,
+          connected: action.connection.connected
+        });
+        break;
+      }
+      case ActionNames.gameRestore: {
+        const dto = JSON.parse(message.data) as GameRestoreActionDto;
+        AppState.Singleton.myColor.setValue(dto.color);
+        AppState.Singleton.game.setValue(dto.game);
+        AppState.Singleton.dices.setValue(dto.dices);
+        this.statusMessageService.setTextMessage(dto.game);
+        break;
+      }
+
+      default:
+        throw new Error(`Action not implemented ${action.actionName}`);
+    }
   }
 
   doOpponentMove(move: MoveDto): void {
@@ -170,87 +252,6 @@ export class SocketsService implements OnDestroy {
     // console.log('pushing next animation');
     clone.push({ ...move, from: move.to, to: move.from });
     AppState.Singleton.moveAnimations.setValue(clone);
-  }
-
-  onMessage(message: MessageEvent<string>): void {
-    const action = JSON.parse(message.data) as ActionDto;
-    // console.log(message.data);
-    const game = AppState.Singleton.game.getValue();
-    switch (action.actionName) {
-      case ActionNames.gameCreated: {
-        const dto = JSON.parse(message.data) as GameCreatedActionDto;
-        AppState.Singleton.myColor.setValue(dto.myColor);
-        AppState.Singleton.game.setValue(dto.game);
-
-        const cookie: GameCookieDto = { id: dto.game.id, color: dto.myColor };
-        this.cookieService.deleteAll(Keys.gameIdKey);
-        // console.log('Settings cookie', cookie);
-        this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
-        break;
-      }
-      case ActionNames.dicesRolled: {
-        const dicesAction = JSON.parse(message.data) as DicesRolledActionDto;
-        AppState.Singleton.dices.setValue(dicesAction.dices);
-        const cGame = {
-          ...game,
-          validMoves: dicesAction.validMoves,
-          currentPlayer: dicesAction.playerToMove
-        };
-        // console.log(dicesAction.validMoves);
-        AppState.Singleton.game.setValue(cGame);
-        this.statusMessageService.setTextMessage(cGame);
-        break;
-      }
-      case ActionNames.movesMade: {
-        // const movesAction = JSON.parse(message.data) as MovesMadeActionDto;
-        // for (let i = 0; i < movesAction.moves.length; i++) {
-        //   const move = movesAction.moves[i];
-        //   this.doOpponentMove(move);
-        // }
-        break;
-      }
-      case ActionNames.gameEnded: {
-        const endedAction = JSON.parse(message.data) as GameEndedActionDto;
-        // console.log('game ended', endedAction.game.winner);
-        AppState.Singleton.game.setValue(endedAction.game);
-        this.statusMessageService.setTextMessage(endedAction.game);
-        break;
-      }
-      case ActionNames.opponentMove: {
-        const action = JSON.parse(message.data) as OpponentMoveActionDto;
-        this.doMove(action.move);
-        break;
-      }
-      case ActionNames.undoMove: {
-        // const action = JSON.parse(message.data) as UndoActionDto;
-        this.undoMove();
-        break;
-      }
-      case ActionNames.connectionInfo: {
-        const action = JSON.parse(message.data) as ConnectionInfoActionDto;
-        if (!action.connection.connected) {
-          console.log('Opponent disconnected');
-          this.statusMessageService.setOpponentConnectionLost();
-        }
-        const cnn = AppState.Singleton.opponentConnection.getValue();
-        AppState.Singleton.opponentConnection.setValue({
-          ...cnn,
-          connected: action.connection.connected
-        });
-        break;
-      }
-      case ActionNames.gameRestore: {
-        const dto = JSON.parse(message.data) as GameRestoreActionDto;
-        AppState.Singleton.myColor.setValue(dto.color);
-        AppState.Singleton.game.setValue(dto.game);
-        AppState.Singleton.dices.setValue(dto.dices);
-        this.statusMessageService.setTextMessage(dto.game);
-        break;
-      }
-
-      default:
-        throw new Error(`Action not implemented ${action.actionName}`);
-    }
   }
 
   sendMessage(message: string): void {

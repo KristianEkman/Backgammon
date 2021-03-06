@@ -49,4 +49,9 @@ export class StatusMessageService {
     const statusMessage = StatusMessage.warning('Opponent connection lost');
     AppState.Singleton.statusMessage.setValue(statusMessage);
   }
+
+  setWaitingForConnect(): void {
+    const statusMessage = StatusMessage.info('Waiting for opponent to connect');
+    AppState.Singleton.statusMessage.setValue(statusMessage);
+  }
 }

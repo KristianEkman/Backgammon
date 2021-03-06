@@ -19,8 +19,8 @@ export class Checker {
     const { x, y } = point;
     if (shaddow) {
       const off = flipped ? -8 : 8;
-      cx.shadowColor = 'rgba(0, 0, 0, 0.5)';
-      cx.shadowBlur = 6;
+      cx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+      cx.shadowBlur = 8;
       cx.shadowOffsetX = off;
       cx.shadowOffsetY = off;
     }

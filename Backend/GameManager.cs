@@ -444,7 +444,7 @@ namespace Backend
 
         private async Task Send<T>(WebSocket socket, T obj)
         {
-            if (socket == null)
+            if (socket == null || socket.State != WebSocketState.Open)
             {
                 Logger.LogInformation("Cannot send to socket, connection was lost.");
                 return;

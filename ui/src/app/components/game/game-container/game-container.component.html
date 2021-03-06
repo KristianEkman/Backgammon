@@ -43,5 +43,5 @@
       (onExit)="exitGame()"
     ></app-board-buttons>
   </div>
-  <!-- <div class="game-id">{{ (gameDto$ | async)?.id }}</div> -->
+  <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div>
 </div>

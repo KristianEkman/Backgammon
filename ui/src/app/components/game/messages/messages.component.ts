@@ -57,20 +57,20 @@ export class MessagesComponent implements OnChanges, AfterViewInit {
   timeLeft = 0;
   state = 'initial';
   ngOnChanges(changes: SimpleChanges): void {
-    let intervalHandle: any;
+    let intervalHandle: number | unknown;
     if (changes['message']) {
       this.animate();
       if (this.message?.startTimerSec) {
         this.timeLeft = <number>this.message?.startTimerSec;
 
-        intervalHandle = setInterval(() => {
+        intervalHandle = <unknown>setInterval(() => {
           this.timeLeft--;
           if (this.timeLeft === 0) {
-            clearInterval(intervalHandle);
+            clearInterval(<number>intervalHandle);
           }
         }, 1000);
       } else {
-        clearInterval(intervalHandle);
+        clearInterval(<number>intervalHandle);
         this.timeLeft = 0;
       }
     }

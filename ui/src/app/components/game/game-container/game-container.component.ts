@@ -86,10 +86,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setDicesVisible();
     this.setSendVisible();
     this.setUndoVisible();
-    this.diceColor = dto.currentPlayer;
+    this.diceColor = dto?.currentPlayer;
     this.fireResize();
-    this.newVisible = dto.playState === GameState.ended;
-    this.exitVisible = dto.playState === GameState.ended;
+    this.newVisible = dto?.playState === GameState.ended;
+    this.exitVisible = dto?.playState === GameState.ended;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

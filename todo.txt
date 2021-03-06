@@ -3,6 +3,10 @@ Nästa delmål. Testmatch med, Linn, Patrik, Shane
 
 Crash bugg efter new game.
 
+Inte kunna göra något när en connection ligger nere.
+
+Kan båda koppla ner och sen återansluta?
+
 Försök spara games state innan WebApi går ner.
 
 Connection status och felmeddeladen.
