@@ -52,7 +52,10 @@ namespace Backend
                 if (cookie != null)
                 {
                     var gameManager = AllGames
-                        .SingleOrDefault(g => g.Game.Id.ToString().Equals(cookie.id) && g.Game.PlayState != Game.State.Ended);
+                        .SingleOrDefault(g => 
+                            g.Game.Id.ToString().Equals(cookie.id) && 
+                            g.Game.PlayState != Game.State.Ended
+                         );
                     if (gameManager != null)
                     {
                         AssertUserIds(gameManager, dbUser, color);

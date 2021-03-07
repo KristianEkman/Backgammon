@@ -41,7 +41,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   whiteBar: CheckerArea = new CheckerArea(0, 0, 0, 0, 25);
 
   cx: CanvasRenderingContext2D | null = null;
-  drawDirty = false;
   dragging: CheckerDrag | null = null;
   cursor: Point = new Point(0, 0);
   framerate = 60;
@@ -71,7 +70,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
             () => {
               // finished callback
               this.animatedMove = undefined;
-              this.drawDirty = true;
+              this.requestDraw();
               this.moveAnimFinished.emit();
             }
           );
@@ -84,27 +83,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
 
-    setInterval(() => {
-      if ((this.drawDirty || this.animatedMove) && this.cx) {
-        // console.log('drawing');
-        this.draw(this.cx);
-        this.drawDirty = false;
-      }
-    }, 1000 / this.framerate);
-
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
-    if (this.cx) {
-      // this.cx.translate(-0.5, -0.5);
-    }
-    this.drawDirty = true;
+    this.requestDraw();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ([changes['width'] || changes['height']]) {
       this.recalculateGeometry();
     }
-    this.drawDirty = true;
+    this.requestDraw();
     const bName =
       this.myColor === PlayerColor.black ? 'You' : this.game?.blackPlayer.name;
     const wName =
@@ -196,20 +184,28 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     );
   }
 
-  draw(cx: CanvasRenderingContext2D): void {
-    if (!this.canvas) {
-      return;
+  requestDraw(): void {
+    requestAnimationFrame(this.draw.bind(this));
+  }
+
+  draw(): number {
+    if (!this.canvas || !this.cx) {
+      return 0;
     }
+
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     canvasEl.width = this.width;
     canvasEl.height = this.height;
+    const cx = this.cx;
 
     this.drawBoard(cx);
     // this.drawDebugRects(cx);
     this.drawCheckers(cx);
     if (this.animatedMove) {
       this.animatedMove.draw(cx, this.getCheckerWidth());
+      this.requestDraw();
     }
+    return 0;
   }
 
   drawDebugRects(cx: CanvasRenderingContext2D | null): void {
@@ -743,7 +739,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     if (this.dragging) {
-      this.drawDirty = true;
+      this.requestDraw();
       return;
     }
 
@@ -795,7 +791,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         });
       }
     }
-    this.drawDirty = true;
+    this.requestDraw();
   }
 
   onMouseUp(event: MouseEvent): void {
@@ -858,7 +854,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         break;
       }
     }
-    this.drawDirty = true;
+    this.requestDraw();
     // console.log('dragging null');
     this.dragging = null;
   }
