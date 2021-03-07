@@ -1,9 +1,16 @@
 Nästa delmål. Testmatch med, Linn, Patrik, Shane
 =================================
 
-Azure loggning med nivåer.
+Bug: Om man byter användare men har pågående spel krashar det.
+    -Återansluta där både game och user stämmer.
 
-Se till så att AllGames rensas.
+requestAnimationFrame istf setinterval
+
+Progressbar på klienten. Tidskontroll på server.
+
+Se till så att AllGames rensas när någon har vunnit.
+
+Visa statistik på startsidan.
 
 Inte kunna göra något när en server connection ligger nere.
 
@@ -13,7 +20,6 @@ Visa när motståndaren kastar.
 
 Points left.
 
-Progressbar på klienten. Tidskontroll på server.
 
 Flytta flera drag på ett klick.
 
