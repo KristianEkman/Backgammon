@@ -6,8 +6,9 @@ Gör massa tester med att starta om, byta användare, med två webläsare.
     -- Disconnect both, remove game
     -- Skapa spel som guest och sen ett till som inloggad, samma läsare olika flikar.    
 
-Inte stänga båda sockets vid exit.
+Progressbar på klienten. Tidskontroll på server.
 
+Inte stänga båda sockets vid exit.
 
 Förhindra att en är med flera game samtidigt.
     - Guest då? Är det möjligt? Inte lika farligt om den krashar.
@@ -16,12 +17,13 @@ Seed Guest User.
 
 Animation på firefox suger.
 
-Progressbar på klienten. Tidskontroll på server.
-
 Inte kunna göra något när en server connection ligger nere.
 
 Fundera på två samtidiga spel med samma webläsare.
     Avbryt den första?
+
+Återansluta lost connection efter 3-6s,
+    Så att spel kan fortsätta efter en uppdatering.
 
 
 Release 1.0
@@ -31,7 +33,8 @@ Points left.
 
 
 Release 1.>0
-======
+============
+Backa upp Managers till DB, så man kan göra en swap vid release.
 Visa statistik på startsidan.
 Visa när motståndaren kastar.
 - Ohanterade fel? Ska de visas.
@@ -59,7 +62,9 @@ Ui
   Auto move, when only one move.
   View dices on board
   PlayAI-Button
+Rematch same opponent
 
 Frågor
 ======
 Är UX bra?
+Färgerna behagliga?
