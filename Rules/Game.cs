@@ -89,6 +89,26 @@ namespace Backend.Rules
             //DebugBlocked();
 
             // DebugBearingOff();
+
+            // AtHomeAndOtherAtBar();
+        }
+
+        private void AtHomeAndOtherAtBar()
+        {
+            AddCheckers(3, Player.Color.Black, 21);
+            AddCheckers(2, Player.Color.Black, 22);
+            AddCheckers(5, Player.Color.Black, 23);
+            AddCheckers(3, Player.Color.Black, 24);
+            AddCheckers(2, Player.Color.Black, 25);
+
+            AddCheckers(2, Player.Color.White, 19);
+            AddCheckers(2, Player.Color.White, 20);
+            AddCheckers(3, Player.Color.White, 21);
+            AddCheckers(2, Player.Color.White, 22);
+            AddCheckers(2, Player.Color.White, 23);
+            AddCheckers(1, Player.Color.White, 24);
+            AddCheckers(2, Player.Color.White, 0);
+
         }
 
         private void OneMoveToVictory()
@@ -286,12 +306,14 @@ namespace Backend.Rules
 
         public Checker MakeMove(Move move)
         {
-            var checker = move.From.Checkers.FirstOrDefault();
+            var checker = move.From.Checkers.FirstOrDefault(c => c.Color == move.Color);
             if (checker == null)
                 throw new ApplicationException("There should be a checker on this point. Something is very wrong.");
             move.From.Checkers.Remove(checker);
             move.To.Checkers.Add(checker);
-            var hit = move.To.Checkers.SingleOrDefault(c => c.Color != checker.Color);
+            // Feels wrong that now that own home is same point as opponent bar.
+            // Todo: Try to change it some day.
+            var hit = move.To.IsHome(move.Color) ? null : move.To.Checkers.SingleOrDefault(c => c.Color != checker.Color);
             if (hit != null)
             {
                 move.To.Checkers.Remove(hit);
@@ -303,7 +325,7 @@ namespace Backend.Rules
 
         private void UndoMove(Move move, Checker hitChecker)
         {
-            var checker = move.To.Checkers.FirstOrDefault();
+            var checker = move.To.Checkers.FirstOrDefault(c => c.Color == move.Color);
             move.To.Checkers.Remove(checker);
             move.From.Checkers.Add(checker);
             if (hitChecker != null)
@@ -313,6 +335,5 @@ namespace Backend.Rules
                 bar.Checkers.Remove(hitChecker);
             }
         }
-
     }
 }

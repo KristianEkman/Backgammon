@@ -101,6 +101,20 @@ namespace BackendTests
         }
 
         [TestMethod]
+        public void TestBearingOffOvershotAndonBar()
+        {
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.Black, 21); //needs 4
+            game.AddCheckers(1, Player.Color.Black, 22); //needs 3
+            game.AddCheckers(2, Player.Color.White, 0); //needs 3
+
+            Assert.IsTrue(game.IsBearingOff(Player.Color.Black));
+            game.FakeRoll(6, 5);
+            var moves = game.GenerateMoves();
+            Assert.AreEqual(1, moves.Count);
+        }
+
+        [TestMethod]
         public void TestHitMove()
         {
             // Adding a checker which will be hit.

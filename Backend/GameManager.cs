@@ -17,6 +17,7 @@ namespace Backend
 {
     public class GameManager
     {
+        // Needed for serialization
         public GameManager()
         {
 
@@ -54,23 +55,25 @@ namespace Backend
                     var gameManager = AllGames
                         .SingleOrDefault(g => 
                             g.Game.Id.ToString().Equals(cookie.id) && 
-                            g.Game.PlayState != Game.State.Ended
+                            g.Game.PlayState != Game.State.Ended                            
                          );
-                    if (gameManager != null)
-                    {
-                        AssertUserIds(gameManager, dbUser, color);
+                    
+                    if (gameManager != null && MyColor(gameManager, dbUser, color))
+                    {                        
                         logger.LogInformation($"Restoring game {cookie.id} for {color}");
+                        // entering socket loop
                         await gameManager.Restore(color, webSocket);
                         var otherColor = color == PlayerColor.black ?
                             PlayerColor.white : PlayerColor.black;
-                        _ = SendConnectionLost(otherColor, gameManager);
+                        await SendConnectionLost(otherColor, gameManager);
+                        RemoveDissconnected(gameManager);
                         return;
                     }
                 }
             }
 
             //todo: pair with someone equal ranking.
-            var manager = AllGames.OrderBy(g => g.Created)
+            var manager = AllGames.OrderByDescending(g => g.Created) // Oldest first.
                 .FirstOrDefault(g => g.Client2 == null && g.SearchingOpponent);
 
             if (manager == null)
@@ -80,20 +83,33 @@ namespace Backend
                 AllGames.Add(manager);
                 manager.SearchingOpponent = true;
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
-
+                
+                // entering socket loop
                 await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser);
-                _ = SendConnectionLost(PlayerColor.white, manager);
+                await SendConnectionLost(PlayerColor.white, manager);
                 //This is end of connection
-
             }
             else
             {
                 manager.SearchingOpponent = false;
                 logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
-                await manager.ConnectAndListen(webSocket, Rules.Player.Color.White, dbUser);
+                
+                // entering socket loop
+                await manager.ConnectAndListen(webSocket, Player.Color.White, dbUser);
                 logger.LogInformation("White player disconnected.");
-                _ = SendConnectionLost(PlayerColor.black, manager);
+                await SendConnectionLost(PlayerColor.black, manager);
                 //This is end of connection
+            }
+            RemoveDissconnected(manager);            
+        }
+
+        private static void RemoveDissconnected(GameManager manager)
+        {
+            if ((manager.Client1 == null || manager.Client1.State != WebSocketState.Open) &&
+                (manager.Client2 == null || manager.Client2.State != WebSocketState.Open))
+            {
+                AllGames.Remove(manager);
+                manager.Logger.LogInformation($"Removing game {manager.Game.Id} which is not used.");
             }
         }
 
@@ -115,14 +131,14 @@ namespace Backend
             }
         }
 
-        private static void AssertUserIds(GameManager manager, Db.User dbUser, PlayerColor color)
+        private static bool MyColor(GameManager manager, Db.User dbUser, PlayerColor color)
         {
+            //prevents someone with same game id, get someone elses side in the game.
             var player = manager.Game.BlackPlayer;
             if (color == PlayerColor.white)
                 player = manager.Game.WhitePlayer;
 
-            if (dbUser != null && dbUser.Id != player.Id)
-                throw new ApplicationException("UserId and playerId missmatch. They should always be the same.");
+            return dbUser != null && dbUser.Id == player.Id;                
         }
 
         internal static void SaveState()
@@ -145,7 +161,7 @@ namespace Backend
         private static Db.User GetDbUser(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
-                return null;
+                userId = Guid.Empty.ToString();
             using (var db = new Db.BgDbContext())
             {
                 return db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
@@ -275,7 +291,7 @@ namespace Backend
         private async Task Restore(PlayerColor color, WebSocket socket)
         {
             var gameDto = Game.ToDto();
-            var action = new GameRestoreActionDto
+            var restoreAction = new GameRestoreActionDto
             {
                 game = gameDto,
                 color = color,
@@ -294,12 +310,12 @@ namespace Backend
                 otherSocket = Client1;
             }
 
-            await Send(socket, action);
+            await Send(socket, restoreAction);
             //Also send the state to the other client in case it has made moves.
             if (otherSocket != null && otherSocket.State == WebSocketState.Open)
             {
-                action.color = color == PlayerColor.black ? PlayerColor.white : PlayerColor.black;
-                await Send(otherSocket, action);
+                restoreAction.color = color == PlayerColor.black ? PlayerColor.white : PlayerColor.black;
+                await Send(otherSocket, restoreAction);
             }
 
             await ListenOn(socket);

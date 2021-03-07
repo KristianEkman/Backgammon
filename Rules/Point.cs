@@ -19,7 +19,8 @@ namespace Backend.Rules
         public bool IsOpen(Player.Color myColor)
         {
             //Opponent has less than two checkers on the point.
-            return Checkers.Count(c => c.Color != myColor) < 2;
+            //My own home is always open.
+            return Checkers.Count(c => c.Color != myColor) < 2 || GetNumber(myColor) == 25;
         }
 
         public int GetNumber(Player.Color player)
@@ -37,5 +38,6 @@ namespace Backend.Rules
         {
             return this.GetNumber(player) == 25;
         }
+
     }
 }

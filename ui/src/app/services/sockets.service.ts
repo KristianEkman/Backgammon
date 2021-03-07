@@ -190,15 +190,22 @@ export class SocketsService implements OnDestroy {
     const isWhite = move.color === PlayerColor.white;
     const from = isWhite ? 25 - move.from : move.from;
     const to = isWhite ? 25 - move.to : move.to;
+
     // remove moved checker
-    const checker = <CheckerDto>gameClone.points[from].checkers.pop();
+    const checker = <CheckerDto>(
+      gameClone.points[from].checkers.find((c) => c.color === move.color)
+    );
+    const index = gameClone.points[from].checkers.indexOf(checker);
+    gameClone.points[from].checkers.splice(index, 1);
 
     // hitting opponent checker
     const hit = gameClone.points[to].checkers.find(
       (c) => c.color !== move.color
     );
+
     if (hit) {
-      gameClone.points[to].checkers.pop();
+      const hitIdx = gameClone.points[to].checkers.indexOf(hit);
+      gameClone.points[to].checkers.splice(hitIdx, 1);
       const barIdx = isWhite ? 0 : 25;
       gameClone.points[barIdx].checkers.push(hit);
     }

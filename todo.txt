@@ -1,81 +1,65 @@
 Nästa delmål. Testmatch med, Linn, Patrik, Shane
 =================================
 
-Bug: Om man byter användare men har pågående spel krashar det.
-    -Återansluta där både game och user stämmer.
+Gör massa tester med att starta om, byta användare, med två webläsare.
+    -- Disconnet, one, restore
+    -- Disconnect both, remove game
+    -- Skapa spel som guest och sen ett till som inloggad, samma läsare olika flikar.    
 
-requestAnimationFrame istf setinterval
+Inte stänga båda sockets vid exit.
+
+
+Förhindra att en är med flera game samtidigt.
+    - Guest då? Är det möjligt? Inte lika farligt om den krashar.
+
+Seed Guest User.
+
+Animation på firefox suger.
 
 Progressbar på klienten. Tidskontroll på server.
 
-Se till så att AllGames rensas när någon har vunnit.
-
-Visa statistik på startsidan.
-
 Inte kunna göra något när en server connection ligger nere.
 
-Visa när motståndaren kastar.
+Fundera på två samtidiga spel med samma webläsare.
+    Avbryt den första?
 
-- Ohanterade fel? Ska de visas.
 
+Release 1.0
+===========
+Facebook sso
 Points left.
 
 
+Release 1.>0
+======
+Visa statistik på startsidan.
+Visa när motståndaren kastar.
+- Ohanterade fel? Ska de visas.
 Flytta flera drag på ett klick.
-
 TopList, ELO
-
 Ljust tema. (default)
-
-Inte ansluta till games med disconnected opponent client.
-
-Claim winner om inte reconnect sker.
-
-Inloggning, facebook
-
+Ge extra tid för reconnect.
 Ljud
-
 Player photos
-
 Editing of name and photo.
-
 Förhindra spel mot sig själv?
-
 Play friend
-
 Repution: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
-
-Två samtidiga spel med samma webläsare.
-    Avbryt den första?
-
 Språk
-
 ios
-
 Visa dubblar vid första drag.
-
 Chat
-
 Olika teman, ljus, marble, wood.
-
 Doubling
-
 Två olika hastigheter. 10s, resp 35s. Inte som gäst. Infinite?
-
-
-
-Ordentlig loggning, info, warning, errors   
-
-    ai: Evaluate to give a score.
-    
-Database
-    Users
-    Games
-        Score
-
+ai: Evaluate to give a score.
 Ui
   Auto send when no options
   Auto move, when only one move.
   View dices on board
   PlayAI-Button
+
+Frågor
+======
+Är UX bra?
