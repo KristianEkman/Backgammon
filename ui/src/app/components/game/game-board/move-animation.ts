@@ -1,4 +1,4 @@
-import { MoveDto, PlayerColor } from 'src/app/dto';
+import { MoveDto } from 'src/app/dto';
 import { Point } from './';
 import { Checker } from './checker';
 import { IThemes } from './themes';
@@ -10,7 +10,8 @@ export class MoveAnimation {
     private to: Point,
     private theme: IThemes,
     private flipped: boolean,
-    finished: (move: MoveDto) => void
+    finished: (move: MoveDto) => void,
+    step: () => void
   ) {
     this.incrementX = (to.x - from.x) / this.frames;
     this.incrementY = (to.y - from.y) / this.frames;
@@ -21,6 +22,7 @@ export class MoveAnimation {
         x: this.from.x + this.incrementX * this.currentFrame,
         y: this.from.y + this.incrementY * this.currentFrame
       };
+      step();
       if (this.currentFrame >= this.frames) {
         clearInterval(timerID);
         finished(this.move);
@@ -45,14 +47,5 @@ export class MoveAnimation {
       true,
       this.flipped
     );
-    // if (this.move.color === PlayerColor.black) {
-    //   cx.fillStyle = '#000';
-    // } else {
-    //   cx.fillStyle = '#FFF';
-    // }
-    // cx.beginPath();
-    // cx.ellipse(x, y, width, width, 0, 0, Math.PI * 2);
-    // cx.closePath();
-    // cx.fill();
   }
 }

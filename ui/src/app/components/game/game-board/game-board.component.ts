@@ -70,8 +70,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
             () => {
               // finished callback
               this.animatedMove = undefined;
-              this.requestDraw();
               this.moveAnimFinished.emit();
+            },
+            () => {
+              this.requestDraw();
             }
           );
         }
@@ -203,7 +205,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.drawCheckers(cx);
     if (this.animatedMove) {
       this.animatedMove.draw(cx, this.getCheckerWidth());
-      this.requestDraw();
     }
     return 0;
   }
