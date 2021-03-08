@@ -20,6 +20,8 @@ namespace Backend.Rules
         public List<Move> ValidMoves { get; set; } = new List<Move>();
         public State PlayState { get; set; } = State.FirstThrow;
         public DateTime Created { get; set; }
+        public DateTime ThinkStart { get; set; }
+
 
         public enum State
         {
@@ -200,6 +202,7 @@ namespace Backend.Rules
                     PlayState = State.Playing;
             }
         }
+
 
         public void RollDice()
         {

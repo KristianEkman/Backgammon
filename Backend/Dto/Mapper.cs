@@ -18,7 +18,8 @@ namespace Backend.Dto
                 currentPlayer = (PlayerColor)game.CurrentPlayer,
                 playState = (GameState)game.PlayState,
                 points = game.Points.Select(p => p.ToDto()).ToArray(),
-                validMoves = game.ValidMoves.Select(m => m.ToDto()).ToArray(),                
+                validMoves = game.ValidMoves.Select(m => m.ToDto()).ToArray(),
+                thinkTime = 30 - (DateTime.Now - game.ThinkStart).TotalSeconds
             };
             return gameDto;
         }

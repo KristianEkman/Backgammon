@@ -53,13 +53,13 @@ namespace Backend
                 if (cookie != null)
                 {
                     var gameManager = AllGames
-                        .SingleOrDefault(g => 
-                            g.Game.Id.ToString().Equals(cookie.id) && 
-                            g.Game.PlayState != Game.State.Ended                            
+                        .SingleOrDefault(g =>
+                            g.Game.Id.ToString().Equals(cookie.id) &&
+                            g.Game.PlayState != Game.State.Ended
                          );
-                    
+
                     if (gameManager != null && MyColor(gameManager, dbUser, color))
-                    {                        
+                    {
                         logger.LogInformation($"Restoring game {cookie.id} for {color}");
                         // entering socket loop
                         await gameManager.Restore(color, webSocket);
@@ -83,7 +83,7 @@ namespace Backend
                 AllGames.Add(manager);
                 manager.SearchingOpponent = true;
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
-                
+
                 // entering socket loop
                 await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser);
                 await SendConnectionLost(PlayerColor.white, manager);
@@ -93,14 +93,14 @@ namespace Backend
             {
                 manager.SearchingOpponent = false;
                 logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
-                
+
                 // entering socket loop
                 await manager.ConnectAndListen(webSocket, Player.Color.White, dbUser);
                 logger.LogInformation("White player disconnected.");
                 await SendConnectionLost(PlayerColor.black, manager);
                 //This is end of connection
             }
-            RemoveDissconnected(manager);            
+            RemoveDissconnected(manager);
         }
 
         private static void RemoveDissconnected(GameManager manager)
@@ -138,7 +138,7 @@ namespace Backend
             if (color == PlayerColor.white)
                 player = manager.Game.WhitePlayer;
 
-            return dbUser != null && dbUser.Id == player.Id;                
+            return dbUser != null && dbUser.Id == player.Id;
         }
 
         internal static void SaveState()
@@ -168,8 +168,10 @@ namespace Backend
             }
         }
 
+        CancellationTokenSource moveTimeOut = new CancellationTokenSource();
         private void StartGame()
         {
+            Game.ThinkStart = DateTime.Now;
             var gameDto = Game.ToDto();
             var action = new GameCreatedActionDto
             {
@@ -193,6 +195,35 @@ namespace Backend
                 _ = Send(Client1, rollAction);
                 _ = Send(Client2, rollAction);
             }
+            moveTimeOut = new CancellationTokenSource();
+            _ = Utils.RepeatEvery(500, () =>
+            {
+                TimeTick();
+            }, moveTimeOut);
+        }
+
+        private void TimeTick()
+        {
+            if (!moveTimeOut.IsCancellationRequested)
+            {
+                var ellapsed = DateTime.Now - Game.ThinkStart;
+                if (ellapsed.TotalSeconds > 38)
+                {
+                    Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
+                    var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
+                    EndGame(winner);                    
+                }
+            }
+        }
+
+        private void EndGame(PlayerColor winner)
+        {
+            Logger.LogInformation($"The winner is ${winner}");
+            Game.PlayState= Game.State.Ended;            
+            SaveWinner(winner);
+            _ = SendWinner(winner);
+            AllGames.Remove(this);
+            moveTimeOut.Cancel();
         }
 
         private void SendNewRoll()
@@ -343,16 +374,12 @@ namespace Backend
             Logger.LogInformation($"Doing action: {actionName}");
             if (actionName == ActionNames.movesMade)
             {
+                Game.ThinkStart = DateTime.Now;
                 var action = (MovesMadeActionDto)JsonSerializer.Deserialize(text, typeof(MovesMadeActionDto));
                 DoMoves(action);
                 PlayerColor? winner = GetWinner();
                 if (winner.HasValue)
-                {
-                    Logger.LogInformation($"Player {winner} won the game");
-                    SaveWinner(winner.Value);
-                    await SendWinner(winner.Value);
-                    AllGames.Remove(this);
-                }
+                    EndGame(winner.Value);                                    
                 else
                     SendNewRoll();
             }

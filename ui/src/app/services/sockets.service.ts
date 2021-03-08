@@ -24,6 +24,7 @@ import {
 import { AppState } from '../state/app-state';
 import { Keys } from '../utils';
 import { StatusMessageService } from './status-message.service';
+import { MessageLevel, StatusMessage } from '../dto/local/status-message';
 
 @Injectable({
   providedIn: 'root'
@@ -94,6 +95,8 @@ export class SocketsService implements OnDestroy {
         // console.log('Settings cookie', cookie);
         this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
         this.statusMessageService.setTextMessage(dto.game);
+        AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
+        this.startTimer();
         break;
       }
       case ActionNames.dicesRolled: {
@@ -107,10 +110,11 @@ export class SocketsService implements OnDestroy {
         // console.log(dicesAction.validMoves);
         AppState.Singleton.game.setValue(cGame);
         this.statusMessageService.setTextMessage(cGame);
+        AppState.Singleton.moveTimer.setValue(30);
         break;
       }
       case ActionNames.movesMade: {
-        // Action is only sent from server.
+        // This action is only sent to server.
         break;
       }
       case ActionNames.gameEnded: {
@@ -148,13 +152,39 @@ export class SocketsService implements OnDestroy {
         AppState.Singleton.myColor.setValue(dto.color);
         AppState.Singleton.game.setValue(dto.game);
         AppState.Singleton.dices.setValue(dto.dices);
+        AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
         this.statusMessageService.setTextMessage(dto.game);
+        this.startTimer();
         break;
       }
 
       default:
         throw new Error(`Action not implemented ${action.actionName}`);
     }
+  }
+
+  timerStarted = false;
+  startTimer(): void {
+    if (this.timerStarted) {
+      return;
+    }
+    this.timerStarted = true;
+    setInterval(() => {
+      let time = AppState.Singleton.moveTimer.getValue();
+      time--;
+      AppState.Singleton.moveTimer.setValue(time);
+      if (time <= 0) {
+        const currentMes = AppState.Singleton.statusMessage.getValue();
+        if (
+          AppState.Singleton.myTurn() &&
+          currentMes.level !== MessageLevel.warning
+        ) {
+          const mes = StatusMessage.warning('Move now or lose!');
+          // A few more seconds are given on the server.
+          AppState.Singleton.statusMessage.setValue(mes);
+        }
+      }
+    }, 1000);
   }
 
   doOpponentMove(move: MoveDto): void {

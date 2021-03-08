@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Backend.Dto
 {
     public class GameDto
@@ -12,5 +14,6 @@ namespace Backend.Dto
         public GameState playState { get; set; }
         public PointDto[] points { get; set; }
         public MoveDto[] validMoves { get; set; }
+        public double thinkTime { get; set; }
     }
 }

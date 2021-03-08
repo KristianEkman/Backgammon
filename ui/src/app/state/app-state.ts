@@ -24,6 +24,7 @@ export class AppState {
     this.opponentConnection = new StateObject<ConnectionDto>();
     this.user = new StateObject<UserDto>();
     this.statusMessage = new StateObject<StatusMessage>();
+    this.moveTimer = new StateObject<number>();
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -42,6 +43,7 @@ export class AppState {
   opponentConnection: StateObject<ConnectionDto>;
   user: StateObject<UserDto>;
   statusMessage: StateObject<StatusMessage>;
+  moveTimer: StateObject<number>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

@@ -54,25 +54,11 @@ export class MessagesComponent implements OnChanges, AfterViewInit {
   // changing the coordinates will affect all animations coordinates.
   @Input() initial = 0;
   @Input() shown = 0;
-  timeLeft = 0;
+  @Input() timeLeft: number | null = 0;
   state = 'initial';
   ngOnChanges(changes: SimpleChanges): void {
-    let intervalHandle: number | unknown;
     if (changes['message']) {
       this.animate();
-      if (this.message?.startTimerSec) {
-        this.timeLeft = <number>this.message?.startTimerSec;
-
-        intervalHandle = <unknown>setInterval(() => {
-          this.timeLeft--;
-          if (this.timeLeft === 0) {
-            clearInterval(<number>intervalHandle);
-          }
-        }, 1000);
-      } else {
-        clearInterval(<number>intervalHandle);
-        this.timeLeft = 0;
-      }
     }
   }
 
@@ -100,5 +86,12 @@ export class MessagesComponent implements OnChanges, AfterViewInit {
     }
 
     return '';
+  }
+
+  roundTimeLeft(): number {
+    if (!this.timeLeft) {
+      return 0;
+    }
+    return Math.round(this.timeLeft);
   }
 }

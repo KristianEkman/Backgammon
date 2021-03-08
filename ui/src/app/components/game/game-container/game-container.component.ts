@@ -34,6 +34,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       .observe()
       .subscribe(this.gameChanged.bind(this));
     this.message$ = AppState.Singleton.statusMessage.observe();
+    this.timeLeft$ = AppState.Singleton.moveTimer.observe();
 
     // if game page is refreshed, restore user from login cookie
     if (!AppState.Singleton.user.getValue()) {
@@ -47,6 +48,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   dices$: Observable<DiceDto[]>;
   playerColor$: Observable<PlayerColor>;
   message$: Observable<StatusMessage>;
+  timeLeft$: Observable<number>;
   gameSubs: Subscription;
   diceSubs: Subscription;
 

@@ -20,21 +20,12 @@ export class StatusMessageService {
           : 'Sorry. You lost the game.'
       );
     } else if (myColor === game.currentPlayer) {
-      message = StatusMessage.timer(
-        `Your turn to move.  (${PlayerColor[game.currentPlayer]})`,
-        30,
-        () => {
-          console.log('Your time is up!');
-          // todo: You must move now or you will lose.
-        }
+      message = StatusMessage.info(
+        `Your turn to move.  (${PlayerColor[game.currentPlayer]})`
       );
     } else {
-      message = StatusMessage.timer(
-        `Waiting for ${PlayerColor[game.currentPlayer]} to move.`,
-        30,
-        () => {
-          console.log('Opponents time is up!');
-        }
+      message = StatusMessage.info(
+        `Waiting for ${PlayerColor[game.currentPlayer]} to move.`
       );
     }
     AppState.Singleton.statusMessage.setValue(message);

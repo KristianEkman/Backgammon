@@ -4,11 +4,15 @@ Nästa delmål. Testmatch med, Linn, Patrik, Shane
 Gör massa tester med att starta om, byta användare, med två webläsare.
     -- Disconnet, one, restore
     -- Disconnect both, remove game
-    -- Skapa spel som guest och sen ett till som inloggad, samma läsare olika flikar.    
+    -- Skapa spel som guest och sen ett till som inloggad, samma läsare olika flikar.   
+    
+Testa att refresha game med tidskontroll.
 
-Progressbar på klienten. Tidskontroll på server.
+Busy when waiting.
 
-Inte stänga båda sockets vid exit.
+Aven ansluta till managers där Client1 är ledig, men inte Client2
+
+Inte stänga båda sockets vid exit, eller?
 
 Förhindra att en är med flera game samtidigt.
     - Guest då? Är det möjligt? Inte lika farligt om den krashar.
@@ -24,17 +28,19 @@ Fundera på två samtidiga spel med samma webläsare.
 
 Återansluta lost connection efter 3-6s,
     Så att spel kan fortsätta efter en uppdatering.
+	
+Icon
 
 
 Release 1.0
 ===========
 Facebook sso
-Points left.
 
 
 Release 1.>0
 ============
 Backa upp Managers till DB, så man kan göra en swap vid release.
+Points left.
 Visa statistik på startsidan.
 Visa när motståndaren kastar.
 - Ohanterade fel? Ska de visas.
@@ -44,6 +50,7 @@ Ljust tema. (default)
 Ge extra tid för reconnect.
 Ljud
 Player photos
+Progressbar
 Editing of name and photo.
 Förhindra spel mot sig själv?
 Play friend

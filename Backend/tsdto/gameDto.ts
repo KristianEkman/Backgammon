@@ -15,4 +15,5 @@ export interface GameDto {
     playState: GameState;
     points: PointDto[];
     validMoves: MoveDto[];
+    thinkTime: number;
 }
