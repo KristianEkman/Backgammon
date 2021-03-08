@@ -66,6 +66,7 @@ namespace Backend
                         var otherColor = color == PlayerColor.black ?
                             PlayerColor.white : PlayerColor.black;
                         await SendConnectionLost(otherColor, gameManager);
+                        // socket loop exited
                         RemoveDissconnected(gameManager);
                         return;
                     }
@@ -74,7 +75,7 @@ namespace Backend
 
             //todo: pair with someone equal ranking.
             var manager = AllGames.OrderByDescending(g => g.Created) // Oldest first.
-                .FirstOrDefault(g => g.Client2 == null && g.SearchingOpponent);
+                .FirstOrDefault(g => (g.Client2 == null || g.Client1 == null) && g.SearchingOpponent);
 
             if (manager == null)
             {
@@ -83,22 +84,21 @@ namespace Backend
                 AllGames.Add(manager);
                 manager.SearchingOpponent = true;
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
-
                 // entering socket loop
                 await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser);
                 await SendConnectionLost(PlayerColor.white, manager);
-                //This is end of connection
+                //This is the end of the connection
             }
             else
             {
                 manager.SearchingOpponent = false;
                 logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
-
+                var color = manager.Client1 == null ? Player.Color.Black : Player.Color.White;
                 // entering socket loop
-                await manager.ConnectAndListen(webSocket, Player.Color.White, dbUser);
-                logger.LogInformation("White player disconnected.");
+                await manager.ConnectAndListen(webSocket, color, dbUser);
+                logger.LogInformation($"{color} player disconnected.");
                 await SendConnectionLost(PlayerColor.black, manager);
-                //This is end of connection
+                //This is the end of the connection
             }
             RemoveDissconnected(manager);
         }
