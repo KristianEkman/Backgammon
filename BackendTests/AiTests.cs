@@ -13,7 +13,10 @@ namespace BackendTests
         [TestMethod]
         public void GetBestMove()
         {
-            var ai = new Ai();
+            var game = Backend.Rules.Game.Create();
+            var ai = new Ai.Engine(game);
+            game.FakeRoll(1, 2);
+            var moves = ai.GetBestMoves();
         }
     }
 }
