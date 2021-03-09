@@ -30,13 +30,21 @@ namespace Backend.Controllers
             //	HostedDomain = "http://localhost:4200"				
             //};
 
-            bool valid;
+            bool valid = false;
             try
             {
-				var validPayload = await GoogleJsonWebSignature.ValidateAsync(Request.Headers["Authorization"]);
-				// todo: more validation?
-                valid = validPayload != null;				
-			}
+
+                if (userDto.socialProvider == "GOOGLE")
+                {
+                    var validPayload = await GoogleJsonWebSignature.ValidateAsync(Request.Headers["Authorization"]);
+                    // todo: more validation?
+                    valid = validPayload != null;
+                }
+                if (userDto.socialProvider == "FACEBOOK")
+                {
+                    valid = true;
+                }
+            }
 			catch (Exception)
             {
 				//todo: log error
