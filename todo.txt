@@ -1,4 +1,4 @@
-Nästa delmål. Testmatch med, Linn, Patrik, Shane
+Nästa delmål. Testmatch med Patrik, Shane
 =================================
 
 Icon
@@ -28,13 +28,20 @@ Fundera på två samtidiga spel med samma webläsare.
 Release 1.0
 ===========
 Facebook sso
+Snyggare knappar i side - meny. Svarta board button.
+Glossigare checkers.
+
+Release 1.1 - mål att öka logins
+===========
+AI
+Play friend.
+Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
+Player photos
 
 
 Release 1.>0
 ============
-
-Snyggare knappar i side - meny. Svata board button.
-Glossigare checkers.
+Dubbling.
 Backa upp Managers till DB, så man kan göra en swap vid release.
 Points left.
 Visa statistik på startsidan.
@@ -46,14 +53,12 @@ Ljust tema.
 Ge extra tid för reconnect.
 Ljud
 Busy when waiting. Och snyggare gif.
-Player photos
 Progressbar
 Editing of name and photo.
 Förhindra spel mot sig själv?
 Play friend
 Repution: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
-Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
 ios
 Visa dubblar vid första drag.
 Chat
@@ -65,7 +70,7 @@ Ui
   Auto send when no options
   Auto move, when only one move.
   View dices on board
-  PlayAI-Button
+
 Rematch same opponent.
 Sepegeleffekt i board.
 Coolare grafik när man vinner.

@@ -46,8 +46,8 @@ export class Checker {
     const glossyW = width * 0.9;
     if (!flipped) {
       const glossy = cx.createLinearGradient(x, y - width / 2, x, y);
-      glossy.addColorStop(0, 'rgba(255, 255, 255, 0.2)');
-      glossy.addColorStop(1, 'rgba(255, 255, 255, 0');
+      glossy.addColorStop(0, 'rgba(255, 255, 255, 0.25)');
+      glossy.addColorStop(1, 'rgba(255, 255, 255, 0.15');
       cx.fillStyle = glossy;
       cx.beginPath();
       cx.ellipse(x, y, glossyW, glossyW, 0, Math.PI, 2 * Math.PI);
@@ -55,8 +55,8 @@ export class Checker {
       cx.fill();
     } else {
       const glossy = cx.createLinearGradient(x, y, x, y + width / 2);
-      glossy.addColorStop(0, 'rgba(255, 255, 255, 0)');
-      glossy.addColorStop(1, 'rgba(255, 255, 255, 0.2');
+      glossy.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+      glossy.addColorStop(1, 'rgba(255, 255, 255, 0.25');
       cx.fillStyle = glossy;
       cx.beginPath();
       cx.ellipse(x, y, glossyW, glossyW, 0, 2 * Math.PI, Math.PI);

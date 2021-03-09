@@ -200,6 +200,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     canvasEl.height = this.height;
     const cx = this.cx;
 
+    // this.drawIcon(cx);
+
     this.drawBoard(cx);
     // this.drawDebugRects(cx);
     this.drawCheckers(cx);
@@ -207,6 +209,28 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.animatedMove.draw(cx, this.getCheckerWidth());
     }
     return 0;
+  }
+
+  drawIcon(cx: CanvasRenderingContext2D): void {
+    if (!this.game) {
+      return;
+    }
+    cx.fillStyle = '#fff';
+    cx.fillRect(0, 0, 500, 500);
+
+    Checker.draw(
+      cx,
+      { x: 100, y: 100 },
+      40,
+      this.theme,
+      PlayerColor.black,
+      false,
+      false,
+      false
+    );
+    cx.font = 'bold 50px Arial';
+    cx.fillStyle = '#ccc';
+    cx.fillText('B', 85, 118);
   }
 
   drawDebugRects(cx: CanvasRenderingContext2D | null): void {
