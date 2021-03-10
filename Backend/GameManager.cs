@@ -190,7 +190,8 @@ namespace Backend
                 {
                     dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
                     playerToMove = (PlayerColor)Game.CurrentPlayer,
-                    validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
+                    validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray(),
+                    moveTimer = Game.ClientCountDown
                 };
                 _ = Send(Client1, rollAction);
                 _ = Send(Client2, rollAction);
@@ -207,23 +208,23 @@ namespace Backend
             if (!moveTimeOut.IsCancellationRequested)
             {
                 var ellapsed = DateTime.Now - Game.ThinkStart;
-                if (ellapsed.TotalSeconds > 38)
+                if (ellapsed.TotalSeconds > Game.TotalThinkTime)
                 {
                     Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
                     var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
-                    EndGame(winner);                    
+                    _ = EndGame(winner);                    
                 }
             }
         }
 
-        private void EndGame(PlayerColor winner)
+        private async Task EndGame(PlayerColor winner)
         {
+            moveTimeOut.Cancel();
             Logger.LogInformation($"The winner is ${winner}");
             Game.PlayState= Game.State.Ended;            
             SaveWinner(winner);
-            _ = SendWinner(winner);
+            await SendWinner(winner);
             AllGames.Remove(this);
-            moveTimeOut.Cancel();
         }
 
         private void SendNewRoll()
@@ -233,7 +234,8 @@ namespace Backend
             {
                 dices = Game.Roll.Select(d => d.ToDto()).ToArray(),
                 playerToMove = (PlayerColor)Game.CurrentPlayer,
-                validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray()
+                validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray(),
+                moveTimer = Game.ClientCountDown
             };
             _ = Send(Client1, rollAction);
             _ = Send(Client2, rollAction);
@@ -379,7 +381,7 @@ namespace Backend
                 DoMoves(action);
                 PlayerColor? winner = GetWinner();
                 if (winner.HasValue)
-                    EndGame(winner.Value);                                    
+                    _ = EndGame(winner.Value);                                    
                 else
                     SendNewRoll();
             }
@@ -421,9 +423,7 @@ namespace Backend
 
         private async Task Resign(PlayerColor winner)
         {
-            Game.PlayState = Game.State.Ended;
-            await SendWinner(winner);
-            AllGames.Remove(this);
+            await EndGame(winner);            
             Logger.LogInformation($"{winner} won game Game {Game.Id} by resignition.");
         }
 

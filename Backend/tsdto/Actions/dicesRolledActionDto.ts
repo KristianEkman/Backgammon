@@ -9,4 +9,5 @@ export interface DicesRolledActionDto extends ActionDto {
     dices: DiceDto[];
     playerToMove: PlayerColor;
     validMoves: MoveDto[];
+    moveTimer: number;
 }

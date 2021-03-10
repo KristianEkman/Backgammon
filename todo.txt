@@ -1,13 +1,8 @@
 Nästa delmål. Testmatch med Patrik, Shane
 =================================
 
-Icon
 
-Försöka få till bättre fullskärm mobil.
 
-Lite längre tid kanske? 40s / 48s.
-
-Stänga av timer vid slut.
 
 Glitch bugg på bar. Beräkna med motståndaren i home.
 
@@ -27,15 +22,14 @@ Inte kunna göra något när en server connection ligger nere.
 
 Release 1.0
 ===========
-Snyggare knappar i side - meny. Svarta board button.
+Snyggare knappar i side - meny. Svarta board button. Hover.
+Play a friend.
+Top list
+Posta länk till facebook grupp.
 
 
 Release 1.1 - mål att öka logins
 ===========
-Play a friend.
-Top list
-Posta till facebook grupp.
-
 Code project artiklar.
 AI
 Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
@@ -78,6 +72,9 @@ Rematch same opponent.
 Sepegeleffekt i board.
 Coolare grafik när man vinner.
 Automatiska e2e-tester, selenium.
+
+Försöka få till bättre fullskärm mobil.
+    Installation mobil.
 
 
 Frågor

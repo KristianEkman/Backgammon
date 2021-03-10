@@ -22,6 +22,8 @@ namespace Backend.Rules
         public DateTime Created { get; set; }
         public DateTime ThinkStart { get; set; }
 
+        public const int ClientCountDown = 40;
+        public const int TotalThinkTime = 48;
 
         public enum State
         {

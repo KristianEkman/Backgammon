@@ -110,7 +110,7 @@ export class SocketsService implements OnDestroy {
         // console.log(dicesAction.validMoves);
         AppState.Singleton.game.setValue(cGame);
         this.statusMessageService.setTextMessage(cGame);
-        AppState.Singleton.moveTimer.setValue(30);
+        AppState.Singleton.moveTimer.setValue(dicesAction.moveTimer);
         break;
       }
       case ActionNames.movesMade: {
@@ -121,6 +121,7 @@ export class SocketsService implements OnDestroy {
         const endedAction = JSON.parse(message.data) as GameEndedActionDto;
         // console.log('game ended', endedAction.game.winner);
         AppState.Singleton.game.setValue(endedAction.game);
+        AppState.Singleton.moveTimer.setValue(0);
         this.statusMessageService.setTextMessage(endedAction.game);
         break;
       }
