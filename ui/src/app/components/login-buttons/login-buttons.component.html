@@ -1,10 +1,8 @@
 <div *ngIf="!isLoggedIn" class="login-buttons">
-  <button (click)="facebookLoginClick()">
-    <div>
-      <img src="assets/images/facebook.png" />Sign in with Facebook
-    </div></button
-  ><br />
-  <button (click)="googleLoginClick()">
-    <div><img src="assets/images/google.jpg" />Sign in with Google</div></button
-  ><br />
+  <button class="glass" (click)="facebookLoginClick()">
+    <div><img src="assets/images/facebook.png" />Sign in with Facebook</div>
+  </button>
+  <button class="glass" (click)="googleLoginClick()">
+    <div><img src="assets/images/google.jpg" />Sign in with Google</div>
+  </button>
 </div>

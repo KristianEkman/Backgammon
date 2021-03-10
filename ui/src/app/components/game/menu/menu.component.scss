@@ -69,7 +69,10 @@
   margin-top: 50px;
 
   button {
-    @include button;
+    border: none;
+    color: #bbb;
+    margin-bottom: 16px;
+    @include hover-shadow;
   }
 }
 

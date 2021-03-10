@@ -1,21 +1,28 @@
 @import '../../../styles.scss';
 
-.loggin-buttons {
+.login-buttons {
   margin: 8px;
-
+  display: flex;
+  flex-direction: column;
 }
 
 button {
-  width: 342px;
+  margin-bottom: 16px;
+  @include hover-shadow;
 
   div {
     display: flex;
+    color: #bbb;
+    text-shadow: -1px -1px #333;
+    font-weight: 600;
     align-items: center;
   }
 
   img {
+    width: 30px;
+    height: 30px;
     margin-right: 8px;
   }
 
-  @include button;
+  // @include button;
 }

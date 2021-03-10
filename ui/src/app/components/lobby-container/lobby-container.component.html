@@ -7,8 +7,19 @@
     [isLoggedIn]="!!(user$ | async)"
   ></app-login-buttons>
   <div class="lobby">
-    <button class="guest-play-button" (click)="playRandom()">
-      Play {{ (user$ | async) ? ' random opponent' : 'as guest' }}
+    <button
+      *ngIf="!(user$ | async)"
+      class="guest-play-button"
+      (click)="playClick()"
+    >
+      Play as guest
+    </button>
+    <button
+      *ngIf="user$ | async"
+      class="random-play-button glass"
+      (click)="playClick()"
+    >
+      Play random opponent
     </button>
   </div>
   <div class="account">

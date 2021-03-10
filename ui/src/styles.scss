@@ -37,6 +37,16 @@ body {
   }
 }
 
+@mixin hover-shadow {
+
+  &:hover,
+  &:focus {
+    -webkit-box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+    -moz-box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+    box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+  }
+}
+
 .small-shadow-text {
   text-shadow: 1px 1px rgb(214, 214, 214);
   font-family: Helvetica, Arial, sans-serif;
@@ -71,6 +81,7 @@ body {
     left: 2px;
     width: calc(100% - 4px);
     height: 50%;
-    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1));
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
   }
+
 }

@@ -47,7 +47,7 @@ export class LobbyContainerComponent implements OnInit {
     this.accountService.signOut();
   }
 
-  playRandom(): void {
+  playClick(): void {
     this.router.navigateByUrl('game');
   }
 }
