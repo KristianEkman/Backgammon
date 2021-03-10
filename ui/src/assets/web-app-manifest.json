@@ -2,8 +2,8 @@
   "short_name": "Backgammon",
   "name": "Backgammon",
   "icons": [{
-    "src": "favicon.ico",
-    "sizes": "28x30",
+    "src": "/assets/images/android-chrome-72x72.png",
+    "sizes": "72x72",
     "type": "ico"
   }],
   "start_url": "/index.html",

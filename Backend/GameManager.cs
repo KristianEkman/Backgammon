@@ -369,13 +369,13 @@ namespace Backend
             }
         }
 
-        private async Task DoAction(ActionNames actionName, string text, WebSocket socket)
+        private async Task DoAction(ActionNames actionName, string actionText, WebSocket socket)
         {
             Logger.LogInformation($"Doing action: {actionName}");
             if (actionName == ActionNames.movesMade)
             {
                 Game.ThinkStart = DateTime.Now;
-                var action = (MovesMadeActionDto)JsonSerializer.Deserialize(text, typeof(MovesMadeActionDto));
+                var action = (MovesMadeActionDto)JsonSerializer.Deserialize(actionText, typeof(MovesMadeActionDto));
                 DoMoves(action);
                 PlayerColor? winner = GetWinner();
                 if (winner.HasValue)
@@ -385,17 +385,17 @@ namespace Backend
             }
             else if (actionName == ActionNames.opponentMove)
             {
-                var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(text, typeof(OpponentMoveActionDto));
+                var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(actionText, typeof(OpponentMoveActionDto));
                 _ = Send(socket, action);
             }
             else if (actionName == ActionNames.undoMove)
             {
-                var action = (UndoActionDto)JsonSerializer.Deserialize(text, typeof(UndoActionDto));
+                var action = (UndoActionDto)JsonSerializer.Deserialize(actionText, typeof(UndoActionDto));
                 _ = Send(socket, action);
             }
             else if (actionName == ActionNames.connectionInfo)
             {
-                var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(text, typeof(ConnectionInfoActionDto));
+                var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(actionText, typeof(ConnectionInfoActionDto));
                 _ = Send(socket, action);
             }
             else if (actionName == ActionNames.resign)

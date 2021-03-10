@@ -43,7 +43,7 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   logout(): void {
-    this.authService.signOut();
+    this.authService.signOut(true);
     this.accountService.signOut();
   }
 
