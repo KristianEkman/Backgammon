@@ -407,7 +407,7 @@ namespace Backend
             }
             else if (actionName == ActionNames.exitGame)
             {
-                _ = CloseConnections();
+                _ = CloseConnections(socket);
             }
         }
 
@@ -427,21 +427,14 @@ namespace Backend
             Logger.LogInformation($"{winner} won game Game {Game.Id} by resignition.");
         }
 
-        private async Task CloseConnections()
+        private async Task CloseConnections(WebSocket socket)
         {
-            if (Client1 != null)
+            if (socket != null)
             {
-                Logger.LogInformation("Closing client 1");
-                await Client1.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
-                if (Client1 != null)
-                    Client1.Dispose();
-            }
-            if (Client2 != null)
-            {
-                Logger.LogInformation("Closing client 2");
-                await Client2.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
-                if (Client2 != null)
-                    Client2.Dispose();
+                Logger.LogInformation("Closing client");
+                await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Game aborted by client", CancellationToken.None);
+                if (socket != null)
+                    socket.Dispose();
             }
         }
 

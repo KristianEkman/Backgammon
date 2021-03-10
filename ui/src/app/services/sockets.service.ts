@@ -293,7 +293,7 @@ export class SocketsService implements OnDestroy {
   }
 
   sendMessage(message: string): void {
-    if (this.socket) {
+    if (this.socket && this.socket.readyState === this.socket.OPEN) {
       this.socket.send(message);
     }
   }
