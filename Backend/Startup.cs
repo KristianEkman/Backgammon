@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.WebSockets;
 using System.Text.Json;
 using System.Threading;
@@ -45,7 +46,7 @@ namespace Backend
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<GameManager> logger, IHostApplicationLifetime applicationLifetime)
-        {
+        {            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -75,14 +76,24 @@ namespace Backend
             app.UseDefaultFiles();
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path == "/ws")
+                if (context.Request.Path == "/ws/game")
                 {
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         logger.LogInformation($"New web socket request.");
+
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         var userId = context.Request.Query.FirstOrDefault(q => q.Key == "userId").Value;
-                        await GameManager.Connect(webSocket, context, logger, userId);
+                        var gameId = context.Request.Query.FirstOrDefault(q => q.Key == "gameId").Value;
+                        try
+                        {
+                            await GameManager.Connect(webSocket, context, logger, userId, gameId);
+                        }
+                        catch (Exception)
+                        {
+                            context.Response.StatusCode = 500;
+                        }
+
                     }
                     else
                     {
@@ -116,7 +127,7 @@ namespace Backend
         {
             try
             {
-                GameManager.RestoreState(logger);                
+                GameManager.RestoreState(logger);
             }
             catch (Exception e)
             {

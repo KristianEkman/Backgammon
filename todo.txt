@@ -1,30 +1,29 @@
-Nästa delmål. Testmatch med Patrik, Shane
-=================================
 
-
-
-
-Glitch bugg på bar. Beräkna med motståndaren i home.
-
---------
-
-Inte stänga båda sockets vid exit, eller?
-Förhindra att man är med flera game samtidigt.
-    - Guest då? Är det möjligt? Inte lika farligt om den krashar.
-
-Återansluta lost connection efter 3-6s,
-    Så att spel kan fortsätta efter tex en uppdatering.
-
-Seed Guest User.
-Animation på firefox suger.
-Inte kunna göra något när en server connection ligger nere.
-
-
-Release 1.0
+Release 1.0 - beta
 ===========
-Snyggare knappar i side - meny. Svarta board button. Hover.
-Play a friend.
+Play a friend.  
+
+    Client starts a game, with status invite. (Filtered out in random matching)
+        GameService -> CreateInvite:dto.rest.inciteresponese.gameid
+    
+    Client receives the game guid id response.
+        
+
+    Alink is generated and inviter manually sends the link to an opponent. (mail, chat, anything).
+        - The link is displayed in a dialog with a copy to clipboard button.
+        - Invite link container, istf buttons. Send this link to a friend https://bgmn/lobby?invite=guid
+
+    The invited klicks the link and comes to lobby where an extra "Join invite" buttton is visible.
+        Name om the inviter is displayed on the button. (Fetched from rest api)
+        The "Invite Friend" button is not visible.
+    The invited can chose to play as guest or log in.
+    The first socket call will have the id and only match that game.
+
+Active games.
+Exit to lobby.
 Top list
+Maintenence - förhindra att nya spel startas när flagga är satt.
+Feedback.
 Posta länk till facebook grupp.
 
 
@@ -38,6 +37,10 @@ Player photos
 
 Release 1.>0
 ============
+Inte kunna göra något när en server connection ligger nere.
+Seed Guest User.
+Glitch bugg på bar. Beräkna med motståndaren i home.
+Animation på firefox suger.
 Dubbling.
 Backa upp Managers till DB, så man kan göra en swap vid release.
 Points left.
