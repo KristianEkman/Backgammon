@@ -27,7 +27,6 @@
     background-clip: text;
     color: transparent;
     opacity: 0.5;
-
   }
 
   .guest-play-button {
@@ -36,16 +35,19 @@
     border: none;
     color: #bbb;
     @include hover-shadow;
-
-
   }
 
+  .friend-play-button,
   .random-play-button {
     color: #bbb;
     text-shadow: -1px -1px #333;
     font-weight: 600;
     @include hover-shadow;
+  }
 
+  .invite-play-button {
+    @include default-button;
+    @include hover-shadow;
   }
 
   .account {

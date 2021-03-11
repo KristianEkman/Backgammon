@@ -54,6 +54,11 @@ body {
   white-space: nowrap;
 }
 
+@mixin default-button {
+  background-image: linear-gradient(rgb(31, 71, 38), rgb(53, 121, 66));
+  color: #fff;
+}
+
 .glass {
 
   position: relative;

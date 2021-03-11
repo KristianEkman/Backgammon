@@ -1,0 +1,9 @@
+<p>Copy this link and send it to your friend</p>
+<div>
+  <input #linkText readonly="readonly" [value]="link">
+  <button (click)="selectAndCopy()" class="copy-button"><i class="fas fa-copy"></i></button>
+</div>
+<div class="buttons">
+  <button class="glass" (click)="cancelClick()">Cancel invite</button>
+  <button class="start-button glass" (click)="startClick()">Start game</button>
+</div>

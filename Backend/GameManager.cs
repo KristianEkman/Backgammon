@@ -37,45 +37,34 @@ namespace Backend
         public Rules.Game Game { get; set; }
 
         public DateTime Created { get; private set; }
+
         private bool SearchingOpponent { get; set; }
+        public string Inviter { get; set; }
         private ILogger<GameManager> Logger { get; set; }
 
-        public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId)
+        public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId)
         {
-            // Find existing game to reconnect to.
             var dbUser = GetDbUser(userId);
-            var cookies = context.Request.Cookies;
-            var cookieKey = "backgammon-game-id";
-            if (cookies.Any(c => (c.Key == cookieKey)))
-            {
-                var cookie = GameCookieDto.TryParse(cookies[cookieKey]);
-                var color = cookie.color;
-                if (cookie != null)
-                {
-                    var gameManager = AllGames
-                        .SingleOrDefault(g =>
-                            g.Game.Id.ToString().Equals(cookie.id) &&
-                            g.Game.PlayState != Game.State.Ended
-                         );
 
-                    if (gameManager != null && MyColor(gameManager, dbUser, color))
-                    {
-                        logger.LogInformation($"Restoring game {cookie.id} for {color}");
-                        // entering socket loop
-                        await gameManager.Restore(color, webSocket);
-                        var otherColor = color == PlayerColor.black ?
-                            PlayerColor.white : PlayerColor.black;
-                        await SendConnectionLost(otherColor, gameManager);
-                        // socket loop exited
-                        RemoveDissconnected(gameManager);
-                        return;
-                    }
-                }
+            if (await TryReConnect(webSocket, context, logger, dbUser))
+            {
+                // Game disconnected here
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(gameId))
+            {
+                await ConnectInvite(webSocket, dbUser, gameId);
+                // Game disconnected here.
+                return;
             }
 
             //todo: pair with someone equal ranking.
-            var manager = AllGames.OrderByDescending(g => g.Created) // Oldest first.
+
+            // Search any game, oldest first.
+            var manager = AllGames.OrderByDescending(g => g.Created)
                 .FirstOrDefault(g => (g.Client2 == null || g.Client1 == null) && g.SearchingOpponent);
+
 
             if (manager == null)
             {
@@ -101,6 +90,57 @@ namespace Backend
                 //This is the end of the connection
             }
             RemoveDissconnected(manager);
+        }
+
+        private static async Task<bool> TryReConnect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, Db.User dbUser)
+        {
+            var cookies = context.Request.Cookies;
+            var cookieKey = "backgammon-game-id";
+            // Find existing game to reconnect to.
+            if (cookies.Any(c => (c.Key == cookieKey)))
+            {
+                var cookie = GameCookieDto.TryParse(cookies[cookieKey]);
+                var color = cookie.color;
+                if (cookie != null)
+                {
+                    var gameManager = AllGames
+                        .SingleOrDefault(g =>
+                            g.Game.Id.ToString().Equals(cookie.id) &&
+                            g.Game.PlayState != Game.State.Ended
+                         );
+
+                    if (gameManager != null && MyColor(gameManager, dbUser, color))
+                    {
+                        logger.LogInformation($"Restoring game {cookie.id} for {color}");
+                        // entering socket loop
+                        await gameManager.Restore(color, webSocket);
+                        var otherColor = color == PlayerColor.black ?
+                            PlayerColor.white : PlayerColor.black;
+                        await SendConnectionLost(otherColor, gameManager);
+                        // socket loop exited
+                        RemoveDissconnected(gameManager);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private static async Task ConnectInvite(WebSocket webSocket, Db.User dbUser, string gameInviteId)
+        {
+            var manager = AllGames.SingleOrDefault(g => g.Game.Id.ToString() == gameInviteId && (g.Client1 == null || g.Client2 == null));
+            if (manager == null)
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Invite link has expired", CancellationToken.None);
+                throw new ApplicationException("Invite link has expired");
+            }
+
+            var color = Player.Color.Black;
+            if (manager.Client1 != null)
+                color = Player.Color.White;
+
+            await manager.ConnectAndListen(webSocket, color, dbUser);
+            await SendConnectionLost(PlayerColor.white, manager);
         }
 
         private static void RemoveDissconnected(GameManager manager)
@@ -158,6 +198,21 @@ namespace Backend
             }
         }
 
+        internal static Guid CreateInvite(ILogger<GameManager> logger, string userId)
+        {
+            var existing = AllGames.Where(
+                g => g.Inviter == userId).ToArray();
+
+            for (int i = existing.Length - 1; i >= 0; i--)
+                AllGames.Remove(existing[i]);
+
+            var manager = new GameManager(logger);
+            manager.Inviter = userId;
+            manager.SearchingOpponent = false;
+            AllGames.Add(manager);
+            return manager.Game.Id;
+        }
+
         private static Db.User GetDbUser(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
@@ -169,6 +224,8 @@ namespace Backend
         }
 
         CancellationTokenSource moveTimeOut = new CancellationTokenSource();
+
+
         private void StartGame()
         {
             Game.ThinkStart = DateTime.Now;
@@ -212,7 +269,7 @@ namespace Backend
                 {
                     Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
                     var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
-                    _ = EndGame(winner);                    
+                    _ = EndGame(winner);
                 }
             }
         }
@@ -221,7 +278,7 @@ namespace Backend
         {
             moveTimeOut.Cancel();
             Logger.LogInformation($"The winner is ${winner}");
-            Game.PlayState= Game.State.Ended;            
+            Game.PlayState = Game.State.Ended;
             SaveWinner(winner);
             await SendWinner(winner);
             AllGames.Remove(this);
@@ -381,7 +438,7 @@ namespace Backend
                 DoMoves(action);
                 PlayerColor? winner = GetWinner();
                 if (winner.HasValue)
-                    _ = EndGame(winner.Value);                                    
+                    _ = EndGame(winner.Value);
                 else
                     SendNewRoll();
             }
@@ -423,7 +480,7 @@ namespace Backend
 
         private async Task Resign(PlayerColor winner)
         {
-            await EndGame(winner);            
+            await EndGame(winner);
             Logger.LogInformation($"{winner} won game Game {Game.Id} by resignition.");
         }
 

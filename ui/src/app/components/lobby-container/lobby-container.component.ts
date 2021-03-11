@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SocialAuthService } from 'angularx-social-login';
 import { Observable } from 'rxjs';
 import { UserDto } from 'src/app/dto';
-import { AccountService } from 'src/app/services';
+import { InviteResponseDto } from 'src/app/dto/rest';
+import { AccountService, InviteService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
+import { Keys } from 'src/app/utils';
 
 @Component({
   selector: 'app-lobby-container',
@@ -15,10 +17,15 @@ export class LobbyContainerComponent implements OnInit {
   constructor(
     private router: Router,
     private authService: SocialAuthService,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private inviteService: InviteService,
+    private route: ActivatedRoute
   ) {}
 
   user$: Observable<UserDto> = AppState.Singleton.user.observe();
+  invite$: Observable<InviteResponseDto> | null = null;
+  playInvite = false;
+  inviteId = '';
 
   ngOnInit(): void {
     this.authService.authState.subscribe((user) => {
@@ -35,6 +42,10 @@ export class LobbyContainerComponent implements OnInit {
     });
 
     this.accountService.repair();
+
+    this.inviteId = this.router.parseUrl(this.router.url).queryParams[
+      Keys.inviteId
+    ];
   }
 
   login(provider: string): void {
@@ -50,4 +61,19 @@ export class LobbyContainerComponent implements OnInit {
   playClick(): void {
     this.router.navigateByUrl('game');
   }
+
+  playFriendClick(): void {
+    this.playInvite = true;
+    this.invite$ = this.inviteService.createInvite();
+  }
+
+  startInvitedGame(id: string): void {
+    this.router.navigateByUrl('game?gameId=' + id);
+  }
+
+  cancelInvite(): void {
+    this.playInvite = false;
+  }
+
+  acceptInviteClick(): void {}
 }

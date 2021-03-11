@@ -41,7 +41,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       this.accountService.repair();
     }
 
-    service.connect();
+    const gameId = this.router.parseUrl(this.router.url).queryParams['gameId'];
+    service.connect(gameId);
   }
 
   gameDto$: Observable<GameDto>;
@@ -210,7 +211,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   newGame(): void {
     this.newVisible = false;
-    this.service.connect();
+    this.service.connect('');
   }
 
   exitGame(): void {

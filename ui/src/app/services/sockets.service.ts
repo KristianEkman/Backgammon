@@ -25,6 +25,7 @@ import { AppState } from '../state/app-state';
 import { Keys } from '../utils';
 import { StatusMessageService } from './status-message.service';
 import { MessageLevel, StatusMessage } from '../dto/local/status-message';
+import { Router, UrlSerializer } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -38,17 +39,26 @@ export class SocketsService implements OnDestroy {
   connectTime = new Date();
   constructor(
     private cookieService: CookieService,
-    private statusMessageService: StatusMessageService
+    private statusMessageService: StatusMessageService,
+    private router: Router,
+    private serializer: UrlSerializer
   ) {}
 
-  connect(): void {
+  connect(gameId: string): void {
     if (this.socket) {
       this.socket.close();
     }
     this.url = environment.socketServiceUrl;
     const user = AppState.Singleton.user.getValue();
-    const userId = user ? user.id : null;
-    this.socket = new WebSocket(this.url + (userId ? `?userId=${userId}` : ''));
+    const userId = user ? user.id : '';
+    const tree = this.router.createUrlTree([], {
+      queryParams: { userId: userId, gameId: gameId }
+    });
+    const url = this.url + this.serializer.serialize(tree);
+
+    console.log(url);
+
+    this.socket = new WebSocket(url);
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
     this.socket.onopen = this.onOpen.bind(this);
@@ -69,14 +79,14 @@ export class SocketsService implements OnDestroy {
     console.error('Error', { event });
     const cnn = AppState.Singleton.myConnection.getValue();
     AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
-    this.statusMessageService.setMyConnectionLost();
+    this.statusMessageService.setMyConnectionLost('');
   }
 
   onClose(event: CloseEvent): void {
     console.log('Close', { event });
     const cnn = AppState.Singleton.myConnection.getValue();
     AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
-    this.statusMessageService.setMyConnectionLost();
+    this.statusMessageService.setMyConnectionLost(event.reason);
   }
 
   // Messages received from server.

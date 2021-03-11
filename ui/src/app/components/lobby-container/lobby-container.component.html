@@ -2,25 +2,26 @@
   <div class="title-container">
     <h1>Backgammon</h1>
   </div>
-  <app-login-buttons
-    (onLogin)="login($event)"
-    [isLoggedIn]="!!(user$ | async)"
-  ></app-login-buttons>
-  <div class="lobby">
-    <button
-      *ngIf="!(user$ | async)"
-      class="guest-play-button"
-      (click)="playClick()"
-    >
+  <app-login-buttons (onLogin)="login($event)" [isLoggedIn]="!!(user$ | async)"></app-login-buttons>
+  <div *ngIf="!playInvite && !inviteId" class="lobby">
+    <button *ngIf="!(user$ | async)" class="guest-play-button" (click)="playClick()">
       Play as guest
     </button>
-    <button
-      *ngIf="user$ | async"
-      class="random-play-button glass"
-      (click)="playClick()"
-    >
+    <button *ngIf="user$ | async" class="random-play-button glass" (click)="playClick()">
       Play random opponent
+    </button><br>
+    <button *ngIf="user$ | async" class="friend-play-button glass" (click)="playFriendClick()">
+      Invite a friend
     </button>
+  </div>
+  <div *ngIf="inviteId">
+    <button class="invite-play-button glass" (click)="startInvitedGame(inviteId)">
+      Accept invite
+    </button>
+  </div>
+  <div *ngIf="playInvite">
+    <app-invite (start)="startInvitedGame($event)" (cancel)="cancelInvite()" [gameId]="(invite$ |async)?.gameId">
+    </app-invite>
   </div>
   <div class="account">
     <app-account [user]="user$ | async" (logout)="logout()"></app-account>
