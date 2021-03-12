@@ -4,11 +4,7 @@
 <button (click)="undoMove()" *ngIf="undoVisible" class="undoButton glass">
   Undo
 </button>
-<button
-  *ngIf="rollButtonVisible"
-  (click)="rollButtonClick()"
-  class="rollButton glass"
->
+<button *ngIf="rollButtonVisible" (click)="rollButtonClick()" class="rollButton glass">
   Roll
 </button>
 <button (click)="newGame()" *ngIf="newVisible" class="newButton glass">

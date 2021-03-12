@@ -10,7 +10,7 @@ export class BoardButtonsComponent {
   @Input() sendVisible = false;
   @Input() rollButtonVisible = false;
   @Input() newVisible = false;
-  @Input() exitVisible = false;
+  @Input() exitVisible = true;
 
   @Output() onUndoMove = new EventEmitter<void>();
   @Output() onSendMoves = new EventEmitter<void>();

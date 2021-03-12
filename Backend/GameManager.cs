@@ -101,6 +101,7 @@ namespace Backend
             {
                 var cookie = GameCookieDto.TryParse(cookies[cookieKey]);
                 var color = cookie.color;
+
                 if (cookie != null)
                 {
                     var gameManager = AllGames
@@ -132,7 +133,7 @@ namespace Backend
             if (manager == null)
             {
                 await webSocket.CloseAsync(WebSocketCloseStatus.InvalidPayloadData, "Invite link has expired", CancellationToken.None);
-                throw new ApplicationException("Invite link has expired");
+                return;
             }
 
             var color = Player.Color.Black;
@@ -406,6 +407,10 @@ namespace Backend
             {
                 restoreAction.color = color == PlayerColor.black ? PlayerColor.white : PlayerColor.black;
                 await Send(otherSocket, restoreAction);
+            }
+            else
+            {
+                Logger.LogWarning("Failed to send restore to other client");
             }
 
             await ListenOn(socket);

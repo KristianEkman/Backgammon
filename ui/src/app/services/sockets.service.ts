@@ -6,7 +6,8 @@ import {
   GameDto,
   MoveDto,
   PlayerColor,
-  GameCookieDto
+  GameCookieDto,
+  GameState
 } from '../dto';
 import { CookieService } from 'ngx-cookie-service';
 import {
@@ -55,8 +56,6 @@ export class SocketsService implements OnDestroy {
       queryParams: { userId: userId, gameId: gameId }
     });
     const url = this.url + this.serializer.serialize(tree);
-
-    console.log(url);
 
     this.socket = new WebSocket(url);
     this.socket.onmessage = this.onMessage.bind(this);
@@ -115,7 +114,8 @@ export class SocketsService implements OnDestroy {
         const cGame = {
           ...game,
           validMoves: dicesAction.validMoves,
-          currentPlayer: dicesAction.playerToMove
+          currentPlayer: dicesAction.playerToMove,
+          playState: GameState.playing
         };
         // console.log(dicesAction.validMoves);
         AppState.Singleton.game.setValue(cGame);

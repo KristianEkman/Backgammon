@@ -1,29 +1,21 @@
 
 Release 1.0 - beta
 ===========
-Play a friend.  
+Reconnect funkar inte jämnt. cookin?
+    Invite och annat, läsare chrome
 
-    Client starts a game, with status invite. (Filtered out in random matching)
-        GameService -> CreateInvite:dto.rest.inciteresponese.gameid
-    
-    Client receives the game guid id response.
-        
-
-    Alink is generated and inviter manually sends the link to an opponent. (mail, chat, anything).
-        - The link is displayed in a dialog with a copy to clipboard button.
-        - Invite link container, istf buttons. Send this link to a friend https://bgmn/lobby?invite=guid
-
-    The invited klicks the link and comes to lobby where an extra "Join invite" buttton is visible.
-        Name om the inviter is displayed on the button. (Fetched from rest api)
-        The "Invite Friend" button is not visible.
-    The invited can chose to play as guest or log in.
-    The first socket call will have the id and only match that game.
+Förbättra styles för buttons. Mixins? color.
 
 Active games.
-Exit to lobby.
+
+New game same opponnet
+
 Top list
+
 Maintenence - förhindra att nya spel startas när flagga är satt.
+
 Feedback.
+
 Posta länk till facebook grupp.
 
 

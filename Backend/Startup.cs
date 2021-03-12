@@ -89,9 +89,9 @@ namespace Backend
                         {
                             await GameManager.Connect(webSocket, context, logger, userId, gameId);
                         }
-                        catch (Exception)
+                        catch (Exception exc)
                         {
-                            context.Response.StatusCode = 500;
+                            logger.LogError(exc.ToString());
                         }
 
                     }

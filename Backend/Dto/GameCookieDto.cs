@@ -25,5 +25,10 @@ namespace Backend.Dto
                 return null;
             }
         }
+
+        public override string ToString()
+        {
+            return id + " " + color.ToString();
+        }
     }
 }

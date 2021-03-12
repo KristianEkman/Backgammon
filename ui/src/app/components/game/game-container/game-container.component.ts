@@ -92,7 +92,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.diceColor = dto?.currentPlayer;
     this.fireResize();
     this.newVisible = dto?.playState === GameState.ended;
-    this.exitVisible = dto?.playState === GameState.ended;
+    this.exitVisible = dto?.playState !== GameState.playing;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -102,6 +102,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setSendVisible();
     this.setUndoVisible();
     this.fireResize();
+    this.exitVisible =
+      AppState.Singleton.game.getValue()?.playState !== GameState.playing;
   }
 
   ngOnDestroy(): void {
@@ -158,7 +160,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   undoVisible = false;
   dicesVisible = false;
   newVisible = false;
-  exitVisible = false;
+  exitVisible = true;
 
   rollButtonClick(): void {
     this.rollButtonClicked = true;
