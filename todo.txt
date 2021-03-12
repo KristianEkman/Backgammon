@@ -3,6 +3,7 @@ Release 1.0 - beta
 ===========
 
 Maintenence - förhindra att nya spel startas när flagga är satt.
+
 Top list
 
 Feedback.

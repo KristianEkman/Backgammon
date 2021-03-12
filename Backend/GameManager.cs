@@ -44,7 +44,13 @@ namespace Backend
 
         public static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId)
         {
-            var dbUser = GetDbUser(userId);
+            if (Maintenance())
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Backgammon temporary closed for maintenance.", CancellationToken.None);
+                return;
+            }
+            
+            var dbUser = GetDbUser(userId);            
 
             if (await TryReConnect(webSocket, context, logger, dbUser))
             {
@@ -90,6 +96,15 @@ namespace Backend
                 //This is the end of the connection
             }
             RemoveDissconnected(manager);
+        }
+
+        private static bool Maintenance()
+        {
+            using (var db = new Db.BgDbContext())
+            {
+                var m = db.Maintenance.OrderByDescending(m=> m.Time).FirstOrDefault();
+                return m != null && m.On;
+            }
         }
 
         private static async Task<bool> TryReConnect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, Db.User dbUser)
