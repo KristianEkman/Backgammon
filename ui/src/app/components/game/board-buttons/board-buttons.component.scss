@@ -1,17 +1,5 @@
-@import '../../../../styles.scss';
+@import '../../../../styles/styles.scss';
 
 button {
   margin: 4px;
-}
-
-.sendButton,
-.rollButton,
-.newButton {
-  @include default-button;
-}
-
-.undoButton,
-.exitButton {
-  background-image: linear-gradient(#5d3910, #a16520);
-  color: #d3c9be;
 }

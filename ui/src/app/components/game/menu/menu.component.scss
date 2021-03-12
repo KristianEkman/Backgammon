@@ -1,8 +1,7 @@
-@import '../../../../styles.scss';
+@import '../../../../styles/styles.scss';
 
 
 .open-button {
-  @include button;
   color: #ddd;
   font-size: 20px;
   border: none;
@@ -69,10 +68,8 @@
   margin-top: 50px;
 
   button {
-    border: none;
     color: #bbb;
     margin-bottom: 16px;
-    @include hover-shadow;
   }
 }
 
@@ -82,7 +79,5 @@
   top: 20px;
   right: 45px;
   font-size: 40px;
-  border: none;
-  background: none;
   color: #ddd;
 }

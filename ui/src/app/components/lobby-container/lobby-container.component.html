@@ -4,18 +4,18 @@
   </div>
   <app-login-buttons (onLogin)="login($event)" [isLoggedIn]="!!(user$ | async)"></app-login-buttons>
   <div *ngIf="!playInvite && !inviteId" class="lobby">
-    <button *ngIf="!(user$ | async)" class="guest-play-button" (click)="playClick()">
+    <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
       Play as guest
     </button>
-    <button *ngIf="user$ | async" class="random-play-button glass" (click)="playClick()">
+    <button *ngIf="user$ | async" class="black-button" (click)="playClick()">
       Play random opponent
     </button><br>
-    <button *ngIf="user$ | async" class="friend-play-button glass" (click)="playFriendClick()">
+    <button *ngIf="user$ | async" class="black-button" (click)="playFriendClick()">
       Invite a friend
     </button>
   </div>
   <div *ngIf="inviteId">
-    <button class="invite-play-button glass" (click)="startInvitedGame(inviteId)">
+    <button class="black-button" (click)="startInvitedGame(inviteId)">
       Accept invite
     </button>
   </div>

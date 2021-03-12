@@ -1,0 +1,71 @@
+@mixin button {
+  background: none;
+  border: none;
+  padding: 10px;
+  color: #ddd;
+  font-family: sans-serif;
+  font-size: 22px;
+  padding: 8px 16px;
+  @include hovershadow();
+
+  &:focus {
+    outline: 0 !important;
+  }
+
+  &:active {
+    color: red;
+  }
+}
+
+@mixin hovershadow {
+
+  &:hover,
+  &:focus {
+    -webkit-box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+    -moz-box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+    box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
+  }
+}
+
+@mixin glass {
+  position: relative;
+  background-image: linear-gradient(rgb(0, 0, 0), rgb(26, 26, 26));
+  text-decoration: none;
+  border-radius: 10px;
+  text-shadow: -1px -1px rgb(145, 145, 145);
+
+  &:after {
+    content: '';
+    position: absolute;
+    border-radius: 10px;
+    top: 2px;
+    left: 2px;
+    width: calc(100% - 4px);
+    height: 50%;
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
+  }
+}
+
+.default-button {
+  @include button();
+  @include glass();
+  background-image: linear-gradient(rgb(31, 71, 38), rgb(53, 121, 66));
+  color: #fff;
+}
+
+.secondary-button {
+  @include button();
+  @include glass();
+
+  background-image: linear-gradient(#5d3910, #a16520);
+  color: #d3c9be;
+}
+
+.black-button {
+  @include button();
+  @include glass();
+}
+
+.flat-button {
+  @include button();
+}

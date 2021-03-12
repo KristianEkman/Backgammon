@@ -1,4 +1,4 @@
-@import '../../../styles.scss';
+@import '../../../styles/styles.scss';
 
 .app-account {
   &__menu-panel {
@@ -7,7 +7,5 @@
 }
 
 button {
-  @include button;
   font-size: 16px;
-  border: none;
 }

@@ -1,4 +1,4 @@
-@import '../../../../styles.scss';
+@import '../../../../styles/styles.scss';
 
 * {
   margin-bottom: 8px;
@@ -21,21 +21,4 @@ input {
 .buttons {
   display: flex;
   justify-content: space-between;
-
-  button {
-    @include hover-shadow;
-  }
-}
-
-.start-button {
-  @include default-button;
-}
-
-.copy-button {
-  color: #bbb;
-  font-size: 20px;
-
-  background: none;
-  border: none;
-  @include hover-shadow;
 }

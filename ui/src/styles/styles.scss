@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas%20Neue&display=swap');
+@import './buttons';
+
+span,
+p,
+div,
+label {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  background-color: #111;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
