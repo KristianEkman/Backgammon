@@ -16,8 +16,8 @@ td {
 
 .close-button {
   position: absolute;
-  right: -10px;
-  top: -15px;
+  right: -20px;
+  top: -25px;
   width: 30px;
   height: 30px;
   font-size: 30px;
@@ -26,4 +26,9 @@ td {
   margin-right: 0;
   border: 1px solid white;
   border-radius: 50%;
+}
+
+.you {
+  color: rgb(251, 251, 116);
+  text-shadow: 0 0 5px rgb(251, 251, 116);
 }

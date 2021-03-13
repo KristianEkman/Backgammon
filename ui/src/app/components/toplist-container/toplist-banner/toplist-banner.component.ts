@@ -37,7 +37,7 @@ import { Toplist, ToplistResult } from 'src/app/dto';
         { params: { shown: 0 } }
       ),
       transition('initial => shown', [animate('20s')]),
-      transition('show => initial', [animate('0s')])
+      transition('show => initial', [animate('0.1s')])
     ])
   ]
 })
@@ -50,29 +50,37 @@ export class ToplistBannerComponent implements OnChanges {
   reversedList: ToplistResult[] = [];
   initial = 340;
   shown = 0;
-  rollingState = 'initial';
+  rollingState = '';
+  timeoutHandle: any = null;
+  started = false;
 
   ngOnChanges(): void {
     if (this.toplist) {
-      this.reversedList = this.toplist.results.reverse();
+      const temp = [...this.toplist.results];
+      this.reversedList = temp.reverse();
+
+      this.timeoutHandle = setTimeout(() => {
+        if (this.bannerRef) {
+          this.initial = (this.bannerRef
+            .nativeElement as HTMLElement).clientWidth;
+        }
+
+        if (this.bannerItemsRef) {
+          this.shown = -(this.bannerItemsRef.nativeElement as HTMLElement)
+            .clientWidth;
+        }
+
+        this.started = true;
+        this.rollingState = 'shown';
+        clearTimeout(this.timeoutHandle);
+      }, 2000);
     }
-
-    setTimeout(() => {
-      if (this.bannerRef) {
-        this.initial = (this.bannerRef
-          .nativeElement as HTMLElement).clientWidth;
-      }
-
-      if (this.bannerItemsRef) {
-        this.shown = -(this.bannerItemsRef.nativeElement as HTMLElement)
-          .clientWidth;
-      }
-
-      this.rollingState = 'shown';
-    }, 2000);
   }
 
   scrollFinished(): void {
+    if (!this.started) {
+      return;
+    }
     if (this.rollingState === 'initial') {
       this.rollingState = 'shown';
     } else {

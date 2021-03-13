@@ -13,16 +13,17 @@ namespace Backend.Db
         public DbSet<Game> Games { get; set; }
 
         public DbSet<Maintenance> Maintenance { get; set; }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             var pw = Secrets.GetPw();
             options.UseSqlServer($"Data Source=ekmandbs.database.windows.net;Initial Catalog=backgammon-db;User ID=kristian;Password={pw};Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Game>().
-        //}
+
+        // protected override void OnModelCreating(ModelBuilder modelBuilder)
+        // {
+        //     base.OnModelCreating(modelBuilder);
+        // }
 
     }
 }

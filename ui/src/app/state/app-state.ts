@@ -4,6 +4,7 @@ import {
   GameState,
   MoveDto,
   PlayerColor,
+  Toplist,
   UserDto
 } from '../dto';
 import { DiceDto } from '../dto/diceDto';
@@ -25,6 +26,7 @@ export class AppState {
     this.user = new StateObject<UserDto>();
     this.statusMessage = new StateObject<StatusMessage>();
     this.moveTimer = new StateObject<number>();
+    this.toplist = new StateObject<Toplist>();
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -44,6 +46,7 @@ export class AppState {
   user: StateObject<UserDto>;
   statusMessage: StateObject<StatusMessage>;
   moveTimer: StateObject<number>;
+  toplist: StateObject<Toplist>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

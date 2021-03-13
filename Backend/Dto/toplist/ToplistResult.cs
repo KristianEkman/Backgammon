@@ -9,7 +9,7 @@ namespace Backend.Dto.toplist
     {
         public int place { get; set; }
         public string name { get; set; }
-        public int games { get; internal set; }
         public int elo { get; set; }
+        public bool you { get; set; }
     }
 }

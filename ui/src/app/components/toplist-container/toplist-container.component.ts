@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Toplist } from 'src/app/dto';
 import { ToplistService } from 'src/app/services';
+import { AppState } from 'src/app/state/app-state';
 
 @Component({
   selector: 'app-toplist-container',
@@ -14,7 +15,8 @@ export class ToplistContainerComponent {
   @Output() showing = new EventEmitter<boolean>();
   banner = true;
   constructor(private service: ToplistService) {
-    this.toplist$ = this.service.getToplist();
+    this.toplist$ = AppState.Singleton.toplist.observe();
+    service.loadToplist();
   }
 
   bannerClicked(): void {

@@ -7,6 +7,7 @@ namespace Backend.Dto.toplist
 {
     public class Toplist
     {
-        public ToplistResult[] Results { get; set; }
+        public ToplistResult[] results { get; set; }
+        public ToplistResult you { get; set; }
     }
 }

@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Toplist } from '../dto';
+import { AppState } from '../state/app-state';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,15 @@ export class ToplistService {
     this.url = `${environment.apiServiceUrl}/toplist`;
   }
 
-  getToplist(): Observable<Toplist> {
-    return this.httpClient.get(this.url).pipe(map((x) => x as Toplist));
+  loadToplist(): void {
+    this.httpClient
+      .get(this.url)
+      .pipe(map((data) => data as Toplist))
+      .subscribe((toplist) => {
+        if (!toplist.results.find((t) => t.you)) {
+          toplist.results.push(toplist.you); // add you last if not on top 10.
+        }
+        AppState.Singleton.toplist.setValue(toplist);
+      });
   }
 }

@@ -3,6 +3,6 @@
 export interface ToplistResult {
   place: number;
   name: string;
-  games: number;
   elo: number;
+  you: boolean;
 }
