@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SocialAuthService } from 'angularx-social-login';
 import { Observable } from 'rxjs';
 import { UserDto } from 'src/app/dto';
@@ -18,14 +18,14 @@ export class LobbyContainerComponent implements OnInit {
     private router: Router,
     private authService: SocialAuthService,
     private accountService: AccountService,
-    private inviteService: InviteService,
-    private route: ActivatedRoute
+    private inviteService: InviteService
   ) {}
 
   user$: Observable<UserDto> = AppState.Singleton.user.observe();
   invite$: Observable<InviteResponseDto> | null = null;
   playInvite = false;
   inviteId = '';
+  toplist = false;
 
   ngOnInit(): void {
     this.authService.authState.subscribe((user) => {
@@ -76,4 +76,8 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   acceptInviteClick(): void {}
+
+  showingTopList(flag: boolean): void {
+    this.toplist = flag;
+  }
 }

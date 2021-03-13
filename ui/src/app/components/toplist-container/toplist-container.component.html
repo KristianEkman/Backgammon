@@ -1,0 +1,2 @@
+<app-toplist *ngIf="!banner" [toplist]="toplist$ | async" (closed)="topListClosed()"></app-toplist>
+<app-toplist-banner *ngIf="banner" [toplist]="toplist$ | async" (clicked)="bannerClicked()"></app-toplist-banner>

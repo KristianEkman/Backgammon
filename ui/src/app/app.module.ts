@@ -23,10 +23,13 @@ import { DicesComponent } from './components/game/dices/dices.component';
 import { BoardButtonsComponent } from './components/game/board-buttons/board-buttons.component';
 import { MessagesComponent } from './components/game/messages/messages.component';
 import { MenuComponent } from './components/game/menu/menu.component';
-import { LoginButtonsComponent } from './components/login-buttons/login-buttons.component';
+import { LoginButtonsComponent } from './components/lobby-container/login-buttons/login-buttons.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AccountComponent } from './components/account/account.component';
 import { InviteComponent } from './components/lobby-container/invite/invite.component';
+import { ToplistContainerComponent } from './components/toplist-container/toplist-container.component';
+import { ToplistComponent } from './components/toplist-container/toplist/toplist.component';
+import { ToplistBannerComponent } from './components/toplist-container/toplist-banner/toplist-banner.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { InviteComponent } from './components/lobby-container/invite/invite.comp
     MenuComponent,
     LoginButtonsComponent,
     AccountComponent,
-    InviteComponent
+    InviteComponent,
+    ToplistContainerComponent,
+    ToplistComponent,
+    ToplistBannerComponent
   ],
   imports: [
     BrowserModule,

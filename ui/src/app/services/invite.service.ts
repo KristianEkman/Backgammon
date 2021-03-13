@@ -14,12 +14,12 @@ import { InviteResponseDto } from '../dto/rest';
 export class InviteService {
   url: string;
   constructor(private httpClient: HttpClient) {
-    this.url = `${environment.apiServiceUrl}`;
+    this.url = `${environment.apiServiceUrl}/invite`;
   }
 
   createInvite(): Observable<InviteResponseDto> {
     return this.httpClient
-      .get(`${this.url}/invite/create`)
+      .get(`${this.url}/create`)
       .pipe(map((dto) => dto as InviteResponseDto));
   }
 }

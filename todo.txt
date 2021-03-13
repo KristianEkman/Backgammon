@@ -2,15 +2,20 @@
 Release 1.0 - beta
 ===========
 
-Maintenence - förhindra att nya spel startas när flagga är satt.
-
 Top list
+    You
+    Kolla att db inte frågas i onödan
+    Mindre cpu krävande. Egna timers?
+    Refresh efter spel slut.
+        Elo - beräkning
+        Visa ny rating
 
 Feedback.
 
-candeactivate
+serverside http only userid cookie
 
 Posta länk till facebook grupp.
+
 
 
 Release 1.1 - mål att öka logins
@@ -24,6 +29,8 @@ New game same opponnet vid invite.
 
 Release 1.>0
 ============
+
+candeactivate
 Inte kunna göra något när en server connection ligger nere.
 Active games.
 Seed Guest User.

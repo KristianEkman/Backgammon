@@ -1,0 +1,29 @@
+.toplist {
+  position: relative;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+td {
+  min-width: 60px;
+}
+
+.close-button {
+  position: absolute;
+  right: -10px;
+  top: -15px;
+  width: 30px;
+  height: 30px;
+  font-size: 30px;
+  line-height: 30px;
+  padding: 0;
+  margin-right: 0;
+  border: 1px solid white;
+  border-radius: 50%;
+}

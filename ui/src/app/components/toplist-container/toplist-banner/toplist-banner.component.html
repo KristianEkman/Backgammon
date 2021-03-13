@@ -1,0 +1,14 @@
+<div #banner class="toplist-banner" (click)="bannerClick()">
+  <div #bannerItems class="toplist-banner__items"
+    [@scrollBanner]="{ value: rollingState, params: { shown: shown, initial: initial } }"
+    (@scrollBanner.done)="scrollFinished()">
+    <span class="toplist-banner__item" *ngFor="let item of reversedList">
+      <strong>
+        {{item.place}}.
+        {{item.name}}&nbsp;&nbsp;&nbsp;
+      </strong>
+      ({{item.elo}})
+    </span>
+  </div>
+  <div class="toplist-banner__overlay"></div>
+</div>

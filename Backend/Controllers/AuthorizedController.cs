@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace Backend.Controllers
 {
-    public abstract class AuthorizedController : ControllerBase
+    public class AuthorizedController : ControllerBase
     {
         protected string GetUserId()
         {

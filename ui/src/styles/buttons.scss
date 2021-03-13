@@ -2,11 +2,15 @@
   background: none;
   border: none;
   padding: 10px;
-  color: #ddd;
+  color: #aaa;
   font-family: sans-serif;
   font-size: 22px;
   padding: 8px 16px;
   @include hovershadow();
+
+  &:hover {
+    color: #ccc;
+  }
 
   &:focus {
     outline: 0 !important;

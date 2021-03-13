@@ -20,9 +20,7 @@ namespace Backend.Controllers
         [Route("/api/invite/create")]
         public InviteResponseDto CreateInvite()
         {
-            var userId = GetUserId();
-
-            var id = GameManager.CreateInvite(logger, userId);
+            var id = GameManager.CreateInvite(logger, GetUserId());
 
             logger.LogInformation("Creating game invite");
             return new InviteResponseDto { gameId = id.ToString() };

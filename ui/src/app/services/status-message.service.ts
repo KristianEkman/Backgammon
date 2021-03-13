@@ -32,9 +32,7 @@ export class StatusMessageService {
   }
 
   setMyConnectionLost(reason: string): void {
-    const statusMessage = StatusMessage.error(
-      reason || 'Server connection lost'
-    );
+    const statusMessage = StatusMessage.error(reason || 'No server connection');
     AppState.Singleton.statusMessage.setValue(statusMessage);
   }
 
