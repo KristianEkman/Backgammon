@@ -87,7 +87,7 @@ namespace Backend
                         var gameId = context.Request.Query.FirstOrDefault(q => q.Key == "gameId").Value;
                         try
                         {
-                            await GameManager.Connect(webSocket, context, logger, userId, gameId);
+                            await GamesService.Connect(webSocket, context, logger, userId, gameId);
                         }
                         catch (Exception exc)
                         {
@@ -127,7 +127,7 @@ namespace Backend
         {
             try
             {
-                GameManager.RestoreState(logger);
+                GamesService.RestoreState(logger);
             }
             catch (Exception e)
             {
@@ -144,7 +144,7 @@ namespace Backend
         {
             try
             {
-                GameManager.SaveState();
+                GamesService.SaveState();
             }
             catch (Exception e)
             {

@@ -4,9 +4,9 @@ Release 1.0 - beta
 
 Top list
         
-    Mindre cpu krävande. Egna timers?
+    Mindre cpu krävande rullning. Egna timers?
 
-    Refresh efter spel slut.
+    Refresh efter spel slut. Sätta Score.
 
 
 Feedback
