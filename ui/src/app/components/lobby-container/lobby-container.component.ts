@@ -4,7 +4,11 @@ import { SocialAuthService } from 'angularx-social-login';
 import { Observable } from 'rxjs';
 import { UserDto } from 'src/app/dto';
 import { InviteResponseDto } from 'src/app/dto/rest';
-import { AccountService, InviteService } from 'src/app/services';
+import {
+  AccountService,
+  InviteService,
+  ToplistService
+} from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { Keys } from 'src/app/utils';
 
@@ -18,16 +22,20 @@ export class LobbyContainerComponent implements OnInit {
     private router: Router,
     private authService: SocialAuthService,
     private accountService: AccountService,
-    private inviteService: InviteService
+    private inviteService: InviteService,
+    private topListService: ToplistService
   ) {}
 
   user$: Observable<UserDto> = AppState.Singleton.user.observe();
   invite$: Observable<InviteResponseDto> | null = null;
+  toplist$ = AppState.Singleton.toplist.observe();
+
   playInvite = false;
   inviteId = '';
   toplist = false;
 
   ngOnInit(): void {
+    this.topListService.loadToplist();
     this.authService.authState.subscribe((user) => {
       // send user, store secret user id
       const userDto = {

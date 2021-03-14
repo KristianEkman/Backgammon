@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StatusMessage } from '../dto/local/status-message';
-import { GameDto, GameState, PlayerColor } from '../dto';
+import { GameDto, GameState, NewScoreDto, PlayerColor } from '../dto';
 import { AppState } from '../state/app-state';
 
 @Injectable({
@@ -12,13 +12,6 @@ export class StatusMessageService {
     let message: StatusMessage;
     if (!game) {
       message = StatusMessage.info('Waiting for opponent to connect');
-    } else if (game.playState === GameState.ended) {
-      // console.log(this.myColor, this.game.winner);
-      message = StatusMessage.info(
-        myColor === game.winner
-          ? 'Congrats! You won.'
-          : 'Sorry. You lost the game.'
-      );
     } else if (myColor === game.currentPlayer) {
       message = StatusMessage.info(
         `Your turn to move.  (${PlayerColor[game.currentPlayer]})`
@@ -44,5 +37,18 @@ export class StatusMessageService {
   setWaitingForConnect(): void {
     const statusMessage = StatusMessage.info('Waiting for opponent to connect');
     AppState.Singleton.statusMessage.setValue(statusMessage);
+  }
+
+  setGameEnded(game: GameDto, newScore: NewScoreDto): void {
+    // console.log(this.myColor, this.game.winner);
+    const myColor = AppState.Singleton.myColor.getValue();
+    const score = `New score ${newScore.score} (${newScore.increase})`;
+
+    const message = StatusMessage.info(
+      myColor === game.winner
+        ? `Congrats! You won. ${score}`
+        : `Sorry. You lost the game. ${score}`
+    );
+    AppState.Singleton.statusMessage.setValue(message);
   }
 }

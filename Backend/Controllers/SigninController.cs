@@ -89,7 +89,8 @@ namespace Backend.Controllers
                         Name = userDto.name,
                         PhotoUrl = userDto.photoUrl,
                         ProviderId = userDto.socialProviderId,
-                        SocialProvider = userDto.socialProvider
+                        SocialProvider = userDto.socialProvider,
+                        Elo = 1200
                     };
                     db.Users.Add(dbUser);
                     db.SaveChanges();

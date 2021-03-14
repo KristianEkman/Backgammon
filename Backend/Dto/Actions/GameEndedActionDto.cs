@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Backend.Dto.toplist;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Backend.Dto.Actions
         }
 
         public GameDto game { get; set; }
-
+        public NewScoreDto newScore { get; set; }
     }
 }
 

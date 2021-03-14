@@ -1,5 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas%20Neue&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Bebas%20Neue&display=swap');
 @import './buttons';
+
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url(../assets/fonts/BebasNeue-Regular.ttf) format("truetype");
+}
 
 span,
 p,

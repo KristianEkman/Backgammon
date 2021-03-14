@@ -1,8 +1,5 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Toplist } from 'src/app/dto';
-import { ToplistService } from 'src/app/services';
-import { AppState } from 'src/app/state/app-state';
 
 @Component({
   selector: 'app-toplist-container',
@@ -10,14 +7,11 @@ import { AppState } from 'src/app/state/app-state';
   styleUrls: ['./toplist-container.component.scss']
 })
 export class ToplistContainerComponent {
-  toplist$: Observable<Toplist>;
+  @Input() toplist: Toplist | null = null;
 
   @Output() showing = new EventEmitter<boolean>();
   banner = true;
-  constructor(private service: ToplistService) {
-    this.toplist$ = AppState.Singleton.toplist.observe();
-    service.loadToplist();
-  }
+  constructor() {}
 
   bannerClicked(): void {
     this.banner = false;

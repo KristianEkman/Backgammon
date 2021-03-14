@@ -1,7 +1,9 @@
 ﻿using Backend.Dto;
 using Backend.Dto.Actions;
+using Backend.Dto.toplist;
 using Backend.Rules;
 using Microsoft.Extensions.Logging;
+using Rules;
 using System;
 using System.Linq;
 using System.Net.WebSockets;
@@ -91,9 +93,8 @@ namespace Backend
             moveTimeOut.Cancel();
             Logger.LogInformation($"The winner is ${winner}");
             Game.PlayState = Game.State.Ended;
-            // todo: new score
-            SaveWinner(winner);
-            await SendWinner(winner);
+            var newScore = SaveWinner(winner);
+            await SendWinner(winner, newScore);
             Ended?.Invoke(this, EventArgs.Empty);
         }
 
@@ -285,13 +286,31 @@ namespace Backend
             }
         }
 
-        private void SaveWinner(PlayerColor color)
+        private (NewScoreDto black, NewScoreDto white) SaveWinner(PlayerColor color)
         {
+            if (Game.BlackPlayer.IsGuest() || Game.WhitePlayer.IsGuest())
+                return (null, null);
             using (var db = new Db.BgDbContext())
             {
+                var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
+                var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
+                var computed = Score.NewScore(black.Elo, white.Elo, black.GameCount, white.GameCount, color == PlayerColor.black);
+                var blackInc = computed.black - black.Elo;
+                var whiteInc = computed.white - white.Elo;
+
+                black.GameCount++;
+                white.GameCount++;
+                
+                black.Elo = computed.black;
+                white.Elo = computed.white;
+
                 var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
                 dbGame.Winner = color;
                 db.SaveChanges();
+
+                return (
+                    new NewScoreDto { score = black.Elo, increase = blackInc },
+                    new NewScoreDto { score = white.Elo, increase = whiteInc });
             }
         }
 
@@ -366,7 +385,7 @@ namespace Backend
             }
         }
 
-        private async Task SendWinner(PlayerColor color)
+        private async Task SendWinner(PlayerColor color, (NewScoreDto black, NewScoreDto white) newScore)
         {
             var game = Game.ToDto();
             game.winner = color;
@@ -374,7 +393,10 @@ namespace Backend
             {
                 game = game
             };
+            gameEndedAction.newScore = newScore.black;
             await Send(Client1, gameEndedAction);
+
+            gameEndedAction.newScore = newScore.white;
             await Send(Client2, gameEndedAction);
         }
 

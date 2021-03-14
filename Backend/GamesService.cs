@@ -39,19 +39,27 @@ namespace Backend
                 return;
             }
 
-            //todo: pair with someone equal ranking.
-
+            //todo: pair with someone equal ranking?
+            
             // Search any game, oldest first.
-            var manager = AllGames.OrderByDescending(g => g.Created)
-                .FirstOrDefault(g => (g.Client2 == null || g.Client1 == null) && g.SearchingOpponent);
+            var managers = AllGames.OrderByDescending(g => g.Created)
+                .Where(g => (g.Client2 == null || g.Client1 == null) && g.SearchingOpponent);
+           
+            var isGuest = dbUser.Id == Guid.Empty;
+            // filter out games having a logged in player            
+            if (isGuest)
+                managers = managers.Where(m => !(
+                    m.Game.BlackPlayer.Id != Guid.Empty) ||
+                    m.Game.WhitePlayer.Id != Guid.Empty
+                ).ToArray();
 
+            var manager = managers.FirstOrDefault();
 
             if (manager == null)
             {
                 manager = new GameManager(logger);
-
-                AllGames.Add(manager);
                 manager.SearchingOpponent = true;
+                AllGames.Add(manager);
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
                 // entering socket loop
                 await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser);

@@ -132,7 +132,10 @@ export class SocketsService implements OnDestroy {
         // console.log('game ended', endedAction.game.winner);
         AppState.Singleton.game.setValue(endedAction.game);
         AppState.Singleton.moveTimer.setValue(0);
-        this.statusMessageService.setTextMessage(endedAction.game);
+        this.statusMessageService.setGameEnded(
+          endedAction.game,
+          endedAction.newScore
+        );
         break;
       }
       case ActionNames.opponentMove: {

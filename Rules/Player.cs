@@ -26,5 +26,10 @@ namespace Backend.Rules
         {
             return PlayerColor + " player";
         }
+
+        public bool IsGuest()
+        {
+            return Id == Guid.Empty;
+        }
     }
 }
