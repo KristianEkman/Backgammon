@@ -13,9 +13,10 @@ namespace Backend.Db
     {
         internal static string GetPw()
         {
-#if DEBUG
-            return File.ReadAllText("pw.txt");
-#endif
+            //This is for local use only, when secrets are not accessible.
+            if (File.Exists("pw.txt"))
+                return File.ReadAllText("pw.txt");
+
             var options = new SecretClientOptions()
             {
                 Retry =

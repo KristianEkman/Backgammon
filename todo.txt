@@ -1,17 +1,11 @@
 
 Release 1.0 - beta
 ===========
-
-
-login guard for account edit container
-gul icon på delete
-
 serverside http only userid cookie
+    - kräver inloggning vaje gång app startas
 
 Feedback
 
-Prod db
-    seed guest och sp.
 
 Acc-test med Linn, Patrik och Shane
     

@@ -28,6 +28,8 @@ namespace Backend
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
+            Db.BgDbContext.ConnectionsString = configuration.GetSection("ConnectionStrings");
         }
 
         public IConfiguration Configuration { get; }

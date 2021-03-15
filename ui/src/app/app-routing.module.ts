@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AccountEditContainerComponent } from './components/account/account-edit-container/account-edit-container.component';
 import { GameContainerComponent } from './components/game/game-container/game-container.component';
 import { LobbyContainerComponent } from './components/lobby-container/lobby-container.component';
+import { LoginGuard } from './guards/login.guard';
 
 const routes: Routes = [
   {
@@ -15,7 +16,8 @@ const routes: Routes = [
   },
   {
     path: 'edit-user',
-    component: AccountEditContainerComponent
+    component: AccountEditContainerComponent,
+    canActivate: [LoginGuard],
   },
   {
     path: '**',
