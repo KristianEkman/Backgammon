@@ -25,11 +25,13 @@ import { MessagesComponent } from './components/game/messages/messages.component
 import { MenuComponent } from './components/game/menu/menu.component';
 import { LoginButtonsComponent } from './components/lobby-container/login-buttons/login-buttons.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AccountComponent } from './components/account/account.component';
 import { InviteComponent } from './components/lobby-container/invite/invite.component';
 import { ToplistContainerComponent } from './components/toplist-container/toplist-container.component';
 import { ToplistComponent } from './components/toplist-container/toplist/toplist.component';
 import { ToplistBannerComponent } from './components/toplist-container/toplist-banner/toplist-banner.component';
+import { AccountMenuComponent } from './components/account/account-menu/account-menu.component';
+import { AccountEditContainerComponent } from './components/account/account-edit-container/account-edit-container.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -42,11 +44,12 @@ import { ToplistBannerComponent } from './components/toplist-container/toplist-b
     MessagesComponent,
     MenuComponent,
     LoginButtonsComponent,
-    AccountComponent,
+    AccountMenuComponent,
     InviteComponent,
     ToplistContainerComponent,
     ToplistComponent,
-    ToplistBannerComponent
+    ToplistBannerComponent,
+    AccountEditContainerComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +57,8 @@ import { ToplistBannerComponent } from './components/toplist-container/toplist-b
     BrowserAnimationsModule,
     SocialLoginModule,
     HttpClientModule,
-    StorageServiceModule
+    StorageServiceModule,
+    ReactiveFormsModule
   ],
   providers: [
     SocketsService,

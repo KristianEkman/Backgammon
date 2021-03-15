@@ -3,12 +3,13 @@ import { UserDto } from 'src/app/dto';
 
 @Component({
   selector: 'app-account',
-  templateUrl: './account.component.html',
-  styleUrls: ['./account.component.scss']
+  templateUrl: './account-menu.component.html',
+  styleUrls: ['./account-menu.component.scss']
 })
-export class AccountComponent {
+export class AccountMenuComponent {
   @Input() user: UserDto | null = null;
   @Output() logout = new EventEmitter<void>();
+  @Output() onEditAccount = new EventEmitter<void>();
   toggle = false;
 
   logoutClick(): void {
@@ -24,10 +25,14 @@ export class AccountComponent {
     }
   }
 
-  getName(): string {
+  get Name(): string {
     if (!this.user) {
       return 'Guest';
     }
     return this.user.name;
+  }
+
+  editAccount(): void {
+    this.onEditAccount.emit();
   }
 }

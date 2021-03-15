@@ -14,11 +14,15 @@ p {
 }
 
 input {
-  width: 700px;
+  width: 600px;
   font-size: 20px;
 }
 
 .buttons {
   display: flex;
   justify-content: space-between;
+}
+
+.link-text {
+  font-size: 16px;
 }

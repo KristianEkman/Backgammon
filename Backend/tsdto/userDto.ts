@@ -7,4 +7,5 @@ export interface UserDto {
     photoUrl: string;
     socialProvider: string;
     socialProviderId: string;
+    createdNew: boolean;
 }

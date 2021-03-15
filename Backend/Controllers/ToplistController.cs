@@ -25,7 +25,7 @@ namespace Backend.Controllers
             {
                 var top10 = db.Users
                     .OrderByDescending(u => u.Elo)
-                    .Where(u => u.Id != Guid.Empty) // filter quest
+                    .Where(u => u.Id != Guid.Empty && u.Name != "deleted") // filter guest and deleted
                     .Take(10)
                     .Select(user => new
                     {

@@ -19,7 +19,7 @@ import { Keys } from 'src/app/utils';
 })
 export class LobbyContainerComponent implements OnInit {
   constructor(
-    private router: Router,
+    public router: Router,
     private authService: SocialAuthService,
     private accountService: AccountService,
     private inviteService: InviteService,
@@ -35,7 +35,6 @@ export class LobbyContainerComponent implements OnInit {
   toplist = false;
 
   ngOnInit(): void {
-    this.topListService.loadToplist();
     this.authService.authState.subscribe((user) => {
       // send user, store secret user id
       const userDto = {
@@ -54,6 +53,10 @@ export class LobbyContainerComponent implements OnInit {
     this.inviteId = this.router.parseUrl(this.router.url).queryParams[
       Keys.inviteId
     ];
+
+    if (this.accountService.isLoggedIn()) {
+      this.topListService.loadToplist();
+    }
   }
 
   login(provider: string): void {

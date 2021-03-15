@@ -6,6 +6,7 @@ import { UserDto } from '../dto/userDto';
 import { AppState } from '../state/app-state';
 import { Keys } from '../utils';
 import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +15,10 @@ export class AccountService {
   url: string;
   constructor(
     private http: HttpClient,
-    @Inject(LOCAL_STORAGE) private storage: StorageService
+    @Inject(LOCAL_STORAGE) private storage: StorageService,
+    private router: Router
   ) {
-    this.url = `${environment.apiServiceUrl}`;
+    this.url = `${environment.apiServiceUrl}/account`;
   }
 
   public signIn(userDto: UserDto, idToken: string): void {
@@ -31,10 +33,13 @@ export class AccountService {
           return data;
         })
       )
-      .subscribe((data: UserDto) => {
-        this.storage.set(Keys.loginKey, data);
-        AppState.Singleton.user.setValue(data);
+      .subscribe((userDto: UserDto) => {
+        this.storage.set(Keys.loginKey, userDto);
+        AppState.Singleton.user.setValue(userDto);
         AppState.Singleton.busy.setValue(false);
+        if (userDto.createdNew) {
+          this.router.navigateByUrl('/edit-user');
+        }
       });
   }
 
@@ -47,5 +52,24 @@ export class AccountService {
   repair(): void {
     const user = this.storage.get(Keys.loginKey) as UserDto;
     AppState.Singleton.user.setValue(user);
+  }
+
+  saveUser(user: UserDto): void {
+    this.http.post(`${this.url}/saveuser`, user).subscribe(() => {
+      AppState.Singleton.user.setValue(user);
+      this.storage.set(Keys.loginKey, user);
+    });
+  }
+
+  deleteUser(): void {
+    const user = AppState.Singleton.user.getValue();
+    this.http.post(`${this.url}/delete`, user).subscribe(() => {
+      AppState.Singleton.user.clearValue();
+      this.storage.set(Keys.loginKey, null);
+    });
+  }
+
+  isLoggedIn(): boolean {
+    return !!AppState.Singleton.user.getValue();
   }
 }

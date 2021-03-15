@@ -13,5 +13,6 @@ namespace Backend.Dto
         public string photoUrl { get; set; }
         public string socialProvider { get; set; }
         public string socialProviderId { get; set; }
+        public bool createdNew { get; set; }
     }
 }

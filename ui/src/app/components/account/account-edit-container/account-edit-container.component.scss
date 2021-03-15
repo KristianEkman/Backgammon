@@ -1,0 +1,30 @@
+.account-edit-container {
+  h1 {
+    font-size: 30px;
+  }
+
+  font-size: 20px;
+
+  form {
+    line-height: 50px;
+  }
+
+  .spread-out {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .delete {
+    text-align: right;
+    margin-top: 30px;
+
+    button {
+      font-size: 16px;
+    }
+  }
+
+  input {
+    font-size: 20px;
+
+  }
+}

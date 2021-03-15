@@ -20,17 +20,17 @@ using System.Threading.Tasks;
 namespace Backend.Controllers
 {
     [ApiController]
-    public class SigninController : ControllerBase
+    public class AccountController : AuthorizedController
     {
-        private readonly ILogger<SigninController> logger;
+        private readonly ILogger<AccountController> logger;
 
-        public SigninController(ILogger<SigninController> logger)
+        public AccountController(ILogger<AccountController> logger)
         {
             this.logger = logger;
         }
 
         [HttpPost]
-        [Route("/api/signin")]
+        [Route("/api/account/signin")]
         public async Task<UserDto> Post(UserDto userDto)
         {
             // todo: 
@@ -97,10 +97,49 @@ namespace Backend.Controllers
 
                     // The id will not be set until the save is successfull.
                     userDto.id = dbUser.Id.ToString();
+                    userDto.createdNew = true;
                 }
                 return userDto;
             }
         }
+
+        [HttpPost]
+        [Route("/api/account/saveuser")]
+        public void SaveUser(UserDto userDto)
+        {
+            var usId = GetUserId();
+            using (var db = new Db.BgDbContext())
+            {
+                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+                dbUser.Name = userDto.name;
+                db.SaveChanges();
+            }
+        }
+
+        [HttpPost]
+        [Route("/api/account/delete")]
+        public void DeleteUserAccount(UserDto userDto)
+        {
+            var usId = GetUserId();
+            // some kind of safety check.
+            if (userDto.id != usId)
+                throw new ApplicationException("User id missmatch"); // The id in the request header should always be the same as sent by client.
+
+            using (var db = new Db.BgDbContext())
+            {
+                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+                // maybe delete all records in player table, (has to be modeled out)                
+                dbUser.Name = "deleted";
+                dbUser.Elo = 0;
+                dbUser.SocialProvider = "";
+                dbUser.Email = "";
+                dbUser.GameCount = 0;
+                dbUser.PhotoUrl = "";
+                dbUser.ProviderId = "";
+                db.SaveChanges();
+            }
+        }
+
 
         private async Task<bool> ValidateFacebookJwt(string token)
         {

@@ -1,0 +1,25 @@
+<div class="account-edit-container" *ngIf="user">
+  <ng-container *ngIf="!confirm">
+    <h1>Edit Account</h1>
+    <form [formGroup]="formGroup" (ngSubmit)="submit()">
+      <label>Name: <input formControlName="name"></label>
+      <div class="spread-out">
+        <button type="button" (click)="cancel()" class="black-button">Cancel</button>
+        <button type="submit" class="default-button">Save</button>
+      </div>
+      <div class="delete">
+        <button type="button" (click)="deleteUser()" class="flat-button">Delete Account</button>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-container *ngIf="confirm">
+    <h1>Delete Account</h1>
+    <p>All you games and saved data will also be deleted. You can not undo this.</p>
+    <p>Are you sure?</p>
+    <div class="spread-out">
+      <button class="black-button" type="button" (click)="cancel()">Cancel</button>
+      <button class="black-button" type="button" (click)="doDeletion()">Yes delete me</button>
+    </div>
+  </ng-container>
+</div>

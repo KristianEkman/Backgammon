@@ -2,20 +2,16 @@
 Release 1.0 - beta
 ===========
 
-Top list
-        
-    Mindre cpu krävande rullning. Egna timers?
+
+login guard for account edit container
+gul icon på delete
 
 serverside http only userid cookie
 
 Feedback
 
-
-Logg ui-errors
 Prod db
     seed guest och sp.
-
-Ändra namn. Vid create login och meny.
 
 Acc-test med Linn, Patrik och Shane
     
@@ -34,6 +30,10 @@ New game same opponnet vid invite.
 
 Release 1.>0
 ============
+https://ionicframework.com/
+
+canvas banner
+Logg ui-errors
 animera app routing
 candeactivate
 Inte kunna göra något när en server connection ligger nere.
