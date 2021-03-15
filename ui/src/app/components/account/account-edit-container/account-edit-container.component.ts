@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserDto } from 'src/app/dto';
@@ -37,8 +38,9 @@ export class AccountEditContainerComponent {
   submit(): void {
     if (this.formGroup.valid) {
       const user = { ...this.user, ...this.formGroup.value };
-      this.service.saveUser(user);
-      this.router.navigateByUrl('/lobby');
+      this.service.saveUser(user).subscribe(() => {
+        this.router.navigateByUrl('/lobby');
+      });
     }
   }
 

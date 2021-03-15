@@ -7,6 +7,7 @@ import { AppState } from '../state/app-state';
 import { Keys } from '../utils';
 import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -54,11 +55,13 @@ export class AccountService {
     AppState.Singleton.user.setValue(user);
   }
 
-  saveUser(user: UserDto): void {
-    this.http.post(`${this.url}/saveuser`, user).subscribe(() => {
-      AppState.Singleton.user.setValue(user);
-      this.storage.set(Keys.loginKey, user);
-    });
+  saveUser(user: UserDto): Observable<void> {
+    return this.http.post(`${this.url}/saveuser`, user).pipe(
+      map(() => {
+        AppState.Singleton.user.setValue(user);
+        this.storage.set(Keys.loginKey, user);
+      })
+    );
   }
 
   deleteUser(): void {

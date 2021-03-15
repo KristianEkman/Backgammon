@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UserDto } from 'src/app/dto';
 
 @Component({
-  selector: 'app-account',
+  selector: 'app-account-menu',
   templateUrl: './account-menu.component.html',
   styleUrls: ['./account-menu.component.scss']
 })

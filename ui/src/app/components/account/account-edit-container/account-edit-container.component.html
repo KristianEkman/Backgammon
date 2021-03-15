@@ -3,11 +3,12 @@
     <h1>Edit Account</h1>
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <label>Name: <input formControlName="name"></label>
-      <div class="spread-out">
+      <div class="error" *ngIf="formGroup.get('name')?.errors?.required">The field is required.</div>
+      <div class="spread-out mt">
         <button type="button" (click)="cancel()" class="black-button">Cancel</button>
         <button type="submit" class="default-button">Save</button>
       </div>
-      <div class="delete">
+      <div class="delete mt">
         <button type="button" (click)="deleteUser()" class="flat-button">Delete Account</button>
       </div>
     </form>
@@ -19,7 +20,7 @@
     <p>Are you sure?</p>
     <div class="spread-out">
       <button class="black-button" type="button" (click)="cancel()">Cancel</button>
-      <button class="black-button" type="button" (click)="doDeletion()">Yes delete me <i
+      <button class="black-button" type="button" (click)="doDeletion()">Yes delete it <i
           class="fas fa-exclamation-triangle yellow"></i></button>
     </div>
   </ng-container>

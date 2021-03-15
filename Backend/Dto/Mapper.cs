@@ -89,5 +89,18 @@ namespace Backend.Dto
                 To = game.Points.Single(p => p.GetNumber(color) == dto.to),
             };      
         }
+
+        public static UserDto ToDto(this Db.User dbUser)
+        {
+            return new UserDto
+            {
+                email = dbUser.Email,
+                name = dbUser.Name,
+                id = dbUser.Id.ToString(),
+                photoUrl = dbUser.PhotoUrl,
+                socialProvider = dbUser.SocialProvider,
+                //socialProviderId = dbUser.ProviderId // Feels more secure not to send this to the client.
+            };
+        }
     }
 }

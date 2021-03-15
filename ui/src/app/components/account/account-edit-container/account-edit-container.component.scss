@@ -1,13 +1,14 @@
 .account-edit-container {
+
+  .mt {
+    margin-top: 8px;
+  }
+
   h1 {
     font-size: 30px;
   }
 
   font-size: 20px;
-
-  form {
-    line-height: 50px;
-  }
 
   .spread-out {
     display: flex;
@@ -25,6 +26,5 @@
 
   input {
     font-size: 20px;
-
   }
 }

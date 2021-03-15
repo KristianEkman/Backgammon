@@ -17,7 +17,7 @@ const routes: Routes = [
   {
     path: 'edit-user',
     component: AccountEditContainerComponent,
-    canActivate: [LoginGuard],
+    canActivate: [LoginGuard]
   },
   {
     path: '**',

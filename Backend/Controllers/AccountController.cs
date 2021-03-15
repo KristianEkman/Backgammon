@@ -78,7 +78,7 @@ namespace Backend.Controllers
 
                 if (dbUser != null)
                 {
-                    userDto.id = dbUser.Id.ToString();
+                    return dbUser.ToDto();
                 }
                 else
                 {
@@ -140,7 +140,6 @@ namespace Backend.Controllers
             }
         }
 
-
         private async Task<bool> ValidateFacebookJwt(string token)
         {
             var appToken = Secrets.FbAppToken();
@@ -161,7 +160,7 @@ namespace Backend.Controllers
                         if (isValid)
                             logger.LogInformation("Facebook auth token found valid.");
                         else
-                            logger.LogWarning($"A facebook auth token found invalid. {responseString}");                        
+                            logger.LogWarning($"A facebook auth token found invalid. {responseString}");
                     }
                     else
                     {

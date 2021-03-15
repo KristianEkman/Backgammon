@@ -29,7 +29,7 @@
     </div>
   </ng-container>
   <div class="account">
-    <app-account [user]="user$ | async" (logout)="logout()" (onEditAccount)="router.navigateByUrl('edit-user')">
-    </app-account>
+    <app-account-menu [user]="user$ | async" (logout)="logout()" (onEditAccount)="router.navigateByUrl('edit-user')">
+    </app-account-menu>
   </div>
 </div>

@@ -1,8 +1,17 @@
 
 Release 1.0 - beta
 ===========
-serverside http only userid cookie
-    - kräver inloggning vaje gång app startas
+
+Error när man loggar ut.
+
+Fel namn visas på menyn.
+
+unique names
+
+validation error
+
+spinners
+
 
 Feedback
 
@@ -71,6 +80,9 @@ Automatiska e2e-tester, selenium.
 
 Försöka få till bättre fullskärm mobil.
     Installation mobil.
+
+serverside http only userid cookie
+    - kräver inloggning vaje gång app startas
 
 
 Frågor
