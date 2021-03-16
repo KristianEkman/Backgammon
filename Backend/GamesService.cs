@@ -171,6 +171,7 @@ namespace Backend
                 color = Player.Color.White;
 
             await manager.ConnectAndListen(webSocket, color, dbUser);
+            RemoveDissconnected(manager);
             await SendConnectionLost(PlayerColor.white, manager);
         }
 

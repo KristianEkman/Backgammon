@@ -183,9 +183,9 @@ namespace Backend
                     var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                     sb.Append(text);
                 }
-                catch (WebSocketException exc)
+                catch (Exception exc)
                 {
-                    Logger.LogInformation($"Cant receive data from socket, it was closed. ErrorCode: {exc.ErrorCode}");
+                    Logger.LogInformation($"Cant receive data from socket. Error: {exc.ToString()}");
                     return "";
                 }
             }
@@ -241,12 +241,12 @@ namespace Backend
                     Logger.LogInformation($"Received: {text}");
                     var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
                     var otherClient = socket == Client1 ? Client2 : Client1;
-                    await DoAction(action.actionName, text, otherClient);
+                    await DoAction(action.actionName, text, socket, otherClient);
                 }
             }
         }
 
-        private async Task DoAction(ActionNames actionName, string actionText, WebSocket socket)
+        private async Task DoAction(ActionNames actionName, string actionText, WebSocket socket, WebSocket otherSocket)
         {
             Logger.LogInformation($"Doing action: {actionName}");
             if (actionName == ActionNames.movesMade)
@@ -263,21 +263,21 @@ namespace Backend
             else if (actionName == ActionNames.opponentMove)
             {
                 var action = (OpponentMoveActionDto)JsonSerializer.Deserialize(actionText, typeof(OpponentMoveActionDto));
-                _ = Send(socket, action);
+                _ = Send(otherSocket, action);
             }
             else if (actionName == ActionNames.undoMove)
             {
                 var action = (UndoActionDto)JsonSerializer.Deserialize(actionText, typeof(UndoActionDto));
-                _ = Send(socket, action);
+                _ = Send(otherSocket, action);
             }
             else if (actionName == ActionNames.connectionInfo)
             {
                 var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(actionText, typeof(ConnectionInfoActionDto));
-                _ = Send(socket, action);
+                _ = Send(otherSocket, action);
             }
             else if (actionName == ActionNames.resign)
             {
-                var winner = Client1 == socket ? PlayerColor.black : PlayerColor.white;
+                var winner = Client1 == otherSocket ? PlayerColor.black : PlayerColor.white;
                 _ = Resign(winner);
             }
             else if (actionName == ActionNames.exitGame)
@@ -292,6 +292,10 @@ namespace Backend
                 return (null, null);
             using (var db = new Db.BgDbContext())
             {
+                var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
+                if (dbGame.Winner.HasValue) // extra safety
+                    return(null, null);
+
                 var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
                 var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
                 var computed = Score.NewScore(black.Elo, white.Elo, black.GameCount, white.GameCount, color == PlayerColor.black);
@@ -300,11 +304,10 @@ namespace Backend
 
                 black.GameCount++;
                 white.GameCount++;
-                
+
                 black.Elo = computed.black;
                 white.Elo = computed.white;
 
-                var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
                 dbGame.Winner = color;
                 db.SaveChanges();
 

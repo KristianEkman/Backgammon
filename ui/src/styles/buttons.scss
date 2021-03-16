@@ -36,7 +36,6 @@
   background-image: linear-gradient(rgb(0, 0, 0), rgb(26, 26, 26));
   text-decoration: none;
   border-radius: 10px;
-  text-shadow: -1px -1px rgb(145, 145, 145);
 
   &:after {
     content: '';
@@ -68,6 +67,9 @@
 .black-button {
   @include button();
   @include glass();
+  background-image: linear-gradient(#000000, #252525);
+
+
 }
 
 .flat-button {
