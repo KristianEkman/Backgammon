@@ -2,25 +2,18 @@
 Release 1.0 - beta
 ===========
 
-Error när man loggar ut.
 
-Fel namn visas på menyn.
+Förhindra spel mot sig själv.
 
-unique names
-
-validation error
 
 spinners
-
+   - saving
 
 Feedback
-
 
 Acc-test med Linn, Patrik och Shane
     
 Posta länk till facebook grupp.
-
-
 
 Release 1.1 - mål att öka logins
 ===========
@@ -44,7 +37,7 @@ Active games.
 Seed Guest User.
 Glitch bugg på bar. Beräkna med motståndaren i home.
 Animation på firefox suger.
-Dubbling.
+Dubbling. Först till 10.
 Backa upp Managers till DB, så man kan göra en swap vid release.
 Points left.
 Visa statistik på startsidan.
@@ -54,11 +47,9 @@ Flytta flera drag på ett klick.
 Ljust tema.
 Ge extra tid för reconnect.
 Ljud
-Busy when waiting. Och snyggare gif.
 Progressbar
 Editing of name and photo.
 Förhindra spel mot sig själv?
-Play friend
 Repution: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
 ios
@@ -69,7 +60,7 @@ Doubling
 Två olika hastigheter. 10s, resp 35s. Inte som gäst. Infinite?
 ai: Evaluate to give a score.
 Ui
-  Auto send when no options
+  Auto send when no options, vis no moves.
   Auto move, when only one move.
   View dices on board
 
@@ -82,8 +73,9 @@ Försöka få till bättre fullskärm mobil.
     Installation mobil.
 
 serverside http only userid cookie
-    - kräver inloggning vaje gång app startas
+    - kräver inloggning vaje gång app startas.
 
+Offline validering av jwt's
 
 Frågor
 ======

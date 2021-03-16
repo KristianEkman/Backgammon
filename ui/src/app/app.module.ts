@@ -32,7 +32,7 @@ import { ToplistBannerComponent } from './components/toplist-container/toplist-b
 import { AccountMenuComponent } from './components/account/account-menu/account-menu.component';
 import { AccountEditContainerComponent } from './components/account/account-edit-container/account-edit-container.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import { BusyComponent } from './components/shared/busy/busy.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +49,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     ToplistContainerComponent,
     ToplistComponent,
     ToplistBannerComponent,
-    AccountEditContainerComponent
+    AccountEditContainerComponent,
+    BusyComponent
   ],
   imports: [
     BrowserModule,

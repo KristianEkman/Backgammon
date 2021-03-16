@@ -8,6 +8,8 @@ import { Keys } from '../utils';
 import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ToplistService } from './toplist.service';
+import { Busy } from '../state/busy';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +19,8 @@ export class AccountService {
   constructor(
     private http: HttpClient,
     @Inject(LOCAL_STORAGE) private storage: StorageService,
-    private router: Router
+    private router: Router,
+    private topListService: ToplistService
   ) {
     this.url = `${environment.apiServiceUrl}/account`;
   }
@@ -37,9 +40,11 @@ export class AccountService {
       .subscribe((userDto: UserDto) => {
         this.storage.set(Keys.loginKey, userDto);
         AppState.Singleton.user.setValue(userDto);
-        AppState.Singleton.busy.setValue(false);
+        Busy.hide();
         if (userDto.createdNew) {
           this.router.navigateByUrl('/edit-user');
+        } else {
+          this.topListService.loadToplist();
         }
       });
   }

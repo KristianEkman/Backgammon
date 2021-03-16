@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { StatusMessage } from '../dto/local/status-message';
-import { GameDto, GameState, NewScoreDto, PlayerColor } from '../dto';
+import { GameDto, NewScoreDto, PlayerColor } from '../dto';
 import { AppState } from '../state/app-state';
+import { Busy } from '../state/busy';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +11,13 @@ export class StatusMessageService {
   setTextMessage(game: GameDto): void {
     const myColor = AppState.Singleton.myColor.getValue();
     let message: StatusMessage;
-    if (!game) {
-      message = StatusMessage.info('Waiting for opponent to connect');
-    } else if (myColor === game.currentPlayer) {
+    if (game && myColor === game.currentPlayer) {
+      Busy.hide();
       message = StatusMessage.info(
         `Your turn to move.  (${PlayerColor[game.currentPlayer]})`
       );
     } else {
+      Busy.hide();
       message = StatusMessage.info(
         `Waiting for ${PlayerColor[game.currentPlayer]} to move.`
       );
@@ -36,6 +37,7 @@ export class StatusMessageService {
 
   setWaitingForConnect(): void {
     const statusMessage = StatusMessage.info('Waiting for opponent to connect');
+    Busy.showNoOverlay();
     AppState.Singleton.statusMessage.setValue(statusMessage);
   }
 

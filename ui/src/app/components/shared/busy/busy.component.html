@@ -1,0 +1,5 @@
+<div *ngIf="busy" class="busy-container" [ngClass]="{overlay: busy?.overlay}">
+  <div class="child">
+    <div class="busy-checker">{{ busy?.text}}</div>
+  </div>
+</div>

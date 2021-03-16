@@ -10,10 +10,11 @@ import {
 import { DiceDto } from '../dto/diceDto';
 import { GameDto } from '../dto/gameDto';
 import { StateObject } from './state-object';
+import { Busy } from './busy';
 
 export class AppState {
   constructor() {
-    this.busy = new StateObject<boolean>();
+    this.busy = new StateObject<Busy>();
     this.game = new StateObject<GameDto>();
     this.myColor = new StateObject<PlayerColor>();
     this.myColor.setValue(PlayerColor.neither);
@@ -36,7 +37,7 @@ export class AppState {
     return this._singleton;
   }
 
-  busy: StateObject<boolean>;
+  busy: StateObject<Busy>;
   game: StateObject<GameDto>;
   myColor: StateObject<PlayerColor>;
   dices: StateObject<DiceDto[]>;

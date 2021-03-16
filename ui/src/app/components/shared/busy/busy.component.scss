@@ -1,0 +1,70 @@
+.busy-container {
+  position: absolute;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0);
+  // border: 1px solid red;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  text-align: center;
+
+  .child {
+    // border: 1px solid red;
+    margin-top: 50px;
+    display: inline-block;
+  }
+}
+
+.overlay {
+  background-color: rgba(0, 0, 0, 0.8);
+  pointer-events: unset;
+}
+
+.busy-checker {
+  display: inline-block;
+  width: 100px;
+  height: 80px;
+  line-height: 80px;
+
+  border: 3px solid rgb(82, 82, 82);
+  background-image: linear-gradient(rgb(0, 0, 0), rgb(53, 53, 53));
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  text-align: center;
+  animation: rotating 2s ease infinite;
+
+  position: relative;
+  background-image: linear-gradient(rgb(0, 0, 0), rgb(26, 26, 26));
+  border-radius: 50%;
+
+  &:after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    top: 2px;
+    left: 15px;
+    width: calc(100% - 30px);
+    height: 40%;
+    background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05));
+  }
+}
+
+@keyframes rotating {
+  from {
+    -ms-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
+    -webkit-transform: rotateY(0deg);
+    -o-transform: rotateY(0deg);
+    transform: rotateY(0deg);
+  }
+
+  to {
+    -ms-transform: rotateY(360deg);
+    -moz-transform: rotateY(360deg);
+    -webkit-transform: rotateY(360deg);
+    -o-transform: rotateY(360deg);
+    transform: rotateY(360deg);
+  }
+}

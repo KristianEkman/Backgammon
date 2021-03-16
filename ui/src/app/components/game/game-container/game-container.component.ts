@@ -12,6 +12,7 @@ import { DiceDto, GameDto, GameState, MoveDto, PlayerColor } from 'src/app/dto';
 import { AccountService, SocketsService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { StatusMessage } from 'src/app/dto/local/status-message';
+import { Busy } from 'src/app/state/busy';
 
 @Component({
   selector: 'app-game',
@@ -218,6 +219,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   exitGame(): void {
     this.service.exitGame();
+    Busy.hide();
     this.router.navigateByUrl('/lobby');
   }
 }
