@@ -8,9 +8,9 @@
     </div>
     <app-login-buttons (onLogin)="login($event)" [isLoggedIn]="!!(user$ | async)"></app-login-buttons>
     <div *ngIf="!playInvite && !inviteId" class="lobby">
-      <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
-        Play as guest
-      </button>
+      <!-- <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
+        Play as guest&nbsp;&nbsp;<i class="fas fa-info-circle" title="Guests can only play other guests"></i>
+      </button> -->
       <button *ngIf="user$ | async" class="black-button" (click)="playClick()">
         Play random opponent
       </button><br>
