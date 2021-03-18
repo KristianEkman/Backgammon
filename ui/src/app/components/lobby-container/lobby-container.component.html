@@ -18,7 +18,7 @@
         Invite a friend
       </button>
     </div>
-    <div *ngIf="inviteId">
+    <div *ngIf="inviteId && (user$ | async)">
       <button class="default-button" (click)="startInvitedGame(inviteId)">
         Accept invite
       </button>
