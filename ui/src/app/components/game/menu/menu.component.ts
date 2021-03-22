@@ -11,7 +11,6 @@ export class MenuComponent {
   open = false;
 
   openClick(): void {
-    console.log('open');
     this.open = true;
   }
 

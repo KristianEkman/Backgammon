@@ -1,8 +1,9 @@
 
 Release 1.0 - beta
 ===========
-
-Bugg i spara resultat.
+Förhindra att gamla spel ligger kvar länge.
+ - Ingen timer på första daget.
+ - Ta bort 
 
 Förhindra spel mot sig själv.
 

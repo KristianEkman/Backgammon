@@ -253,6 +253,11 @@ namespace Backend
             {
                 Game.ThinkStart = DateTime.Now;
                 var action = (MovesMadeActionDto)JsonSerializer.Deserialize(actionText, typeof(MovesMadeActionDto));
+                if (socket == Client1)
+                    Game.BlackPlayer.FirstMoveMade = true;
+                else
+                    Game.WhitePlayer.FirstMoveMade = true;
+
                 DoMoves(action);
                 PlayerColor? winner = GetWinner();
                 if (winner.HasValue)
@@ -286,10 +291,13 @@ namespace Backend
             }
         }
 
-        private (NewScoreDto black, NewScoreDto white) SaveWinner(PlayerColor color)
+        private (NewScoreDto black, NewScoreDto white)? SaveWinner(PlayerColor color)
         {
             if (Game.BlackPlayer.IsGuest() || Game.WhitePlayer.IsGuest())
-                return (null, null);
+                return null;
+
+            if (!Game.BlackPlayer.FirstMoveMade || !Game.WhitePlayer.FirstMoveMade)
+                return null;
             using (var db = new Db.BgDbContext())
             {
                 var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
@@ -388,7 +396,7 @@ namespace Backend
             }
         }
 
-        private async Task SendWinner(PlayerColor color, (NewScoreDto black, NewScoreDto white) newScore)
+        private async Task SendWinner(PlayerColor color, (NewScoreDto black, NewScoreDto white)? newScore)
         {
             var game = Game.ToDto();
             game.winner = color;
@@ -396,10 +404,10 @@ namespace Backend
             {
                 game = game
             };
-            gameEndedAction.newScore = newScore.black;
+            gameEndedAction.newScore = newScore?.black;
             await Send(Client1, gameEndedAction);
 
-            gameEndedAction.newScore = newScore.white;
+            gameEndedAction.newScore = newScore?.white;
             await Send(Client2, gameEndedAction);
         }
 

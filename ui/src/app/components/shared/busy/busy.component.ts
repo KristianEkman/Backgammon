@@ -16,6 +16,6 @@ export class BusyComponent implements OnInit {
   ngOnInit(): void {}
 
   ngOnChanges(): void {
-    console.log(this.busy);
+    // console.log(this.busy);
   }
 }

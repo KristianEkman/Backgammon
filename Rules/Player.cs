@@ -9,11 +9,14 @@ namespace Backend.Rules
     {
         public string Name { get; set; }
         public Color PlayerColor { get; set; }
-        
+        public int PointsLeft { get; set; }
+
         /// <summary>
         /// Do not map this to the dto. Opponnents id should never be revealed to anyone else.
         /// </summary>
         public Guid Id { get; set; }
+
+        public bool FirstMoveMade { get; set; }
 
         public enum Color
         {

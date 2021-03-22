@@ -99,9 +99,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.myColor === PlayerColor.black ? 'You' : this.game?.blackPlayer.name;
     const wName =
       this.myColor === PlayerColor.white ? 'You' : this.game?.whitePlayer.name;
+    const bLeft = this.game?.blackPlayer.pointsLeft;
+    const wLeft = this.game?.whitePlayer.pointsLeft;
 
-    this.blacksName = this.game ? `${bName} (black)` : '';
-    this.whitesName = this.game ? `${wName} (white)` : '';
+    this.blacksName = this.game ? `${bName} - ${bLeft} left` : '';
+    this.whitesName = this.game ? `${wName} - ${wLeft} left` : '';
     // console.log(this.game?.playState);
   }
 
@@ -570,7 +572,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.whiteHome.drawBorder(cx, false);
     this.blackHome.fill(cx, this.theme.boardBackground);
     this.blackHome.drawBorder(cx, false);
-
+    const homeFntSize = this.blackHome.width / 2 + 'px Arial';
     // names of players
     cx.font = '18px Arial';
     cx.fillStyle = this.theme.textColor;
@@ -579,13 +581,31 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.rotate(Math.PI / 2);
     cx.fillStyle = this.theme.textColor;
     cx.fillText(this.blacksName, 0, -this.blackHome.width - 11);
+    cx.fillStyle = this.theme.border;
+    cx.font = homeFntSize;
+    cx.fillText(
+      'Black',
+      this.borderWidth / 2 + 2,
+      -this.borderWidth / 2 - 2,
+      this.blackHome.height
+    );
     cx.restore();
 
     cx.save();
     cx.translate(this.whiteHome.x, this.whiteHome.y);
     cx.rotate(Math.PI / 2);
+    cx.font = '18px Arial';
     cx.fillStyle = this.theme.textColor;
     cx.fillText(this.whitesName, 0, -this.whiteHome.width - 11);
+    cx.fillStyle = this.theme.border;
+    cx.font = homeFntSize;
+
+    cx.fillText(
+      'White',
+      this.borderWidth / 2 + 2,
+      -this.borderWidth / 2 - 2,
+      this.whiteHome.height
+    );
     cx.restore();
 
     // the border

@@ -31,6 +31,7 @@ namespace Backend.Dto
                 // Do not mapp id, it should never be sent to opponent.
                 playerColor = (PlayerColor)player.PlayerColor,
                 name = player.Name,
+                pointsLeft = player.PointsLeft
                 // todo: image? But do not force users to show their image. It should be an active choice.
             };
             return playerDto;

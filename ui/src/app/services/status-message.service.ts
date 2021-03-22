@@ -44,13 +44,16 @@ export class StatusMessageService {
   setGameEnded(game: GameDto, newScore: NewScoreDto): void {
     // console.log(this.myColor, this.game.winner);
     const myColor = AppState.Singleton.myColor.getValue();
-    const score = `New score ${newScore.score} (${newScore.increase})`;
+    let message = StatusMessage.info('Game ended.');
+    if (newScore) {
+      const score = `New score ${newScore.score} (${newScore.increase})`;
 
-    const message = StatusMessage.info(
-      myColor === game.winner
-        ? `Congrats! You won. ${score}`
-        : `Sorry. You lost the game. ${score}`
-    );
-    AppState.Singleton.statusMessage.setValue(message);
+      message = StatusMessage.info(
+        myColor === game.winner
+          ? `Congrats! You won. ${score}`
+          : `Sorry. You lost the game. ${score}`
+      );
+      AppState.Singleton.statusMessage.setValue(message);
+    }
   }
 }

@@ -211,5 +211,20 @@ namespace BackendTests
             g.FakeRoll(3, 3);
             Assert.AreEqual(Game.State.FirstThrow, g.PlayState);
         }
+
+        [TestMethod]
+        public void TestPointsLeft()
+        {
+            Assert.AreEqual(167, game.BlackPlayer.PointsLeft);
+            Assert.AreEqual(167, game.WhitePlayer.PointsLeft);
+            game.FakeRoll(4, 5);
+            var moves = game.GenerateMoves();
+            game.MakeMove(moves[0]);
+            game.MakeMove(moves[0].NextMoves[0]);
+
+            Assert.AreEqual(158, game.BlackPlayer.PointsLeft);
+            Assert.AreEqual(167, game.WhitePlayer.PointsLeft);
+
+        }
     }
 }

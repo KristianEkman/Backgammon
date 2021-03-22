@@ -11,6 +11,7 @@ namespace Backend.Rules
         public Player.Color Color { get; set; }
 
         public List<Move> NextMoves { get; set; } = new List<Move>();
+        public int Score { get; set; }
 
         public override string ToString()
         {

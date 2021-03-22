@@ -61,10 +61,20 @@ namespace Backend.Rules
             }
 
             game.SetStartPosition();
-
+            CalcPointsLeft(game);
             return game;
         }
 
+        private static void CalcPointsLeft(Game game)
+        {
+            foreach (var point in game.Points)
+            {
+                foreach (var ckr in point.Checkers.Where(c => c.Color == Player.Color.Black))
+                    game.BlackPlayer.PointsLeft += 25 - point.BlackNumber;
+                foreach (var ckr in point.Checkers.Where(c => c.Color == Player.Color.White))
+                    game.WhitePlayer.PointsLeft += 25 - point.WhiteNumber;
+            }
+        }
 
         private Player.Color OtherPlayer()
         {
@@ -316,6 +326,15 @@ namespace Backend.Rules
                 throw new ApplicationException("There should be a checker on this point. Something is very wrong.");
             move.From.Checkers.Remove(checker);
             move.To.Checkers.Add(checker);
+            if (move.Color == Player.Color.Black)
+            {
+                BlackPlayer.PointsLeft -= (move.To.BlackNumber - move.From.BlackNumber);
+            }
+            else
+            {
+                WhitePlayer.PointsLeft -= (move.To.WhiteNumber - move.From.WhiteNumber);
+            }
+
             // Feels wrong that now that own home is same point as opponent bar.
             // Todo: Try to change it some day.
             var hit = move.To.IsHome(move.Color) ? null : move.To.Checkers.SingleOrDefault(c => c.Color != checker.Color);
@@ -324,20 +343,32 @@ namespace Backend.Rules
                 move.To.Checkers.Remove(hit);
                 var bar = Points.Single(p => p.GetNumber(OtherPlayer()) == 0);
                 bar.Checkers.Add(hit);
+                if (move.Color == Player.Color.Black)
+                    WhitePlayer.PointsLeft += (25 - move.To.WhiteNumber);
+                else
+                    BlackPlayer.PointsLeft += (25 - move.To.BlackNumber);
             }
             return hit;
         }
 
-        private void UndoMove(Move move, Checker hitChecker)
+        public void UndoMove(Move move, Checker hitChecker)
         {
             var checker = move.To.Checkers.FirstOrDefault(c => c.Color == move.Color);
             move.To.Checkers.Remove(checker);
             move.From.Checkers.Add(checker);
+            if (move.Color == Player.Color.Black)
+                BlackPlayer.PointsLeft += (move.To.BlackNumber - move.From.BlackNumber);
+            else
+                WhitePlayer.PointsLeft += (move.To.WhiteNumber - move.From.WhiteNumber);
             if (hitChecker != null)
             {
                 move.To.Checkers.Add(hitChecker);
                 var bar = Points.Single(p => p.GetNumber(OtherPlayer()) == 0);
                 bar.Checkers.Remove(hitChecker);
+                if (move.Color == Player.Color.Black)
+                    WhitePlayer.PointsLeft -= (25 - move.To.WhiteNumber);
+                else
+                    BlackPlayer.PointsLeft -= (25 - move.To.BlackNumber);
             }
         }
     }

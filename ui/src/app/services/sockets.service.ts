@@ -242,6 +242,11 @@ export class SocketsService implements OnDestroy {
     const index = gameClone.points[from].checkers.indexOf(checker);
     gameClone.points[from].checkers.splice(index, 1);
 
+    if (move.color == PlayerColor.black) {
+      gameClone.blackPlayer.pointsLeft -= move.to - move.from;
+    } else {
+      gameClone.whitePlayer.pointsLeft -= move.to - move.from;
+    }
     // hitting opponent checker
     const hit = gameClone.points[to].checkers.find(
       (c) => c.color !== move.color
@@ -252,6 +257,11 @@ export class SocketsService implements OnDestroy {
       gameClone.points[to].checkers.splice(hitIdx, 1);
       const barIdx = isWhite ? 0 : 25;
       gameClone.points[barIdx].checkers.push(hit);
+      if (move.color == PlayerColor.black) {
+        gameClone.whitePlayer.pointsLeft += 25 - move.to;
+      } else {
+        gameClone.blackPlayer.pointsLeft += 25 - move.to;
+      }
     }
 
     //push checker to new point
