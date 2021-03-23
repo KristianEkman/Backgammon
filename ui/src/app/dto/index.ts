@@ -12,3 +12,4 @@ export * from './userDto';
 export * from './toplist/toplist';
 export * from './toplist/toplistResult';
 export * from './toplist/newScoreDto';
+export * from './errorReportDto';

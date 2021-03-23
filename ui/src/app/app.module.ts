@@ -34,7 +34,7 @@ import { AccountEditContainerComponent } from './components/account/account-edit
 import { ReactiveFormsModule } from '@angular/forms';
 import { BusyComponent } from './components/shared/busy/busy.component';
 import { ErrorHandlerComponent } from './components/shared/error-handler/error-handler.component';
-import { GlobalErrorService } from './services/global-error-service';
+import { GlobalErrorService } from './services';
 @NgModule({
   declarations: [
     AppComponent,

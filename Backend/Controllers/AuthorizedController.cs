@@ -25,5 +25,14 @@ namespace Backend.Controllers
             }
             return userId;
         }
+
+        protected string GetUserOrGuestId()
+        {
+            var userId = Request.Headers["user-id"].ToString();
+            if (string.IsNullOrWhiteSpace(userId))
+                return Guid.Empty.ToString();
+
+            return userId;
+        }
     }
 }

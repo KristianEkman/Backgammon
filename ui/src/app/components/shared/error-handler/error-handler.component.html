@@ -1,6 +1,6 @@
 <div *ngIf="textVisible">
   <form [formGroup]="formGroup" class="error-handler-text">
-    <textarea formControlName="errors"></textarea>
+    <textarea readonly="readonly" formControlName="errors"></textarea>
     <div class="send-button">
       <button type="submit" (click)="sendErrors()" class="flat-button">Send report <i
           class="fas fa-paper-plane"></i></button>

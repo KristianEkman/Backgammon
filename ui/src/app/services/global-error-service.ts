@@ -14,6 +14,7 @@ export class GlobalErrorService implements ErrorHandler {
     if (!error) {
       return;
     }
+
     let current = AppState.Singleton.errors.getValue()?.message ?? '';
 
     let sError = error.stack ?? '';

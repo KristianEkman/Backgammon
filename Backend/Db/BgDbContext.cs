@@ -15,6 +15,8 @@ namespace Backend.Db
 
         public DbSet<Maintenance> Maintenance { get; set; }
 
+        public DbSet<ErrorReport> ErrorReports { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             var pw = Secrets.GetPw();

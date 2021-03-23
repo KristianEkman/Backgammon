@@ -1,11 +1,14 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   SimpleChanges
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ErrorReportDto } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
 import { ErrorState } from 'src/app/state/ErrorState';
 
@@ -18,6 +21,7 @@ import { ErrorState } from 'src/app/state/ErrorState';
 export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
   textVisible = false;
   @Input() errors: ErrorState | null = new ErrorState('');
+  @Output() save = new EventEmitter<ErrorReportDto>();
   formGroup: FormGroup;
 
   constructor(private fb: FormBuilder) {
@@ -35,7 +39,6 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     // setInterval(() => {
-    //   console.log(this);
     //   throw new Error('interval');
     // }, 3000);
   }
@@ -51,6 +54,12 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
 
   sendErrors(): void {
     this.clearErrors();
+    const dto: ErrorReportDto = {
+      error: this.formGroup.get('errors')?.value,
+      reproduce: ''
+    };
+
+    this.save.emit(dto);
   }
 
   clearErrors(): void {
