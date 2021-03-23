@@ -4,13 +4,15 @@ import {
   HttpEvent,
   HttpInterceptor,
   HttpHandler,
-  HttpRequest
+  HttpRequest,
+  HttpErrorResponse
 } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
 import { Keys } from '../utils';
 import { UserDto } from '../dto';
+import { catchError } from 'rxjs/operators';
 
 /** Pass untouched request through to the next request handler. */
 @Injectable()
@@ -25,6 +27,19 @@ export class AuthInterceptor implements HttpInterceptor {
     const authReq = req.clone({
       headers: req.headers.set('user-id', userId)
     });
-    return next.handle(authReq);
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        let errorMessage = '';
+
+        if (error.error instanceof ErrorEvent) {
+          // client-side error
+          errorMessage = `Error: ${error.error.message}`;
+        } else {
+          // server-side error
+          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        }
+        return throwError(errorMessage);
+      })
+    );
   }
 }

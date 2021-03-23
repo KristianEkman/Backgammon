@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StorageServiceModule } from 'ngx-webstorage-service';
@@ -33,6 +33,8 @@ import { AccountMenuComponent } from './components/account/account-menu/account-
 import { AccountEditContainerComponent } from './components/account/account-edit-container/account-edit-container.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BusyComponent } from './components/shared/busy/busy.component';
+import { ErrorHandlerComponent } from './components/shared/error-handler/error-handler.component';
+import { GlobalErrorService } from './services/global-error-service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +52,8 @@ import { BusyComponent } from './components/shared/busy/busy.component';
     ToplistComponent,
     ToplistBannerComponent,
     AccountEditContainerComponent,
-    BusyComponent
+    BusyComponent,
+    ErrorHandlerComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +85,8 @@ import { BusyComponent } from './components/shared/busy/busy.component';
         ]
       } as SocialAuthServiceConfig
     },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: ErrorHandler, useClass: GlobalErrorService }
   ],
   bootstrap: [AppComponent]
 })

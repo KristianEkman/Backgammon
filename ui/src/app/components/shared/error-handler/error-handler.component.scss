@@ -1,0 +1,48 @@
+.error-handler-button {
+  position: fixed;
+  right: 4px;
+  bottom: 4px;
+  display: inline-block;
+
+  button {
+    font-size: 12px;
+    color: red;
+
+  }
+}
+
+.error-handler-text {
+  position: fixed;
+  left: 10%;
+  top: 10%;
+
+  display: inline-block;
+  width: 80%;
+  height: 80%;
+
+  textarea {
+    border: 1px solid #888;
+
+    padding: 10px;
+    border-radius: 10px;
+    color: rgb(182, 178, 159);
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.send-button {
+  text-align: right;
+  display: flex;
+  justify-content: space-evenly;
+
+  button {
+    font-size: 14px;
+  }
+}

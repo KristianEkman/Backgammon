@@ -11,6 +11,7 @@ import { DiceDto } from '../dto/diceDto';
 import { GameDto } from '../dto/gameDto';
 import { StateObject } from './state-object';
 import { Busy } from './busy';
+import { ErrorState } from './ErrorState';
 
 export class AppState {
   constructor() {
@@ -28,6 +29,7 @@ export class AppState {
     this.statusMessage = new StateObject<StatusMessage>();
     this.moveTimer = new StateObject<number>();
     this.toplist = new StateObject<Toplist>();
+    this.errors = new StateObject<ErrorState>();
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -48,6 +50,7 @@ export class AppState {
   statusMessage: StateObject<StatusMessage>;
   moveTimer: StateObject<number>;
   toplist: StateObject<Toplist>;
+  errors: StateObject<ErrorState>;
 
   myTurn(): boolean {
     const game = this.game.getValue();
