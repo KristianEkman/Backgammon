@@ -58,6 +58,7 @@ namespace Backend
             if (manager == null)
             {
                 manager = new GameManager(logger);
+                manager.Ended += Game_Ended;
                 manager.SearchingOpponent = true;
                 AllGames.Add(manager);
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
