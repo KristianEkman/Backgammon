@@ -56,4 +56,10 @@ export class StatusMessageService {
       AppState.Singleton.statusMessage.setValue(message);
     }
   }
+
+  setBlockedMessage(): void {
+    const text = 'You are blocked. Click "Done"';
+    const msg = StatusMessage.warning(text);
+    AppState.Singleton.statusMessage.setValue(msg);
+  }
 }

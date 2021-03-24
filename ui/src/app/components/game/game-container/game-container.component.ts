@@ -13,6 +13,7 @@ import { AccountService, SocketsService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { StatusMessage } from 'src/app/dto/local/status-message';
 import { Busy } from 'src/app/state/busy';
+import { StatusMessageService } from 'src/app/services/status-message.service';
 
 @Component({
   selector: 'app-game',
@@ -23,7 +24,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   constructor(
     private service: SocketsService,
     private accountService: AccountService,
-    private router: Router
+    private router: Router,
+    private statusMessageService: StatusMessageService
   ) {
     this.gameDto$ = AppState.Singleton.game.observe();
     this.dices$ = AppState.Singleton.dices.observe();
@@ -169,6 +171,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setDicesVisible();
     this.setSendVisible();
     this.fireResize();
+    const gme = AppState.Singleton.game.getValue();
+    if (!gme.validMoves || gme.validMoves.length === 0) {
+      this.statusMessageService.setBlockedMessage();
+    }
   }
 
   setRollButtonVisible(): void {
