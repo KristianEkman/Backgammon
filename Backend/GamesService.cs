@@ -43,8 +43,11 @@ namespace Backend
             
             // Search any game, oldest first.
             var managers = AllGames.OrderByDescending(g => g.Created)
-                .Where(g => (g.Client2 == null || g.Client1 == null) && g.SearchingOpponent);
-           
+                .Where(g => (g.Client2 == null|| g.Client1 == null) && g.SearchingOpponent);
+
+            if (GameAlreadyStarted(managers, userId))
+                throw new ApplicationException("The user has already started a game");
+                       
             var isGuest = dbUser.Id == Guid.Empty;
             // filter out games having a logged in player            
             if (isGuest)
@@ -54,7 +57,6 @@ namespace Backend
                 ).ToArray();
 
             var manager = managers.FirstOrDefault();
-
             if (manager == null)
             {
                 manager = new GameManager(logger);
@@ -81,9 +83,21 @@ namespace Backend
             RemoveDissconnected(manager);
         }
 
+        private static bool GameAlreadyStarted(IEnumerable<GameManager> managers, string userId)
+        {
+            var list = new List<GameManager>();
+            foreach (var m in managers)
+            {
+                // Guest vs guest must be allowed. When guest games are enabled.
+                if (m.Game.BlackPlayer.Id.ToString() == userId || m.Game.WhitePlayer.Id.ToString() == userId && userId != Guid.Empty.ToString())
+                    return true;
+                list.Add(m);
+            }
+            return false;
+        }
+
         internal static void SaveState()
         {
-
             var state = JsonSerializer.Serialize<List<GameManager>>(AllGames);
             System.IO.File.WriteAllText("SavedGames.json", state);
         }

@@ -4,7 +4,7 @@ Release 1.0 - beta
 
 Förhindra spel mot sig själv.
 
-Feedback
+Performance tests.
 
 Acc-test med Linn, Patrik och Shane
 
@@ -20,7 +20,8 @@ New game same opponnet vid invite.
 Release 1.>0
 ============
 https://ionicframework.com/
-
+install to mobile start screen
+Feedback
 canvas banner
 animera app routing
 candeactivate

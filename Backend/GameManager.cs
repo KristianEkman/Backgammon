@@ -91,8 +91,8 @@ namespace Backend
         private async Task EndGame(PlayerColor winner)
         {
             moveTimeOut.Cancel();
-            Logger.LogInformation($"The winner is ${winner}");
             Game.PlayState = Game.State.Ended;
+            Logger.LogInformation($"The winner is ${winner}");
             var newScore = SaveWinner(winner);
             await SendWinner(winner, newScore);
             Ended?.Invoke(this, EventArgs.Empty);

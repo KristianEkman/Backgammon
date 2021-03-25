@@ -94,8 +94,9 @@ namespace Backend
                         catch (Exception exc)
                         {
                             logger.LogError(exc.ToString());
+                            await context.Response.WriteAsync(exc.Message, CancellationToken.None);
+                            context.Response.StatusCode = 400;
                         }
-
                     }
                     else
                     {
