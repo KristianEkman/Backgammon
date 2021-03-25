@@ -211,7 +211,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     // this.drawIcon(cx);
 
     this.drawBoard(cx);
-    this.drawDebugRects(cx);
+    // this.drawDebugRects(cx);
     this.drawCheckers(cx);
     if (this.animatedMove) {
       this.animatedMove.draw(cx, this.getCheckerWidth());
@@ -707,14 +707,19 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   getTouchPoint(touch: Touch): Point {
+    const parent = (this.canvas?.nativeElement as HTMLElement)
+      ?.offsetParent as HTMLElement;
+
     if (this.flipped) {
       return {
-        x: this.width - touch.clientX + 10,
-        y: this.height - touch.clientY + 35
-        // todo, figure out this offset.
+        x: this.width - touch.clientX + parent.offsetLeft + 10,
+        y: this.height - touch.clientY + parent.offsetTop + 35
       };
     }
-    return { x: touch.clientX + 10, y: touch.clientY - 25 };
+    return {
+      x: touch.clientX - parent.offsetLeft + 10,
+      y: touch.clientY - parent.offsetTop - 25
+    };
   }
 
   handleDown(clientX: number, clientY: number): void {

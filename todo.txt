@@ -3,6 +3,8 @@ Release 1.0 - beta
 ===========
 Performance tests.
 
+Större bar rect.
+
 Acc-test med Linn, Patrik och Shane
 
 Release 1.1 - mål att öka logins
