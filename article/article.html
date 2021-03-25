@@ -1,0 +1,335 @@
+
+<h2>Introduction</h2>
+
+<p>Read about how to develop an online game on Azure.<br />
+<em>Or just play&nbsp;the game here:&nbsp;<strong><a href="https://backgammon.azurewebsites.net/" target="_blank">https://backgammon.azurewebsites.net/</a></strong></em></p>
+
+<p>
+    <a href="https://backgammon.azurewebsites.net/">
+       <img height="365px" src="Login.png" width="388px" />
+    </a>
+</p>
+
+<p>&nbsp;</p>
+
+<h2>Background</h2>
+
+<p>During the last month or so, I&#39;ve spent most of my free time building an online&nbsp;backgammon game.<br />
+The main goal was to try to improve my&nbsp;full stack developer skills and perhaps discover a new trick or two.<br />
+In this article&nbsp;I share the technologies&nbsp;I use and small things I think can be useful&nbsp;if you plan to start a similar project.<br />
+It&#39;s by no means a complete guide of my code, but you can find the source open to read on GitHub <sup>(2)</sup>.</p>
+
+<p>Some of the game features</p>
+
+<ul>
+	<li>Play a random opponent</li>
+	<li>Invite a friend</li>
+	<li>Elo rating and toplist</li>
+	<li>Mobile responsive design</li>
+</ul>
+
+<h2>Table of contents</h2>
+
+<p>Introduction</p>
+
+<p>Background</p>
+
+<p><a href="#Architecture">Architecture</a></p>
+
+<p><a href="#rules">Rules</a></p>
+
+<p><a href="#websockets">Websockets</a></p>
+
+<p><a href="#login">Login</a></p>
+
+<p><a href="#drawing">Drawing the board</a></p>
+
+<p><a href="#ef">Entity framework</a></p>
+
+<p><a href="#dto">Data transfer objects</a></p>
+
+<p><a href="#finalwords">Final words</a></p>
+
+<p><a href="#links">Links</a></p>
+
+<p><a href="#history">History</a></p>
+
+<h2><a name="Architecture">Architecture</a></h2>
+
+<p>The application is hosted on Azure<sup>(10)</sup> in an App Service and the data is stored&nbsp;in Sql Server. You authenticate via Facebook or Google Oauth 2.0. The Backend is written in C# .net 5. (latest dotnet core). For Sql Server database integration I use Entity Framework core with code first migrations.</p>
+
+<p>The communication between frontend and backend is done with websockets during game play and a rest api for everything else.</p>
+
+<p>For frontend I use Angular 11 and the game board is&nbsp;drawn&nbsp;on a html canvas element.</p>
+
+<p><img src="Architecture.png" style="width: 700px; height: 613px;" /></p>
+
+<h2><a id="rules" name="rules">Rules</a></h2>
+
+<p>The rules<sup>(3)</sup> of Backgammon might look quite simple at first: Roll the dice and move checkers the number you get on the dice towards your home. If an opponent has two or more checkers on a point that point is blocked. If&nbsp;the opponent has only one checker on a point you can hit it and that checker is moved to the&nbsp;bar, forcing it to start from point zero.&nbsp;But there are&nbsp;a few complex situations also, for example that you always have to use both dice if you can. If the move of a checker prevents using the other dice you can&#39;t&nbsp;move that checker.<br />
+Read more about Backgammon rules <a href="https://www.bkgm.com/rules.html">here</a>. For these reasons I decided to develop the rules of the game using Test Driven Development (TDD) and&nbsp;keep them in a separate dll. TDD is my choice of method when calculations get complicated and you don&#39;t want to spend hours and days tracking down ugly bugs.<br />
+<br />
+I also realized early that the game state had to be kept on the server and that the client should have as little game rules as possible. The game rules are developed in C# and is a part of the backend. One main priority was also to keep network traffic low, in case many users start playing at the same time. Larger servers cost more money&nbsp;on Azure.<br />
+<br />
+Since the roll of dice are random the Rules.Game class also has&nbsp;a FakeRoll function&nbsp;for testing, which of course isn&#39;t accessible from the client. Below are a few examples of test cases of the Rules.Game class.</p>
+
+<pre lang="cs">
+[TestMethod]
+public void TestMoveGeneration()
+{ 
+&nbsp;   game.FakeRoll(1, 2);
+    var moves = game.GenerateMoves();
+    Assert.AreEqual(7, moves.Count);
+}
+
+[TestMethod]
+public void TestCheckerOnTheBarBlocked()
+{
+    game.AddCheckers(2, Player.Color.Black, 0);
+    game.FakeRoll(6, 6);
+    var moves = game.GenerateMoves();
+    Assert.AreEqual(0, moves.Count);
+}</pre>
+
+<h2>One less webserver</h2>
+
+<p>The client accesses the server through a&nbsp;web api. Since the api is served with an App Service, which is basically a&nbsp;web server, I wanted to use the same App Service to serve the Angular client in production. Then you will have one less App Service to worry about. The alternative could have been to use for example nginx on a Ubuntu machine.</p>
+
+<p>This is the configuration needed to make it work.</p>
+
+<pre lang="cs">
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger&lt;GameManager&gt; logger, IHostApplicationLifetime applicationLifetime)
+{            
+    app.UseHttpsRedirection();
+    app.UseRouting();
+    app.UseEndpoints(endpoints =&gt;
+    {
+        endpoints.MapControllers();
+    });
+    app.UseWebSockets();
+    app.UseDefaultFiles();            
+    app.Use(async (context, next) =&gt;
+        {
+            if (context.Request.Path == &quot;/ws/game&quot;)
+            {
+                if (context.WebSockets.IsWebSocketRequest)
+                {
+                    logger.LogInformation($&quot;New web socket request.&quot;);                        
+                    // Handle web socket stuff. See example below.
+                }
+                else
+                {
+                    context.Response.StatusCode = 400;
+                }
+            }
+            else
+            {
+                await next();
+                // This enables angular routing to function on the same app as the web socket.
+                // If there&#39;s no available file and the request doesn&#39;t contain an extension, we&#39;re probably trying to access a page.
+                // Rewrite request to use app root
+                if (SinglePageAppRequestCheck(context))
+                {
+                    context.Request.Path = &quot;/index.html&quot;;
+                    await next();
+                }
+            }
+        });
+        app.UseEndpoints(endpoints =&gt;
+        {
+            endpoints.MapControllers();
+        });
+        // Required for Angular app i wwwroot
+        app.UseStaticFiles();
+   }</pre>
+
+<p>&nbsp;</p>
+
+<h2><a id="websockets" name="websockets">Websockets</a></h2>
+
+<p>Web sockets is a technology I hadn&#39;t worked with before, but I was very curious about&nbsp;it. I am familiar&nbsp;with regular sockets on windows so I understood that the&nbsp;communication is actually simpler&nbsp;than the regular request response pattern. The difference with web sockets and a http request is that sockets are always open. Either the client or the server can send data&nbsp;at any time.<br />
+There are good libraries for both Angular and .net 5, and they are fully compatible. The only thing that might feel strange is that when the function on the .net server side accepts the socket&nbsp;returns the connection is closed. So you have to read the socket in a loop until you decide to close communications. The socket is also wrapped in a http request, which isn&#39;t returned until socket closure.</p>
+
+<p>Below is my Startup configure function, littlebit simplified.</p>
+
+<pre lang="cs">
+if (context.Request.Path == &quot;/ws/game&quot;)
+{
+    if (context.WebSockets.IsWebSocketRequest)
+    {
+        var socket = await context.WebSockets.AcceptWebSocketAsync();                        
+        try
+        {
+            while (socket.State != WebSocketState.Closed &amp;&amp;
+                   socket.State != WebSocketState.Aborted &amp;&amp;
+                   socket.State != WebSocketState.CloseReceived)
+            {
+                 var buffer = new byte[512];
+                 var sb = new StringBuilder();
+                 WebSocketReceiveResult result = null;
+                 // reading everyting on the socket
+                 while (result == null || (!result.EndOfMessage &amp;&amp; !result.CloseStatus.HasValue))
+                 {
+                     result = await socket.ReceiveAsync(new ArraySegment&lt;byte&gt;(buffer), CancellationToken.None);
+                     var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
+                     sb.Append(text);
+                 }
+                 // Do something with the data here.
+             }
+&nbsp;            logger.LogInformation(&quot;Socket is closed&quot;);
+         }
+         catch (Exception exc)
+         {
+             logger.LogError(exc.ToString());
+         }
+    }
+    else
+    {
+         context.Response.StatusCode = 400;
+    }
+}</pre>
+
+<p>&nbsp;</p>
+
+<h2><a id="login" name="login">Login</a></h2>
+
+<p>It is not important for the backend to know who the players are. What matters is to identify&nbsp;if the user has been here&nbsp;before to keep a score when different players compete. For these requirements I think the perfect choice is to use an external social provider for authentication. I&#39;ve enabled facebook and google provider.<br />
+I see no reason for a user to log in everytime he (or she) browses to the app, so the login UserDto is stored in the browser&#39;s local storage. These are steps occurring during login.</p>
+
+<p>1. A user clicks the google or facebook login button.</p>
+
+<p>2. signIn as called on Angular package angularx-social-login<sup>(6)</sup>.</p>
+
+<p>3. The signin modal is opened.</p>
+
+<p>4. A SocialUser object is returned including an OpenId jwt.</p>
+
+<p>5. The jwt is sent securely to the backend where it is validated.</p>
+
+<p>6. If valid, a user is created, if not already created.</p>
+
+<p>7. The user&#39;s unique user Id is sent back to the client and store in local storage. The user is now logged in and can play other users.</p>
+
+<h2><a id="drawing" name="drawing">Drawing the board</a></h2>
+
+<p>Drawing is the most fun part of the application I think. I find canvas drawing<sup>(7)</sup> to be quite easy if you are used to thinking in x-y-coordinates. The main benefit is that you can make the board 100% responsive, so it will fit nice on any screen size. That is if you calculate all coordinates in relation to height and width of the screen.<br />
+This is how you get the drawing context and draw a filled circle on it.</p>
+
+<pre>
+// typescript
+
+  @ViewChild(&#39;canvas&#39;) public canvas: ElementRef | undefined;
+  ngAfterViewInit(): void {
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+    const cx = canvasEl.getContext(&#39;2d&#39;);
+&nbsp;   cx.beginPath();
+    cx.ellipse(x, y, width, width, 0, 0, 2 * Math.PI);
+    cx.closePath();
+    cx.fill();
+  }</pre>
+
+<p><br />
+One thing I learned is to use the built&nbsp;in function:&nbsp;requestAnimationFrame.<br />
+It is called every time something changes on the board and then it&#39;s up to the browser if it feels it has time to draw a frame. I find that the cpu impact is quite low using this method.</p>
+
+<pre lang="jscript">
+requestAnimationFrame(this.draw.bind(this));
+</pre>
+
+<p>&nbsp;</p>
+
+<p><img src="Board.png" style="width: 700px; height: 461px;" /></p>
+
+<h2><a id="ef" name="ef">Entity Framework</a></h2>
+
+<p>I&#39;m so happy to see how Entity Framework<sup>(9)</sup> has evolved during the last years. Nowadays it is very easy to write some C# classes, make sure every class has a primary key&nbsp;and then let Entity Framework generate everything for you. I was surprised that EF core 5.0 is so good to realize many to many relations for example. I also like that properties named &quot;Id&quot; with datatype int automatically get&nbsp;defined as an auto incrementing identity.<br />
+Error messages were&nbsp;always clear and descriptive to me so this part of the development was what I spent the least time with.<br />
+And everytime I need to make a database update I just add some data class, property or whatever and then call:</p>
+
+<pre>
+Add-Migration a-name-I-choose
+(Inspect the changes in the generated migration files)
+
+Update-Database
+(done)</pre>
+
+<h2><a id="dto" name="dto">Data transfer objects</a></h2>
+
+<p>In all client server applications, it is important to give extra time and thought on the parts that makes the integration possible. The client and server are essentially two different programs, which very&nbsp;often have&nbsp;different pace of development. To minimize the&nbsp;risk of changing things on one side that will break the integration you use data transfer objects, (dto). Their purpose is to&nbsp;define the data transferred between the client and server. Since they are written in different languages I use a package called MTT by Cody Schrank. It is set it up in the .csproj file like this:</p>
+
+<pre lang="xml">
+&lt;Target Name=&quot;Convert&quot; BeforeTargets=&quot;PrepareForBuild&quot;&gt;
+    &lt;ConvertMain WorkingDirectory=&quot;Dto/&quot; ConvertDirectory=&quot;tsdto/&quot; /&gt;
+&lt;/Target&gt;</pre>
+
+<p>MTT takes the C# dtos and converts them at compile time to typescript interfaces which are then used&nbsp;as definition for either sent or received data in both client and server. Unfortunately MTT can only save its files below the project directory, so I also have to copy them to the client file source tree.</p>
+
+<p>Example of conversion:</p>
+
+<pre lang="cs">
+namespace Backend.Dto
+{
+    public class CheckerDto
+    {
+        public PlayerColor color { get; set; }
+    }
+}
+
+// gets converted to typescript
+
+import { PlayerColor } from &quot;./playerColor&quot;;
+
+export interface CheckerDto {
+    color: PlayerColor;
+}</pre>
+
+<h2>Final Words<a id="finalwords" name="finalwords"></a></h2>
+
+<p>If you find this article interesting, but have an opinion on what technologies you would have chosen, also let me know in the comments.</p>
+
+<p>If you find a bug in the game, please also let me know.<br />
+The code is open for anyone to read, so if you want to make pull request and help out with improvements you are also welcome.</p>
+
+<p>I also want to thank <strong>Shane, Patrik and&nbsp;Linn</strong> for helping me with testing.</p>
+
+<h2><a id="links" name="links">Links</a></h2>
+
+<p>1. The game<br />
+<a href="https://backgammon.azurewebsites.net/" target="_blank">https://backgammon.azurewebsites.net/</a></p>
+
+<p>2. The code<br />
+<a href="https://github.com/KristianEkman/Backgammon" target="_blank">https://github.com/KristianEkman/Backgammon</a></p>
+
+<p>3. Backgammon rules<br />
+<a href="https://bkgm.com/rules.html">https://bkgm.com/rules.html</a></p>
+
+<p>4.&nbsp;WebSockets support in ASP.NET Core<br />
+<a href="https://docs.microsoft.com/en-us/aspnet/core/fundamentals/websockets?view=aspnetcore-5.0">https://docs.microsoft.com/en-us/aspnet/core/fundamentals/websockets?view=aspnetcore-5.0</a></p>
+
+<p>5.&nbsp;Angular Websockets Tutorial<br />
+<a href="https://tutorialedge.net/typescript/angular/angular-websockets-tutorial/" target="_blank">https://tutorialedge.net/typescript/angular/angular-websockets-tutorial/</a></p>
+
+<p>6.&nbsp;angularx-social-login<br />
+<a href="https://www.npmjs.com/package/angularx-social-login" target="_blank">https://www.npmjs.com/package/angularx-social-login</a></p>
+
+<p>7. HTML Canvas Tutorial<br />
+<a href="https://www.w3schools.com/graphics/canvas_intro.asp" target="_blank">https://www.w3schools.com/graphics/canvas_intro.asp</a></p>
+
+<p>8.&nbsp;C# DTOs to Typescript Interfaces<br />
+<a href="https://github.com/CodySchrank/MTT">https://github.com/CodySchrank/MTT</a></p>
+
+<p>9. Entityframework core<br />
+<a href="https://entityframeworkcore.com/approach-code-first">https://entityframeworkcore.com/approach-code-first</a></p>
+
+<p>10. Azure<br />
+<a href="https://azure.microsoft.com/" target="_blank">https://azure.microsoft.com/</a></p>
+
+<h2><a name="history">History</a></h2>
+
+<p>24th March 2021<br />
+Version 1.0</p>
+
+<p>&nbsp;</p>
+
+<h2>&nbsp;</h2>
+
