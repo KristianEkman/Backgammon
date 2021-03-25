@@ -91,7 +91,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ([changes['width'] || changes['height']]) {
+    if (changes['width'] || changes['height'] || changes['flipped']) {
       this.recalculateGeometry();
     }
     this.requestDraw();
@@ -108,6 +108,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   recalculateGeometry(): void {
+    if (this.canvas) {
+      const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+      canvasEl.width = this.width;
+      canvasEl.height = this.height;
+    }
+
     this.borderWidth = this.width * 0.01;
     this.barWidth = this.borderWidth * 3;
     this.sideBoardWidth = this.width * 0.1;
@@ -200,12 +206,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     canvasEl.width = this.width;
     canvasEl.height = this.height;
-    const cx = this.cx;
 
+    const cx = this.cx;
     // this.drawIcon(cx);
 
     this.drawBoard(cx);
-    // this.drawDebugRects(cx);
+    this.drawDebugRects(cx);
     this.drawCheckers(cx);
     if (this.animatedMove) {
       this.animatedMove.draw(cx, this.getCheckerWidth());
@@ -704,11 +710,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (this.flipped) {
       return {
         x: this.width - touch.clientX + 10,
-        y: this.height - touch.clientY + 25
+        y: this.height - touch.clientY + 35
         // todo, figure out this offset.
       };
     }
-    return { x: touch.clientX, y: touch.clientY };
+    return { x: touch.clientX + 10, y: touch.clientY - 25 };
   }
 
   handleDown(clientX: number, clientY: number): void {

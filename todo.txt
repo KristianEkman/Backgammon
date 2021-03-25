@@ -1,9 +1,6 @@
 
 Release 1.0 - beta
 ===========
-
-Förhindra spel mot sig själv.
-
 Performance tests.
 
 Acc-test med Linn, Patrik och Shane
