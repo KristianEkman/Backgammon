@@ -1,6 +1,7 @@
 
 Release 1.0 - beta
 ===========
+
 Performance tests.
 
 Större bar rect.

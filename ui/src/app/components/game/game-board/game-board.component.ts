@@ -718,13 +718,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     if (this.flipped) {
       return {
-        x: this.width - eventX + parent.offsetLeft + 10,
-        y: this.height - eventY + parent.offsetTop + 35
+        x: this.width - eventX + parent.offsetLeft,
+        y: this.height - eventY + parent.offsetTop
       };
     }
     return {
-      x: eventX - parent.offsetLeft + 10,
-      y: eventY - parent.offsetTop - 25
+      x: eventX - parent.offsetLeft + this.borderWidth,
+      y: eventY - parent.offsetTop + this.borderWidth
     };
   }
 
@@ -929,6 +929,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
     const touch = event.touches[0];
     const { x, y } = this.getTouchPoint(touch);
+
     this.lastTouch = { x, y };
 
     this.cursor.x = x;
@@ -944,8 +945,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   onTouchEnd(event: TouchEvent): void {
     // console.log('touchend', event);
 
-    if (this.lastTouch != undefined) {
-      this.handleUp(this.lastTouch.x, this.lastTouch.y);
+    if (this.cursor != undefined) {
+      this.handleUp(this.cursor.x, this.cursor.y);
     }
     this.lastTouch = undefined;
   }

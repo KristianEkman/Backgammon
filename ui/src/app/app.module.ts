@@ -75,7 +75,7 @@ import { environment } from '../environments/environment';
     {
       provide: 'SocialAuthServiceConfig',
       useValue: {
-        autoLogin: true,
+        autoLogin: navigator.userAgent.indexOf('Firefox') == -1, // firefox must have false. dont know why
         providers: [
           {
             id: GoogleLoginProvider.PROVIDER_ID,
