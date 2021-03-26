@@ -35,6 +35,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { BusyComponent } from './components/shared/busy/busy.component';
 import { ErrorHandlerComponent } from './components/shared/error-handler/error-handler.component';
 import { GlobalErrorService } from './services';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,7 +64,10 @@ import { GlobalErrorService } from './services';
     SocialLoginModule,
     HttpClientModule,
     StorageServiceModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production
+    })
   ],
   providers: [
     SocketsService,

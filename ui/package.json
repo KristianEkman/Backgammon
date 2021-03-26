@@ -19,6 +19,7 @@
     "@angular/platform-browser": "~11.2.5",
     "@angular/platform-browser-dynamic": "~11.2.5",
     "@angular/router": "~11.2.5",
+    "@angular/service-worker": "~11.2.5",
     "angularx-social-login": "^3.5.4",
     "ngx-cookie-service": "^11.0.2",
     "ngx-webstorage-service": "^4.1.0",
