@@ -1,5 +1,6 @@
 using Backend.Rules;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -224,6 +225,28 @@ namespace BackendTests
 
             Assert.AreEqual(158, game.BlackPlayer.PointsLeft);
             Assert.AreEqual(167, game.WhitePlayer.PointsLeft);
+
+        }
+
+        [TestMethod]
+        public void TestRandomness()
+        {
+            int doubles = 0;
+            var list = new List<int>();
+            const int count = 10000;
+            for (int i = 0; i < count; i++)
+            {
+                var dice = Dice.Roll();
+                list.Add(dice[0].Value);
+                list.Add(dice[1].Value);
+
+                if (dice[0].Value == dice[1].Value)
+                    doubles++;
+            }
+
+            Console.WriteLine($"Avg: {list.Average()}");
+            var pct = (doubles / (double)count).ToString("P");
+            Console.WriteLine($"Doubeles : {pct}");
 
         }
     }
