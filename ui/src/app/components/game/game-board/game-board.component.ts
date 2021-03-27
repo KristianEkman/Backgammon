@@ -411,7 +411,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       }
 
       // distance between checkers on a point
-      const dist = Math.min(2 * chWidth, area.height / checkerCount);
+      const dist = Math.min(
+        2 * chWidth,
+        (area.height - chWidth) / checkerCount
+      );
       // main draw checkers loop
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
@@ -724,12 +727,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (this.flipped) {
       return {
         x: this.width - eventX + parent.offsetLeft,
-        y: this.height - eventY + parent.offsetTop
+        y: this.height - eventY + parent.offsetTop + 20
       };
     }
     return {
       x: eventX - parent.offsetLeft + this.borderWidth,
-      y: eventY - parent.offsetTop + this.borderWidth
+      y: eventY - parent.offsetTop + this.borderWidth - 20
     };
   }
 
@@ -966,7 +969,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const { x, y } = this.getTouchPoint(touch);
 
     this.lastTouch = { x, y };
+    const w = this.getCheckerWidth();
 
-    this.handleMove(x, y);
+    this.handleMove(x - w / 2, y - w / 2);
   }
 }

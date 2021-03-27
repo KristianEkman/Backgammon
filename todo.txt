@@ -1,12 +1,21 @@
 
 Release 1.0 - beta
 ===========
+Dragging är sne för black.
 
 Performance tests.
-    loop, send start
+    Temporärt tillåta guest.
 
+    Loop
+    Skapa spel
+    Skapa spel
+    Vänta 10s
+    Avsluta
 
-iphone
+    Logga
+    Monitorera fel
+    CPU och minne svars tider
+    Antal spel i AllGames
 
 Acc-test med Linn, Patrik och Shane
 
@@ -16,11 +25,19 @@ Code project artiklar.
 AI
 Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
 Player photos
-New game same opponnet vid invite.
-
+New game --> same opponnet efter avslutat invite.
 
 Release 1.>0
 ============
+About button
+    This is an open, just for fun, free-time projekt.
+    You are very welcome to play.
+    Or if you are a developer you might be intrested in the links below with all the details on this application.
+    On GitHub, you can create and vote for issues/new feature, or even contribute with a pull request.
+
+    - link to code project article.
+    - link to git hub
+
 https://ionicframework.com/
 install to mobile start screen
 Feedback
@@ -34,7 +51,6 @@ Glitch bugg på bar. Beräkna med motståndaren i home.
 Animation på firefox suger.
 Dubbling. Först till 10.
 Backa upp Managers till DB, så man kan göra en swap vid release.
-Points left.
 Visa statistik på startsidan.
 Visa när motståndaren kastar.
 - Ohanterade fel? Ska de visas? Bättre att logga dem kanske?
@@ -43,29 +59,23 @@ Ljust tema.
 Ge extra tid för reconnect.
 Ljud
 Progressbar
-Editing of name and photo.
-Förhindra spel mot sig själv?
+Editing of photo.
 Repution: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
-ios
+
 Visa dubblar vid första drag.
 Chat
 Olika teman, ljus, marble, wood.
 Doubling
 Två olika hastigheter. 10s, resp 35s. Inte som gäst. Infinite?
-ai: Evaluate to give a score.
 Ui
   Auto send when no options, vis no moves.
   Auto move, when only one move.
-  View dices on board
 
 Rematch same opponent.
 Sepegeleffekt i board.
 Coolare grafik när man vinner.
 Automatiska e2e-tester, selenium.
-
-Försöka få till bättre fullskärm mobil.
-    Installation mobil.
 
 serverside http only userid cookie
     - kräver inloggning vaje gång app startas.
