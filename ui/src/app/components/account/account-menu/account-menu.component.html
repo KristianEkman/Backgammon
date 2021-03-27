@@ -1,5 +1,5 @@
 <div>
-  <button class="flat-button" (click)="nameClick()">{{ Name }}</button>
+  <button *ngIf="user" class="flat-button" (click)="nameClick()">{{ Name }}</button>
 </div>
 <div *ngIf="toggle" class="app-account__menu-panel">
   <button class="flat-button" (click)="logoutClick()">Logout</button>
