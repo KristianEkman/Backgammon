@@ -130,9 +130,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     //blacks bar
     this.checkerAreas[24].set(
       this.width / 2 - this.borderWidth * 1.5,
-      rectH / 2,
+      rectH / 3,
       this.borderWidth * 3,
-      rectH / 2 + this.borderWidth,
+      rectH / 1.5 + this.borderWidth,
       0
     );
     this.blackBar = this.checkerAreas[24];
@@ -142,7 +142,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.width / 2 - this.borderWidth * 1.5,
       this.height / 2 + this.height * 0.08 - this.borderWidth,
       this.borderWidth * 3,
-      rectH / 2,
+      rectH / 1.5,
       25
     );
 
@@ -213,19 +213,17 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     canvasEl.width = this.width;
     canvasEl.height = this.height;
-
     const cx = this.cx;
-
-    // *** NOT PROD CODE
-    // this.drawIcon(cx);
-    // this.drawDebugRects(cx);
-    // *** NOT PROD CODE
-
     this.drawBoard(cx);
     this.drawCheckers(cx);
     if (this.animatedMove) {
       this.animatedMove.draw(cx, this.getCheckerWidth());
     }
+
+    // *** NOT PROD CODE
+    // this.drawIcon(cx);
+    // this.drawDebugRects(cx);
+    // *** NOT PROD CODE
     return 0;
   }
 
