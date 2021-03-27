@@ -13,12 +13,13 @@
 
 .error-handler-text {
   position: fixed;
-  left: 10%;
-  top: 10%;
+  left: 5%;
+  top: 5%;
 
   display: inline-block;
-  width: 80%;
-  height: 80%;
+  width: 85%;
+  height: calc(90% - 35px);
+
 
   textarea {
     border: 1px solid #888;
