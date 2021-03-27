@@ -14,11 +14,16 @@ export class GlobalErrorService implements ErrorHandler {
     if (!error) {
       return;
     }
-
+    console.error(error);
     let current = AppState.Singleton.errors.getValue()?.message ?? '';
-
     let sError = error.stack ?? '';
     sError += error.message ?? error;
+
+    // This is actually no error I suppose.
+    if (sError.indexOf('popup_closed_by_user') > -1) {
+      return;
+    }
+
     const date = new Date();
     const err = date + '\n' + sError + '\n\n';
     current += err;
