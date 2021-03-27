@@ -1,5 +1,6 @@
 import {
   EventEmitter,
+  HostListener,
   OnChanges,
   Output,
   SimpleChanges,
@@ -105,6 +106,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.blacksName = this.game ? `${bName} - ${bLeft} left` : '';
     this.whitesName = this.game ? `${wName} - ${wLeft} left` : '';
     // console.log(this.game?.playState);
+  }
+
+  @HostListener('window:orientationchange', ['$event'])
+  onOrientationChange(): void {
+    this.recalculateGeometry();
+    console.log('orient change');
   }
 
   recalculateGeometry(): void {
