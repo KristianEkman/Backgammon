@@ -199,17 +199,23 @@ namespace BackendTests
 
             Assert.AreEqual(Game.State.FirstThrow, g.PlayState);
             g.FakeRoll(1, 2);
+            g.SetFirstRollWinner();
+
             Assert.AreEqual(Player.Color.White, g.CurrentPlayer);
             Assert.AreEqual(Game.State.Playing, g.PlayState);
 
 
             g = new Game();
             g.FakeRoll(2, 1);
+            g.SetFirstRollWinner();
+
             Assert.AreEqual(Player.Color.Black, g.CurrentPlayer);
             Assert.AreEqual(Game.State.Playing, g.PlayState);
 
             g = new Game();
             g.FakeRoll(3, 3);
+            g.SetFirstRollWinner();
+
             Assert.AreEqual(Game.State.FirstThrow, g.PlayState);
         }
 

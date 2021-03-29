@@ -1,7 +1,9 @@
 
 Release 1.0 - beta
 ===========
-Dragging är sne för black.
+
+Krysset att stänga menyn.
+Göra menyn klickbar.
 
 Performance tests.
     Temporärt tillåta guest.

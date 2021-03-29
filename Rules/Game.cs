@@ -198,7 +198,6 @@ namespace Backend.Rules
         public void FakeRoll(int v1, int v2)
         {
             Roll = new List<Dice>(Dice.GetDices(v1, v2));
-            SetFirstRollWinner();
         }
 
         public void SetFirstRollWinner()
