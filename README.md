@@ -2,7 +2,7 @@
 
 Online game player vs player.
 
-[Codeproject article](https://codeproject.com)
+[Codeproject article](https://www.codeproject.com/Articles/5297405/Online-Backgammon)
 
 ## These might be the steps to set it up locally
 
