@@ -87,9 +87,10 @@ namespace Backend
                         var webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         var userId = context.Request.Query.FirstOrDefault(q => q.Key == "userId").Value;
                         var gameId = context.Request.Query.FirstOrDefault(q => q.Key == "gameId").Value;
+                        var playAi = context.Request.Query.FirstOrDefault(q => q.Key == "playAi").Value == "true";
                         try
                         {
-                            await GamesService.Connect(webSocket, context, logger, userId, gameId);
+                            await GamesService.Connect(webSocket, context, logger, userId, gameId, playAi);
                         }
                         catch (Exception exc)
                         {

@@ -82,6 +82,10 @@ export class LobbyContainerComponent implements OnInit {
     this.invite$ = this.inviteService.createInvite();
   }
 
+  playAiClick(): void {
+    this.router.navigate(['game'], { queryParams: { playAi: true } });
+  }
+
   startInvitedGame(id: string): void {
     this.router.navigateByUrl('game?gameId=' + id);
   }

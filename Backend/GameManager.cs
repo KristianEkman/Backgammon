@@ -37,7 +37,8 @@ namespace Backend
         public string Inviter { get; set; }
         internal ILogger<GameManager> Logger { get; set; }
         internal event EventHandler Ended;
-
+        
+        internal Ai.Engine Engine = null;
         CancellationTokenSource moveTimeOut = new CancellationTokenSource();
 
         private void StartGame()
@@ -83,7 +84,7 @@ namespace Backend
                 {
                     Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
                     var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
-                    _ = EndGame(winner);
+                    //_ = EndGame(winner);
                 }
             }
         }
@@ -108,21 +109,41 @@ namespace Backend
                 validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray(),
                 moveTimer = Game.ClientCountDown
             };
-            _ = Send(Client1, rollAction);
-            _ = Send(Client2, rollAction);
+            if (!IsAi(Game.BlackPlayer))
+                _ = Send(Client1, rollAction);
+            if (!IsAi(Game.WhitePlayer))
+                _ = Send(Client2, rollAction);
         }
 
-        internal async Task ConnectAndListen(WebSocket webSocket, Player.Color color, Db.User dbUser)
+        private bool IsAi(Player player)
+        {
+            return player.Id.ToString().Equals(Db.User.AiUser, StringComparison.OrdinalIgnoreCase);
+        }
+
+        internal async Task ConnectAndListen(WebSocket webSocket, Player.Color color, Db.User dbUser, bool playAi)
         {
             if (color == Player.Color.Black)
             {
                 Client1 = webSocket;
                 Game.BlackPlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
                 Game.BlackPlayer.Name = dbUser != null ? dbUser.Name : "Guest";
+                if (playAi)
+                {
+                    var aiUser = Db.BgDbContext.GetDbUser(Db.User.AiUser);
+                    Game.WhitePlayer.Id = aiUser.Id;
+                    Game.WhitePlayer.Name = aiUser.Name;
+                    Engine = new Ai.Engine(Game);
+                    CreateDbGame();
+                    StartGame();
+                    if (Game.CurrentPlayer == Player.Color.White)
+                        await EnginMoves(Client1);
+                }
                 await ListenOn(webSocket);
             }
             else
             {
+                if (playAi)
+                    throw new ApplicationException("Ai always playes as white. This is not expected");
                 Client2 = webSocket;
                 Game.WhitePlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
                 Game.WhitePlayer.Name = dbUser != null ? dbUser.Name : "Guest";
@@ -257,13 +278,9 @@ namespace Backend
                     Game.BlackPlayer.FirstMoveMade = true;
                 else
                     Game.WhitePlayer.FirstMoveMade = true;
-
                 DoMoves(action);
-                PlayerColor? winner = GetWinner();
-                if (winner.HasValue)
-                    _ = EndGame(winner.Value);
-                else
-                    SendNewRoll();
+                await NewTurn(socket);
+                
             }
             else if (actionName == ActionNames.opponentMove)
             {
@@ -289,6 +306,40 @@ namespace Backend
             {
                 _ = CloseConnections(socket);
             }
+        }
+
+        private async Task NewTurn(WebSocket socket)
+        {
+            PlayerColor? winner = GetWinner();
+            Game.SwitchPlayer();
+            if (winner.HasValue)
+                _ = EndGame(winner.Value);
+            else
+            {
+                SendNewRoll();
+                var plyr = Game.CurrentPlayer == Player.Color.Black ? Game.BlackPlayer : Game.WhitePlayer;
+                if (IsAi(plyr))
+                    await EnginMoves(socket);
+            }
+        }
+
+        private async Task EnginMoves(WebSocket client)
+        {
+            var moves = Engine.GetBestMoves();
+            for (int i = 0; i < moves.Length; i++)
+            {
+                var move = moves[i];
+                Thread.Sleep(1500);
+                var moveDto = move.ToDto();
+                moveDto.animate = true;                
+                var dto = new OpponentMoveActionDto
+                {
+                    move = moveDto,                    
+                };
+                Game.MakeMove(move);
+                await Send(client, dto);                
+            }
+            await NewTurn(client);
         }
 
         private (NewScoreDto black, NewScoreDto white)? SaveWinner(PlayerColor color)
@@ -347,7 +398,6 @@ namespace Backend
             PlayerColor? winner = null;
             if (Game.CurrentPlayer == Player.Color.Black)
             {
-                Game.CurrentPlayer = Player.Color.White;
                 if (Game.GetHome(Player.Color.Black).Checkers.Count == 15)
                 {
                     Game.PlayState = Game.State.Ended;
@@ -355,8 +405,7 @@ namespace Backend
                 }
             }
             else
-            {
-                Game.CurrentPlayer = Player.Color.Black;
+            {             
                 if (Game.GetHome(Player.Color.White).Checkers.Count == 15)
                 {
                     Game.PlayState = Game.State.Ended;

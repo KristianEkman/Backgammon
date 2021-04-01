@@ -90,7 +90,8 @@ namespace Backend.Controllers
                         PhotoUrl = userDto.photoUrl,
                         ProviderId = userDto.socialProviderId,
                         SocialProvider = userDto.socialProvider,
-                        Elo = 1200
+                        Elo = 1200,
+                        Registered = DateTime.Now
                     };
                     db.Users.Add(dbUser);
                     db.SaveChanges();

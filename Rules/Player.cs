@@ -34,5 +34,6 @@ namespace Backend.Rules
         {
             return Id == Guid.Empty;
         }
+
     }
 }

@@ -15,8 +15,12 @@ namespace BackendTests
         {
             var game = Backend.Rules.Game.Create();
             var ai = new Ai.Engine(game);
-            game.FakeRoll(1, 2);
+            game.FakeRoll(2, 3);
             var moves = ai.GetBestMoves();
+            foreach (var move in moves)
+            {
+                Console.WriteLine(move);
+            }
         }
     }
 }

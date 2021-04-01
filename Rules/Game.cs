@@ -76,6 +76,11 @@ namespace Backend.Rules
             }
         }
 
+        public void SwitchPlayer()
+        {
+            CurrentPlayer = OtherPlayer();
+        }
+
         private Player.Color OtherPlayer()
         {
             return CurrentPlayer == Player.Color.Black ? Player.Color.White : Player.Color.Black;
@@ -312,7 +317,6 @@ namespace Backend.Rules
                             UndoMove(move, hit);
                         }
                     }
-
                 }
                 dice.Used = false;
             }
@@ -320,7 +324,7 @@ namespace Backend.Rules
 
         public Checker MakeMove(Move move)
         {
-            var checker = move.From.Checkers.FirstOrDefault(c => c.Color == move.Color);
+            var checker = move.From.Checkers.LastOrDefault(c => c.Color == move.Color);
             if (checker == null)
                 throw new ApplicationException("There should be a checker on this point. Something is very wrong.");
             move.From.Checkers.Remove(checker);
@@ -352,7 +356,7 @@ namespace Backend.Rules
 
         public void UndoMove(Move move, Checker hitChecker)
         {
-            var checker = move.To.Checkers.FirstOrDefault(c => c.Color == move.Color);
+            var checker = move.To.Checkers.LastOrDefault(c => c.Color == move.Color);
             move.To.Checkers.Remove(checker);
             move.From.Checkers.Add(checker);
             if (move.Color == Player.Color.Black)

@@ -17,6 +17,9 @@
       <button *ngIf="user$ | async" class="black-button" (click)="playFriendClick()">
         Invite a friend
       </button>
+      <button *ngIf="user$ | async" class="black-button" (click)="playAiClick()">
+        Play AI
+      </button>
     </div>
     <div *ngIf="inviteId && (user$ | async)">
       <button class="default-button" (click)="startInvitedGame(inviteId)">

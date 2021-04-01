@@ -16,7 +16,7 @@ namespace Backend
     {
         private static List<GameManager> AllGames = new List<GameManager>();
 
-        internal static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId)
+        internal static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId, bool playAi)
         {
             if (Maintenance())
             {
@@ -24,7 +24,7 @@ namespace Backend
                 return;
             }
 
-            var dbUser = GetDbUser(userId);
+            var dbUser = Db.BgDbContext.GetDbUser(userId);
 
             if (await TryReConnect(webSocket, context, logger, dbUser))
             {
@@ -57,15 +57,15 @@ namespace Backend
                 ).ToArray();
 
             var manager = managers.FirstOrDefault();
-            if (manager == null)
+            if (manager == null || playAi)
             {
                 manager = new GameManager(logger);
                 manager.Ended += Game_Ended;
-                manager.SearchingOpponent = true;
+                manager.SearchingOpponent = !playAi;
                 AllGames.Add(manager);
                 logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
                 // entering socket loop
-                await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser);
+                await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser, playAi);
                 await SendConnectionLost(PlayerColor.white, manager);
                 //This is the end of the connection
             }
@@ -75,7 +75,7 @@ namespace Backend
                 logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
                 var color = manager.Client1 == null ? Player.Color.Black : Player.Color.White;
                 // entering socket loop
-                await manager.ConnectAndListen(webSocket, color, dbUser);
+                await manager.ConnectAndListen(webSocket, color, dbUser, false);
                 logger.LogInformation($"{color} player disconnected.");
                 await SendConnectionLost(PlayerColor.black, manager);
                 //This is the end of the connection
@@ -157,6 +157,7 @@ namespace Backend
 
                     if (gameManager != null && MyColor(gameManager, dbUser, color))
                     {
+                        gameManager.Engine = new Ai.Engine(gameManager.Game);
                         logger.LogInformation($"Restoring game {cookie.id} for {color}");
                         // entering socket loop
                         await gameManager.Restore(color, webSocket);
@@ -185,7 +186,7 @@ namespace Backend
             if (manager.Client1 != null)
                 color = Player.Color.White;
 
-            await manager.ConnectAndListen(webSocket, color, dbUser);
+            await manager.ConnectAndListen(webSocket, color, dbUser, false);
             RemoveDissconnected(manager);
             await SendConnectionLost(PlayerColor.white, manager);
         }
@@ -231,16 +232,6 @@ namespace Backend
         private static void Game_Ended(object sender, EventArgs e)
         {
             AllGames.Remove(sender as GameManager);
-        }
-
-        private static Db.User GetDbUser(string userId)
-        {
-            if (string.IsNullOrWhiteSpace(userId))
-                userId = Guid.Empty.ToString();
-            using (var db = new Db.BgDbContext())
-            {
-                return db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
-            }
-        }
+        }        
     }
 }

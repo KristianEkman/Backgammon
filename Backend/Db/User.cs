@@ -15,7 +15,10 @@ namespace Backend.Db
         public string SocialProvider { get; set; }
         public int Elo { get; set; }
         public int GameCount { get; set; }
+        public DateTime? Registered { get; set; }
 
         public ICollection<Player> Players { get; set; } = new List<Player>();
+        public const string AiUser = "ECC9A1FC-3E5C-45E6-BCE3-7C24DFE82C98";
+
     }
 }

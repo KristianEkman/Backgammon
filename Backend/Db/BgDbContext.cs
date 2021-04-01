@@ -31,6 +31,17 @@ namespace Backend.Db
             options.UseSqlServer(connectionString);
         }
 
+        internal static User GetDbUser(string userId)
+        {
+
+            if (string.IsNullOrWhiteSpace(userId))
+                userId = Guid.Empty.ToString();
+            using (var db = new Db.BgDbContext())
+            {
+                return db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
+            }
+        }
+
         public static IConfigurationSection ConnectionsString { get; internal set; }
 
         //protected override void OnModelCreating(ModelBuilder builder)
