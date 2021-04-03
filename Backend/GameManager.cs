@@ -85,7 +85,7 @@ namespace Backend
                     Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
                     moveTimeOut.Cancel();
                     var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
-                    //_ = EndGame(winner);
+                    _ = EndGame(winner);
                 }
             }
         }
@@ -437,7 +437,7 @@ namespace Backend
                 if (validMove == null)
                 {
                     // Preventing invalid moves to enter the state. Should not happen unless someones hacking the socket or serious bugs.
-                    throw new ApplicationException("An attempt ta make an invalid move was made");
+                    throw new ApplicationException("An attempt to make an invalid move was made");
                 }
                 else if (i < action.moves.Length - 1)
                 {

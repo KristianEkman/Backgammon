@@ -374,4 +374,12 @@ export class SocketsService implements OnDestroy {
     };
     this.sendMessage(JSON.stringify(action));
   }
+
+  resetGame(): void {
+    this.cookieService.deleteAll(Keys.gameIdKey);
+    this.userMoves = [];
+    this.gameHistory = [];
+    this.dicesHistory = [];
+    this.connectTime = new Date();
+  }
 }

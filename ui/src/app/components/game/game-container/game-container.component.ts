@@ -221,6 +221,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   newGame(): void {
     this.newVisible = false;
+    this.service.resetGame();
     this.service.connect('', false);
   }
 

@@ -103,7 +103,7 @@ namespace Backend.Rules
             AddCheckers(5, Player.Color.Black, 19);
             AddCheckers(5, Player.Color.White, 19);
 
-            //OneMoveToVictory();
+            //CloseToVictory();
 
             //DebugBlocked();
 
@@ -146,14 +146,17 @@ namespace Backend.Rules
 
         }
 
-        private void OneMoveToVictory()
+        private void CloseToVictory()
         {
             //Only one move to victory
-            AddCheckers(14, Player.Color.Black, 25);
-            AddCheckers(14, Player.Color.White, 25);
+            AddCheckers(12, Player.Color.Black, 25);
+            AddCheckers(12, Player.Color.White, 25);
 
             AddCheckers(1, Player.Color.Black, 24);
             AddCheckers(1, Player.Color.White, 24);
+
+            AddCheckers(2, Player.Color.Black, 12);
+            AddCheckers(2, Player.Color.White, 12);
         }
 
         private void DebugBlocked()
