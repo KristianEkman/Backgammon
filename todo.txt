@@ -2,18 +2,24 @@
 Release 1.0 - beta
 ===========
 New game bug.
-Vinnare visas inte vid avslutat ai-spel, när spelare vann.
 
 
-ai
-    mer effectiv move gen
-    if bearing off move to home first.
+ai    
     make refresh page work
+        - header field instead of query param?
+    
+    Score for ai? Yes.
+
+    Searching opponent.
+
+    Visa option to play AI after 20s
+        - There are no other players at the moment.
+          Do you want to play the AI?
+          Yes, No keep waiting.
 
 Adminsida
     Pågående spel
-    Skapade users
-    
+    Skapade users   
 
 
 Performance tests.

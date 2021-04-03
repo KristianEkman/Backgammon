@@ -81,7 +81,7 @@ namespace Backend.Rules
             CurrentPlayer = OtherPlayer();
         }
 
-        private Player.Color OtherPlayer()
+        public Player.Color OtherPlayer()
         {
             return CurrentPlayer == Player.Color.Black ? Player.Color.White : Player.Color.Black;
         }
@@ -107,9 +107,25 @@ namespace Backend.Rules
 
             //DebugBlocked();
 
-            // DebugBearingOff();
+            //DebugBearingOff();
 
             // AtHomeAndOtherAtBar();
+
+            //Test();
+        }
+
+        private void Test()
+        {
+            AddCheckers(1, Player.Color.Black, 1);
+            //game.AddCheckers(1, Player.Color.White, 1);
+
+            AddCheckers(1, Player.Color.Black, 2);
+            //game.AddCheckers(1, Player.Color.White, 2);
+
+            AddCheckers(3, Player.Color.Black, 17);
+            AddCheckers(3, Player.Color.White, 17);
+
+            AddCheckers(1, Player.Color.White, 19); // 6 for black, the target
         }
 
         private void AtHomeAndOtherAtBar()
@@ -142,10 +158,12 @@ namespace Backend.Rules
 
         private void DebugBlocked()
         {
-            AddCheckers(3, Player.Color.Black, 20);
+            AddCheckers(2, Player.Color.Black, 19);
+
+            AddCheckers(2, Player.Color.Black, 20);
             AddCheckers(3, Player.Color.White, 20);
 
-            AddCheckers(3, Player.Color.Black, 21);
+            AddCheckers(2, Player.Color.Black, 21);
             AddCheckers(3, Player.Color.White, 21);
 
             AddCheckers(3, Player.Color.Black, 22);
@@ -330,13 +348,9 @@ namespace Backend.Rules
             move.From.Checkers.Remove(checker);
             move.To.Checkers.Add(checker);
             if (move.Color == Player.Color.Black)
-            {
                 BlackPlayer.PointsLeft -= (move.To.BlackNumber - move.From.BlackNumber);
-            }
             else
-            {
                 WhitePlayer.PointsLeft -= (move.To.WhiteNumber - move.From.WhiteNumber);
-            }
 
             // Feels wrong that now that own home is same point as opponent bar.
             // Todo: Try to change it some day.
@@ -363,6 +377,7 @@ namespace Backend.Rules
                 BlackPlayer.PointsLeft += (move.To.BlackNumber - move.From.BlackNumber);
             else
                 WhitePlayer.PointsLeft += (move.To.WhiteNumber - move.From.WhiteNumber);
+
             if (hitChecker != null)
             {
                 move.To.Checkers.Add(hitChecker);
@@ -374,5 +389,6 @@ namespace Backend.Rules
                     BlackPlayer.PointsLeft -= (25 - move.To.BlackNumber);
             }
         }
+
     }
 }

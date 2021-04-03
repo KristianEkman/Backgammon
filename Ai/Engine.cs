@@ -17,31 +17,44 @@ namespace Ai
 
         public Move[] GetBestMoves()
         {
-            List<Move> bestMoveSequence = null;
+            Move[] bestMoveSequence = null;
             var bestScore = double.MinValue;
-            var allSequences = GetAllMoveSequence();
+            var allSequences = GenerateMovesSequence();
             //return allSequences[0].ToArray();
+            //int depth = Game.Roll.Count == 2 ? 0 : 0;
+            var myColor = Game.CurrentPlayer;
+            var oponent = Game.OtherPlayer();
+            for (int s = 0; s < allSequences.Count; s++)
+            {
+                var sequence = allSequences[s];
+                var hits = DoSequence(sequence);
+                var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
+                //if (bestScore - score < 2) //only eval costly propability score if it is interesting
+                    //score -= PropabilityScore(oponent) / 5; // the possibility for the other player to score good.
+                //var score = AlpaBeta(int.MinValue, int.MaxValue, depth);
+                UndoSequence(sequence, hits);
 
-            foreach (var sequence in allSequences)
-            {                                
-                var score = AlpaBeta(int.MinValue, int.MaxValue, 0);
+                Console.WriteLine($"Engine search {s} of {allSequences.Count}\t{score.ToString("0.##")}\t{sequence.BuildString()}");
 
                 if (score > bestScore)
                 {
                     bestScore = score;
                     bestMoveSequence = sequence;
                 }
+
             }
+            if (bestMoveSequence == null)
+                return new Move[0];
             return bestMoveSequence.ToArray();
         }
 
         private double AlpaBeta(double alpha, double beta, int depth)
         {
             if (depth == 0)
-                return PropabilityScore();
+                return PropabilityScore(Game.CurrentPlayer);
 
             var bestScore = double.MinValue;
-            var seqs = GetAllMoveSequence();
+            var seqs = GenerateMovesSequence();
 
             foreach (var seq in seqs)
             {
@@ -67,115 +80,45 @@ namespace Ai
             return alpha;
         }
 
-        private Stack<Checker> DoSequence(List<Move> sequence)
+        private Stack<Checker> DoSequence(Move[] sequence)
         {
             var hits = new Stack<Checker>();
             foreach (var move in sequence)
             {
+                if (move == null)
+                    continue;
                 var hit = Game.MakeMove(move);
-                if (hit != null)
-                    Debug.Assert(true);
+                //if (hit != null)
+                //    Debug.Assert(true);
                 hits.Push(hit);
             }
             Game.SwitchPlayer();
             return hits;
         }
 
-        private void UndoSequence(List<Move> sequence, Stack<Checker> hits)
+        private void UndoSequence(Move[] sequence, Stack<Checker> hits)
         {
             Game.SwitchPlayer();
 
-            for (int i = sequence.Count - 1; i >= 0; i--)
-            {
-                Game.UndoMove(sequence[i], hits.Pop());
-            }
+            for (int i = sequence.Length - 1; i >= 0; i--)
+                if (sequence[i] != null)
+                    Game.UndoMove(sequence[i], hits.Pop());
         }
 
-        private List<List<Move>> GetAllMoveSequence()
+        private double EvaluatePoints(Player.Color myColor)
         {
-            // make an 2d-array of the move tree structure.
-
-            // todo: unique movesequences, undependent on order
-            var validMoves = Game.GenerateMoves();
-            var listofList = new List<List<Move>>();
-            var first1 = true;
-            listofList.Add(new List<Move>());
-            int idx = 0;
-            foreach (var move1 in validMoves)
-            {
-                if (first1)
-                    listofList[idx].Add(move1);
-                else
-                {
-                    listofList.Add(new List<Move>());
-                    idx++;
-                    listofList[idx].Add(move1);
-                }
-                first1 = false;
-                var first2 = true;
-
-                foreach (var move2 in move1.NextMoves)
-                {
-                    if (first2)
-                        listofList[idx].Add(move2);
-                    else
-                    {
-                        var copy = listofList[idx].Take(1).ToList();
-                        copy.Add(move2);
-                        if (listofList.ContainsEntryWithAll(copy))
-                            continue;
-
-                        listofList.Add(new List<Move>(copy.ToArray()));
-                        idx++;
-                    }
-                    first2 = false;
-                    var first3 = true;
-
-                    foreach (var move3 in move2.NextMoves)
-                    {
-                        if (first3)
-                            listofList[idx].Add(move3);
-                        else
-                        {
-                            var take = 2;
-                            listofList.Add(new List<Move>(listofList[idx].Take(take).ToArray()));
-                            idx++;
-                            listofList[idx].Add(move3);
-                        }
-                        first3 = false;
-                        var first4 = true;
-
-                        foreach (var move4 in move3.NextMoves) // this is maximum number of moves in one roll
-                        {
-                            if (first4)
-                                listofList[idx].Add(move4);
-                            else
-                            {
-                                var take = 3;
-                                listofList.Add(new List<Move>(listofList[idx].Take(take).ToArray()));
-                                idx++;
-                                listofList[idx].Add(move4);
-                            }
-                            first4 = false;
-                        }
-                    }
-                }
-            }
-            return listofList;
-        }
-
-        private int Evaluate()
-        {
-            var score = 0;
-            var myColor = Game.CurrentPlayer;
             if (myColor == Player.Color.Black)
-                score = Game.BlackPlayer.PointsLeft - Game.WhitePlayer.PointsLeft;
-             else
-                score = Game.WhitePlayer.PointsLeft - Game.BlackPlayer.PointsLeft;
+                return Game.BlackPlayer.PointsLeft - Game.WhitePlayer.PointsLeft;
+            else
+                return Game.WhitePlayer.PointsLeft - Game.BlackPlayer.PointsLeft;
+        }
 
+        private double EvaluateCheckers(Player.Color myColor)
+        {
+            double score = 0;
             var inBlock = false;
             var counter = 0;
-            for (int i = 0; i < Game.Points.Count; i++)
+            for (int i = 1; i < 25; i++)
             {
                 var point = Game.Points[i];
                 if (point.MyBlock(myColor))
@@ -190,7 +133,7 @@ namespace Ai
                 {
                     if (inBlock)
                     {
-                        score += (int)Math.Pow(counter, 2);
+                        score += Math.Pow(counter, 2);
                         counter = 0;
 
                     }
@@ -199,34 +142,39 @@ namespace Ai
             }
 
             if (inBlock)
-                score += (int)Math.Pow(counter, 2);
+                score += Math.Pow(counter, 2);
 
+            score += Game.GetHome(myColor).Checkers.Count * 10;
             return score;
         }
 
-        private double PropabilityScore()
+        //Get the average score for current player rolling all possible combinations
+        private double PropabilityScore(Player.Color myColor)
         {
             var allDiceRoll = AllRolls();
-            var scores = new List<int>();
+            var scores = new List<double>();
             foreach (var roll in allDiceRoll)
-            {                           
+            {
                 Game.FakeRoll(roll.dice1, roll.dice2);
-                var bestScore = int.MinValue;
-                var seqs = GetAllMoveSequence();
+                var bestScore = double.MinValue;
+                var seqs = GenerateMovesSequence();
                 foreach (var s in seqs)
                 {
                     var hits = DoSequence(s);
-                    var score = Evaluate();
+                    var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
                     if (score > bestScore)
                         bestScore = score;
                     UndoSequence(s, hits);
                 }
                 int m = roll.dice1 == roll.dice2 ? 1 : 2; // dice roll with not same value on dices are twice as probable. 2 / 36, vs 1 / 36
-                scores.Add(bestScore * m);
+                if (seqs.Any())
+                    scores.Add(bestScore * m);
                 // Get best score of each roll, and make an average.
                 // some rolls are more probable, multiply them
                 // some rolls will be blocked or partially blocked
             }
+            if (!scores.Any())
+                return -100000;
             return scores.Average();
         }
 
@@ -245,29 +193,122 @@ namespace Ai
             _allRolls = list.ToArray();
             return _allRolls;
         }
-    }
 
-    static class Extension
-    {
-        public static bool ContainsEntryWithAll(this List<List<Move>> listOfList, List<Move> match)
+        public List<Move[]> GenerateMovesSequence()
         {
-            // searching for a list entry that contains all entries in match
-            foreach (var list in listOfList)
+            var sequences = new List<Move[]>();
+            var moves = new Move[Game.Roll.Count];
+            sequences.Add(moves);
+            GenerateMovesSequence(sequences, moves, 0);
+            // If there are move sequences with all moves not null, remove sequences that has some moves null.
+            // (rule of backgammon that you have to use all dice if you can)
+            if (sequences.Any(moves => moves.All(m => m != null)))
+                sequences = sequences.Where(moves => moves.All(m => m != null)).Select(s => s).ToList();
+            return sequences;
+        }
+
+        private void GenerateMovesSequence(List<Move[]> sequences, Move[] moves, int diceIndex)
+        {
+            var bar = Game.Points.Where(p => p.GetNumber(Game.CurrentPlayer) == 0); // TODO: no need ta call every time
+            var barHasCheckers = bar.First().Checkers.Any(c => c.Color == Game.CurrentPlayer);
+            var dice = Game.Roll[diceIndex];
+
+            var points = barHasCheckers ? bar :
+                Game.Points.Where(p => p.Checkers.Any(c => c.Color == Game.CurrentPlayer))
+                .OrderBy(p => p.GetNumber(Game.CurrentPlayer));
+
+            foreach (var fromPoint in points)
             {
-                var hasMove = true;
-                foreach (var mv in match)
+                var fromPointNo = fromPoint.GetNumber(Game.CurrentPlayer);
+                if (fromPointNo == 25)
+                    continue;
+                var toPoint = Game.Points.SingleOrDefault(p => p.GetNumber(Game.CurrentPlayer) == dice.Value + fromPointNo);
+                if (toPoint != null && toPoint.IsOpen(Game.CurrentPlayer)
+                    && !toPoint.IsHome(Game.CurrentPlayer)) // no creation of bearing off moves here. See next block.
                 {
-                    if (!list.Any(m => m.From == mv.From && m.To == mv.To && m.Color == mv.Color))
+                    var move = new Move { Color = Game.CurrentPlayer, From = fromPoint, To = toPoint };
+                    //copy and make a new list for first dice
+                    if (moves[diceIndex] == null)
+                        moves[diceIndex] = move;
+                    else
                     {
-                        hasMove = false;
-                        break;
+                        var newMoves = new Move[Game.Roll.Count];
+                        Array.Copy(moves, newMoves, diceIndex);
+                        newMoves[diceIndex] = move;
+                        if (diceIndex < Game.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
+                        {
+                            moves = newMoves;
+                            sequences.Add(moves);
+                        }
+                    }
+                    if (diceIndex < Game.Roll.Count - 1)
+                    {
+                        var hit = Game.MakeMove(move);
+                        GenerateMovesSequence(sequences, moves, diceIndex + 1);
+                        Game.UndoMove(move, hit);
                     }
                 }
-                if (hasMove)
-                    return true;
-
+                else if (Game.IsBearingOff(Game.CurrentPlayer))
+                {
+                    // The furthest away checker can be moved beyond home.
+                    var minPoint = Game.Points.Where(p => p.Checkers.Any(c => c.Color == Game.CurrentPlayer)).OrderBy(p => p.GetNumber(Game.CurrentPlayer)).First().GetNumber(Game.CurrentPlayer);
+                    var toPointNo = fromPointNo == minPoint ? Math.Min(25, fromPointNo + dice.Value) : fromPointNo + dice.Value;
+                    toPoint = Game.Points.SingleOrDefault(p => p.GetNumber(Game.CurrentPlayer) == toPointNo);
+                    if (toPoint != null && toPoint.IsOpen(Game.CurrentPlayer))
+                    {
+                        var move = new Move { Color = Game.CurrentPlayer, From = fromPoint, To = toPoint };
+                        if (moves[diceIndex] == null)
+                            moves[diceIndex] = move;
+                        else
+                        {
+                            var newMoves = new Move[Game.Roll.Count];
+                            Array.Copy(moves, newMoves, diceIndex);
+                            newMoves[diceIndex] = move;
+                            if (diceIndex < Game.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
+                            {
+                                moves = newMoves;
+                                sequences.Add(moves);
+                            }
+                        }
+                        if (diceIndex < Game.Roll.Count - 1)
+                        {
+                            var hit = Game.MakeMove(move);
+                            GenerateMovesSequence(sequences, moves, diceIndex + 1);
+                            Game.UndoMove(move, hit);
+                        }
+                    }
+                }
             }
-            return false;
         }
     }
 }
+
+static class Extensions
+{
+    public static bool ContainsEntryWithAll(this List<Move[]> listOfList, Move[] match)
+    {
+        // searching for a list entry that contains all entries in match
+        foreach (var list in listOfList)
+        {
+            var hasMove = true;
+            foreach (var mv in match)
+            {
+                if (!list.Any(m => mv != null && m != null && m.From == mv.From && m.To == mv.To && m.Color == mv.Color))
+                {
+                    hasMove = false;
+                    break;
+                }
+            }
+            if (hasMove)
+                return true;
+
+        }
+        return false;
+    }
+
+    public static string BuildString(this Move[] moves)
+    {
+        return string.Join(",", moves.Where(m => m != null).Select(m => m.ToString()).ToArray());
+    }
+}
+

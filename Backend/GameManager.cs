@@ -83,6 +83,7 @@ namespace Backend
                 if (ellapsed.TotalSeconds > Game.TotalThinkTime)
                 {
                     Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
+                    moveTimeOut.Cancel();
                     var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
                     //_ = EndGame(winner);
                 }
@@ -326,10 +327,13 @@ namespace Backend
         private async Task EnginMoves(WebSocket client)
         {
             var moves = Engine.GetBestMoves();
+            var noMoves = true;
             for (int i = 0; i < moves.Length; i++)
             {
                 var move = moves[i];
-                Thread.Sleep(1500);
+                if (move == null)
+                    continue;
+                await Task.Delay(1500);
                 var moveDto = move.ToDto();
                 moveDto.animate = true;                
                 var dto = new OpponentMoveActionDto
@@ -337,8 +341,11 @@ namespace Backend
                     move = moveDto,                    
                 };
                 Game.MakeMove(move);
+                noMoves = false;
                 await Send(client, dto);                
             }
+            if (noMoves)
+                await Task.Delay(4000); // if turn is switch right away, ui will not have time to display dice.
             await NewTurn(client);
         }
 

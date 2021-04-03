@@ -26,7 +26,7 @@ namespace Backend.Rules
         public bool MyBlock(Player.Color myColor)
         {
             // Do I have a block? Home doesnt count.
-            return Checkers.Count(c => c.Color == myColor) >= 2 && GetNumber(myColor) != 25;
+            return Checkers.Count(c => c.Color == myColor) >= 2;
         }
 
         public int GetNumber(Player.Color player)

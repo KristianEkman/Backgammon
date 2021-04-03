@@ -45,16 +45,17 @@ export class StatusMessageService {
     // console.log(this.myColor, this.game.winner);
     const myColor = AppState.Singleton.myColor.getValue();
     let message = StatusMessage.info('Game ended.');
+    let score = '';
     if (newScore) {
-      const score = `New score ${newScore.score} (${newScore.increase})`;
-
-      message = StatusMessage.info(
-        myColor === game.winner
-          ? `Congrats! You won. ${score}`
-          : `Sorry. You lost the game. ${score}`
-      );
-      AppState.Singleton.statusMessage.setValue(message);
+      score = ` New score ${newScore.score} (${newScore.increase})`;
     }
+
+    message = StatusMessage.info(
+      myColor === game.winner
+        ? `Congrats! You won.${score}`
+        : `Sorry. You lost the game.${score}`
+    );
+    AppState.Singleton.statusMessage.setValue(message);
   }
 
   setBlockedMessage(): void {
