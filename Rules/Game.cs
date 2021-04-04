@@ -351,9 +351,13 @@ namespace Backend.Rules
             move.From.Checkers.Remove(checker);
             move.To.Checkers.Add(checker);
             if (move.Color == Player.Color.Black)
-                BlackPlayer.PointsLeft -= (move.To.BlackNumber - move.From.BlackNumber);
+            {
+                BlackPlayer.PointsLeft -= (move.To.BlackNumber - move.From.BlackNumber);                
+            }
             else
+            {
                 WhitePlayer.PointsLeft -= (move.To.WhiteNumber - move.From.WhiteNumber);
+            }
 
             // Feels wrong that now that own home is same point as opponent bar.
             // Todo: Try to change it some day.

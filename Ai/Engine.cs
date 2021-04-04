@@ -200,6 +200,16 @@ namespace Ai
             var moves = new Move[Game.Roll.Count];
             sequences.Add(moves);
             GenerateMovesSequence(sequences, moves, 0);
+
+            // Special case. Sometimes the first dice is blocked, but can be moved after next dice
+            if (sequences.Count == 1 && sequences[0].All(move => move == null))
+            {
+                var temp = Game.Roll[0];
+                Game.Roll[0] = Game.Roll[1];
+                Game.Roll[1] = temp;
+                GenerateMovesSequence(sequences, moves, 0);
+            }
+
             // If there are move sequences with all moves not null, remove sequences that has some moves null.
             // (rule of backgammon that you have to use all dice if you can)
             if (sequences.Any(moves => moves.All(m => m != null)))
@@ -209,7 +219,7 @@ namespace Ai
 
         private void GenerateMovesSequence(List<Move[]> sequences, Move[] moves, int diceIndex)
         {
-            var bar = Game.Points.Where(p => p.GetNumber(Game.CurrentPlayer) == 0); // TODO: no need ta call every time
+            var bar = Game.Points.Where(p => p.GetNumber(Game.CurrentPlayer) == 0);
             var barHasCheckers = bar.First().Checkers.Any(c => c.Color == Game.CurrentPlayer);
             var dice = Game.Roll[diceIndex];
 
@@ -230,7 +240,7 @@ namespace Ai
                     //copy and make a new list for first dice
                     if (moves[diceIndex] == null)
                         moves[diceIndex] = move;
-                    else
+                    else // a move is already generated for this dice in this sequence. branch off a new.
                     {
                         var newMoves = new Move[Game.Roll.Count];
                         Array.Copy(moves, newMoves, diceIndex);
@@ -241,7 +251,8 @@ namespace Ai
                             sequences.Add(moves);
                         }
                     }
-                    if (diceIndex < Game.Roll.Count - 1)
+
+                    if (diceIndex < Game.Roll.Count - 1) // Do the created move and recurse to next dice
                     {
                         var hit = Game.MakeMove(move);
                         GenerateMovesSequence(sequences, moves, diceIndex + 1);

@@ -70,5 +70,35 @@ namespace BackendTests
             var moves = ai.GetBestMoves();
 
         }
+
+        [TestMethod]
+        public void FirstDiceBlocked()
+        {
+            var game = Game.Create();
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.White, 0);
+            game.AddCheckers(1, Player.Color.White, 1);
+            game.AddCheckers(2, Player.Color.White, 3);
+            game.AddCheckers(2, Player.Color.White, 16);
+            game.AddCheckers(2, Player.Color.White, 18);
+            game.AddCheckers(2, Player.Color.White, 19);
+            game.AddCheckers(2, Player.Color.White, 20);
+            game.AddCheckers(2, Player.Color.White, 21);
+
+            game.AddCheckers(1, Player.Color.Black, 3);
+            game.AddCheckers(1, Player.Color.Black, 15);
+            game.AddCheckers(2, Player.Color.Black, 16);
+            game.AddCheckers(3, Player.Color.Black, 17);
+            game.AddCheckers(3, Player.Color.Black, 19);
+            game.AddCheckers(3, Player.Color.Black, 20);
+            game.AddCheckers(2, Player.Color.Black, 21);
+
+            game.CurrentPlayer = Player.Color.White;
+
+            game.FakeRoll(5, 1);
+            var ai = new Ai.Engine(game);
+            var moves = ai.GetBestMoves();
+            Assert.IsTrue(moves.Any(m => m != null));
+        }
     }
 }

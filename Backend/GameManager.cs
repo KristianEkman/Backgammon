@@ -85,7 +85,7 @@ namespace Backend
                     Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
                     moveTimeOut.Cancel();
                     var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
-                    _ = EndGame(winner);
+                   _ = EndGame(winner);
                 }
             }
         }
@@ -341,6 +341,11 @@ namespace Backend
                     move = moveDto,                    
                 };
                 Game.MakeMove(move);
+                if (Game.CurrentPlayer == Player.Color.Black)
+                    Game.BlackPlayer.FirstMoveMade = true;
+                else
+                    Game.WhitePlayer.FirstMoveMade = true;
+
                 noMoves = false;
                 await Send(client, dto);                
             }
