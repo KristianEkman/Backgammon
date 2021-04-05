@@ -29,6 +29,7 @@ td {
   height: 70vh;
   overflow-y: auto;
   scrollbar-width: none;
+  max-height: 600px;
 }
 
 ::-webkit-scrollbar {

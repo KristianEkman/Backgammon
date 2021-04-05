@@ -8,4 +8,5 @@ export interface UserDto {
   socialProvider: string;
   socialProviderId: string;
   createdNew: boolean;
+  isAdmin: boolean;
 }

@@ -15,3 +15,4 @@ export * from './toplist/newScoreDto';
 export * from './errorReportDto';
 export * from './admin/playedGameDto';
 export * from './admin/playedGameListDto';
+export * from './admin/summaryDto';

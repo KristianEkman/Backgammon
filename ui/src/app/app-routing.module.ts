@@ -22,7 +22,7 @@ const routes: Routes = [
     canActivate: [LoginGuard]
   },
   {
-    path: 'admin',
+    path: 'adminpage',
     component: AdminContainerComponent,
     canActivate: [LoginGuard]
   },

@@ -14,7 +14,7 @@ namespace Backend
 {
     public class GamesService
     {
-        private static List<GameManager> AllGames = new List<GameManager>();
+        internal static List<GameManager> AllGames = new List<GameManager>();
 
         internal static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId, bool playAi)
         {

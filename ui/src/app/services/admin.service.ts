@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { finalize, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { PlayedGameListDto } from '../dto';
+import { PlayedGameListDto, SummaryDto } from '../dto';
 import { AppState } from '../state/app-state';
 import { Busy } from '../state/busy';
 
@@ -19,7 +20,7 @@ export class AdminService {
   loadPlayedGames(afterDate: string): void {
     Busy.showNoOverlay();
     this.httpClient
-      .get(`${this.url}?afterDate=${afterDate}`)
+      .get(`${this.url}/allgames?afterDate=${afterDate}`)
       .pipe(
         map((data) => data as PlayedGameListDto),
         finalize(() => {
@@ -36,5 +37,14 @@ export class AdminService {
           });
         }
       });
+  }
+
+  getSummary(): Observable<SummaryDto> {
+    return this.httpClient.get(`${this.url}/summary`).pipe(
+      map((data) => data as SummaryDto),
+      finalize(() => {
+        Busy.hide();
+      })
+    );
   }
 }

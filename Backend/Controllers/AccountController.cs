@@ -91,7 +91,8 @@ namespace Backend.Controllers
                         ProviderId = userDto.socialProviderId,
                         SocialProvider = userDto.socialProvider,
                         Elo = 1200,
-                        Registered = DateTime.Now
+                        Registered = DateTime.Now,
+                        Admin = false
                     };
                     db.Users.Add(dbUser);
                     db.SaveChanges();

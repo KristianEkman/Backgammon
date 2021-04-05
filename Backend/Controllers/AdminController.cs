@@ -13,7 +13,7 @@ namespace Backend.Controllers
     [ApiController]
     public class AdminController : AuthorizedController
     {
-        [Route("api/admin")]
+        [Route("api/admin/allgames")]
         [HttpGet]
         public PlayedGameListDto AllGames(string afterDate)
         {
@@ -22,7 +22,8 @@ namespace Backend.Controllers
             if (!DateTime.TryParse(afterDate, out date))
                 date = DateTime.Parse("1900-01-01");
 
-            // a trick to prevent loading same game twice.
+            // A trick to prevent loading same game twice.
+            // Will only fail if two games are started the same millisecond which seems impossible.
             date = date.AddMilliseconds(1);
 
             using (var db = new Db.BgDbContext())
@@ -33,7 +34,8 @@ namespace Backend.Controllers
                     black = g.Players.Where(p => p.Color == Db.Color.Black),
                     white = g.Players.Where(p => p.Color == Db.Color.White),
                     winner = g.Winner
-                }).Select(pl => new PlayedGameDto {
+                }).Select(pl => new PlayedGameDto
+                {
                     started = pl.started,
                     black = pl.black.First().User.Name,
                     white = pl.white.First().User.Name,
@@ -42,15 +44,32 @@ namespace Backend.Controllers
                 .Where(x => x.started > date)
                 .OrderBy(x => x.started)
                 .Take(30);
-               
-                
-                var games = playedGames.ToArray();
 
+                var games = playedGames.ToArray();
                 return new PlayedGameListDto
                 {
                     games = games
                 };
             }
-        }        
+        }
+
+        [Route("api/admin/summary")]
+        [HttpGet]
+        public SummaryDto Summary()
+        {
+            AssertAdmin();
+            var summary = new SummaryDto();
+            summary.ongoingGames = GamesService.AllGames.Count;
+            using (var db = new Db.BgDbContext())
+            {
+                var today = DateTime.Now.Date;
+                summary.playedGamesToday = db.Games.Count(g => g.Started > today);
+                summary.playedGamesTotal = db.Games.Count();
+                summary.reggedUsers = db.Users.Count();
+                summary.reggedUsersToday = db.Users.Count(u => u.Registered > today);
+            }
+
+            return summary;
+        }
     }
 }

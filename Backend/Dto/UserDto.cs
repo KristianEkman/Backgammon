@@ -14,5 +14,6 @@ namespace Backend.Dto
         public string socialProvider { get; set; }
         public string socialProviderId { get; set; }
         public bool createdNew { get; set; }
+        public bool isAdmin { get; set; }
     }
 }

@@ -39,6 +39,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { AdminContainerComponent } from './components/admin-container/admin-container.component';
 import { PlayedGamesComponent } from './components/admin-container/played-games/played-games.component';
+import { AdminSummaryComponent } from './components/admin-container/admin-summary/admin-summary.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -59,7 +60,8 @@ import { PlayedGamesComponent } from './components/admin-container/played-games/
     BusyComponent,
     ErrorHandlerComponent,
     AdminContainerComponent,
-    PlayedGamesComponent
+    PlayedGamesComponent,
+    AdminSummaryComponent
   ],
   imports: [
     BrowserModule,

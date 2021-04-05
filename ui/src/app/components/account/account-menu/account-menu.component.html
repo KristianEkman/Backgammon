@@ -4,4 +4,5 @@
 <div *ngIf="toggle" class="app-account__menu-panel">
   <button class="flat-button" (click)="logoutClick()">Logout</button>
   <button class="flat-button" (click)="editAccount()">Edit account</button>
+  <button *ngIf="user?.isAdmin" class="flat-button" (click)="adminPage()">Admin</button>
 </div>

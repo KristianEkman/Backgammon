@@ -1,3 +1,6 @@
-<div class="admin-container">
+<button class="home-button flat-button" (click)="router.navigateByUrl('lobby')"><i class="fas fa-home"></i>
+  Home</button>
+<app-admin-summary *ngIf="!allGames" [summary]="summary$ | async" (onShowGame)="allGames = true"></app-admin-summary>
+<div *ngIf="allGames" class="admin-container">
   <app-played-games [list]="playedGames$ | async" (loadAfter)="onLoadAfter($event)"></app-played-games>
 </div>
