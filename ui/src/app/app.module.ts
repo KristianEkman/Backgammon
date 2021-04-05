@@ -37,6 +37,8 @@ import { ErrorHandlerComponent } from './components/shared/error-handler/error-h
 import { GlobalErrorService } from './services';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { AdminContainerComponent } from './components/admin-container/admin-container.component';
+import { PlayedGamesComponent } from './components/admin-container/played-games/played-games.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,7 +57,9 @@ import { environment } from '../environments/environment';
     ToplistBannerComponent,
     AccountEditContainerComponent,
     BusyComponent,
-    ErrorHandlerComponent
+    ErrorHandlerComponent,
+    AdminContainerComponent,
+    PlayedGamesComponent
   ],
   imports: [
     BrowserModule,

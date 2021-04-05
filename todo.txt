@@ -2,7 +2,7 @@
 Release 1.0 - beta
 ===========
 
-
+    REsize på mobile funkar inte klockrent
     Searching opponent.
 
     Visa option to play AI after 15s
@@ -12,6 +12,9 @@ Release 1.0 - beta
 
 Adminsida
     Pågående spel
+        pl  pl
+        ai
+
     Skapade users   
 
 

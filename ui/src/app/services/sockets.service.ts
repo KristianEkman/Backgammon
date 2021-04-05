@@ -101,7 +101,7 @@ export class SocketsService implements OnDestroy {
 
         const cookie: GameCookieDto = { id: dto.game.id, color: dto.myColor };
         this.cookieService.deleteAll(Keys.gameIdKey);
-        console.log('Settings cookie', cookie);
+        // console.log('Settings cookie', cookie);
         this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
         this.statusMessageService.setTextMessage(dto.game);
         AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);

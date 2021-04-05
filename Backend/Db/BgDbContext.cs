@@ -17,6 +17,8 @@ namespace Backend.Db
 
         public DbSet<ErrorReport> ErrorReports { get; set; }
 
+        public DbSet<Player> Player { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             var pw = Secrets.GetPw();
@@ -27,8 +29,8 @@ namespace Backend.Db
             var cnn = ConnectionsString["prod"];
 #endif
             var connectionString = cnn.Replace("{pw}", pw);
-            //options.UseSqlServer($"Data Source=ekmandbs.database.windows.net;Initial Catalog=backgammon-db;User ID=kristian;Password={pw};Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             options.UseSqlServer(connectionString);
+            //options.LogTo(Console.WriteLine);
         }
 
         internal static User GetDbUser(string userId)

@@ -3,6 +3,7 @@ import {
   ConnectionDto,
   GameState,
   MoveDto,
+  PlayedGameListDto,
   PlayerColor,
   Toplist,
   UserDto
@@ -30,6 +31,8 @@ export class AppState {
     this.moveTimer = new StateObject<number>();
     this.toplist = new StateObject<Toplist>();
     this.errors = new StateObject<ErrorState>();
+    this.playedGames = new StateObject<PlayedGameListDto>();
+    this.playedGames.setValue({ games: [] });
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -51,6 +54,7 @@ export class AppState {
   moveTimer: StateObject<number>;
   toplist: StateObject<Toplist>;
   errors: StateObject<ErrorState>;
+  playedGames: StateObject<PlayedGameListDto>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

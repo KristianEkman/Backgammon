@@ -1,0 +1,3 @@
+<div class="admin-container">
+  <app-played-games [list]="playedGames$ | async" (loadAfter)="onLoadAfter($event)"></app-played-games>
+</div>

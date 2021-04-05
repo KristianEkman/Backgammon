@@ -111,7 +111,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @HostListener('window:orientationchange', ['$event'])
   onOrientationChange(): void {
     this.recalculateGeometry();
-    console.log('orient change');
+    // console.log('orient change');
   }
 
   recalculateGeometry(): void {

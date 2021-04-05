@@ -1,0 +1,24 @@
+<h2>Played Games</h2>
+<table>
+  <thead>
+    <tr>
+      <th class="col1">Started</th>
+      <th class="col2">Black</th>
+      <th class="col3">White</th>
+      <th class="col4">Winner</th>
+    </tr>
+  </thead>
+</table>
+<div class="table-container" (scroll)="onScroll($event)">
+  <table *ngIf="list != null">
+
+    <tbody>
+      <tr *ngFor="let game of list.games">
+        <td class="col1">{{ formatDate(game.started)}}</td>
+        <td class="col2">{{ game.black }}</td>
+        <td class="col3">{{ game.white }}</td>
+        <td class="col4">{{ getColor(game.winner) }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

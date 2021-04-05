@@ -34,5 +34,21 @@ namespace Backend.Controllers
 
             return userId;
         }
+
+        protected void AssertAdmin()
+        {
+            var userId = Request.Headers["user-id"].ToString();
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new UnauthorizedAccessException();
+
+            using (var db = new Db.BgDbContext())
+            {
+                var user = db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
+                if (user == null || !user.Admin)
+                {
+                    throw new UnauthorizedAccessException();
+                }
+            }
+        }
     }
 }

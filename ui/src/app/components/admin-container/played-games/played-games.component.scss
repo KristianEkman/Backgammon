@@ -1,0 +1,46 @@
+table {
+  width: 500px;
+
+  .col1 {
+    width: 187px;
+  }
+
+  .col2,
+  .col3 {
+    width: 119px;
+  }
+
+  .col4 {
+    width: 65px;
+  }
+
+}
+
+th {
+  text-align: left;
+}
+
+td {
+  padding: 2px 2px 0 0
+}
+
+.table-container {
+  display: inline-block;
+  height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #858584;
+  -webkit-border-radius: 1ex;
+}
+
+::-webkit-scrollbar-corner {
+  background: #000;
+}
