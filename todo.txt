@@ -10,6 +10,7 @@ Release 1.0 - beta
 
     Rensa gamla games vid omstart.
 
+
 Performance tests.
     Temporärt tillåta guest.
 
@@ -37,24 +38,19 @@ New game --> same opponnet efter avslutat invite.
 Release 1.>0
 ============
 About button
-    This is an open, just for fun, free-time projekt.
+    This is an open, just for fun, free-time hobby-projekt.
     You are very welcome to play.
     Or if you are a developer you might be intrested in the links below with all the details on this application.
-    On GitHub, you can create and vote for issues/new feature, or even contribute with a pull request.
+    On GitHub, you can request or vote for issues/new features, or even contribute with a pull request.
 
     - link to code project article.
     - link to git hub
 
 https://ionicframework.com/
-install to mobile start screen
 Feedback
 canvas banner
 animera app routing
 candeactivate
-Inte kunna göra något när en server connection ligger nere.
-Active games.
-Seed Guest User.
-Glitch bugg på bar. Beräkna med motståndaren i home.
 Animation på firefox suger.
 Dubbling. Först till 10.
 Backa upp Managers till DB, så man kan göra en swap vid release.
@@ -67,13 +63,12 @@ Ge extra tid för reconnect.
 Ljud
 Progressbar
 Editing of photo.
-Repution: noob, beginner, amature, skilled, expert, elite, grand master
+Reputition: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
 
 Visa dubblar vid första drag.
 Chat
 Olika teman, ljus, marble, wood.
-Doubling
 Två olika hastigheter. 10s, resp 35s. Inte som gäst. Infinite?
 Ui
   Auto send when no options, vis no moves.
@@ -86,10 +81,4 @@ Automatiska e2e-tester, selenium.
 
 serverside http only userid cookie
     - kräver inloggning vaje gång app startas.
-
 Offline validering av jwt's
-
-Frågor
-======
-Är UX bra?
-Färgerna behagliga?

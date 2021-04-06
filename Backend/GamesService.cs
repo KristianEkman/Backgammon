@@ -106,10 +106,9 @@ namespace Backend
         {
             var state = System.IO.File.ReadAllBytes("SavedGames.json");
             AllGames = JsonSerializer.Deserialize<List<GameManager>>(state);
+            AllGames = AllGames.Where(g => g.Created > DateTime.Now.Date).ToList();
             foreach (var game in AllGames)
-            {
                 game.Logger = logger;
-            }
         }
 
         internal static Guid CreateInvite(ILogger<GameManager> logger, string userId)

@@ -2,6 +2,8 @@
   display: inline-block;
   touch-action: none;
   transition: transform .8s ease-in-out;
+  max-width: 100vw;
+  max-height: calc(100vh - 20px);
 }
 
 .flipped {

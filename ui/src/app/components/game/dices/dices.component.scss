@@ -4,12 +4,12 @@
 
   div {
     display: inline-block;
-    width: 30px;
-    height: 30px;
+    width: 33px;
+    height: 33px;
 
     @media screen and (max-height: 445px) {
-      width: 20px;
-      height: 20px;
+      width: 23px;
+      height: 23px;
     }
 
     position: relative;
