@@ -51,13 +51,14 @@ namespace Backend.Controllers
 
                 // This has to be the last call, because the connection then will be closed.
                 var myRank = db.ExcecuteScalar("GetRank", ("Id", userId));  // to prevent reading entire table into this app a stored procedure is called on the server.
-                var me = new ToplistResult()
+                var you = new ToplistResult()
                 {
                     elo = meEnt.Elo,
                     name = meEnt.Name,
-                    place = myRank
+                    place = myRank,
+                    you = true
                 };
-                var topList = new Toplist { results = results };
+                var topList = new Toplist { results = results, you = you };
 
                 return topList;
             }

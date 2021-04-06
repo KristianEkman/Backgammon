@@ -2,21 +2,13 @@
 Release 1.0 - beta
 ===========
 
-    REsize på mobile funkar inte klockrent
-    Searching opponent.
+    Resize på mobile funkar inte klockrent
+    
+    Fula tärningar på FF mobile    
 
-    Visa option to play AI after 15s
-        - There are no other players at the moment.
-          Do you want to play the AI?
-          Yes, No keep waiting.
+    Added users today.
 
-Adminsida
-    Pågående spel
-        pl  pl
-        ai
-
-    Skapade users   
-
+    Rensa gamla games vid omstart.
 
 Performance tests.
     Temporärt tillåta guest.
