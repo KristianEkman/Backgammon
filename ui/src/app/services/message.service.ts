@@ -26,7 +26,6 @@ export class MessageService {
         })
       )
       .subscribe((messages) => {
-        console.log(messages);
         AppState.Singleton.messages.setValue(messages);
       });
   }

@@ -11,15 +11,17 @@
       <!-- <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
         Play as guest&nbsp;&nbsp;<i class="fas fa-info-circle" title="Guests can only play other guests"></i>
       </button> -->
-      <button *ngIf="user$ | async" class="black-button" (click)="playClick()">
-        Play random opponent
-      </button><br>
-      <button *ngIf="user$ | async" class="black-button" (click)="playFriendClick()">
-        Invite a friend
-      </button>
-      <button *ngIf="user$ | async" class="black-button" (click)="playAiClick()">
-        Play AI
-      </button>
+      <ng-container *ngIf="isLoggedIn()">
+        <button class="black-button" (click)="playClick()">
+          Play random opponent
+        </button><br>
+        <button class="black-button" (click)="playFriendClick()">
+          Invite a friend
+        </button>
+        <button class="black-button" (click)="playAiClick()">
+          Play AI
+        </button>
+      </ng-container>
     </div>
     <div *ngIf="inviteId && (user$ | async)">
       <button class="default-button" (click)="startInvitedGame(inviteId)">
@@ -36,6 +38,8 @@
       (onAdminPage)="router.navigateByUrl('adminpage')">
     </app-account-menu>
   </div>
-  <app-new-messages [messages]="messages$ | async" (showMessages)="router.navigateByUrl('messages')">
-  </app-new-messages>
+  <ng-container *ngIf="isLoggedIn()">
+    <app-new-messages [messages]="messages$ | async" (showMessages)="router.navigateByUrl('messages')">
+    </app-new-messages>
+  </ng-container>
 </div>

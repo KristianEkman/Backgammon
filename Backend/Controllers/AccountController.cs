@@ -1,5 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Dto;
+using Backend.Dto.message;
 using Google.Apis.Auth;
 using Google.Apis.Util;
 using Microsoft.AspNetCore.Authorization;
@@ -74,8 +75,8 @@ namespace Backend.Controllers
                     user.SocialProvider.Equals(userDto.socialProvider) &&
                     user.ProviderId.Equals(userDto.socialProviderId)
                     );
-                // todo: is this safe or should email be checked instead or also?
 
+                // todo: is this safe or should email be checked instead or also?
                 if (dbUser != null)
                 {
                     return dbUser.ToDto();
@@ -95,6 +96,17 @@ namespace Backend.Controllers
                         Admin = false
                     };
                     db.Users.Add(dbUser);
+                    
+                    // Give new users a prompt message to share the site.
+                    var admin = db.Users.First(u => u.Admin);
+                    dbUser.ReceivedMessages.Add(new Message
+                    {
+                        Text = "",
+                        Type = MessageType.SharePrompt,
+                        Sender = admin,
+                        Sent = DateTime.Now
+                    });
+
                     db.SaveChanges();
 
                     // The id will not be set until the save is successfull.

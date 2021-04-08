@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SocialAuthService } from 'angularx-social-login';
+import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { Observable } from 'rxjs';
 import { MessageDto, Toplist, UserDto } from 'src/app/dto';
 import { InviteResponseDto } from 'src/app/dto/rest';
@@ -41,9 +41,16 @@ export class LobbyContainerComponent implements OnInit {
   playInvite = false;
   inviteId = '';
   toplist = false;
+  loginClicked = false;
 
   ngOnInit(): void {
-    this.authService.authState.subscribe((user) => {
+    this.authService.authState.subscribe((user: SocialUser) => {
+      if (!this.loginClicked) {
+        // This gets fired sometimes for unknow reasons.
+        // Makes sure it only does things when I want to.
+        return;
+      }
+      this.loginClicked = false;
       // send user, store secret user id
       if (user) {
         const userDto = {
@@ -53,7 +60,7 @@ export class LobbyContainerComponent implements OnInit {
           socialProvider: user.provider,
           photoUrl: user.photoUrl
         } as UserDto;
-        // google ande facebook have different names on the token field.
+        // google and facebook have different names on the token field.
         Busy.show();
         this.accountService.signIn(userDto, user.idToken || user.authToken);
       }
@@ -72,6 +79,7 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   login(provider: string): void {
+    this.loginClicked = true;
     this.authService.signIn(provider);
   }
 
@@ -106,5 +114,9 @@ export class LobbyContainerComponent implements OnInit {
 
   showingTopList(flag: boolean): void {
     this.toplist = flag;
+  }
+
+  isLoggedIn(): boolean {
+    return !!AppState.Singleton.user.getValue();
   }
 }

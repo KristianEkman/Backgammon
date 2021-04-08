@@ -100,8 +100,8 @@ namespace Backend.Dto
                 id = dbUser.Id.ToString(),
                 photoUrl = dbUser.PhotoUrl,
                 socialProvider = dbUser.SocialProvider,
-                isAdmin = dbUser.Admin
-                //socialProviderId = dbUser.ProviderId // Feels more secure not to send this to the client.
+                isAdmin = dbUser.Admin,
+                socialProviderId = dbUser.ProviderId
             };
         }
     }

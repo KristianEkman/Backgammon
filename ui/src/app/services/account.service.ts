@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ToplistService } from './toplist.service';
 import { Busy } from '../state/busy';
+import { SocialAuthService } from 'angularx-social-login';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +22,9 @@ export class AccountService {
     private http: HttpClient,
     @Inject(LOCAL_STORAGE) private storage: StorageService,
     private router: Router,
-    private topListService: ToplistService
+    private topListService: ToplistService,
+    private authService: SocialAuthService,
+    private messageService: MessageService
   ) {
     this.url = `${environment.apiServiceUrl}/account`;
   }
@@ -41,10 +45,12 @@ export class AccountService {
         this.storage.set(Keys.loginKey, userDto);
         AppState.Singleton.user.setValue(userDto);
         Busy.hide();
-        if (userDto.createdNew) {
+        if (userDto?.createdNew) {
           this.router.navigateByUrl('/edit-user');
-        } else {
+        }
+        if (userDto) {
           this.topListService.loadToplist();
+          this.messageService.loadMessages();
         }
       });
   }
@@ -73,7 +79,9 @@ export class AccountService {
     const user = AppState.Singleton.user.getValue();
     this.http.post(`${this.url}/delete`, user).subscribe(() => {
       AppState.Singleton.user.clearValue();
+      this.authService.signOut();
       this.storage.set(Keys.loginKey, null);
+      this.router.navigateByUrl('/lobby');
     });
   }
 

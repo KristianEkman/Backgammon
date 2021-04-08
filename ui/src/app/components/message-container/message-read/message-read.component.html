@@ -5,7 +5,6 @@
     <app-share-prompt *ngIf="message.type === MessageType.sharePrompt"></app-share-prompt>
     <p *ngIf="message.type === MessageType.sharePrompt">{{ message.text }}</p>
   </div>
-
   <div class="buttons-container">
     <button class="flat-button" (click)="deleteClick()">Delete <i class="fas fa-trash-alt"></i></button>
     <button class="flat-button" (click)="nextClick()">Next <i class="far fa-arrow-alt-circle-right"></i></button>
