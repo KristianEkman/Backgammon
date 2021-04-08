@@ -1,0 +1,17 @@
+p {
+  font-size: 20px;
+}
+
+.share-buttons {
+  display: flex;
+  justify-content: space-between;
+
+  &__twitter {
+    background-color: #1DA1F2;
+    color: white;
+    text-decoration: none;
+    padding: 6px 20px 6px 10px;
+    border-radius: 5px;
+    font-size: 13px;
+  }
+}

@@ -18,6 +18,7 @@ namespace Backend.Db
         public DbSet<ErrorReport> ErrorReports { get; set; }
 
         public DbSet<Player> Player { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
@@ -30,7 +31,7 @@ namespace Backend.Db
 #endif
             var connectionString = cnn.Replace("{pw}", pw);
             options.UseSqlServer(connectionString);
-            //options.LogTo(Console.WriteLine);
+            // options.LogTo(Console.WriteLine);
         }
 
         internal static User GetDbUser(string userId)

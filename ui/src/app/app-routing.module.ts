@@ -4,6 +4,7 @@ import { AccountEditContainerComponent } from './components/account/account-edit
 import { AdminContainerComponent } from './components/admin-container/admin-container.component';
 import { GameContainerComponent } from './components/game/game-container/game-container.component';
 import { LobbyContainerComponent } from './components/lobby-container/lobby-container.component';
+import { MessageContainerComponent } from './components/message-container/message-container.component';
 import { LoginGuard } from './guards/login.guard';
 
 const routes: Routes = [
@@ -24,6 +25,11 @@ const routes: Routes = [
   {
     path: 'adminpage',
     component: AdminContainerComponent,
+    canActivate: [LoginGuard]
+  },
+  {
+    path: 'messages',
+    component: MessageContainerComponent,
     canActivate: [LoginGuard]
   },
   {

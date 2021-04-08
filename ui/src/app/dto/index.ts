@@ -16,3 +16,5 @@ export * from './errorReportDto';
 export * from './admin/playedGameDto';
 export * from './admin/playedGameListDto';
 export * from './admin/summaryDto';
+export * from './message/messageDto';
+export * from './message/messageType';

@@ -40,6 +40,11 @@ import { environment } from '../environments/environment';
 import { AdminContainerComponent } from './components/admin-container/admin-container.component';
 import { PlayedGamesComponent } from './components/admin-container/played-games/played-games.component';
 import { AdminSummaryComponent } from './components/admin-container/admin-summary/admin-summary.component';
+import { MessageContainerComponent } from './components/message-container/message-container.component';
+import { NewMessagesComponent } from './components/shared/new-messages/new-messages.component';
+import { MessageReadComponent } from './components/message-container/message-read/message-read.component';
+import { SharePromptComponent } from './components/message-container/share-prompt/share-prompt.component';
+import { HomeButtonComponent } from './components/shared/home-button/home-button.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +66,12 @@ import { AdminSummaryComponent } from './components/admin-container/admin-summar
     ErrorHandlerComponent,
     AdminContainerComponent,
     PlayedGamesComponent,
-    AdminSummaryComponent
+    AdminSummaryComponent,
+    MessageContainerComponent,
+    NewMessagesComponent,
+    MessageReadComponent,
+    SharePromptComponent,
+    HomeButtonComponent
   ],
   imports: [
     BrowserModule,

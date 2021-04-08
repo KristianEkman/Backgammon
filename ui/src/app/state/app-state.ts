@@ -13,6 +13,7 @@ import { GameDto } from '../dto/gameDto';
 import { StateObject } from './state-object';
 import { Busy } from './busy';
 import { ErrorState } from './ErrorState';
+import { MessageDto } from '../dto/message/messageDto';
 
 export class AppState {
   constructor() {
@@ -33,6 +34,8 @@ export class AppState {
     this.errors = new StateObject<ErrorState>();
     this.playedGames = new StateObject<PlayedGameListDto>();
     this.playedGames.setValue({ games: [] });
+    this.messages = new StateObject<MessageDto[]>();
+    this.messages.setValue([]);
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -55,6 +58,7 @@ export class AppState {
   toplist: StateObject<Toplist>;
   errors: StateObject<ErrorState>;
   playedGames: StateObject<PlayedGameListDto>;
+  messages: StateObject<MessageDto[]>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

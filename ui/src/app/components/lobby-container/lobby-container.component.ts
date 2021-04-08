@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SocialAuthService } from 'angularx-social-login';
 import { Observable } from 'rxjs';
-import { UserDto } from 'src/app/dto';
+import { MessageDto, Toplist, UserDto } from 'src/app/dto';
 import { InviteResponseDto } from 'src/app/dto/rest';
 import {
   AccountService,
   InviteService,
+  MessageService,
   ToplistService
 } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
@@ -24,12 +25,18 @@ export class LobbyContainerComponent implements OnInit {
     private authService: SocialAuthService,
     private accountService: AccountService,
     private inviteService: InviteService,
-    private topListService: ToplistService
-  ) {}
+    private topListService: ToplistService,
+    private messageService: MessageService
+  ) {
+    this.user$ = AppState.Singleton.user.observe();
+    this.toplist$ = AppState.Singleton.toplist.observe();
+    this.messages$ = AppState.Singleton.messages.observe();
+  }
 
-  user$: Observable<UserDto> = AppState.Singleton.user.observe();
+  user$: Observable<UserDto>;
   invite$: Observable<InviteResponseDto> | null = null;
-  toplist$ = AppState.Singleton.toplist.observe();
+  toplist$: Observable<Toplist>;
+  messages$: Observable<MessageDto[]>;
 
   playInvite = false;
   inviteId = '';
@@ -60,6 +67,7 @@ export class LobbyContainerComponent implements OnInit {
 
     if (this.accountService.isLoggedIn()) {
       this.topListService.loadToplist();
+      this.messageService.loadMessages();
     }
   }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Backend.Db;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -19,11 +20,18 @@ namespace Backend.Controllers
             {
                 var user = db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
                 if (user == null)
-                {
                     throw new UnauthorizedAccessException();
-                }
             }
             return userId;
+        }
+
+        protected User GetUser(BgDbContext db)
+        {
+            var userId = Request.Headers["user-id"].ToString();
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new UnauthorizedAccessException();
+
+            return db.Users.Single(u => u.Id.ToString().Equals(userId));
         }
 
         protected string GetUserOrGuestId()

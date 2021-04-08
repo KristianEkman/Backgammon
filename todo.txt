@@ -1,29 +1,7 @@
 
-Release 1.0 - beta
-===========
-
-    Resize på mobile funkar inte klockrent
-    
     Fula tärningar på FF mobile    
-
     Added users today.
 
-    Rensa gamla games vid omstart.
-
-
-Performance tests.
-    Temporärt tillåta guest.
-
-    Loop
-    Skapa spel
-    Skapa spel
-    Vänta 10s
-    Avsluta
-
-    Logga
-    Monitorera fel
-    CPU och minne svars tider
-    Antal spel i AllGames
 
 Acc-test med Linn, Patrik och Shane
 

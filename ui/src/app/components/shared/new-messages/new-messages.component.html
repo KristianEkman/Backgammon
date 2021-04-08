@@ -1,0 +1,6 @@
+<ng-container *ngIf="messages && messages.length > 0">
+  <button class="flat-button" (click)="buttonClick()">
+    {{ messages.length }} {{ messages.length > 1 ? 'messages' : 'message' }}
+    <i class="fas fa-comment-dots"></i>
+  </button>
+</ng-container>

@@ -19,7 +19,6 @@ export class AppComponent {
     private errorReportService: ErrorReportService
   ) {
     this.errors$ = AppState.Singleton.errors.observe();
-
     this.accountService.repair();
   }
 
