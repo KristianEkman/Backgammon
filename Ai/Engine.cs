@@ -11,9 +11,17 @@ namespace Ai
         public Engine(Game game)
         {
             Game = game;
+            Configuration = new Config();
+        }
+
+        public Engine(Game game, Config config)
+        {
+            Configuration = config;
         }
 
         private Game Game { get; }
+
+        public Config Configuration { get; }
 
         public Move[] GetBestMoves()
         {
@@ -30,11 +38,12 @@ namespace Ai
                 var hits = DoSequence(sequence);
                 var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
                 //if (bestScore - score < 2) //only eval costly propability score if it is interesting
-                    //score -= PropabilityScore(oponent) / 5; // the possibility for the other player to score good.
+                if (Configuration.PropabilityScore)
+                    score -= PropabilityScore(oponent) * Configuration.PropabilityFactor; // the possibility for the other player to score good.
                 //var score = AlpaBeta(int.MinValue, int.MaxValue, depth);
                 UndoSequence(sequence, hits);
 
-                Console.WriteLine($"Engine search {s} of {allSequences.Count}\t{score.ToString("0.##")}\t{sequence.BuildString()}");
+                //Console.WriteLine($"Engine search {s} of {allSequences.Count}\t{score.ToString("0.##")}\t{sequence.BuildString()}");
 
                 if (score > bestScore)
                 {
@@ -135,9 +144,12 @@ namespace Ai
                     {
                         score += Math.Pow(counter, 2);
                         counter = 0;
-
                     }
                     inBlock = false;
+                    if (Configuration.HitableBad && point.Hitable(myColor))
+                    {
+                        score -= point.GetNumber(myColor) / 10;
+                    }
                 }
             }
 

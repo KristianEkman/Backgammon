@@ -1,4 +1,5 @@
-﻿using Backend.Rules;
+﻿using Ai;
+using Backend.Rules;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -99,6 +100,22 @@ namespace BackendTests
             var ai = new Ai.Engine(game);
             var moves = ai.GetBestMoves();
             Assert.IsTrue(moves.Any(m => m != null));
+        }
+
+        [TestMethod]
+        public void TestRunner()
+        {
+            var runner = new Runner();
+            var winner = runner.PlayGame();
+            Console.WriteLine($"Winner: {winner}");
+        }
+
+        [TestMethod]
+        public void TestRunnerMany()
+        {
+            var runner = new Runner();
+            var result = runner.PlayMany(1000);
+            Console.WriteLine($"Black: {result.BlackPct.ToString("P")} White: {result.WhitePct.ToString("P")}");
         }
     }
 }

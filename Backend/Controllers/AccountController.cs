@@ -43,7 +43,6 @@ namespace Backend.Controllers
             bool valid = false;
             try
             {
-
                 if (userDto.socialProvider == "GOOGLE")
                 {
                     var validPayload = await GoogleJsonWebSignature.ValidateAsync(Request.Headers["Authorization"]);

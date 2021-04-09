@@ -45,5 +45,9 @@ namespace Backend.Rules
             return this.GetNumber(player) == 25;
         }
 
+        public bool Hitable(Player.Color myColor)
+        {
+            return Checkers.Count(c => c.Color == myColor)== 1;
+        }
     }
 }

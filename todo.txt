@@ -1,13 +1,21 @@
 
     Fula tärningar på FF mobile    
-    Added users today.
+    Add users today.
 
+AI,
+    1. Ai-Ai game, bäst av 100 eller 500. Borde ge 50-50
 
-Acc-test med Linn, Patrik och Shane
+    2. Lägg på propability score.
+
+    3. Utvärdera
+
+    4. Skriv en artikel
+
+    5. 
+
 
 Release 1.1 - mål att öka logins
 ===========
-Code project artiklar.
 AI
 Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
 Player photos

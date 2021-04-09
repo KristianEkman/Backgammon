@@ -65,15 +65,27 @@ namespace Backend.Rules
             return game;
         }
 
+        public void Reset()
+        {
+            ClearCheckers();
+            SetStartPosition();
+            CalcPointsLeft(this);
+            PlayState = State.FirstThrow;
+        }
+
         private static void CalcPointsLeft(Game game)
         {
+            var black = 0;
+            var white = 0;
             foreach (var point in game.Points)
             {
                 foreach (var ckr in point.Checkers.Where(c => c.Color == Player.Color.Black))
-                    game.BlackPlayer.PointsLeft += 25 - point.BlackNumber;
+                    black += 25 - point.BlackNumber;
                 foreach (var ckr in point.Checkers.Where(c => c.Color == Player.Color.White))
-                    game.WhitePlayer.PointsLeft += 25 - point.WhiteNumber;
+                    white += 25 - point.WhiteNumber;
             }
+            game.BlackPlayer.PointsLeft = black;
+            game.WhitePlayer.PointsLeft = white;
         }
 
         public void SwitchPlayer()
