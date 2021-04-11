@@ -12,13 +12,13 @@ namespace Ai
         {
             //Runner.OptimizeHitableThreshold();
             //Runner.OptimizeHitableFactor();
-            Runner.RunStatic();
+            //Runner.RunStatic();
             //Runner.ComparePassedBlocks();
             //Runner.OptimizeConnectedBlocksFactor();
             //Runner.OptimizeBlockedPointScore();
 
 
-            //Runner.MaximizeAll();
+            Runner.MaximizeAll();
         }
     }
 }

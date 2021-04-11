@@ -16,7 +16,7 @@ namespace Ai
             White = new Engine(Game);
             if (config != null)
             {
-                Black.Configuration = config;
+                Black.Configuration = config.Clone();
                 White.Configuration = config.Clone();
             }
         }
@@ -35,12 +35,11 @@ namespace Ai
         public static double RunMany(Runner runner)
         {
             var start = DateTime.Now;
-            var runs = 2500;
+            var runs = 1500;
 
             var result = runner.PlayMany(runs);
             var time = DateTime.Now - start;
 
-            Console.WriteLine($"Black: {result.BlackPct.ToString("P")} White: {result.WhitePct.ToString("P")} Errors: {result.errors}");
             var runsPs = runs / time.TotalSeconds;
             Console.WriteLine($"Games per second: {runsPs.ToString("0.#")}");
             Console.WriteLine($"{runner.Game.BlackStarts}, {runner.Game.WhiteStarts}");
@@ -54,7 +53,7 @@ namespace Ai
             int errors = 0;
             Game.BlackStarts = 0;
             Game.WhiteStarts = 0;
-            for (int i = 0; i < times; i++)
+            for (int i = 1; i <= times; i++)
             {
                 Game.Reset();
                 var winner = PlayGame();
@@ -67,7 +66,9 @@ namespace Ai
                 if (i % 100 == 0)
                 {
                     Console.CursorLeft = 0;
-                    Console.Write(i);
+                    var blackPct = blackWins / (double)i;
+                    var whitePct = whitekWins / (double)i;
+                    Console.Write($"{i} Black: {blackPct.ToString("P")} White: {whitePct.ToString("P")} Errors: {errors}");
                 }
             }
             Console.WriteLine();
@@ -138,7 +139,7 @@ namespace Ai
                 Console.WriteLine($"=====================");
                 Console.WriteLine($"HitableThreshold: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.55)
                 {
                     best = res;
                     bestT = t;
@@ -152,7 +153,7 @@ namespace Ai
             var best = 0d;
             var bestT = 0d;
 
-            for (var t = start; t < end; t += 1)
+            for (var t = start; t < end; t += 0.2)
             {
                 var runner = new Runner(config);
                 // todo: enable Hitable for white but keep factor constant
@@ -160,7 +161,7 @@ namespace Ai
                 Console.WriteLine($"==================");
                 Console.WriteLine($"HitableFactor: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.55)
                 {
                     best = res;
                     bestT = t;
@@ -179,7 +180,7 @@ namespace Ai
                 runner.Black.Configuration.ConnectedBlocksFactor = f;
                 Console.WriteLine($"===== ConnectedBlocksFactor {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.55)
                 {
                     best = res;
                     bestF = f;
@@ -198,7 +199,7 @@ namespace Ai
                 runner.Black.Configuration.BlockedPointScore = f;
                 Console.WriteLine($"===== BlockedPointScore {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.55)
                 {
                     best = res;
                     bestF = f;
@@ -216,8 +217,8 @@ namespace Ai
             Console.WriteLine("*********************");
             while (true)
             {
-                var sHf = Math.Max(config.HitableFactor - 5, 0);
-                var eHf = config.HitableFactor + 5;
+                var sHf = Math.Max(config.HitableFactor - 2, 0.1);
+                var eHf = config.HitableFactor + 2;
                 var hf = OptimizeHitableFactor(sHf, eHf, config);
                 if (hf > 0)
                     config.HitableFactor = config.HitableFactor + (hf - config.HitableFactor) / 2;

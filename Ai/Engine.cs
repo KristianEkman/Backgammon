@@ -108,7 +108,7 @@ namespace Ai
 
         private double EvaluatePoints(Player.Color myColor)
         {
-            if (myColor == Player.Color.Black)
+            if (myColor == Player.Color.White) // Higher score for white when few checkers and black has many checkers left
                 return EngineGame.BlackPlayer.PointsLeft - EngineGame.WhitePlayer.PointsLeft;
             else
                 return EngineGame.WhitePlayer.PointsLeft - EngineGame.BlackPlayer.PointsLeft;
@@ -240,7 +240,8 @@ namespace Ai
 
             var points = barHasCheckers ? new[] { bar } :
                 EngineGame.Points.Where(p => p.Checkers.Any(c => c.Color == current))
-                .OrderBy(p => p.GetNumber(current)).ToArray();
+                //.OrderBy(p => p.GetNumber(current))
+                .ToArray();
 
             // There seems to be a big advantage to evaluate points from lowest number.
             // If not reversing black will win 60 to 40 with same config.
