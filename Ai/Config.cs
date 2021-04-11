@@ -27,7 +27,7 @@ namespace Ai
         /// <summary>
         /// The point divided by this factor reduces score for hitable checkers.
         /// </summary>
-        public double HitableFactor { get; set; } = 2d;
+        public double HitableFactor { get; set; } = 0.1d;
 
         // Score received for one point blocked.
         public double BlockedPointScore { get; set; } = 1d;

@@ -1,6 +1,7 @@
 ﻿using Backend.Rules;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -128,18 +129,20 @@ namespace Ai
             }
         }
 
-        public static int OptimizeHitableThreshold(int start = 2, int end = 20, Config config = null)
+        public static int OptimizeHitableThreshold(int start = 1, int end = 10, Config config = null)
         {
             var best = 0d;
             var bestT = 0;
-            for (int t = start; t < end; t++)
+            var delta = (end - start) / 10;
+
+            for (int t = start; t < end; t += delta)
             {
                 var runner = new Runner(config);
                 runner.Black.Configuration.HitableThreshold = t;
                 Console.WriteLine($"=====================");
                 Console.WriteLine($"HitableThreshold: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.55)
+                if (res > best && res > 0.5)
                 {
                     best = res;
                     bestT = t;
@@ -148,12 +151,13 @@ namespace Ai
             return bestT;
         }
 
-        public static double OptimizeHitableFactor(double start = 1, double end = 20, Config config = null)
+        public static double OptimizeHitableFactor(double start = 1, double end = 10, Config config = null)
         {
             var best = 0d;
             var bestT = 0d;
+            var delta = (end - start) / 10;
 
-            for (var t = start; t < end; t += 0.2)
+            for (var t = start; t < end; t += delta)
             {
                 var runner = new Runner(config);
                 // todo: enable Hitable for white but keep factor constant
@@ -161,7 +165,7 @@ namespace Ai
                 Console.WriteLine($"==================");
                 Console.WriteLine($"HitableFactor: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.55)
+                if (res > best && res > 0.5)
                 {
                     best = res;
                     bestT = t;
@@ -170,17 +174,18 @@ namespace Ai
             return bestT;
         }
 
-        public static double OptimizeConnectedBlocksFactor(double start = 3d, double end = 4d, Config config = null)
+        public static double OptimizeConnectedBlocksFactor(double start = 1d, double end = 10d, Config config = null)
         {
             var best = 0d;
             var bestF = 0d;
-            for (var f = start; f < end; f += 0.1d) // maximum at 3.6
+            var delta = (end - start) / 10;
+            for (var f = start; f < end; f += delta) // maximum at 3.6
             {
                 var runner = new Runner(config);
                 runner.Black.Configuration.ConnectedBlocksFactor = f;
                 Console.WriteLine($"===== ConnectedBlocksFactor {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.55)
+                if (res > best && res > 0.5)
                 {
                     best = res;
                     bestF = f;
@@ -193,13 +198,15 @@ namespace Ai
         {
             var best = 0d;
             var bestF = 0d;
-            for (var f = start; f < end; f += 0.1d) // maximum at 3.6
+            var delta = (end - start) / 10;
+
+            for (var f = start; f < end; f += delta) // maximum at 3.6
             {
                 var runner = new Runner(config);
                 runner.Black.Configuration.BlockedPointScore = f;
                 Console.WriteLine($"===== BlockedPointScore {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.55)
+                if (res > best && res > 0.5)
                 {
                     best = res;
                     bestF = f;
@@ -215,10 +222,13 @@ namespace Ai
             Console.WriteLine("*********************");
             Console.WriteLine(config.ToString());
             Console.WriteLine("*********************");
+            var csvName = $"MaximizeAll{DateTime.Now.ToString("yyMMddHHmmss")}.csv";
+            File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;HitableFactor;HitableThreshold\n");
+
             while (true)
             {
                 var sHf = Math.Max(config.HitableFactor - 2, 0.1);
-                var eHf = config.HitableFactor + 2;
+                var eHf = config.HitableFactor + 5;
                 var hf = OptimizeHitableFactor(sHf, eHf, config);
                 if (hf > 0)
                     config.HitableFactor = config.HitableFactor + (hf - config.HitableFactor) / 2;
@@ -230,19 +240,20 @@ namespace Ai
                     config.HitableThreshold = config.HitableThreshold + (ht - config.HitableThreshold) / 2;
 
                 var sCb = Math.Max(config.ConnectedBlocksFactor - 1, 1);
-                var eCb = config.ConnectedBlocksFactor + 1;
+                var eCb = config.ConnectedBlocksFactor + 5;
                 var cb = OptimizeConnectedBlocksFactor(sCb, eCb, config);
                 if (cb > 0)
                     config.ConnectedBlocksFactor = config.ConnectedBlocksFactor + (cb - config.ConnectedBlocksFactor) / 2;
 
-                var sBp = Math.Max(config.BlockedPointScore - .5, 0);
-                var eBp = config.BlockedPointScore + .5;
+                var sBp = Math.Max(config.BlockedPointScore - 1, 0);
+                var eBp = config.BlockedPointScore + 5;
                 var bp = OptimizeBlockedPointScore(sBp, eBp, config);
                 if (bp > 0)
                     config.BlockedPointScore = config.BlockedPointScore + (bp - config.BlockedPointScore) / 2;
 
                 Console.WriteLine("*********************");
                 Console.WriteLine(config.ToString());
+                File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.HitableFactor};{config.HitableThreshold}\n");
                 Console.WriteLine("*********************");
             }
         }
