@@ -10,18 +10,14 @@ namespace Ai
     {
         public Engine(Game game)
         {
-            Game = game;
+            EngineGame = game;
             Configuration = new Config();
         }
 
-        public Engine(Game game, Config config)
-        {
-            Configuration = config;
-        }
 
-        private Game Game { get; }
+        private Game EngineGame { get; }
 
-        public Config Configuration { get; }
+        public Config Configuration { get; set; }
 
         public Move[] GetBestMoves()
         {
@@ -30,21 +26,19 @@ namespace Ai
             var allSequences = GenerateMovesSequence();
             //return allSequences[0].ToArray();
             //int depth = Game.Roll.Count == 2 ? 0 : 0;
-            var myColor = Game.CurrentPlayer;
-            var oponent = Game.OtherPlayer();
+            var myColor = EngineGame.CurrentPlayer;            
             for (int s = 0; s < allSequences.Count; s++)
             {
                 var sequence = allSequences[s];
                 var hits = DoSequence(sequence);
                 var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
                 //if (bestScore - score < 2) //only eval costly propability score if it is interesting
-                if (Configuration.PropabilityScore)
-                    score -= PropabilityScore(oponent) * Configuration.PropabilityFactor; // the possibility for the other player to score good.
+                //if (Configuration.PropabilityScore)
+                //    score -= PropabilityScore(oponent) * Configuration.PropabilityFactor; // the possibility for the other player to score good.
                 //var score = AlpaBeta(int.MinValue, int.MaxValue, depth);
                 UndoSequence(sequence, hits);
 
                 //Console.WriteLine($"Engine search {s} of {allSequences.Count}\t{score.ToString("0.##")}\t{sequence.BuildString()}");
-
                 if (score > bestScore)
                 {
                     bestScore = score;
@@ -60,7 +54,7 @@ namespace Ai
         private double AlpaBeta(double alpha, double beta, int depth)
         {
             if (depth == 0)
-                return PropabilityScore(Game.CurrentPlayer);
+                return PropabilityScore(EngineGame.CurrentPlayer);
 
             var bestScore = double.MinValue;
             var seqs = GenerateMovesSequence();
@@ -96,30 +90,28 @@ namespace Ai
             {
                 if (move == null)
                     continue;
-                var hit = Game.MakeMove(move);
-                //if (hit != null)
-                //    Debug.Assert(true);
+                var hit = EngineGame.MakeMove(move);                
                 hits.Push(hit);
             }
-            Game.SwitchPlayer();
+            EngineGame.SwitchPlayer();
             return hits;
         }
 
         private void UndoSequence(Move[] sequence, Stack<Checker> hits)
         {
-            Game.SwitchPlayer();
+            EngineGame.SwitchPlayer();
 
             for (int i = sequence.Length - 1; i >= 0; i--)
                 if (sequence[i] != null)
-                    Game.UndoMove(sequence[i], hits.Pop());
+                    EngineGame.UndoMove(sequence[i], hits.Pop());
         }
 
         private double EvaluatePoints(Player.Color myColor)
         {
             if (myColor == Player.Color.Black)
-                return Game.BlackPlayer.PointsLeft - Game.WhitePlayer.PointsLeft;
+                return EngineGame.BlackPlayer.PointsLeft - EngineGame.WhitePlayer.PointsLeft;
             else
-                return Game.WhitePlayer.PointsLeft - Game.BlackPlayer.PointsLeft;
+                return EngineGame.WhitePlayer.PointsLeft - EngineGame.BlackPlayer.PointsLeft;
         }
 
         private double EvaluateCheckers(Player.Color myColor)
@@ -127,9 +119,18 @@ namespace Ai
             double score = 0;
             var inBlock = false;
             var counter = 0;
+            var cht = Configuration.HitableThreshold;
+            var chf = (double)Configuration.HitableFactor;
+            var cbf = Configuration.ConnectedBlocksFactor;
+            var cbp = Configuration.BlockedPointScore;
+
+            var other = myColor == Player.Color.Black ? Player.Color.White : Player.Color.Black;
+            // Oponents checker closest to their bar. Relative to my point numbers.
+            var opponentMax = EngineGame.Points.Where(p => p.Checkers.Any( c => c.Color == other)).Select( p => p.GetNumber(myColor)).Max();
+
             for (int i = 1; i < 25; i++)
             {
-                var point = Game.Points[i];
+                var point = EngineGame.Points[i];
                 if (point.MyBlock(myColor))
                 {
                     if (inBlock)
@@ -140,15 +141,15 @@ namespace Ai
                 }
                 else
                 {
-                    if (inBlock)
+                    if (inBlock && point.GetNumber(myColor) < opponentMax) // If all opponents checkers has passed this block, its no use.
                     {
-                        score += Math.Pow(counter, 2);
+                        score += Math.Pow(counter * cbp, cbf);
                         counter = 0;
                     }
                     inBlock = false;
-                    if (Configuration.HitableBad && point.Hitable(myColor))
+                    if (point.Hitable(myColor) && point.GetNumber(myColor) > cht)
                     {
-                        score -= point.GetNumber(myColor) / 10;
+                        score -= point.GetNumber(myColor) / chf;
                     }
                 }
             }
@@ -156,7 +157,7 @@ namespace Ai
             if (inBlock)
                 score += Math.Pow(counter, 2);
 
-            score += Game.GetHome(myColor).Checkers.Count * 10;
+            score += EngineGame.GetHome(myColor).Checkers.Count * 10;
             return score;
         }
 
@@ -167,7 +168,7 @@ namespace Ai
             var scores = new List<double>();
             foreach (var roll in allDiceRoll)
             {
-                Game.FakeRoll(roll.dice1, roll.dice2);
+                EngineGame.FakeRoll(roll.dice1, roll.dice2);
                 var bestScore = double.MinValue;
                 var seqs = GenerateMovesSequence();
                 foreach (var s in seqs)
@@ -209,16 +210,16 @@ namespace Ai
         public List<Move[]> GenerateMovesSequence()
         {
             var sequences = new List<Move[]>();
-            var moves = new Move[Game.Roll.Count];
+            var moves = new Move[EngineGame.Roll.Count];
             sequences.Add(moves);
             GenerateMovesSequence(sequences, moves, 0);
 
             // Special case. Sometimes the first dice is blocked, but can be moved after next dice
             if (sequences.Count == 1 && sequences[0].All(move => move == null))
             {
-                var temp = Game.Roll[0];
-                Game.Roll[0] = Game.Roll[1];
-                Game.Roll[1] = temp;
+                var temp = EngineGame.Roll[0];
+                EngineGame.Roll[0] = EngineGame.Roll[1];
+                EngineGame.Roll[1] = temp;
                 GenerateMovesSequence(sequences, moves, 0);
             }
 
@@ -227,77 +228,84 @@ namespace Ai
             if (sequences.Any(moves => moves.All(m => m != null)))
                 sequences = sequences.Where(moves => moves.All(m => m != null)).Select(s => s).ToList();
             return sequences;
-        }
+        }        
 
         private void GenerateMovesSequence(List<Move[]> sequences, Move[] moves, int diceIndex)
         {
-            var bar = Game.Points.Where(p => p.GetNumber(Game.CurrentPlayer) == 0);
-            var barHasCheckers = bar.First().Checkers.Any(c => c.Color == Game.CurrentPlayer);
-            var dice = Game.Roll[diceIndex];
+            //var bar = Game.Points.Where(p => p.GetNumber(Game.CurrentPlayer) == 0);
+            var current = EngineGame.CurrentPlayer;
+            var bar = EngineGame.Bars[(int)current];
+            var barHasCheckers = bar.Checkers.Any(c => c.Color == current);
+            var dice = EngineGame.Roll[diceIndex];
 
-            var points = barHasCheckers ? bar :
-                Game.Points.Where(p => p.Checkers.Any(c => c.Color == Game.CurrentPlayer))
-                .OrderBy(p => p.GetNumber(Game.CurrentPlayer));
+            var points = barHasCheckers ? new[] { bar } :
+                EngineGame.Points.Where(p => p.Checkers.Any(c => c.Color == current))
+                .OrderBy(p => p.GetNumber(current)).ToArray();
+
+            // There seems to be a big advantage to evaluate points from lowest number.
+            // If not reversing black will win 60 to 40 with same config.
+            if (EngineGame.CurrentPlayer == Player.Color.White)
+                Array.Reverse(points);
 
             foreach (var fromPoint in points)
             {
-                var fromPointNo = fromPoint.GetNumber(Game.CurrentPlayer);
+                var fromPointNo = fromPoint.GetNumber(EngineGame.CurrentPlayer);
                 if (fromPointNo == 25)
                     continue;
-                var toPoint = Game.Points.SingleOrDefault(p => p.GetNumber(Game.CurrentPlayer) == dice.Value + fromPointNo);
-                if (toPoint != null && toPoint.IsOpen(Game.CurrentPlayer)
-                    && !toPoint.IsHome(Game.CurrentPlayer)) // no creation of bearing off moves here. See next block.
+                var toPoint = EngineGame.Points.SingleOrDefault(p => p.GetNumber(EngineGame.CurrentPlayer) == dice.Value + fromPointNo);
+                if (toPoint != null && toPoint.IsOpen(EngineGame.CurrentPlayer)
+                    && !toPoint.IsHome(EngineGame.CurrentPlayer)) // no creation of bearing off moves here. See next block.
                 {
-                    var move = new Move { Color = Game.CurrentPlayer, From = fromPoint, To = toPoint };
+                    var move = new Move { Color = EngineGame.CurrentPlayer, From = fromPoint, To = toPoint };
                     //copy and make a new list for first dice
                     if (moves[diceIndex] == null)
                         moves[diceIndex] = move;
                     else // a move is already generated for this dice in this sequence. branch off a new.
                     {
-                        var newMoves = new Move[Game.Roll.Count];
+                        var newMoves = new Move[EngineGame.Roll.Count];
                         Array.Copy(moves, newMoves, diceIndex);
                         newMoves[diceIndex] = move;
-                        if (diceIndex < Game.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
+                        if (diceIndex < EngineGame.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
                         {
                             moves = newMoves;
                             sequences.Add(moves);
                         }
                     }
 
-                    if (diceIndex < Game.Roll.Count - 1) // Do the created move and recurse to next dice
+                    if (diceIndex < EngineGame.Roll.Count - 1) // Do the created move and recurse to next dice
                     {
-                        var hit = Game.MakeMove(move);
+                        var hit = EngineGame.MakeMove(move);
                         GenerateMovesSequence(sequences, moves, diceIndex + 1);
-                        Game.UndoMove(move, hit);
+                        EngineGame.UndoMove(move, hit);                        
                     }
                 }
-                else if (Game.IsBearingOff(Game.CurrentPlayer))
+                else if (EngineGame.IsBearingOff(EngineGame.CurrentPlayer))
                 {
                     // The furthest away checker can be moved beyond home.
-                    var minPoint = Game.Points.Where(p => p.Checkers.Any(c => c.Color == Game.CurrentPlayer)).OrderBy(p => p.GetNumber(Game.CurrentPlayer)).First().GetNumber(Game.CurrentPlayer);
+                    var minPoint = EngineGame.Points.Where(p => p.Checkers.Any(c => c.Color == EngineGame.CurrentPlayer)).OrderBy(p => p.GetNumber(EngineGame.CurrentPlayer)).First().GetNumber(EngineGame.CurrentPlayer);
                     var toPointNo = fromPointNo == minPoint ? Math.Min(25, fromPointNo + dice.Value) : fromPointNo + dice.Value;
-                    toPoint = Game.Points.SingleOrDefault(p => p.GetNumber(Game.CurrentPlayer) == toPointNo);
-                    if (toPoint != null && toPoint.IsOpen(Game.CurrentPlayer))
+                    toPoint = EngineGame.Points.SingleOrDefault(p => p.GetNumber(EngineGame.CurrentPlayer) == toPointNo);
+                    if (toPoint != null && toPoint.IsOpen(EngineGame.CurrentPlayer))
                     {
-                        var move = new Move { Color = Game.CurrentPlayer, From = fromPoint, To = toPoint };
+                        var move = new Move { Color = EngineGame.CurrentPlayer, From = fromPoint, To = toPoint };
                         if (moves[diceIndex] == null)
                             moves[diceIndex] = move;
                         else
                         {
-                            var newMoves = new Move[Game.Roll.Count];
+                            var newMoves = new Move[EngineGame.Roll.Count];
                             Array.Copy(moves, newMoves, diceIndex);
                             newMoves[diceIndex] = move;
-                            if (diceIndex < Game.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
+                            if (diceIndex < EngineGame.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
                             {
                                 moves = newMoves;
                                 sequences.Add(moves);
                             }
                         }
-                        if (diceIndex < Game.Roll.Count - 1)
+                        if (diceIndex < EngineGame.Roll.Count - 1)
                         {
-                            var hit = Game.MakeMove(move);
+                            var hit = EngineGame.MakeMove(move);
                             GenerateMovesSequence(sequences, moves, diceIndex + 1);
-                            Game.UndoMove(move, hit);
+                            EngineGame.UndoMove(move, hit);                            
                         }
                     }
                 }

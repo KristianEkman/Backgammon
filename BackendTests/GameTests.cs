@@ -239,7 +239,7 @@ namespace BackendTests
         {
             int doubles = 0;
             var list = new List<int>();
-            const int count = 10000;
+            const int count = 100000;
             for (int i = 0; i < count; i++)
             {
                 var dice = Dice.Roll();

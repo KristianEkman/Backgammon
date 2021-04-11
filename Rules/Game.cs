@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,8 +10,7 @@ namespace Backend.Rules
 {
 
     public class Game
-    {
-        
+    {        
         public Guid Id { get; set; }
         public Player BlackPlayer { get; set; }
         public Player WhitePlayer { get; set; }
@@ -21,6 +21,7 @@ namespace Backend.Rules
         public State PlayState { get; set; } = State.FirstThrow;
         public DateTime Created { get; set; }
         public DateTime ThinkStart { get; set; }
+        public Point[] Bars { get; set; }
 
         public const int ClientCountDown = 40;
         public const int TotalThinkTime = 48;
@@ -59,6 +60,9 @@ namespace Backend.Rules
                 game.Points[i].BlackNumber = i;
                 game.Points[i].WhiteNumber = 25 - i;
             }
+            game.Bars = new Point[2];
+            game.Bars[(int)Player.Color.Black] = game.Points[0];
+            game.Bars[(int)Player.Color.White] = game.Points[25];
 
             game.SetStartPosition();
             CalcPointsLeft(game);
@@ -67,7 +71,6 @@ namespace Backend.Rules
 
         public void Reset()
         {
-            ClearCheckers();
             SetStartPosition();
             CalcPointsLeft(this);
             PlayState = State.FirstThrow;
@@ -238,14 +241,23 @@ namespace Backend.Rules
             Roll = new List<Dice>(Dice.GetDices(v1, v2));
         }
 
+        public int WhiteStarts = 0;
+        public int BlackStarts = 0;
+
         public void SetFirstRollWinner()
         {
             if (this.PlayState == State.FirstThrow)
             {
                 if (Roll[0].Value > Roll[1].Value)
+                {
                     CurrentPlayer = Player.Color.Black;
+                    BlackStarts++; 
+                }
                 else if (Roll[0].Value < Roll[1].Value)
+                {
                     CurrentPlayer = Player.Color.White;
+                    WhiteStarts++;
+                }
 
                 if (Roll[0].Value != Roll[1].Value)
                     PlayState = State.Playing;
@@ -260,6 +272,11 @@ namespace Backend.Rules
 
             ClearMoves(ValidMoves);
             GenerateMoves(ValidMoves);
+        }
+
+        public void NewRoll()
+        {
+            Roll = new List<Dice>(Dice.Roll());
         }
 
         private void ClearMoves(List<Move> moves)
@@ -303,6 +320,20 @@ namespace Backend.Rules
             return Points.Single(p => p.GetNumber(color) == 25);
         }
 
+        public (int black, int white) CalcPointsLeft2(Game game)
+        {
+            var black = 0;
+            var white = 0;
+            foreach (var point in game.Points)
+            {
+                foreach (var ckr in point.Checkers.Where(c => c.Color == Player.Color.Black))
+                    black += 25 - point.BlackNumber;
+                foreach (var ckr in point.Checkers.Where(c => c.Color == Player.Color.White))
+                    white += 25 - point.WhiteNumber;
+            }
+            return (black, white);
+        }
+
         private void GenerateMoves(List<Move> moves)
         {
             var bar = Points.Where(p => p.GetNumber(CurrentPlayer) == 0);
@@ -332,7 +363,7 @@ namespace Backend.Rules
                         moves.Add(move);
                         var hit = MakeMove(move);
                         GenerateMoves(move.NextMoves);
-                        UndoMove(move, hit);
+                        UndoMove(move, hit);                       
                     }
 
                     if (IsBearingOff(CurrentPlayer))
@@ -344,10 +375,10 @@ namespace Backend.Rules
                         if (toPoint != null && toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint))
                         {
                             var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
-                            moves.Add(move);
+                            moves.Add(move);                           
                             var hit = MakeMove(move);
                             GenerateMoves(move.NextMoves);
-                            UndoMove(move, hit);
+                            UndoMove(move, hit);                            
                         }
                     }
                 }
@@ -380,11 +411,21 @@ namespace Backend.Rules
                 var bar = Points.Single(p => p.GetNumber(OtherPlayer()) == 0);
                 bar.Checkers.Add(hit);
                 if (move.Color == Player.Color.Black)
-                    WhitePlayer.PointsLeft += (25 - move.To.WhiteNumber);
+                    WhitePlayer.PointsLeft += (move.To.WhiteNumber);
                 else
-                    BlackPlayer.PointsLeft += (25 - move.To.BlackNumber);
+                    BlackPlayer.PointsLeft += (move.To.BlackNumber);
             }
+            //AssertPointsLeft();
             return hit;
+        }
+
+        private void AssertPointsLeft()
+        {
+            var p = CalcPointsLeft2(this);
+            if (p.black != BlackPlayer.PointsLeft)
+                Debugger.Break();
+            if (p.white != WhitePlayer.PointsLeft)
+                Debugger.Break();
         }
 
         public void UndoMove(Move move, Checker hitChecker)
@@ -403,10 +444,11 @@ namespace Backend.Rules
                 var bar = Points.Single(p => p.GetNumber(OtherPlayer()) == 0);
                 bar.Checkers.Remove(hitChecker);
                 if (move.Color == Player.Color.Black)
-                    WhitePlayer.PointsLeft -= (25 - move.To.WhiteNumber);
+                    WhitePlayer.PointsLeft -= (move.To.WhiteNumber);
                 else
-                    BlackPlayer.PointsLeft -= (25 - move.To.BlackNumber);
+                    BlackPlayer.PointsLeft -= (move.To.BlackNumber);
             }
+            //AssertPointsLeft();
         }
 
     }
