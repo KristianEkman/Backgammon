@@ -11,7 +11,7 @@ namespace Ai
         /// <summary>
         /// Hitables checkers below this threshold does not reduce score.
         /// </summary>
-        public int HitableThreshold { get; set; } = 5;
+        public int HitableThreshold { get; set; } = 1;
 
         internal Config Clone()
         {
@@ -27,13 +27,13 @@ namespace Ai
         /// <summary>
         /// The point divided by this factor reduces score for hitable checkers.
         /// </summary>
-        public double HitableFactor { get; set; } = 2.05d;
+        public double HitableFactor { get; set; } = 1d;
 
         // Score received for one point blocked.
-        public double BlockedPointScore { get; set; } = 1.4d;
+        public double BlockedPointScore { get; set; } = 1d;
 
         // Score from number of consecutive blocks raised to this value.
-        public double ConnectedBlocksFactor { get; set; } = 3.3375;
+        public double ConnectedBlocksFactor { get; set; } = 1.5;
 
         public override string ToString()
         {

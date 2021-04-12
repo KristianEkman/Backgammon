@@ -131,6 +131,10 @@ namespace Ai
             for (int i = 1; i < 25; i++)
             {
                 var point = EngineGame.Points[i];
+                // Found that its important to reverse looping for white. These conditions effects score for some configurations greatly.
+                // But I havnt figured out why.
+                if (myColor == Player.Color.White)
+                    point = EngineGame.Points[25 - i];
                 if (point.MyBlock(myColor))
                 {
                     if (inBlock)

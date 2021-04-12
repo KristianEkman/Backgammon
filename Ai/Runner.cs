@@ -139,10 +139,11 @@ namespace Ai
             {
                 var runner = new Runner(config);
                 runner.White.Configuration.HitableThreshold = (int)t;
+                WriteConfigs(runner);                
                 Console.WriteLine($"=====================");
                 Console.WriteLine($"HitableThreshold: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.52)
                 {
                     best = res;
                     bestT = t;
@@ -162,10 +163,11 @@ namespace Ai
                 var runner = new Runner(config);
                 // todo: enable Hitable for white but keep factor constant
                 runner.White.Configuration.HitableFactor = t; // 12.2 seems to be best so far.
+                WriteConfigs(runner);
                 Console.WriteLine($"==================");
                 Console.WriteLine($"HitableFactor: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.52)
                 {
                     best = res;
                     bestT = t;
@@ -183,9 +185,10 @@ namespace Ai
             {
                 var runner = new Runner(config);
                 runner.White.Configuration.ConnectedBlocksFactor = f;
+                WriteConfigs(runner);
                 Console.WriteLine($"===== ConnectedBlocksFactor {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.52)
                 {
                     best = res;
                     bestF = f;
@@ -204,9 +207,10 @@ namespace Ai
             {
                 var runner = new Runner(config);
                 runner.White.Configuration.BlockedPointScore = f;
+                WriteConfigs(runner);
                 Console.WriteLine($"===== BlockedPointScore {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.5)
+                if (res > best && res > 0.52)
                 {
                     best = res;
                     bestF = f;
@@ -230,8 +234,9 @@ namespace Ai
             while (true)
             {
                 var sHt = Math.Max(config.HitableThreshold - 5, 1);
-                var eHt = config.HitableThreshold + 5;
+                var eHt = config.HitableThreshold + 5;                
                 var ht = OptimizeHitableThreshold(sHt, eHt, config);
+                
                 if (ht > 0)
                     config.HitableThreshold = (int)ht;// config.HitableThreshold + (ht - config.HitableThreshold) / 2;
                 
@@ -259,6 +264,12 @@ namespace Ai
                 File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.HitableFactor};{config.HitableThreshold}\n");
                 Console.WriteLine("*********************");
             }
+        }
+
+        private static void WriteConfigs(Runner runner)
+        {
+            Console.WriteLine("B: " + runner.Black.Configuration);
+            Console.WriteLine("W: " + runner.White.Configuration);
         }
     }
 }
