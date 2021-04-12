@@ -36,15 +36,15 @@ namespace Ai
         public static double RunMany(Runner runner)
         {
             var start = DateTime.Now;
-            var runs = 1500;
+            var runs = 2500;
 
             var result = runner.PlayMany(runs);
             var time = DateTime.Now - start;
 
             var runsPs = runs / time.TotalSeconds;
             Console.WriteLine($"Games per second: {runsPs.ToString("0.#")}");
-            Console.WriteLine($"{runner.Game.BlackStarts}, {runner.Game.WhiteStarts}");
-            return result.BlackPct;
+            Console.WriteLine($"Starts: B {runner.Game.BlackStarts}, W {runner.Game.WhiteStarts}");
+            return result.WhitePct;
         }
 
         public (double BlackPct, double WhitePct, int errors) PlayMany(int times)
@@ -129,16 +129,16 @@ namespace Ai
             }
         }
 
-        public static int OptimizeHitableThreshold(int start = 1, int end = 10, Config config = null)
+        public static double OptimizeHitableThreshold(int start = 1, int end = 10, Config config = null)
         {
             var best = 0d;
-            var bestT = 0;
-            var delta = (end - start) / 10;
+            var bestT = 0d;
+            var delta = (end - start) / 10d;
 
-            for (int t = start; t < end; t += delta)
+            for (double t = start; t < end; t += delta)
             {
                 var runner = new Runner(config);
-                runner.Black.Configuration.HitableThreshold = t;
+                runner.White.Configuration.HitableThreshold = (int)t;
                 Console.WriteLine($"=====================");
                 Console.WriteLine($"HitableThreshold: {t}");
                 var res = RunMany(runner);
@@ -161,7 +161,7 @@ namespace Ai
             {
                 var runner = new Runner(config);
                 // todo: enable Hitable for white but keep factor constant
-                runner.Black.Configuration.HitableFactor = t; // 12.2 seems to be best so far.
+                runner.White.Configuration.HitableFactor = t; // 12.2 seems to be best so far.
                 Console.WriteLine($"==================");
                 Console.WriteLine($"HitableFactor: {t}");
                 var res = RunMany(runner);
@@ -182,7 +182,7 @@ namespace Ai
             for (var f = start; f < end; f += delta) // maximum at 3.6
             {
                 var runner = new Runner(config);
-                runner.Black.Configuration.ConnectedBlocksFactor = f;
+                runner.White.Configuration.ConnectedBlocksFactor = f;
                 Console.WriteLine($"===== ConnectedBlocksFactor {f}=========");
                 var res = RunMany(runner);
                 if (res > best && res > 0.5)
@@ -203,7 +203,7 @@ namespace Ai
             for (var f = start; f < end; f += delta) // maximum at 3.6
             {
                 var runner = new Runner(config);
-                runner.Black.Configuration.BlockedPointScore = f;
+                runner.White.Configuration.BlockedPointScore = f;
                 Console.WriteLine($"===== BlockedPointScore {f}=========");
                 var res = RunMany(runner);
                 if (res > best && res > 0.5)
@@ -222,23 +222,26 @@ namespace Ai
             Console.WriteLine("*********************");
             Console.WriteLine(config.ToString());
             Console.WriteLine("*********************");
-            var csvName = $"MaximizeAll{DateTime.Now.ToString("yyMMddHHmmss")}.csv";
+            var csvName = $"{Environment.CurrentDirectory}\\MaximizeAll{DateTime.Now.ToString("yyMMddHHmmss")}.csv";
+            Console.WriteLine(csvName);
+
             File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;HitableFactor;HitableThreshold\n");
 
             while (true)
             {
+                var sHt = Math.Max(config.HitableThreshold - 5, 1);
+                var eHt = config.HitableThreshold + 5;
+                var ht = OptimizeHitableThreshold(sHt, eHt, config);
+                if (ht > 0)
+                    config.HitableThreshold = (int)ht;// config.HitableThreshold + (ht - config.HitableThreshold) / 2;
+                
                 var sHf = Math.Max(config.HitableFactor - 2, 0.1);
                 var eHf = config.HitableFactor + 5;
                 var hf = OptimizeHitableFactor(sHf, eHf, config);
                 if (hf > 0)
                     config.HitableFactor = config.HitableFactor + (hf - config.HitableFactor) / 2;
 
-                var sHt = Math.Max(config.HitableThreshold - 5, 1);
-                var eHt = config.HitableThreshold + 5;
-                var ht = OptimizeHitableThreshold(sHt, eHt, config);
-                if (ht > 0)
-                    config.HitableThreshold = config.HitableThreshold + (ht - config.HitableThreshold) / 2;
-
+                
                 var sCb = Math.Max(config.ConnectedBlocksFactor - 1, 1);
                 var eCb = config.ConnectedBlocksFactor + 5;
                 var cb = OptimizeConnectedBlocksFactor(sCb, eCb, config);
