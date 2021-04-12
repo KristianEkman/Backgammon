@@ -64,8 +64,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           // console.log('starting animation ');
           this.animatedMove = new MoveAnimation(
             moves[0],
-            this.getMoveStartPoint(moves[0]),
-            this.getMoveEndPoint(moves[0]),
+            this.getAnimationPoint(moves[0], moves[0].from),
+            this.getAnimationPoint(moves[0], moves[0].to),
             this.theme,
             this.flipped,
             () => {
@@ -265,87 +265,43 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.whiteHome.drawBorder(cx, true);
   }
 
-  getMoveEndPoint(moveDto: MoveDto): Point {
+  getAnimationPoint(moveDto: MoveDto, pNum: number): Point {
     if (!this.game) {
       return new Point(0, 0);
     }
     let pointIdx = 0;
 
     if (moveDto.color === PlayerColor.black) {
-      if (moveDto.to === 0) {
+      if (pNum === 0) {
         return this.blackBar.getCenter();
       }
-      if (moveDto.to === 25) {
+      if (pNum === 25) {
         return this.blackHome.getCenter();
         // black bar
       }
     } else {
-      if (moveDto.to === 0) {
+      if (pNum === 0) {
         return this.whiteBar.getCenter();
       }
-      if (moveDto.to === 25) {
+      if (pNum === 25) {
         return this.whiteHome.getCenter();
       }
     }
 
     if (moveDto.color === PlayerColor.black) {
-      pointIdx = moveDto.to;
+      pointIdx = pNum;
     } else {
       // white move
-      pointIdx = 25 - moveDto.to;
+      pointIdx = 25 - pNum;
     }
 
     const rect = this.checkerAreas.find((r) => r.pointIdx === pointIdx);
     const checkCount = this.game.points[pointIdx].checkers.length;
     const cw = this.getCheckerWidth() * 2;
     if (rect) {
-      let y = rect.y + checkCount * cw + cw / 2;
+      let y = Math.min(rect.y + checkCount * cw + cw / 2, rect.y + rect.height);
       if (pointIdx > 12) {
-        y = rect.y + rect.height - checkCount * cw - cw / 2;
-      }
-      const x = rect.x + cw;
-      return new Point(x, y);
-    }
-
-    return new Point(0, 0);
-  }
-
-  getMoveStartPoint(moveDto: MoveDto): Point {
-    if (!this.game) {
-      return new Point(0, 0);
-    }
-    let pointIdx = 0;
-
-    if (moveDto.color === PlayerColor.black) {
-      if (moveDto.from === 0) {
-        return this.blackBar.getCenter();
-      }
-      if (moveDto.from === 25) {
-        return this.blackHome.getCenter();
-        // black bar
-      }
-    } else {
-      if (moveDto.from === 0) {
-        return this.whiteBar.getCenter();
-      }
-      if (moveDto.from === 25) {
-        return this.whiteHome.getCenter();
-      }
-    }
-
-    if (moveDto.color === PlayerColor.black) {
-      pointIdx = moveDto.from;
-    } else {
-      // white move
-      pointIdx = 25 - moveDto.from;
-    }
-    const rect = this.checkerAreas.find((r) => r.pointIdx === pointIdx);
-    const checkCount = this.game.points[pointIdx].checkers.length;
-    const cw = this.getCheckerWidth() * 2;
-    if (rect) {
-      let y = rect.y + checkCount * (cw - 1) - cw / 2;
-      if (pointIdx > 12) {
-        y = rect.y + rect.height - checkCount * (cw - 1) + cw / 2;
+        y = Math.max(rect.y + rect.height - checkCount * cw - cw / 2, rect.y);
       }
       const x = rect.x + cw;
       return new Point(x, y);

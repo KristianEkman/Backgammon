@@ -287,10 +287,24 @@ export class SocketsService implements OnDestroy {
     const dice = diceClone[diceIdx];
     dice.used = true;
     AppState.Singleton.dices.setValue(diceClone);
+
     if (move.animate) {
       const clone = [...AppState.Singleton.moveAnimations.getValue()];
       // console.log('pushing next animation');
       clone.push(move);
+      AppState.Singleton.moveAnimations.setValue(clone);
+    }
+
+    if (hit) {
+      const clone = [...AppState.Singleton.moveAnimations.getValue()];
+      const hitMove: MoveDto = {
+        from: 25 - move.to,
+        color: isWhite ? PlayerColor.black : PlayerColor.white,
+        to: 0,
+        animate: true,
+        nextMoves: []
+      };
+      clone.push(hitMove);
       AppState.Singleton.moveAnimations.setValue(clone);
     }
   }

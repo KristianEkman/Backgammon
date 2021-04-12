@@ -143,7 +143,7 @@ namespace Ai
                 Console.WriteLine($"=====================");
                 Console.WriteLine($"HitableThreshold: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.52)
+                if (res > best && res > 0.51)
                 {
                     best = res;
                     bestT = t;
@@ -167,7 +167,7 @@ namespace Ai
                 Console.WriteLine($"==================");
                 Console.WriteLine($"HitableFactor: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.52)
+                if (res > best && res > 0.51)
                 {
                     best = res;
                     bestT = t;
@@ -188,7 +188,7 @@ namespace Ai
                 WriteConfigs(runner);
                 Console.WriteLine($"===== ConnectedBlocksFactor {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.52)
+                if (res > best && res > 0.51)
                 {
                     best = res;
                     bestF = f;
@@ -210,7 +210,7 @@ namespace Ai
                 WriteConfigs(runner);
                 Console.WriteLine($"===== BlockedPointScore {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.52)
+                if (res > best && res > 0.51)
                 {
                     best = res;
                     bestF = f;
