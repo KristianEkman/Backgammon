@@ -24,18 +24,16 @@ namespace Ai
             Move[] bestMoveSequence = null;
             var bestScore = double.MinValue;
             var allSequences = GenerateMovesSequence();
-            //return allSequences[0].ToArray();
-            //int depth = Game.Roll.Count == 2 ? 0 : 0;
+
+            var oponent = EngineGame.OtherPlayer();
             var myColor = EngineGame.CurrentPlayer;            
             for (int s = 0; s < allSequences.Count; s++)
             {
                 var sequence = allSequences[s];
                 var hits = DoSequence(sequence);
-                var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
-                //if (bestScore - score < 2) //only eval costly propability score if it is interesting
+                //var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
+                var score = -PropabilityScore(oponent);
                 //if (Configuration.PropabilityScore)
-                //    score -= PropabilityScore(oponent) * Configuration.PropabilityFactor; // the possibility for the other player to score good.
-                //var score = AlpaBeta(int.MinValue, int.MaxValue, depth);
                 UndoSequence(sequence, hits);
 
                 //Console.WriteLine($"Engine search {s} of {allSequences.Count}\t{score.ToString("0.##")}\t{sequence.BuildString()}");
@@ -126,7 +124,8 @@ namespace Ai
 
             var other = myColor == Player.Color.Black ? Player.Color.White : Player.Color.Black;
             // Oponents checker closest to their bar. Relative to my point numbers.
-            var opponentMax = EngineGame.Points.Where(p => p.Checkers.Any( c => c.Color == other)).Select( p => p.GetNumber(myColor)).Max();
+            var opponentMax = EngineGame.Points.Where(p => p.Checkers.Any( c => c.Color == other))
+                .Select( p => p.GetNumber(myColor)).Max();
 
             for (int i = 1; i < 25; i++)
             {
@@ -162,6 +161,7 @@ namespace Ai
                 score += Math.Pow(counter, 2);
 
             score += EngineGame.GetHome(myColor).Checkers.Count * 10;
+            //score -= EngineGame.GetHome(other).Checkers.Count * 10;
             return score;
         }
 
@@ -170,6 +170,7 @@ namespace Ai
         {
             var allDiceRoll = AllRolls();
             var scores = new List<double>();
+            var oponent = myColor == Player.Color.Black ? Player.Color.Black : Player.Color.White;
             foreach (var roll in allDiceRoll)
             {
                 EngineGame.FakeRoll(roll.dice1, roll.dice2);
@@ -179,6 +180,7 @@ namespace Ai
                 {
                     var hits = DoSequence(s);
                     var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
+                    score -= EvaluateCheckers(oponent);
                     if (score > bestScore)
                         bestScore = score;
                     UndoSequence(s, hits);
@@ -191,7 +193,7 @@ namespace Ai
                 // some rolls will be blocked or partially blocked
             }
             if (!scores.Any())
-                return -100000;
+                return -100000; // If player cant move, shes blocked. Thats bad.
             return scores.Average();
         }
 

@@ -42,6 +42,7 @@ export class LobbyContainerComponent implements OnInit {
   inviteId = '';
   toplist = false;
   loginClicked = false;
+  playAiAsGuestMessage = false;
 
   ngOnInit(): void {
     this.authService.authState.subscribe((user: SocialUser) => {
@@ -99,7 +100,14 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   playAiClick(): void {
-    this.router.navigate(['game'], { queryParams: { playAi: true } });
+    console.log({ a: this.playAiAsGuestMessage });
+    if (this.playAiAsGuestMessage || this.isLoggedIn()) {
+      this.router.navigate(['game'], { queryParams: { playAi: true } });
+      return;
+    }
+    this.playAiAsGuestMessage = true;
+
+    // The user has to click button twice.
   }
 
   startInvitedGame(id: string): void {

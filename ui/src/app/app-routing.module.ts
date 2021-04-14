@@ -14,8 +14,7 @@ const routes: Routes = [
   },
   {
     path: 'game',
-    component: GameContainerComponent,
-    canActivate: [LoginGuard]
+    component: GameContainerComponent
   },
   {
     path: 'edit-user',

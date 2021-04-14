@@ -355,6 +355,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       }
 
       cx.lineWidth = 1;
+
+      //Preventing animated move to be drawn at its destination until animation is finished.
       const dragAnimationTo =
         this.animatedMove &&
         ((this.animatedMove?.move.color === PlayerColor.black &&

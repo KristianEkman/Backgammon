@@ -47,6 +47,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     const gameId = this.router.parseUrl(this.router.url).queryParams['gameId'];
     const playAi = this.router.parseUrl(this.router.url).queryParams['playAi'];
     service.connect(gameId, playAi);
+    this.playAiFlag = playAi === 'true';
   }
 
   gameDto$: Observable<GameDto>;
@@ -63,6 +64,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   diceColor: PlayerColor | null = PlayerColor.neither;
   messageCenter = 0;
   flipped = false;
+  playAiFlag = false;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -222,7 +224,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   newGame(): void {
     this.newVisible = false;
     this.service.resetGame();
-    this.service.connect('', false);
+    this.service.connect('', this.playAiFlag);
   }
 
   exitGame(): void {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { addDays, format } from 'date-fns';
 import { Observable } from 'rxjs';
 import { PlayedGameListDto, SummaryDto } from 'src/app/dto';
 import { MessageService } from 'src/app/services';
@@ -13,20 +14,22 @@ import { AppState } from 'src/app/state/app-state';
 })
 export class AdminContainerComponent implements OnInit {
   constructor(
-    private adminSerive: AdminService,
+    private adminSerivce: AdminService,
     public router: Router,
     private messageService: MessageService
   ) {
     this.playedGames$ = AppState.Singleton.playedGames.observe();
-    this.adminSerive.loadPlayedGames('1900-01-01');
-    this.summary$ = this.adminSerive.getSummary();
+    const tomorrow = addDays(new Date(), 1);
+
+    this.adminSerivce.loadPlayedGames(format(tomorrow, 'yyyy-MM-dd'));
+    this.summary$ = this.adminSerivce.getSummary();
   }
   allGames = false;
   playedGames$: Observable<PlayedGameListDto>;
   summary$: Observable<SummaryDto>;
 
   onLoadAfter(date: string): void {
-    this.adminSerive.loadPlayedGames(date);
+    this.adminSerivce.loadPlayedGames(date);
   }
   ngOnInit(): void {}
 

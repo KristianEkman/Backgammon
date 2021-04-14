@@ -20,11 +20,11 @@ namespace Backend.Controllers
             AssertAdmin();
             DateTime date;
             if (!DateTime.TryParse(afterDate, out date))
-                date = DateTime.Parse("1900-01-01");
+                date = DateTime.Parse("2300-01-01");
 
             // A trick to prevent loading same game twice.
             // Will only fail if two games are started the same millisecond which seems impossible.
-            date = date.AddMilliseconds(1);
+            date = date.AddMilliseconds(-1);
 
             using (var db = new Db.BgDbContext())
             {
@@ -41,8 +41,8 @@ namespace Backend.Controllers
                     white = pl.white.First().User.Name,
                     winner = (PlayerColor)pl.winner
                 })
-                .Where(x => x.started > date)
-                .OrderBy(x => x.started)
+                .Where(x => x.started < date)
+                .OrderByDescending(x => x.started)
                 .Take(30);
 
                 var games = playedGames.ToArray();

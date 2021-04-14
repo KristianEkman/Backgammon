@@ -1,27 +1,37 @@
 <div class="lobby-container">
   <div class="top-list" *ngIf="(user$ | async) && !playInvite && !inviteId">
-    <app-toplist-container [toplist]="toplist$ | async" (showing)="showingTopList($event)"></app-toplist-container>
+    <app-toplist-container
+      [toplist]="toplist$ | async"
+      (showing)="showingTopList($event)"
+    ></app-toplist-container>
   </div>
   <ng-container *ngIf="!toplist">
     <div class="title-container">
       <h1>Backgammon</h1>
     </div>
-    <app-login-buttons (onLogin)="login($event)" [isLoggedIn]="!!(user$ | async)"></app-login-buttons>
+    <app-login-buttons
+      (onLogin)="login($event)"
+      [isLoggedIn]="!!(user$ | async)"
+    ></app-login-buttons>
     <div *ngIf="!playInvite && !inviteId" class="lobby">
       <!-- <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
         Play as guest&nbsp;&nbsp;<i class="fas fa-info-circle" title="Guests can only play other guests"></i>
       </button> -->
       <ng-container *ngIf="isLoggedIn()">
         <button class="black-button" (click)="playClick()">
-          Play random opponent
-        </button><br>
+          Play random opponent</button
+        ><br />
         <button class="black-button" (click)="playFriendClick()">
           Invite a friend
         </button>
-        <button class="black-button" (click)="playAiClick()">
-          Play AI
-        </button>
       </ng-container>
+      <div class="ai-button-container">
+        <button class="black-button" (click)="playAiClick()">Play AI</button>
+        <div *ngIf="playAiAsGuestMessage">
+          <strong>Tip!</strong><br />
+          <em>When you sign in, more features gets enabled, for free.</em>
+        </div>
+      </div>
     </div>
     <div *ngIf="inviteId && (user$ | async)">
       <button class="default-button" (click)="startInvitedGame(inviteId)">
@@ -29,17 +39,28 @@
       </button>
     </div>
     <div *ngIf="playInvite">
-      <app-invite (start)="startInvitedGame($event)" (cancel)="cancelInvite()" [gameId]="(invite$ |async)?.gameId">
+      <app-invite
+        (start)="startInvitedGame($event)"
+        (cancel)="cancelInvite()"
+        [gameId]="(invite$ | async)?.gameId"
+      >
       </app-invite>
     </div>
   </ng-container>
   <div class="account">
-    <app-account-menu [user]="user$ | async" (logout)="logout()" (onEditAccount)="router.navigateByUrl('edit-user')"
-      (onAdminPage)="router.navigateByUrl('adminpage')">
+    <app-account-menu
+      [user]="user$ | async"
+      (logout)="logout()"
+      (onEditAccount)="router.navigateByUrl('edit-user')"
+      (onAdminPage)="router.navigateByUrl('adminpage')"
+    >
     </app-account-menu>
   </div>
   <ng-container *ngIf="isLoggedIn()">
-    <app-new-messages [messages]="messages$ | async" (showMessages)="router.navigateByUrl('messages')">
+    <app-new-messages
+      [messages]="messages$ | async"
+      (showMessages)="router.navigateByUrl('messages')"
+    >
     </app-new-messages>
   </ng-container>
 </div>

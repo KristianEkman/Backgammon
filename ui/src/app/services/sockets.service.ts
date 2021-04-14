@@ -294,19 +294,6 @@ export class SocketsService implements OnDestroy {
       clone.push(move);
       AppState.Singleton.moveAnimations.setValue(clone);
     }
-
-    if (hit) {
-      const clone = [...AppState.Singleton.moveAnimations.getValue()];
-      const hitMove: MoveDto = {
-        from: 25 - move.to,
-        color: isWhite ? PlayerColor.black : PlayerColor.white,
-        to: 0,
-        animate: true,
-        nextMoves: []
-      };
-      clone.push(hitMove);
-      AppState.Singleton.moveAnimations.setValue(clone);
-    }
   }
 
   undoMove(): void {

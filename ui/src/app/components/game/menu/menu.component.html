@@ -2,13 +2,16 @@
   <button *ngIf="!open" class="flat-button open-button" (click)="openClick()">
     <i class="fas fa-bars"></i>
   </button>
-  <div [ngClass]="{ show: open === true, hide: open === false }" class="overlay">
+  <div
+    [ngClass]="{ show: open === true, hide: open === false }"
+    class="overlay"
+  >
     <button *ngIf="open" class="flat-button closeButton" (click)="closeClick()">
       &times;
     </button>
     <div *ngIf="open" class="overlay-content">
       <button class="flat-button" (click)="flipClick()">Rotate</button><br />
-      <button class="flat-button">Change theme</button><br />
+      <!-- <button class="flat-button">Change theme</button><br /> -->
       <button class="flat-button" (click)="resignClick()">Resign</button><br />
     </div>
   </div>

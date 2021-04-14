@@ -1,18 +1,19 @@
 
-    Fula tärningar på FF mobile    
-    Add users today.
-
+Mobile rotaded from bar not working
 AI,
-    1. Ai-Ai game, bäst av 100 eller 500. Borde ge 50-50
+        
+    
 
-    2. Lägg på propability score.
+    1.  Run or block.
+        Om Man ligger efter, passera inte motståndarens sista checker med sin sista med sista checker
+        bool Enabled
+        double factor: passed
 
-    3. Utvärdera
+        var diff = mylast - oponents las
+        if (diff > 0)
+            score += mypointsleft - op_points left * factor.        
 
-    4. Skriv en artikel
-
-    5. 
-
+     2. Skriv en artikel om AI:t
 
 Release 1.1 - mål att öka logins
 ===========
@@ -32,6 +33,7 @@ About button
     - link to code project article.
     - link to git hub
 
+Fula tärningar på FF mobile    
 https://ionicframework.com/
 Feedback
 canvas banner
