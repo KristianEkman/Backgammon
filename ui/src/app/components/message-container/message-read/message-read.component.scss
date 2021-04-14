@@ -8,5 +8,11 @@
 
 .buttons-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
+
+  button {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
 }
