@@ -7,14 +7,12 @@
     display: block;
   }
 
-  text-align: center;
-
   h1 {
     color: white;
     font-family: 'Bebas Neue';
     font-size: 80px;
     margin-top: 0;
-    margin-bottom: 60px;
+    margin-bottom: 50px;
   }
 
   h1:before {
@@ -52,12 +50,34 @@
   }
 }
 
+@keyframes fadein {
+  from {
+    opacity: 0;
+    right: -230px;
+  }
+
+  to {
+    opacity: 1;
+    right: 0;
+  }
+}
+
 .ai-button-container {
   display: flex;
-  justify-content: space-evenly;
+  position: relative;
+  justify-content: space-between;
   align-items: flex-start;
 
-  div {
-    max-width: 200px;
+  .tip-message {
+    max-width: 230px;
+    width: 230px;
+    position: absolute;
+    right: 0;
+    animation: fadein .5s;
+    text-align: center;
+
+    strong {
+      color: rgb(202, 166, 136);
+    }
   }
 }

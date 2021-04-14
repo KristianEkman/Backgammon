@@ -1,8 +1,8 @@
 
-Mobile rotaded from bar not working
+Mobile rotated from bar not working
+Uppgradera beroenden
+
 AI,
-        
-    
 
     1.  Run or block.
         Om Man ligger efter, passera inte motståndarens sista checker med sin sista med sista checker

@@ -11,7 +11,7 @@
   }
 }
 
-.error-handler-text {
+.error-handler-form {
   position: fixed;
   left: 5%;
   top: 5%;
@@ -20,17 +20,20 @@
   width: 85%;
   height: calc(90% - 35px);
 
+  border: 1px solid #888;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: black;
+  opacity: 0.9;
 
   textarea {
-    border: 1px solid #888;
-
-    padding: 10px;
-    border-radius: 10px;
+    width: 100%;
+    height: calc(100% - 35px);
     color: rgb(182, 178, 159);
     background-color: black;
-    width: 100%;
-    height: 100%;
-    opacity: 0.8;
+    border: none;
+    opacity: 0.9;
+    margin-top: 5px;
 
     &:focus {
       outline: none;
@@ -45,5 +48,6 @@
 
   button {
     font-size: 14px;
+    font-weight: 600;
   }
 }

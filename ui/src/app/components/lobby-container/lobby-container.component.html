@@ -27,9 +27,9 @@
       </ng-container>
       <div class="ai-button-container">
         <button class="black-button" (click)="playAiClick()">Play AI</button>
-        <div *ngIf="playAiAsGuestMessage">
-          <strong>Tip!</strong><br />
-          <em>When you sign in, more features gets enabled, for free.</em>
+        <div *ngIf="playAiAsGuestMessage && !isLoggedIn()" class="tip-message">
+          <strong>Tip <i class="fas fa-carrot"></i></strong><br />
+          <em>When you sign in, more features gets enabled, for free!</em>
         </div>
       </div>
     </div>
