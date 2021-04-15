@@ -102,20 +102,5 @@ namespace BackendTests
             Assert.IsTrue(moves.Any(m => m != null));
         }
 
-        [TestMethod]
-        public void TestRunner()
-        {
-            var runner = new Runner();
-            var winner = runner.PlayGame();
-            Console.WriteLine($"Winner: {winner}");
-        }
-
-        [TestMethod]
-        public void TestRunnerMany()
-        {
-            var runner = new Runner();
-            var result = runner.PlayMany(1000);
-            Console.WriteLine($"Black: {result.BlackPct.ToString("P")} White: {result.WhitePct.ToString("P")}");
-        }
     }
 }

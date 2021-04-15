@@ -31,8 +31,8 @@ namespace Ai
             {
                 var sequence = allSequences[s];
                 var hits = DoSequence(sequence);
-                //var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
-                var score = -PropabilityScore(oponent);
+                var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
+                //var score = -PropabilityScore(oponent);
                 //if (Configuration.PropabilityScore)
                 UndoSequence(sequence, hits);
 
@@ -161,7 +161,7 @@ namespace Ai
                 score += Math.Pow(counter, 2);
 
             score += EngineGame.GetHome(myColor).Checkers.Count * 10;
-            //score -= EngineGame.GetHome(other).Checkers.Count * 10;
+            score -= EngineGame.GetHome(other).Checkers.Count * 10;
             return score;
         }
 
