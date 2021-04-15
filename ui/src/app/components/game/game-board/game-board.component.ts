@@ -126,12 +126,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.sideBoardWidth = this.width * 0.1;
 
     const rectH = this.height * 0.42;
+    const rectBase = this.getRectBase();
 
     //blacks bar
     this.checkerAreas[24].set(
-      this.width / 2 - this.borderWidth * 1.5,
+      this.width / 2 - rectBase / 2,
       rectH / 3,
-      this.borderWidth * 3,
+      rectBase,
       rectH / 1.5 + this.borderWidth,
       0
     );
@@ -139,9 +140,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     //whites bar
     this.checkerAreas[25].set(
-      this.width / 2 - this.borderWidth * 1.5,
+      this.width / 2 - rectBase / 2,
       this.height / 2 + this.height * 0.08 - this.borderWidth,
-      this.borderWidth * 3,
+      rectBase,
       rectH / 1.5,
       25
     );
@@ -168,7 +169,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     let x = this.borderWidth + this.sideBoardWidth;
     let y = this.borderWidth;
-    const rectBase = this.getRectBase();
 
     //Top triangles
     for (let i = 0; i < 12; i++) {
@@ -384,10 +384,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           continue;
         }
 
-        let x = area.x + r;
-        if (p === 0 || p === 25) {
-          x = area.x + chWidth / 2;
-        }
+        const x = area.x + r;
         let y = 0;
         if ((p > 0 && p < 13) || p === 25) {
           // blacks bar and top triangles are drawn bottom down.
@@ -672,7 +669,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     //   return { x: event.offsetX, y: event.offsetY };
     // }
     // Cool that offsets are also rotated. Is that true on all browsers?
-    return { x: event.offsetX, y: event.offsetY };
+    return {
+      x: event.offsetX + this.borderWidth,
+      y: event.offsetY + this.borderWidth
+    };
   }
 
   getTouchPoint(touch: any): Point {
@@ -684,8 +684,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     if (this.flipped) {
       return {
-        x: this.width - eventX + parent.offsetLeft,
-        y: this.height - eventY + parent.offsetTop + 20
+        x: this.width - eventX + parent.offsetLeft + this.borderWidth,
+        y: this.height - eventY + parent.offsetTop + this.borderWidth + 20
       };
     }
     return {

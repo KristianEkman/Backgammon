@@ -119,6 +119,7 @@ namespace Backend.Rules
             AddCheckers(5, Player.Color.White, 19);
 
             //CloseToVictory();
+            //DebugBar();
 
             //DebugBlocked();
 
@@ -195,6 +196,31 @@ namespace Backend.Rules
 
             AddCheckers(1, Player.Color.Black, 0);
             AddCheckers(1, Player.Color.White, 0);
+        }
+
+        private void DebugBar()
+        {
+            AddCheckers(1, Player.Color.Black, 19);
+            AddCheckers(1, Player.Color.White, 19);
+
+
+            AddCheckers(1, Player.Color.Black, 20);
+            AddCheckers(1, Player.Color.White, 20);
+
+            AddCheckers(2, Player.Color.Black, 21);
+            AddCheckers(3, Player.Color.White, 21);
+
+            AddCheckers(3, Player.Color.Black, 22);
+            AddCheckers(3, Player.Color.White, 22);
+
+            AddCheckers(3, Player.Color.Black, 23);
+            AddCheckers(3, Player.Color.White, 23);
+
+            AddCheckers(2, Player.Color.Black, 24);
+            AddCheckers(2, Player.Color.White, 24);
+
+            AddCheckers(3, Player.Color.Black, 0);
+            AddCheckers(3, Player.Color.White, 0);
         }
 
         private void DebugBearingOff()

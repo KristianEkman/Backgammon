@@ -1,8 +1,9 @@
 
-Mobile rotated from bar not working
+
 Uppgradera beroenden
 
 AI,
+    0. den vill inte flytta av tillräckligt effektivt.
 
     1.  Run or block.
         Om Man ligger efter, passera inte motståndarens sista checker med sin sista med sista checker
@@ -15,15 +16,14 @@ AI,
 
      2. Skriv en artikel om AI:t
 
+Ljud
+
 Release 1.1 - mål att öka logins
 ===========
-AI
 Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
 Player photos
 New game --> same opponnet efter avslutat invite.
 
-Release 1.>0
-============
 About button
     This is an open, just for fun, free-time hobby-projekt.
     You are very welcome to play.
@@ -32,15 +32,15 @@ About button
 
     - link to code project article.
     - link to git hub
+Feedback
 
 Fula tärningar på FF mobile    
 https://ionicframework.com/
-Feedback
 canvas banner
 animera app routing
 candeactivate
 Animation på firefox suger.
-Dubbling. Först till 10.
+
 Backa upp Managers till DB, så man kan göra en swap vid release.
 Visa statistik på startsidan.
 Visa när motståndaren kastar.
@@ -48,7 +48,6 @@ Visa när motståndaren kastar.
 Flytta flera drag på ett klick.
 Ljust tema.
 Ge extra tid för reconnect.
-Ljud
 Progressbar
 Editing of photo.
 Reputition: noob, beginner, amature, skilled, expert, elite, grand master
@@ -69,4 +68,10 @@ Automatiska e2e-tester, selenium.
 
 serverside http only userid cookie
     - kräver inloggning vaje gång app startas.
+
 Offline validering av jwt's
+
+Dubbling.
+Först till 10.
+
+Money
