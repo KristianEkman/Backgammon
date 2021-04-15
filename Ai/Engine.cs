@@ -26,13 +26,13 @@ namespace Ai
             var allSequences = GenerateMovesSequence();
 
             var oponent = EngineGame.OtherPlayer();
-            var myColor = EngineGame.CurrentPlayer;            
+            var myColor = EngineGame.CurrentPlayer;
             for (int s = 0; s < allSequences.Count; s++)
             {
                 var sequence = allSequences[s];
                 var hits = DoSequence(sequence);
-                var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
-                //var score = -PropabilityScore(oponent);
+                //var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
+                var score = -PropabilityScore(oponent);
                 //if (Configuration.PropabilityScore)
                 UndoSequence(sequence, hits);
 
@@ -49,38 +49,6 @@ namespace Ai
             return bestMoveSequence.ToArray();
         }
 
-        private double AlpaBeta(double alpha, double beta, int depth)
-        {
-            if (depth == 0)
-                return PropabilityScore(EngineGame.CurrentPlayer);
-
-            var bestScore = double.MinValue;
-            var seqs = GenerateMovesSequence();
-
-            foreach (var seq in seqs)
-            {
-                var hits = DoSequence(seq);
-                var score = -AlpaBeta(-beta, -alpha, depth - 1);
-                UndoSequence(seq, hits);
-
-                if (score > bestScore)
-                {
-                    bestScore = score;
-                    if (score > alpha)
-                    {
-                        if (score >= beta)
-                        {
-                            // todo: store pv move in hash table
-                            return beta;
-                        }
-                        alpha = score;
-                    }
-                }
-            }
-
-            return alpha;
-        }
-
         private Stack<Checker> DoSequence(Move[] sequence)
         {
             var hits = new Stack<Checker>();
@@ -88,7 +56,7 @@ namespace Ai
             {
                 if (move == null)
                     continue;
-                var hit = EngineGame.MakeMove(move);                
+                var hit = EngineGame.MakeMove(move);
                 hits.Push(hit);
             }
             EngineGame.SwitchPlayer();
@@ -124,8 +92,8 @@ namespace Ai
 
             var other = myColor == Player.Color.Black ? Player.Color.White : Player.Color.Black;
             // Oponents checker closest to their bar. Relative to my point numbers.
-            var opponentMax = EngineGame.Points.Where(p => p.Checkers.Any( c => c.Color == other))
-                .Select( p => p.GetNumber(myColor)).Max();
+            var opponentMax = EngineGame.Points.Where(p => p.Checkers.Any(c => c.Color == other))
+                .Select(p => p.GetNumber(myColor)).Max();
 
             for (int i = 1; i < 25; i++)
             {
@@ -134,6 +102,9 @@ namespace Ai
                 // But I havnt figured out why.
                 if (myColor == Player.Color.White)
                     point = EngineGame.Points[25 - i];
+                // If all opponents checkers has passed this block or bloat, its not interesting.
+                if (point.GetNumber(myColor) > opponentMax)
+                    break;
                 if (point.MyBlock(myColor))
                 {
                     if (inBlock)
@@ -144,16 +115,14 @@ namespace Ai
                 }
                 else
                 {
-                    if (inBlock && point.GetNumber(myColor) < opponentMax) // If all opponents checkers has passed this block, its no use.
+                    if (inBlock)
                     {
                         score += Math.Pow(counter * cbp, cbf);
                         counter = 0;
                     }
                     inBlock = false;
                     if (point.Hitable(myColor) && point.GetNumber(myColor) > cht)
-                    {
                         score -= point.GetNumber(myColor) / chf;
-                    }
                 }
             }
 
@@ -170,7 +139,7 @@ namespace Ai
         {
             var allDiceRoll = AllRolls();
             var scores = new List<double>();
-            var oponent = myColor == Player.Color.Black ? Player.Color.Black : Player.Color.White;
+            var oponent = myColor == Player.Color.Black ? Player.Color.White : Player.Color.Black;
             foreach (var roll in allDiceRoll)
             {
                 EngineGame.FakeRoll(roll.dice1, roll.dice2);
@@ -234,7 +203,7 @@ namespace Ai
             if (sequences.Any(moves => moves.All(m => m != null)))
                 sequences = sequences.Where(moves => moves.All(m => m != null)).Select(s => s).ToList();
             return sequences;
-        }        
+        }
 
         private void GenerateMovesSequence(List<Move[]> sequences, Move[] moves, int diceIndex)
         {
@@ -283,7 +252,7 @@ namespace Ai
                     {
                         var hit = EngineGame.MakeMove(move);
                         GenerateMovesSequence(sequences, moves, diceIndex + 1);
-                        EngineGame.UndoMove(move, hit);                        
+                        EngineGame.UndoMove(move, hit);
                     }
                 }
                 else if (EngineGame.IsBearingOff(EngineGame.CurrentPlayer))
@@ -312,7 +281,7 @@ namespace Ai
                         {
                             var hit = EngineGame.MakeMove(move);
                             GenerateMovesSequence(sequences, moves, diceIndex + 1);
-                            EngineGame.UndoMove(move, hit);                            
+                            EngineGame.UndoMove(move, hit);
                         }
                     }
                 }

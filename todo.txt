@@ -1,6 +1,5 @@
-
-
-Uppgradera beroenden
+Prestanda för ai
+Träna om.
 
 AI,
     0. den vill inte flytta av tillräckligt effektivt.

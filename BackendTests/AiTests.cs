@@ -52,14 +52,14 @@ namespace BackendTests
             game.AddCheckers(3, Player.Color.Black, 17);
             game.AddCheckers(3, Player.Color.White, 17);
 
-            game.AddCheckers(1, Player.Color.Black, 19); // 6 for white, the target
-            game.AddCheckers(1, Player.Color.White, 19);
+            game.AddCheckers(1, Player.Color.Black, 19);
 
             game.FakeRoll(4, 5);
             game.SwitchPlayer();
             var moves = ai.GetBestMoves();
-            Assert.IsTrue(moves.SingleOrDefault(m => m.ToString() == "White 1 -> 6") != null);
-            Assert.IsTrue(moves.SingleOrDefault(m => m.ToString() == "White 2 -> 6") != null);
+
+            Assert.IsTrue(moves.Any(m => m.ToString() == "White 1 -> 6"));
+            Assert.IsTrue(moves.Any(m => m.ToString() == "White 2 -> 6"));
         }
 
         [TestMethod]
@@ -100,6 +100,61 @@ namespace BackendTests
             var ai = new Ai.Engine(game);
             var moves = ai.GetBestMoves();
             Assert.IsTrue(moves.Any(m => m != null));
+        }
+
+        [TestMethod]
+        public void BearOffEffectivelyBlack()
+        {
+            var game = Game.Create();
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.Black, 19);
+            game.AddCheckers(1, Player.Color.White, 19);
+            game.AddCheckers(3, Player.Color.Black, 20);
+            game.AddCheckers(3, Player.Color.White, 20);
+            game.AddCheckers(3, Player.Color.Black, 21);
+            game.AddCheckers(3, Player.Color.White, 21);
+            game.AddCheckers(3, Player.Color.Black, 22);
+            game.AddCheckers(3, Player.Color.White, 22);
+            game.AddCheckers(3, Player.Color.Black, 23);
+            game.AddCheckers(3, Player.Color.White, 23);
+            game.AddCheckers(2, Player.Color.Black, 24);
+            game.AddCheckers(2, Player.Color.White, 24);
+            
+            game.FakeRoll(1, 4);
+
+            Assert.AreEqual(Player.Color.Black, game.CurrentPlayer);
+            var ai = new Ai.Engine(game);
+            var moves = ai.GetBestMoves();
+            Assert.IsTrue(moves.Any(m => m.ToString() == "Black 24 -> 25"));
+            Assert.IsTrue(moves.Any(m => m.ToString() == "Black 21 -> 25"));
+        }
+
+        [TestMethod]
+        public void BearOffEffectivelyWhite()
+        {
+            var game = Game.Create();
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.Black, 19);
+            game.AddCheckers(1, Player.Color.White, 19);
+            game.AddCheckers(3, Player.Color.Black, 20);
+            game.AddCheckers(3, Player.Color.White, 20);
+            game.AddCheckers(3, Player.Color.Black, 21);
+            game.AddCheckers(3, Player.Color.White, 21);
+            game.AddCheckers(3, Player.Color.Black, 22);
+            game.AddCheckers(3, Player.Color.White, 22);
+            game.AddCheckers(3, Player.Color.Black, 23);
+            game.AddCheckers(3, Player.Color.White, 23);
+            game.AddCheckers(2, Player.Color.Black, 24);
+            game.AddCheckers(2, Player.Color.White, 24);
+
+            game.FakeRoll(3, 2);
+            game.SwitchPlayer();
+
+            Assert.AreEqual(Player.Color.White, game.CurrentPlayer);
+            var ai = new Ai.Engine(game);
+            var moves = ai.GetBestMoves();
+            Assert.IsTrue(moves.Any(m => m.ToString() == "White 23 -> 25"));
+            Assert.IsTrue(moves.Any(m => m.ToString() == "White 22 -> 25"));
         }
 
     }
