@@ -31,8 +31,8 @@ namespace Ai
             {
                 var sequence = allSequences[s];
                 var hits = DoSequence(sequence);
-                //var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
-                var score = -PropabilityScore(oponent);
+                var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
+                //var score = -PropabilityScore(oponent);
                 //if (Configuration.PropabilityScore)
                 UndoSequence(sequence, hits);
 
@@ -85,8 +85,8 @@ namespace Ai
             double score = 0;
             var inBlock = false;
             var counter = 0;
-            var cht = Configuration.HitableThreshold;
-            var chf = (double)Configuration.HitableFactor;
+            var cht = Configuration.BloatsThreshold;
+            var chf = (double)Configuration.BloatsFactor;
             var cbf = Configuration.ConnectedBlocksFactor;
             var cbp = Configuration.BlockedPointScore;
 
@@ -95,6 +95,8 @@ namespace Ai
             var opponentMax = EngineGame.Points.Where(p => p.Checkers.Any(c => c.Color == other))
                 .Select(p => p.GetNumber(myColor)).Max();
 
+            var allPassed = true;
+
             for (int i = 1; i < 25; i++)
             {
                 var point = EngineGame.Points[i];
@@ -102,9 +104,11 @@ namespace Ai
                 // But I havnt figured out why.
                 if (myColor == Player.Color.White)
                     point = EngineGame.Points[25 - i];
-                // If all opponents checkers has passed this block or bloat, its not interesting.
+                // If all opponents checkers has passed this block or bloat, it is not interesting.
                 if (point.GetNumber(myColor) > opponentMax)
                     break;
+
+                allPassed = false;
                 if (point.MyBlock(myColor))
                 {
                     if (inBlock)
@@ -121,7 +125,7 @@ namespace Ai
                         counter = 0;
                     }
                     inBlock = false;
-                    if (point.Hitable(myColor) && point.GetNumber(myColor) > cht)
+                    if (point.Bloat(myColor) && point.GetNumber(myColor) > cht)
                         score -= point.GetNumber(myColor) / chf;
                 }
             }
@@ -129,13 +133,16 @@ namespace Ai
             if (inBlock)
                 score += Math.Pow(counter, 2);
 
+            if (allPassed)
+                score += EvaluatePoints(myColor) * Configuration.RunOrBlockFactor;
+
             score += EngineGame.GetHome(myColor).Checkers.Count * 10;
             score -= EngineGame.GetHome(other).Checkers.Count * 10;
             return score;
         }
 
         //Get the average score for current player rolling all possible combinations
-        private double PropabilityScore(Player.Color myColor)
+        private double ProbabilityScore(Player.Color myColor)
         {
             var allDiceRoll = AllRolls();
             var scores = new List<double>();
@@ -207,7 +214,6 @@ namespace Ai
 
         private void GenerateMovesSequence(List<Move[]> sequences, Move[] moves, int diceIndex)
         {
-            //var bar = Game.Points.Where(p => p.GetNumber(Game.CurrentPlayer) == 0);
             var current = EngineGame.CurrentPlayer;
             var bar = EngineGame.Bars[(int)current];
             var barHasCheckers = bar.Checkers.Any(c => c.Color == current);
@@ -219,7 +225,7 @@ namespace Ai
                 .ToArray();
 
             // There seems to be a big advantage to evaluate points from lowest number.
-            // If not reversing black will win 60 to 40 with same config.
+            // If not reversing here, black will win 60 to 40 with same config.
             if (EngineGame.CurrentPlayer == Player.Color.White)
                 Array.Reverse(points);
 
@@ -241,6 +247,7 @@ namespace Ai
                         var newMoves = new Move[EngineGame.Roll.Count];
                         Array.Copy(moves, newMoves, diceIndex);
                         newMoves[diceIndex] = move;
+                        // For last checker identical sequences are omitted.
                         if (diceIndex < EngineGame.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
                         {
                             moves = newMoves;
@@ -271,6 +278,7 @@ namespace Ai
                             var newMoves = new Move[EngineGame.Roll.Count];
                             Array.Copy(moves, newMoves, diceIndex);
                             newMoves[diceIndex] = move;
+                            // For last checker identical sequences are omitted.
                             if (diceIndex < EngineGame.Roll.Count - 1 || !sequences.ContainsEntryWithAll(newMoves))
                             {
                                 moves = newMoves;

@@ -9,9 +9,9 @@ namespace Ai
     public class Config
     {
         /// <summary>
-        /// Hitables checkers below this threshold does not reduce score.
+        /// Bloats are hitables checkers. Below this threshold does not reduce score.
         /// </summary>
-        public int HitableThreshold { get; set; } = 6;
+        public int BloatsThreshold { get; set; } = 0;
 
         internal Config Clone()
         {
@@ -19,26 +19,32 @@ namespace Ai
             {
                 BlockedPointScore = BlockedPointScore,
                 ConnectedBlocksFactor = ConnectedBlocksFactor,
-                HitableFactor = HitableFactor,
-                HitableThreshold = HitableThreshold
+                BloatsFactor = BloatsFactor,
+                BloatsThreshold = BloatsThreshold,
+                RunOrBlockFactor = RunOrBlockFactor
             };
         }
 
         /// <summary>
-        /// The point divided by this factor reduces score for hitable checkers.
+        /// The point divided by this factor reduces score for bloats.
         /// </summary>
-        public double HitableFactor { get; set; } = 1.224d;
+        public double BloatsFactor { get; set; } = 1;
 
         // Score received for one point blocked.
-        public double BlockedPointScore { get; set; } = 1.5d;
+        public double BlockedPointScore { get; set; } = 0;
 
         // Score from number of consecutive blocks raised to this value.
-        public double ConnectedBlocksFactor { get; set; } = 1.8325;
+        public double ConnectedBlocksFactor { get; set; } = 0;
+
+        /// <summary>
+        /// When all checkers have passed each other, the leading side gets a score bonus
+        /// this factor multiplied by the lead.
+        /// </summary>
+        public double RunOrBlockFactor { get; set; } = 0;
 
         public override string ToString()
         {
-            return $"HF: {HitableFactor.ToString("0.##")} HT: {HitableThreshold} CB: {ConnectedBlocksFactor.ToString("0.##")} BP: {BlockedPointScore.ToString("0.##")}";   
+            return $"BF: {BloatsFactor.ToString("0.##")} BT: {BloatsThreshold} CB: {ConnectedBlocksFactor.ToString("0.##")} BP: {BlockedPointScore.ToString("0.##")} RB: {RunOrBlockFactor.ToString("0.##")}";   
         }
-
     }
 }

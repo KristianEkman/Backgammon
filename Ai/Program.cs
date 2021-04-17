@@ -10,15 +10,18 @@ namespace Ai
     {
         public static void Main()
         {
-            //Runner.OptimizeHitableThreshold();
-            //Runner.OptimizeHitableFactor();
-            //Runner.RunStatic();
-            //Runner.ComparePassedBlocks();
-            //Runner.OptimizeConnectedBlocksFactor();
-            //Runner.OptimizeBlockedPointScore();
+            //Trainer.OptimizeBloatsThreshold();
+            //Trainer.OptimizeBloatsFactor();
+            //Trainer.RunStatic();
+            //Trainer.ComparePassedBlocks();
+            //Trainer.OptimizeConnectedBlocksFactor();
+            //Trainer.OptimizeBlockedPointScore();
+            //Trainer.OptimizeRunOrBlockFactor();
 
 
-            Runner.MaximizeAll();
+            Trainer.OptimizeAll();
+
+            //Trainer.CompareConfigs();
         }
     }
 }

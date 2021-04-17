@@ -19,6 +19,8 @@ Ljud
 
 Release 1.1 - mål att öka logins
 ===========
+Ljud
+Ljust tema.
 Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
 Player photos
 New game --> same opponnet efter avslutat invite.
@@ -43,9 +45,7 @@ Animation på firefox suger.
 Backa upp Managers till DB, så man kan göra en swap vid release.
 Visa statistik på startsidan.
 Visa när motståndaren kastar.
-- Ohanterade fel? Ska de visas? Bättre att logga dem kanske?
 Flytta flera drag på ett klick.
-Ljust tema.
 Ge extra tid för reconnect.
 Progressbar
 Editing of photo.

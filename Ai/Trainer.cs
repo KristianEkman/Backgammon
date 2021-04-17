@@ -3,14 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Ai
 {
-    public class Runner
+    public class Trainer
     {
-        public Runner(Config config = null)
+        public Trainer(Config config = null)
         {
             Game = Game.Create();
             Black = new Engine(Game);
@@ -33,10 +34,10 @@ namespace Ai
             return White;
         }
 
-        public static double RunMany(Runner runner)
+        public static double RunMany(Trainer runner)
         {
             var start = DateTime.Now;
-            var runs = 2500;
+            var runs = 3000;
 
             var result = runner.PlayMany(runs);
             var time = DateTime.Now - start;
@@ -70,6 +71,7 @@ namespace Ai
                     var blackPct = blackWins / (double)i;
                     var whitePct = whitekWins / (double)i;
                     Console.Write($"{i} Black: {blackPct.ToString("P")} White: {whitePct.ToString("P")} Errors: {errors}");
+                    PreventSleep();
                 }
             }
             Console.WriteLine();
@@ -121,15 +123,13 @@ namespace Ai
         {
             for (var t = 0; t < 10; t++)
             {
-                var runner = new Runner();
-                // todo: enable Hitable for white but keep factor constant
-
+                var runner = new Trainer();
                 Console.WriteLine($"=====Static=============");
                 RunMany(runner);
             }
         }
 
-        public static double OptimizeHitableThreshold(int start = 1, int end = 10, Config config = null)
+        public static double OptimizeBloatsThreshold(int start = 1, int end = 10, Config config = null)
         {
             var best = 0d;
             var bestT = 0d;
@@ -137,11 +137,11 @@ namespace Ai
 
             for (double t = start; t < end; t += delta)
             {
-                var runner = new Runner(config);
-                runner.White.Configuration.HitableThreshold = (int)t;
+                var runner = new Trainer(config);
+                runner.White.Configuration.BloatsThreshold = (int)t;
                 WriteConfigs(runner);                
                 Console.WriteLine($"=====================");
-                Console.WriteLine($"HitableThreshold: {t}");
+                Console.WriteLine($"BloatsThreshold: {t}");
                 var res = RunMany(runner);
                 if (res > best && res > 0.51)
                 {
@@ -152,7 +152,7 @@ namespace Ai
             return bestT;
         }
 
-        public static double OptimizeHitableFactor(double start = 1, double end = 10, Config config = null)
+        public static double OptimizeBloatsFactor(double start = 1, double end = 10, Config config = null)
         {
             var best = 0d;
             var bestT = 0d;
@@ -160,12 +160,11 @@ namespace Ai
 
             for (var t = start; t < end; t += delta)
             {
-                var runner = new Runner(config);
-                // todo: enable Hitable for white but keep factor constant
-                runner.White.Configuration.HitableFactor = t; // 12.2 seems to be best so far.
+                var runner = new Trainer(config);
+                runner.White.Configuration.BloatsFactor = t; // 12.2 seems to be best so far.
                 WriteConfigs(runner);
                 Console.WriteLine($"==================");
-                Console.WriteLine($"HitableFactor: {t}");
+                Console.WriteLine($"BloatsFactor: {t}");
                 var res = RunMany(runner);
                 if (res > best && res > 0.51)
                 {
@@ -183,7 +182,7 @@ namespace Ai
             var delta = (end - start) / 10;
             for (var f = start; f < end; f += delta) // maximum at 3.6
             {
-                var runner = new Runner(config);
+                var runner = new Trainer(config);
                 runner.White.Configuration.ConnectedBlocksFactor = f;
                 WriteConfigs(runner);
                 Console.WriteLine($"===== ConnectedBlocksFactor {f}=========");
@@ -205,7 +204,7 @@ namespace Ai
 
             for (var f = start; f < end; f += delta) // maximum at 3.6
             {
-                var runner = new Runner(config);
+                var runner = new Trainer(config);
                 runner.White.Configuration.BlockedPointScore = f;
                 WriteConfigs(runner);
                 Console.WriteLine($"===== BlockedPointScore {f}=========");
@@ -218,8 +217,30 @@ namespace Ai
             }
             return bestF;
         }
+        
+        public static double OptimizeRunOrBlockFactor(double start = 0d, double end = 5d, Config config = null)
+        {
+            var best = 0d;
+            var bestF = 0d;
+            var delta = (end - start) / 10;
 
-        public static void MaximizeAll()
+            for (var f = start; f < end; f += delta) // maximum at 3.6
+            {
+                var runner = new Trainer(config);
+                runner.White.Configuration.RunOrBlockFactor = f;
+                WriteConfigs(runner);
+                Console.WriteLine($"===== RunOrBlockFactor {f}=========");
+                var res = RunMany(runner);
+                if (res > best && res > 0.51)
+                {
+                    best = res;
+                    bestF = f;
+                }
+            }
+            return bestF;
+        }
+
+        public static void OptimizeAll()
         {
             var config = new Config();
 
@@ -229,47 +250,83 @@ namespace Ai
             var csvName = $"{Environment.CurrentDirectory}\\MaximizeAll{DateTime.Now.ToString("yyMMddHHmmss")}.csv";
             Console.WriteLine(csvName);
 
-            File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;HitableFactor;HitableThreshold\n");
+            File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;BloatsFactor;BloatsThreshold;RunOrBlockFactor\n");
 
+            const double lr = 0.2; // learning rate
             while (true)
             {
-                var sHt = Math.Max(config.HitableThreshold - 5, 1);
-                var eHt = config.HitableThreshold + 5;                
-                var ht = OptimizeHitableThreshold(sHt, eHt, config);
+                var sBt = Math.Max(config.BloatsThreshold -1, 0);
+                var eBt = config.BloatsThreshold + 3;                
+                var bt = OptimizeBloatsThreshold(sBt, eBt, config);                
+                if (bt > 0)
+                    config.BloatsThreshold = (int)bt;// config.BloatsThreshold + (bt - config.BloatsThreshold) / 2;
                 
-                if (ht > 0)
-                    config.HitableThreshold = (int)ht;// config.HitableThreshold + (ht - config.HitableThreshold) / 2;
-                
-                var sHf = Math.Max(config.HitableFactor - 2, 0.1);
-                var eHf = config.HitableFactor + 5;
-                var hf = OptimizeHitableFactor(sHf, eHf, config);
-                if (hf > 0)
-                    config.HitableFactor = config.HitableFactor + (hf - config.HitableFactor) / 2;
+                var sBf = Math.Max(config.BloatsFactor - 2, 0.1);
+                var eBf = config.BloatsFactor + 3;
+                var bf = OptimizeBloatsFactor(sBf, eBf, config);
+                if (bf > 0)
+                    config.BloatsFactor = config.BloatsFactor + (bf - config.BloatsFactor) * lr;
 
                 
-                var sCb = Math.Max(config.ConnectedBlocksFactor - 1, 1);
-                var eCb = config.ConnectedBlocksFactor + 5;
+                var sCb = Math.Max(config.ConnectedBlocksFactor - 1, 0);
+                var eCb = config.ConnectedBlocksFactor + 3;
                 var cb = OptimizeConnectedBlocksFactor(sCb, eCb, config);
                 if (cb > 0)
-                    config.ConnectedBlocksFactor = config.ConnectedBlocksFactor + (cb - config.ConnectedBlocksFactor) / 2;
+                    config.ConnectedBlocksFactor = config.ConnectedBlocksFactor + (cb - config.ConnectedBlocksFactor) * lr;
 
                 var sBp = Math.Max(config.BlockedPointScore - 1, 0);
-                var eBp = config.BlockedPointScore + 5;
+                var eBp = config.BlockedPointScore + 3;
                 var bp = OptimizeBlockedPointScore(sBp, eBp, config);
                 if (bp > 0)
-                    config.BlockedPointScore = config.BlockedPointScore + (bp - config.BlockedPointScore) / 2;
+                    config.BlockedPointScore = config.BlockedPointScore + (bp - config.BlockedPointScore) * lr;
+
+                var sRb = Math.Max(config.RunOrBlockFactor - 1, 0);
+                var eRb = config.RunOrBlockFactor + 1.5;
+                var rb = OptimizeRunOrBlockFactor(sRb, eRb, config);
+                if (rb > 0)
+                    config.RunOrBlockFactor = config.RunOrBlockFactor + (rb - config.RunOrBlockFactor) * lr;
 
                 Console.WriteLine("*********************");
-                Console.WriteLine(config.ToString());
-                File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.HitableFactor};{config.HitableThreshold}\n");
+                Console.WriteLine(DateTime.Now.ToString() + " " + config.ToString());
+                File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.BloatsFactor};{config.BloatsThreshold};{config.RunOrBlockFactor}\n");
                 Console.WriteLine("*********************");
             }
         }
 
-        private static void WriteConfigs(Runner runner)
+        private static void WriteConfigs(Trainer runner)
         {
             Console.WriteLine("B: " + runner.Black.Configuration);
             Console.WriteLine("W: " + runner.White.Configuration);
         }
+
+        public static void CompareConfigs()
+        {
+            var runner = new Trainer();
+            runner.Black.Configuration.BlockedPointScore = 6.7;
+            runner.Black.Configuration.ConnectedBlocksFactor = 1.1;
+            runner.Black.Configuration.BloatsFactor = 1.8472;
+            runner.Black.Configuration.BloatsThreshold = 14;
+            var res = RunMany(runner);
+        }
+
+        void PreventSleep()
+        {
+            // Prevent Idle-to-Sleep (monitor not affected) (see note above)
+            SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_AWAYMODE_REQUIRED);
+        }
+
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        static extern EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
+    }
+
+    [FlagsAttribute]
+    public enum EXECUTION_STATE : uint
+    {
+        ES_AWAYMODE_REQUIRED = 0x00000040,
+        ES_CONTINUOUS = 0x80000000,
+        ES_DISPLAY_REQUIRED = 0x00000002,
+        ES_SYSTEM_REQUIRED = 0x00000001
+        // Legacy flag, should not be used.
+        // ES_USER_PRESENT = 0x00000004
     }
 }
