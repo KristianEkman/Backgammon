@@ -23,7 +23,7 @@ import {
   GameRestoreActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
-import { Keys } from '../utils';
+import { Keys, Sound } from '../utils';
 import { StatusMessageService } from './status-message.service';
 import { MessageLevel, StatusMessage } from '../dto/local/status-message';
 import { Router, UrlSerializer } from '@angular/router';
@@ -194,6 +194,7 @@ export class SocketsService implements OnDestroy {
           currentMes.level !== MessageLevel.warning
         ) {
           const mes = StatusMessage.warning('Move now or lose!');
+          Sound.playWarning();
           // A few more seconds are given on the server.
           AppState.Singleton.statusMessage.setValue(mes);
         }
@@ -253,6 +254,7 @@ export class SocketsService implements OnDestroy {
     );
 
     if (hit) {
+      Sound.playChecker();
       const hitIdx = gameClone.points[to].checkers.indexOf(hit);
       gameClone.points[to].checkers.splice(hitIdx, 1);
       const barIdx = isWhite ? 0 : 25;

@@ -10,6 +10,7 @@ import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
+import { Sound } from 'src/app/utils';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
 import { Checker } from './checker';
 import { DarkTheme, IThemes } from './themes';
@@ -70,6 +71,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
             this.flipped,
             () => {
               // finished callback
+              Sound.playChecker();
               this.animatedMove = undefined;
               this.moveAnimFinished.emit();
             },
@@ -878,6 +880,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         );
       }
       if (move) {
+        if (!isClick) Sound.playChecker();
         this.addMove.emit({ ...move, animate: isClick });
         break;
       }
