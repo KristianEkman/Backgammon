@@ -1,25 +1,13 @@
 Prestanda för ai
 Träna om.
 
-AI,
-    0. den vill inte flytta av tillräckligt effektivt.
-
-    1.  Run or block.
-        Om Man ligger efter, passera inte motståndarens sista checker med sin sista med sista checker
-        bool Enabled
-        double factor: passed
-
-        var diff = mylast - oponents las
-        if (diff > 0)
-            score += mypointsleft - op_points left * factor.        
+AI,    
 
      2. Skriv en artikel om AI:t
 
-Ljud
 
 Release 1.1 - mål att öka logins
 ===========
-Ljud
 Ljust tema.
 Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
 Player photos
