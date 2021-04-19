@@ -36,5 +36,16 @@ namespace Backend.Rules
             return Id == Guid.Empty;
         }
 
+        internal Player Clone()
+        {
+            return new Player
+            {
+                FirstMoveMade = FirstMoveMade,
+                Id = Id,
+                Name = Name,
+                PlayerColor = PlayerColor,
+                PointsLeft = PointsLeft
+            };
+        }
     }
 }

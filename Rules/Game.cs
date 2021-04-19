@@ -23,6 +23,28 @@ namespace Backend.Rules
         public DateTime ThinkStart { get; set; }
         public Point[] Bars { get; set; }
 
+        public Game Clone()
+        {
+            var game = new Game
+                {
+                    Id = Id, 
+                    BlackPlayer = BlackPlayer.Clone(),
+                    WhitePlayer = WhitePlayer.Clone(),
+                    Points = Points.Select(p => p.Clone()).ToList(),
+                    BlackStarts = BlackStarts,
+                    Created = Created,
+                    CurrentPlayer = CurrentPlayer,
+                    PlayState = PlayState,
+                    Roll = Roll.Select(r => new Dice { Used = r.Used, Value = r.Value }).ToList(),
+                    ThinkStart = ThinkStart,                        
+                };
+                game.Bars = new Point[2];
+                game.Bars[(int)Player.Color.Black] = game.Points[0];
+                game.Bars[(int)Player.Color.White] = game.Points[25];
+            
+            return game;
+        }
+
         public const int ClientCountDown = 40;
         public const int TotalThinkTime = 48;
 
@@ -132,16 +154,17 @@ namespace Backend.Rules
 
         private void Test()
         {
+            ClearCheckers();
             AddCheckers(1, Player.Color.Black, 1);
-            //game.AddCheckers(1, Player.Color.White, 1);
-
             AddCheckers(1, Player.Color.Black, 2);
-            //game.AddCheckers(1, Player.Color.White, 2);
+            AddCheckers(2, Player.Color.White, 20);
 
-            AddCheckers(3, Player.Color.Black, 17);
-            AddCheckers(3, Player.Color.White, 17);
+            AddCheckers(5, Player.Color.Black, 21);
+            AddCheckers(5, Player.Color.Black, 23);
+            AddCheckers(3, Player.Color.Black, 18);
 
-            AddCheckers(1, Player.Color.White, 19); // 6 for black, the target
+            AddCheckers(3, Player.Color.White, 1);
+            AddCheckers(3, Player.Color.White, 5);
         }
 
         private void AtHomeAndOtherAtBar()

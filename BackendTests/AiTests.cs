@@ -157,5 +157,57 @@ namespace BackendTests
             Assert.IsTrue(moves.Any(m => m.ToString() == "White 22 -> 25"));
         }
 
+        [TestMethod]
+        public void DontHitBloat1()
+        {
+            var game = Game.Create();
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.Black, 1);
+            game.AddCheckers(1, Player.Color.Black, 2);
+            game.AddCheckers(2, Player.Color.White, 20);
+
+            game.AddCheckers(5, Player.Color.Black, 21);
+            game.AddCheckers(5, Player.Color.Black, 23);
+            game.AddCheckers(3, Player.Color.Black, 18);
+
+            game.AddCheckers(3, Player.Color.White, 1);
+            game.AddCheckers(3, Player.Color.White, 5);
+
+            game.FakeRoll(4, 3);
+            game.SwitchPlayer();
+
+            Assert.AreEqual(Player.Color.White, game.CurrentPlayer);
+            var ai = new Ai.Engine(game);
+            var moves = ai.GetBestMoves();
+            Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 24));
+            Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 23));
+        }
+
+        [TestMethod]
+        public void DontHitBloat2()
+        {
+            var game = Game.Create();
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.Black, 3);
+            game.AddCheckers(1, Player.Color.Black, 4);
+            game.AddCheckers(2, Player.Color.White, 18);
+
+            game.AddCheckers(5, Player.Color.Black, 21);
+            game.AddCheckers(5, Player.Color.Black, 23);
+            game.AddCheckers(3, Player.Color.Black, 18);
+
+            game.AddCheckers(3, Player.Color.White, 1);
+            game.AddCheckers(3, Player.Color.White, 5);
+
+            game.FakeRoll(4, 3);
+            game.SwitchPlayer();
+
+            Assert.AreEqual(Player.Color.White, game.CurrentPlayer);
+            var ai = new Ai.Engine(game);
+            var moves = ai.GetBestMoves();
+            Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 22));
+            Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 21));
+        }
+
     }
 }

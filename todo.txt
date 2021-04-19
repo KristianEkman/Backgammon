@@ -1,9 +1,8 @@
-Prestanda för ai
-Träna om.
+Finns det en bugg som gör att ai slår bloats med låg point?
 
-AI,    
+    utverdera drag parallellt
 
-     2. Skriv en artikel om AI:t
+Skriv en artikel om AI:t
 
 
 Release 1.1 - mål att öka logins

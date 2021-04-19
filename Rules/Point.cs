@@ -49,5 +49,15 @@ namespace Backend.Rules
         {
             return Checkers.Count(c => c.Color == myColor)== 1;
         }
+
+        public Point Clone()
+        {
+            return new Point
+            {
+                BlackNumber = BlackNumber,
+                WhiteNumber = WhiteNumber,
+                Checkers = Checkers.Select(c => new Checker { Color = c.Color }).ToList()
+            };
+        }
     }
 }
