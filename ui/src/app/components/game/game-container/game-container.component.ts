@@ -14,6 +14,7 @@ import { AppState } from 'src/app/state/app-state';
 import { StatusMessage } from 'src/app/dto/local/status-message';
 import { Busy } from 'src/app/state/busy';
 import { StatusMessageService } from 'src/app/services/status-message.service';
+import { Sound } from 'src/app/utils';
 
 @Component({
   selector: 'app-game',
@@ -211,6 +212,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   setDicesVisible(): void {
     if (!this.myTurn()) {
+      if (!this.dicesVisible) Sound.playDice();
       this.dicesVisible = true;
       return;
     }

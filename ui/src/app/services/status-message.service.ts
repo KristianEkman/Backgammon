@@ -3,6 +3,7 @@ import { StatusMessage } from '../dto/local/status-message';
 import { GameDto, NewScoreDto, PlayerColor } from '../dto';
 import { AppState } from '../state/app-state';
 import { Busy } from '../state/busy';
+import { Sound } from '../utils';
 
 @Injectable({
   providedIn: 'root'
@@ -56,6 +57,11 @@ export class StatusMessageService {
         : `Sorry. You lost the game.${score}`
     );
     AppState.Singleton.statusMessage.setValue(message);
+    if (myColor === game.winner) {
+      Sound.playWinner();
+    } else {
+      Sound.playLooser();
+    }
   }
 
   setBlockedMessage(): void {

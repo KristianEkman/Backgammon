@@ -10,6 +10,7 @@ import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
+import { Sound } from 'src/app/utils';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
 import { Checker } from './checker';
 import { DarkTheme, IThemes } from './themes';
@@ -70,6 +71,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
             this.flipped,
             () => {
               // finished callback
+              Sound.playChecker();
               this.animatedMove = undefined;
               this.moveAnimFinished.emit();
             },
@@ -331,7 +333,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const r = this.getCheckerRadius();
     const chWidth = this.getCheckerWidth();
 
-    for (let p = 0; p < this.game.points.length; p++) {
+    for (let p = 1; p < 25; p++) {
       const point = this.game.points[p];
       let checkerCount = point.checkers.length;
       const area = this.checkerAreas.filter((r) => r.pointIdx === p)[0];
@@ -373,17 +375,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         2 * chWidth,
         (area.height - chWidth) / checkerCount
       );
+
       // main draw checkers loop
       for (let i = 0; i < checkerCount; i++) {
         const checker = point.checkers[i];
-        // skipping checkers att home.
-        if (
-          (p === 0 && checker.color === PlayerColor.white) ||
-          (p === 25 && checker.color === PlayerColor.black)
-        ) {
-          continue;
-        }
-
         const x = area.x + r;
         let y = 0;
         if ((p > 0 && p < 13) || p === 25) {
@@ -408,6 +403,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       }
     }
 
+    this.drawHomes(cx);
+    this.drawBars(cx);
+
     if (this.dragging) {
       Checker.draw(
         cx,
@@ -420,7 +418,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         this.flipped
       );
     }
-    this.drawHomes(cx);
   }
 
   drawHomes(cx: CanvasRenderingContext2D): void {
@@ -468,6 +465,82 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     if (this.whiteHome.canBeMovedTo) {
       this.whiteHome.highLightTop(cx);
+    }
+  }
+
+  drawBars(cx: CanvasRenderingContext2D): void {
+    // draw checkers at  home.
+    if (!this.game) {
+      return;
+    }
+    // black
+    let blackCount = this.game.points[0].checkers.filter(
+      (c) => c.color === PlayerColor.black
+    ).length;
+    const draggingBlack =
+      this.dragging && this.dragging.checkerArea == this.blackBar;
+    if (
+      (this.animatedMove &&
+        this.animatedMove?.move.color === PlayerColor.black &&
+        this.animatedMove.move.to == 0) ||
+      draggingBlack
+    ) {
+      blackCount--;
+    }
+
+    const bw = this.borderWidth;
+    let x = this.blackBar.x + this.blackBar.width / 2;
+    let y = this.blackBar.y + this.blackBar.height - bw * 1.5;
+    const chWidth = this.getCheckerWidth();
+
+    const highLightBlack = this.blackBar.hasValidMove && !draggingBlack;
+
+    for (let i = 0; i < blackCount; i++) {
+      const yi = y - i * chWidth * 1.5;
+      Checker.draw(
+        cx,
+        { x, y: yi },
+        chWidth,
+        this.theme,
+        PlayerColor.black,
+        highLightBlack && i === blackCount - 1,
+        false,
+        this.flipped
+      );
+    }
+
+    // white
+    let whiteCount = this.game.points[25].checkers.filter(
+      (c) => c.color === PlayerColor.white
+    ).length;
+    const draggingWhite =
+      this.dragging && this.dragging.checkerArea == this.whiteBar;
+    if (
+      (this.animatedMove &&
+        this.animatedMove?.move.color === PlayerColor.white &&
+        this.animatedMove.move.to == 0) ||
+      draggingWhite
+    ) {
+      whiteCount--;
+    }
+
+    x = this.whiteBar.x + this.whiteBar.width / 2;
+    y = this.whiteBar.y + bw;
+
+    const highLightWhite = this.whiteBar.hasValidMove && !draggingWhite;
+
+    for (let i = 0; i < whiteCount; i++) {
+      const yi = y + i * chWidth * 1.5;
+      Checker.draw(
+        cx,
+        { x, y: yi },
+        chWidth,
+        this.theme,
+        PlayerColor.white,
+        highLightWhite && i === whiteCount - 1,
+        false,
+        this.flipped
+      );
     }
   }
 
@@ -878,6 +951,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         );
       }
       if (move) {
+        if (!isClick) Sound.playChecker();
         this.addMove.emit({ ...move, animate: isClick });
         break;
       }
