@@ -11,7 +11,7 @@ namespace Ai
         /// <summary>
         /// Bloats are hitables checkers. Below this threshold does not reduce score.
         /// </summary>
-        public int BloatsThreshold { get; set; } = 0;
+        public int BloatsThreshold { get; set; } = 6;
 
         internal Config Clone()
         {
@@ -28,19 +28,19 @@ namespace Ai
         /// <summary>
         /// The point divided by this factor reduces score for bloats.
         /// </summary>
-        public double BloatsFactor { get; set; } = 1;
+        public double BloatsFactor { get; set; } = 1.65978574;
 
         // Score received for one point blocked.
-        public double BlockedPointScore { get; set; } = 0;
+        public double BlockedPointScore { get; set; } = 2.158432;
 
         // Score from number of consecutive blocks raised to this value.
-        public double ConnectedBlocksFactor { get; set; } = 0;
+        public double ConnectedBlocksFactor { get; set; } = 1.54848384;
 
         /// <summary>
         /// When all checkers have passed each other, the leading side gets a score bonus
         /// this factor multiplied by the lead.
         /// </summary>
-        public double RunOrBlockFactor { get; set; } = 0;
+        public double RunOrBlockFactor { get; set; } = 1.261879448;
 
         public override string ToString()
         {
