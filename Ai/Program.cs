@@ -19,9 +19,9 @@ namespace Ai
             //Trainer.OptimizeRunOrBlockFactor();
 
 
-            Trainer.OptimizeAll();
+            //Trainer.OptimizeAll();
 
-            //Trainer.CompareConfigs();
+            Trainer.CompareConfigs();
         }
     }
 }

@@ -41,6 +41,7 @@ namespace Ai
         /// this factor multiplied by the lead.
         /// </summary>
         public double RunOrBlockFactor { get; set; } = 1.261879448;
+        public bool ProbablityScore { get; set; } = false;
 
         public override string ToString()
         {

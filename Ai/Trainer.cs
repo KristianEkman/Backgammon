@@ -302,10 +302,11 @@ namespace Ai
         public static void CompareConfigs()
         {
             var runner = new Trainer();
-            runner.Black.Configuration.BlockedPointScore = 6.7;
-            runner.Black.Configuration.ConnectedBlocksFactor = 1.1;
-            runner.Black.Configuration.BloatsFactor = 1.8472;
-            runner.Black.Configuration.BloatsThreshold = 14;
+            //runner.Black.Configuration.BlockedPointScore = 0;
+            //runner.Black.Configuration.ConnectedBlocksFactor = 0;
+            //runner.Black.Configuration.BloatsFactor = 0;
+            //runner.Black.Configuration.BloatsThreshold = 0;
+            runner.Black.Configuration.ProbablityScore = false;
             var res = RunMany(runner);
         }
 

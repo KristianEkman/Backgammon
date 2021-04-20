@@ -39,9 +39,12 @@ namespace Ai
                 var localSequence = ToLocalSequence(sequence, game);
 
                 var hits = DoSequence(localSequence, game);
-                //var score = EvaluatePoints(myColor) + EvaluateCheckers(myColor);
-                var score = -ProbabilityScore(oponent, game);
-                //if (Configuration.PropabilityScore)
+                var score = 0d;
+                if (Configuration.ProbablityScore)
+                    score = -ProbabilityScore(oponent, game);
+                else
+                    score = EvaluatePoints(myColor, game) + EvaluateCheckers(myColor, game);
+
                 UndoSequence(localSequence, hits, game);
                 //Console.WriteLine($"Engine search {s} of {allSequences.Count}\t{score.ToString("0.##")}\t{sequence.BuildString()}");
                 if (score > bestScore)
