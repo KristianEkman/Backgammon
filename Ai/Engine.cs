@@ -12,7 +12,7 @@ namespace Ai
         public Engine(Game game)
         {
             EngineGame = game;
-            Configuration = new Config();
+            Configuration = Config.Trained();
         }
 
 

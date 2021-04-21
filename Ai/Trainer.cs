@@ -242,7 +242,7 @@ namespace Ai
 
         public static void OptimizeAll()
         {
-            var config = new Config();
+            var config = Config.Zero();
 
             Console.WriteLine("*********************");
             Console.WriteLine(config.ToString());
@@ -302,11 +302,8 @@ namespace Ai
         public static void CompareConfigs()
         {
             var runner = new Trainer();
-            //runner.Black.Configuration.BlockedPointScore = 0;
-            //runner.Black.Configuration.ConnectedBlocksFactor = 0;
-            //runner.Black.Configuration.BloatsFactor = 0;
-            //runner.Black.Configuration.BloatsThreshold = 0;
-            runner.Black.Configuration.ProbablityScore = false;
+            runner.Black.Configuration = Config.NoDoubles41Epochs();
+            runner.White.Configuration = Config.Zero();
             var res = RunMany(runner);
         }
 

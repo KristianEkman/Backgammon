@@ -18,7 +18,6 @@ namespace Ai
             //Trainer.OptimizeBlockedPointScore();
             //Trainer.OptimizeRunOrBlockFactor();
 
-
             //Trainer.OptimizeAll();
 
             Trainer.CompareConfigs();
