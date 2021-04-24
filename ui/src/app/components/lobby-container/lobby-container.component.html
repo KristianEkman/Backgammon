@@ -7,7 +7,12 @@
   </div>
   <ng-container *ngIf="!toplist">
     <div class="title-container">
-      <h1>Backgammon</h1>
+      <h1
+        [attr.data-content]="'backgammon' | translate"
+        [ngClass]="{ chinese: (user$ | async)?.preferredLanguage === 'zh' }"
+      >
+        {{ 'backgammon' | translate }}
+      </h1>
     </div>
     <app-login-buttons
       (onLogin)="login($event)"

@@ -16,7 +16,7 @@
   }
 
   h1:before {
-    content: 'Backgammon';
+    content: attr(data-content);
     position: absolute;
     top: -52px;
 
@@ -26,6 +26,10 @@
     background-clip: text;
     color: transparent;
     opacity: 0.5;
+  }
+
+  h1.chinese:before {
+    top: -32px;
   }
 
   button {

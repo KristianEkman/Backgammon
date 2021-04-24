@@ -101,7 +101,8 @@ namespace Backend.Dto
                 photoUrl = dbUser.PhotoUrl,
                 socialProvider = dbUser.SocialProvider,
                 isAdmin = dbUser.Admin,
-                socialProviderId = dbUser.ProviderId
+                socialProviderId = dbUser.ProviderId,
+                preferredLanguage = dbUser.PreferredLanguage ?? "en"
             };
         }
     }

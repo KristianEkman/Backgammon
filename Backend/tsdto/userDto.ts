@@ -9,4 +9,5 @@ export interface UserDto {
     socialProviderId: string;
     createdNew: boolean;
     isAdmin: boolean;
+    preferredLanguage: string;
 }

@@ -29,21 +29,26 @@ export class AppComponent {
     const langs = Language.List.map((l) => l.code);
     this.translateService.addLangs(langs);
     this.translateService.setDefaultLang('en');
-    const browserLang = this.translateService.getBrowserLang();
-    let startLang = 'en';
+    // const browserLang = this.translateService.getBrowserLang();
+    // let startLang = 'en';
 
-    for (let i = 0; i < langs.length; i++) {
-      if (browserLang.indexOf(langs[i]) > -1) {
-        startLang = langs[i];
-      }
-    }
+    // for (let i = 0; i < langs.length; i++) {
+    //   if (browserLang.indexOf(langs[i]) > -1) {
+    //     startLang = langs[i];
+    //   }
+    // }
 
     this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
       // this is for helping screen readers and external translation tools
       this.document.documentElement.lang = event.lang;
+      const userDto = {
+        ...AppState.Singleton.user.getValue(),
+        preferredLanguage: event.lang
+      };
+      this.accountService.saveUser(userDto).subscribe();
     });
 
-    this.translateService.use(startLang);
+    // this.translateService.use(startLang);
   }
 
   saveErrorReport(errorDto: ErrorReportDto): void {

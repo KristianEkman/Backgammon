@@ -125,6 +125,7 @@ namespace Backend.Controllers
             {
                 var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
                 dbUser.Name = userDto.name;
+                dbUser.PreferredLanguage = userDto.preferredLanguage;
                 db.SaveChanges();
             }
         }
@@ -149,6 +150,8 @@ namespace Backend.Controllers
                 dbUser.GameCount = 0;
                 dbUser.PhotoUrl = "";
                 dbUser.ProviderId = "";
+                dbUser.PreferredLanguage = "";
+                dbUser.Admin = false;
                 db.SaveChanges();
             }
         }

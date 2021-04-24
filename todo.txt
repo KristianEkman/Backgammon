@@ -1,6 +1,5 @@
 När gameboard sidan refresha översätts inte white black you.
 
-Översätt Backgammon.
 
 För små board buttons mobil.
 
@@ -8,7 +7,6 @@ Visa home button när man inte är i lobbyn, men ej gameboard
 
 Tar bort ett meddelande, visar inte nästa
 
-Spara valt språk. Sätt alltid engelska om man inte valt.
 
 Ikoner på knappar
 
@@ -35,7 +33,6 @@ About button
 Feedback
 
 Fula tärningar på FF mobile    
-https://ionicframework.com/
 canvas banner
 animera app routing
 candeactivate
@@ -73,3 +70,4 @@ Dubbling.
 Först till 10.
 
 Money
+https://ionicframework.com/

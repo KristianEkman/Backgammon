@@ -12,6 +12,7 @@ import { ToplistService } from './toplist.service';
 import { Busy } from '../state/busy';
 import { SocialAuthService } from 'angularx-social-login';
 import { MessageService } from './message.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,8 @@ export class AccountService {
     private router: Router,
     private topListService: ToplistService,
     private authService: SocialAuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private trans: TranslateService
   ) {
     this.url = `${environment.apiServiceUrl}/account`;
   }
@@ -42,6 +44,7 @@ export class AccountService {
         })
       )
       .subscribe((userDto: UserDto) => {
+        this.trans.use(userDto.preferredLanguage);
         this.storage.set(Keys.loginKey, userDto);
         AppState.Singleton.user.setValue(userDto);
         Busy.hide();
@@ -64,6 +67,7 @@ export class AccountService {
   repair(): void {
     const user = this.storage.get(Keys.loginKey) as UserDto;
     AppState.Singleton.user.setValue(user);
+    this.trans.use(user.preferredLanguage);
   }
 
   saveUser(user: UserDto): Observable<void> {
