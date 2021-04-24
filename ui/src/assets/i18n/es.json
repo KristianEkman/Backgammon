@@ -1,0 +1,94 @@
+{
+  "invite": {
+    "copylink": "Copia este enlace y envíalo a tu amigo.",
+    "cancelinvite": "Cancelar",
+    "startgame": "Empezar juego"
+  },
+  "loginbuttons": {
+    "signin": "Inicia sesión con"
+  },
+  "logincontainer": {
+    "random": "Oponente aleatorio",
+    "friend": "Invita a un amigo",
+    "playai": "Jugar Aina",
+    "tip": "Consejo",
+    "whenyousignin": "Cuando inicia sesión, más funciones se habilitan, ¡gratis!",
+    "accept": "Aceptar invitación"
+  },
+  "accountedit": {
+    "editaccount": "Editar cuenta",
+    "name": "Nombre",
+    "required": "El campo es obligatorio.",
+    "cancel": "Cancelar",
+    "save": "Ahorrar",
+    "delete": "Borrar cuenta",
+    "allyourgames": "Todos los juegos y los datos guardados también se eliminarán.No puedes deshacer esto.",
+    "sure": "¿Está seguro?",
+    "yesdelete": "Si eliminarlo"
+  },
+  "accountmenu": {
+    "edit": "Editar cuenta",
+    "logout": "Cerrar sesión"
+  },
+  "boardbuttons": {
+    "done": "Hecho",
+    "undo": "Deshacer",
+    "roll": "Tirar",
+    "exit": "Salida",
+    "new": "Nueva"
+  },
+  "gameboard": {
+    "black": "Negra",
+    "white": "Blanca",
+    "you": "Tú",
+    "left": "izquierda"
+  },
+  "menu": {
+    "rotate": "Girar",
+    "resign": "Renunciar"
+  },
+  "messageread": {
+    "delete": "Borrar",
+    "next": "Próxima",
+    "from": "De",
+    "nomore": "No más mensajes"
+  },
+  "shareprompt": {
+    "hello": "¡Hola!",
+    "thissite": "Este sitio sigue siendo muy nuevo y necesitamos más jugadores.",
+    "humantohuman": "El juego humano al humano es después de todo lo más divertido.",
+    "please": "Por favor, comparte en sus redes sociales."
+  },
+  "errorhandler": {
+    "sendreport": "Enviar reporte",
+    "clearerrors": "Errores claros",
+    "error": "error"
+  },
+  "homebutton": {
+    "home": "Casa"
+  },
+  "newmessages": {
+    "one": "{{count}} mensaje",
+    "many": "{{count}} mensajes"
+  },
+  "toplist": {
+    "place": "Lugar",
+    "name": "Nombre",
+    "score": "Puntaje",
+    "you": "Tú"
+  },
+  "statusmessage": {
+    "yourturn": "Tu turno para moverte.  ({{color}})",
+    "waitingfor": "Esperando que el {{ color }} se mueva.",
+    "youareblcoked": "Estás bloqueado.Haga clic en \"hecho \"",
+    "noconnection": "No hay conexión del servidor",
+    "opponentconnectionlost": "Conexión oponente perdida",
+    "waitingoppcnn": "Esperando a que el oponente se conecte",
+    "newscore": "Nueva puntuación {{ score }} ({{ increase }})",
+    "youwon": "¡Felicitaciones! Ganaste. {{score}}",
+    "youlost": "Lo siento. Perdiste el juego. {{score}}",
+    "movenow": "¡Muévete ahora o pierde!"
+  },
+  "black": "negra",
+  "white": "blanca"
+}

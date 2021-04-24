@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { AppState } from './state/app-state';
 import { AccountService, ErrorReportService } from './services';
 import { Observable } from 'rxjs';
 import { ErrorState } from './state/ErrorState';
 import { ErrorReportDto } from './dto';
-import { TranslateService } from '@ngx-translate/core';
+import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Language } from './components/select-language/select-language.component';
+import { DOCUMENT } from '@angular/common';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,7 +20,8 @@ export class AppComponent {
   constructor(
     private accountService: AccountService,
     private errorReportService: ErrorReportService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    @Inject(DOCUMENT) private document: Document
   ) {
     this.errors$ = AppState.Singleton.errors.observe();
     this.accountService.repair();
@@ -35,6 +37,11 @@ export class AppComponent {
         startLang = langs[i];
       }
     }
+
+    this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+      // this is for helping screen readers and external translation tools
+      this.document.documentElement.lang = event.lang;
+    });
 
     this.translateService.use(startLang);
   }

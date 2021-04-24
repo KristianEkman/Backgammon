@@ -21,7 +21,9 @@ export class Language {
   static get List(): Language[] {
     return [
       new Language('en', 'English'),
-      new Language('sv', 'Svenska')
+      new Language('sv', 'Svenska'),
+      new Language('zh', '中國人'),
+      new Language('es', 'Español')
       // new Language('x', 'X')
     ];
   }

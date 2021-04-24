@@ -1,18 +1,20 @@
-html lang
+När gameboard sidan refresha översätts inte white black you.
 
-när gameboard sidan refresha översätts inte white black you.
+Översätt Backgammon.
 
 För små board buttons mobil.
-
-translate Please wait.
 
 Visa home button när man inte är i lobbyn, men ej gameboard
 
 Tar bort ett meddelande, visar inte nästa
 
-Spara valt språk.
+Spara valt språk. Sätt alltid engelska om man inte valt.
 
-Finns det en bugg som gör att ai slår bloats med låg point?
+Ikoner på knappar
+
+Finns det en bugg som gör att AI slår bloats med låg point?
+
+Translate Please wait.
 
 
 Release 1.1 - mål att öka logins

@@ -10,7 +10,7 @@ export class BusyComponent implements OnInit {
   constructor() {}
 
   @Input() busy: Busy | null = null;
-  @Input() text = 'Please wait.';
+  @Input() text = 'Please wait';
   @Input() overlay = true;
 
   ngOnInit(): void {}
