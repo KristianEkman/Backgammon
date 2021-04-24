@@ -1,9 +1,15 @@
-<p>Copy this link and send it to your friend</p>
+<p>{{ 'invite.copylink' | translate }}</p>
 <div>
-  <input class="link-text" #linkText readonly="readonly" [value]="link">
-  <button (click)="selectAndCopy()" class="flat-button"><i class="fas fa-copy"></i></button>
+  <input class="link-text" #linkText readonly="readonly" [value]="link" />
+  <button (click)="selectAndCopy()" class="flat-button">
+    <i class="fas fa-copy"></i>
+  </button>
 </div>
 <div class="buttons">
-  <button class="black-button" (click)="cancelClick()">Cancel invite</button>
-  <button class="default-button" (click)="startClick()">Start game</button>
+  <button class="black-button" (click)="cancelClick()">
+    {{ 'invite.cancelinvite' | translate }}
+  </button>
+  <button class="default-button" (click)="startClick()">
+    {{ 'invite.startgame' | translate }}
+  </button>
 </div>

@@ -1,3 +1,6 @@
 <router-outlet></router-outlet>
 <app-busy [busy]="busy$ | async"></app-busy>
-<app-error-handler [errors]="errors$ | async" (save)="saveErrorReport($event)"></app-error-handler>
+<app-error-handler
+  [errors]="errors$ | async"
+  (save)="saveErrorReport($event)"
+></app-error-handler>

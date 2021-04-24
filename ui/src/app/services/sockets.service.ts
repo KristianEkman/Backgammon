@@ -25,7 +25,7 @@ import {
 import { AppState } from '../state/app-state';
 import { Keys, Sound } from '../utils';
 import { StatusMessageService } from './status-message.service';
-import { MessageLevel, StatusMessage } from '../dto/local/status-message';
+import { MessageLevel } from '../dto/local/status-message';
 import { Router, UrlSerializer } from '@angular/router';
 
 @Injectable({
@@ -193,10 +193,7 @@ export class SocketsService implements OnDestroy {
           AppState.Singleton.myTurn() &&
           currentMes.level !== MessageLevel.warning
         ) {
-          const mes = StatusMessage.warning('Move now or lose!');
-          Sound.playWarning();
-          // A few more seconds are given on the server.
-          AppState.Singleton.statusMessage.setValue(mes);
+          this.statusMessageService.setMoveNow();
         }
       }
     }, 1000);

@@ -1,8 +1,18 @@
+html lang
+
+när gameboard sidan refresha översätts inte white black you.
+
+För små board buttons mobil.
+
+translate Please wait.
+
+Visa home button när man inte är i lobbyn, men ej gameboard
+
+Tar bort ett meddelande, visar inte nästa
+
+Spara valt språk.
+
 Finns det en bugg som gör att ai slår bloats med låg point?
-
-    utverdera drag parallellt
-
-Skriv en artikel om AI:t
 
 
 Release 1.1 - mål att öka logins

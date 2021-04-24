@@ -1,15 +1,19 @@
 <button (click)="sendMoves()" *ngIf="sendVisible" class="default-button">
-  Done
+  {{ 'boardbuttons.done' | translate }}
 </button>
 <button (click)="undoMove()" *ngIf="undoVisible" class="secondary-button">
-  Undo
+  {{ 'boardbuttons.undo' | translate }}
 </button>
-<button *ngIf="rollButtonVisible" (click)="rollButtonClick()" class="default-button">
-  Roll
+<button
+  *ngIf="rollButtonVisible"
+  (click)="rollButtonClick()"
+  class="default-button"
+>
+  {{ 'boardbuttons.roll' | translate }}
 </button>
 <button (click)="newGame()" *ngIf="newVisible" class="default-button">
-  New
+  {{ 'boardbuttons.new' | translate }}
 </button>
 <button (click)="exitGame()" *ngIf="exitVisible" class="secondary-button">
-  Exit
+  {{ 'boardbuttons.exit' | translate }}
 </button>

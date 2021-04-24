@@ -1,0 +1,94 @@
+{
+  "invite": {
+    "copylink": "Copy this link and send it to your friend",
+    "cancelinvite": "Cancel",
+    "startgame": "Start game"
+  },
+  "loginbuttons": {
+    "signin": "Sign in with"
+  },
+  "logincontainer": {
+    "random": "Random opponent",
+    "friend": "Invite a friend",
+    "playai": "Play AI",
+    "tip": "Tip",
+    "whenyousignin": "When you sign in, more features gets enabled, for free!",
+    "accept": "Accept invite"
+  },
+  "accountedit": {
+    "editaccount": "Edit Account",
+    "name": "Name",
+    "required": "The field is required.",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete Account",
+    "allyourgames": "All you games and saved data will also be deleted. You can not undo this.",
+    "sure": "Are you sure?",
+    "yesdelete": "Yes delete it"
+  },
+  "accountmenu": {
+    "edit": "Edit account",
+    "logout": "Logout"
+  },
+  "boardbuttons": {
+    "done": "Done",
+    "undo": "Undo",
+    "roll": "Roll",
+    "exit": "Exit",
+    "new": "New"
+  },
+  "gameboard": {
+    "black": "Black",
+    "white": "White",
+    "you": "You",
+    "left": "left"
+  },
+  "menu": {
+    "rotate": "Rotate",
+    "resign": "Resign"
+  },
+  "messageread": {
+    "delete": "Delete",
+    "next": "Next",
+    "from": "From",
+    "nomore": "No more messages"
+  },
+  "shareprompt": {
+    "hello": "Hello!",
+    "thissite": "This site is still very new and we need more players.",
+    "humantohuman": "Human to human game is after all the most fun.",
+    "please": "Please share on your social media."
+  },
+  "errorhandler": {
+    "sendreport": "Send report",
+    "clearerrors": "Clear errors",
+    "error": "Error"
+  },
+  "homebutton": {
+    "home": "Home"
+  },
+  "newmessages": {
+    "one": "{{count}} message",
+    "many": "{{count}} messages"
+  },
+  "toplist": {
+    "place": "Place",
+    "name": "Name",
+    "score": "Score",
+    "you": "You"
+  },
+  "statusmessage": {
+    "yourturn": "Your turn to move.  ({{color}})",
+    "waitingfor": "Waiting for {{color}} to move.",
+    "youareblcoked": "You are blocked. Click \"Done\"",
+    "noconnection": "No server connection",
+    "opponentconnectionlost": "Opponent connection lost",
+    "waitingoppcnn": "Waiting for opponent to connect",
+    "newscore": "New score {{ score }} ({{ increase }})",
+    "youwon": "Congrats! You won. {{score}}",
+    "youlost": "Sorry. You lost the game. {{score}}",
+    "movenow": "Move now or lose!"
+  },
+  "black": "black",
+  "white": "white"
+}

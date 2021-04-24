@@ -1,0 +1,94 @@
+{
+  "invite": {
+    "copylink": "x",
+    "cancelinvite": "x",
+    "startgame": "x"
+  },
+  "loginbuttons": {
+    "signin": "x"
+  },
+  "logincontainer": {
+    "random": "x",
+    "friend": "x",
+    "playai": "x",
+    "tip": "x",
+    "whenyousignin": "x",
+    "accept": "x"
+  },
+  "accountedit": {
+    "editaccount": "x",
+    "name": "x",
+    "required": "x",
+    "cancel": "x",
+    "save": "x",
+    "delete": "x",
+    "allyourgames": "x",
+    "sure": "x",
+    "yesdelete": "x"
+  },
+  "accountmenu": {
+    "edit": "x",
+    "logout": "x"
+  },
+  "boardbuttons": {
+    "done": "x",
+    "undo": "x",
+    "roll": "x",
+    "exit": "x",
+    "new": "x"
+  },
+  "gameboard": {
+    "black": "x",
+    "white": "x",
+    "you": "x",
+    "left": "x"
+  },
+  "menu": {
+    "rotate": "x",
+    "resign": "x"
+  },
+  "messageread": {
+    "delete": "x",
+    "next": "x",
+    "from": "x",
+    "nomore": "x"
+  },
+  "shareprompt": {
+    "hello": "x",
+    "thissite": "x",
+    "humantohuman": "x",
+    "please": "x"
+  },
+  "errorhandler": {
+    "sendreport": "x",
+    "clearerrors": "x",
+    "error": "x"
+  },
+  "homebutton": {
+    "home": "x"
+  },
+  "newmessages": {
+    "one": "x",
+    "many": "x"
+  },
+  "toplist": {
+    "place": "x",
+    "name": "x",
+    "score": "x",
+    "you": "x"
+  },
+  "statusmessage": {
+    "yourturn": "x",
+    "waitingfor": "x",
+    "youareblcoked": "x",
+    "noconnection": "x",
+    "opponentconnectionlost": "x",
+    "waitingoppcnn": "x",
+    "newscore": "x",
+    "youwon": "x",
+    "youlost": "X",
+    "movenow": "X"
+  },
+  "black": "x",
+  "white": "x"
+}

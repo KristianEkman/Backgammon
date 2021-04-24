@@ -2,10 +2,12 @@
   <form [formGroup]="formGroup" class="error-handler-form">
     <div class="send-button">
       <button type="submit" (click)="sendErrors()" class="flat-button">
-        Send report <i class="fas fa-paper-plane"></i>
+        {{ 'errorhandler.sendreport' | translate }}
+        <i class="fas fa-paper-plane"></i>
       </button>
       <button type="button" (click)="clearErrors()" class="flat-button">
-        Clear errors <i class="fas fa-times"></i>
+        {{ 'errorhandler.clearerrors' | translate }}
+        <i class="fas fa-times"></i>
       </button>
     </div>
     <textarea readonly="readonly" formControlName="errors"></textarea>
@@ -18,6 +20,7 @@
     class="flat-button"
     (click)="showErrors()"
   >
-    Error <i class="fas fa-exclamation-circle"></i>
+    {{ 'errorhandler.error' | translate }}
+    <i class="fas fa-exclamation-circle"></i>
   </button>
 </div>

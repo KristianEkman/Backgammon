@@ -1,0 +1,94 @@
+{
+  "invite": {
+    "copylink": "Kopiera länken och skicka till din motspelare",
+    "cancelinvite": "Avbryt",
+    "startgame": "Starta spelet"
+  },
+  "loginbuttons": {
+    "signin": "Logga in med"
+  },
+  "logincontainer": {
+    "random": "Slumpmässig motståndare",
+    "friend": "Bjud in någon",
+    "playai": "Spela mot Aina",
+    "tip": "Tips",
+    "whenyousignin": "När du loggar in aktiveras fler funktioner, gratis!",
+    "accept": "Godta inbjudan"
+  },
+  "accountedit": {
+    "editaccount": "Redigera kontot",
+    "name": "Namn",
+    "required": "Fältet är obligatoriskt.",
+    "cancel": "Avbryt",
+    "save": "Spara",
+    "delete": "Ta bort kontot",
+    "allyourgames": "Alla din matcher och sparad data tas bort. Det går inte att ångra.",
+    "sure": "Är du säker?",
+    "yesdelete": "Ja tabort det"
+  },
+  "accountmenu": {
+    "edit": "Redigera konto",
+    "logout": "Logga ut"
+  },
+  "boardbuttons": {
+    "done": "Klar",
+    "undo": "Ångra",
+    "roll": "Rulla",
+    "exit": "Hem",
+    "new": "Nytt"
+  },
+  "gameboard": {
+    "black": "Svart",
+    "white": "Vit",
+    "you": "Du",
+    "left": "kvar"
+  },
+  "menu": {
+    "rotate": "Rotera",
+    "resign": "Ge upp"
+  },
+  "messageread": {
+    "delete": "Tabort",
+    "next": "Nästa",
+    "from": "Från",
+    "nomore": "Inga fler meddelanden"
+  },
+  "shareprompt": {
+    "hello": "Hej!",
+    "thissite": "Den här sidan är precis ny, och vi behöver fler spelare.",
+    "humantohuman": "Det är ju roligare att spela mot en annan människa",
+    "please": "Snälla, dela sidan på din sociala media."
+  },
+  "errorhandler": {
+    "sendreport": "Skicka rapport",
+    "clearerrors": "Ta bort felet",
+    "error": "Fel"
+  },
+  "homebutton": {
+    "home": "Hem"
+  },
+  "newmessages": {
+    "one": "{{count}} meddelande",
+    "many": "{{count}} meddelanden"
+  },
+  "toplist": {
+    "place": "Plats",
+    "name": "Namn",
+    "score": "Poäng",
+    "you": "Du"
+  },
+  "statusmessage": {
+    "yourturn": "Din tur. ({{color}})",
+    "waitingfor": "Väntar på {{color}}",
+    "youareblcoked": "Du är blockerad, klicka på \"Klar\"",
+    "noconnection": "Ingen serveranslutning",
+    "opponentconnectionlost": "Motståndaren tappade anslutningen",
+    "waitingoppcnn": "Väntar på motståndaren att ansluta",
+    "newscore": "Ny poäng {{ score }} ({{ increase }})",
+    "youwon": "Grattis! Du vann. {{score}}",
+    "youlost": "Ledsen. Du förlorade. {{score}}",
+    "movenow": "Om du inte flyttar nu förlorar du!"
+  },
+  "black": "svart",
+  "white": "vit"
+}

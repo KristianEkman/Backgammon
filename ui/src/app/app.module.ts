@@ -24,7 +24,11 @@ import { BoardButtonsComponent } from './components/game/board-buttons/board-but
 import { MessagesComponent } from './components/game/messages/messages.component';
 import { MenuComponent } from './components/game/menu/menu.component';
 import { LoginButtonsComponent } from './components/lobby-container/login-buttons/login-buttons.component';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpClientModule,
+  HTTP_INTERCEPTORS
+} from '@angular/common/http';
 import { InviteComponent } from './components/lobby-container/invite/invite.component';
 import { ToplistContainerComponent } from './components/toplist-container/toplist-container.component';
 import { ToplistComponent } from './components/toplist-container/toplist/toplist.component';
@@ -45,6 +49,14 @@ import { NewMessagesComponent } from './components/shared/new-messages/new-messa
 import { MessageReadComponent } from './components/message-container/message-read/message-read.component';
 import { SharePromptComponent } from './components/message-container/share-prompt/share-prompt.component';
 import { HomeButtonComponent } from './components/shared/home-button/home-button.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { SelectLanguageComponent } from './components/select-language/select-language.component';
+
+export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
+  return new TranslateHttpLoader(http);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +83,8 @@ import { HomeButtonComponent } from './components/shared/home-button/home-button
     NewMessagesComponent,
     MessageReadComponent,
     SharePromptComponent,
-    HomeButtonComponent
+    HomeButtonComponent,
+    SelectLanguageComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +96,13 @@ import { HomeButtonComponent } from './components/shared/home-button/home-button
     ReactiveFormsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
+    }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
     })
   ],
   providers: [

@@ -15,6 +15,7 @@ import {
   transition
 } from '@angular/animations';
 import { Toplist, ToplistResult } from 'src/app/dto';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-toplist-banner',
@@ -54,6 +55,8 @@ export class ToplistBannerComponent implements OnChanges {
   timeoutHandle: any = null;
   started = false;
 
+  constructor(private trans: TranslateService) {}
+
   ngOnChanges(): void {
     if (this.toplist) {
       const temp = [...this.toplist.results];
@@ -90,5 +93,11 @@ export class ToplistBannerComponent implements OnChanges {
 
   bannerClick(): void {
     this.clicked.emit();
+  }
+
+  getName(item: ToplistResult): string {
+    const you = this.trans.instant('toplist.you');
+
+    return item.you ? you : item.name;
   }
 }

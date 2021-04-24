@@ -1,18 +1,20 @@
 <div class="toplist" *ngIf="toplist">
-  <button (click)="closeClick()" class="close-button flat-button">&times;</button>
+  <button (click)="closeClick()" class="close-button flat-button">
+    &times;
+  </button>
   <table>
     <thead>
       <tr>
-        <th class="left">Place</th>
-        <th class="left">Name</th>
-        <th>Elo</th>
+        <th class="left">{{ 'toplist.place' | translate }}</th>
+        <th class="left">{{ 'toplist.name' | translate }}</th>
+        <th>{{ 'toplist.score' | translate }}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of toplist.results" [ngClass]="{you: item.you}">
-        <td class="left">{{item.place}}.</td>
-        <td class="left">{{ item.you ? item.name + ' (You)' : item.name}}</td>
-        <td class="right">{{item.elo}}</td>
+      <tr *ngFor="let item of toplist.results" [ngClass]="{ you: item.you }">
+        <td class="left">{{ item.place }}.</td>
+        <td class="left">{{ getName(item) }}</td>
+        <td class="right">{{ item.elo }}</td>
       </tr>
     </tbody>
   </table>

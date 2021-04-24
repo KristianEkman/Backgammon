@@ -19,23 +19,28 @@
       </button> -->
       <ng-container *ngIf="isLoggedIn()">
         <button class="black-button" (click)="playClick()">
-          Play random opponent</button
+          {{ 'logincontainer.random' | translate }}</button
         ><br />
         <button class="black-button" (click)="playFriendClick()">
-          Invite a friend
+          {{ 'logincontainer.friend' | translate }}
         </button>
       </ng-container>
       <div class="ai-button-container">
-        <button class="black-button" (click)="playAiClick()">Play AI</button>
+        <button class="black-button" (click)="playAiClick()">
+          {{ 'logincontainer.playai' | translate }}
+        </button>
         <div *ngIf="playAiAsGuestMessage && !isLoggedIn()" class="tip-message">
-          <strong>Tip <i class="fas fa-carrot"></i></strong><br />
-          <em>When you sign in, more features gets enabled, for free!</em>
+          <strong
+            >{{ 'logincontainer.tip' | translate }}
+            <i class="fas fa-carrot"></i></strong
+          ><br />
+          <em>{{ 'logincontainer.whenyousignin' | translate }}</em>
         </div>
       </div>
     </div>
     <div *ngIf="inviteId && (user$ | async)">
       <button class="default-button" (click)="startInvitedGame(inviteId)">
-        Accept invite
+        {{ 'logincontainer.accept' | translate }}
       </button>
     </div>
     <div *ngIf="playInvite">

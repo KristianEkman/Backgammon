@@ -7,6 +7,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
@@ -52,8 +53,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   whitesName = '';
   blacksName = '';
   theme: IThemes = new DarkTheme();
+  you = '';
+  white = '';
+  black = '';
 
-  constructor() {
+  constructor(private translateService: TranslateService) {
     for (let r = 0; r < 26; r++) {
       this.checkerAreas.push(new CheckerArea(0, 0, 0, 0, 0));
     }
@@ -91,6 +95,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
     this.requestDraw();
+    this.you = this.translateService.instant('gameboard.you');
+    this.white = this.translateService.instant('gameboard.white');
+    this.black = this.translateService.instant('gameboard.black');
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -99,14 +106,18 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
     this.requestDraw();
     const bName =
-      this.myColor === PlayerColor.black ? 'You' : this.game?.blackPlayer.name;
+      this.myColor === PlayerColor.black
+        ? this.you
+        : this.game?.blackPlayer.name;
     const wName =
-      this.myColor === PlayerColor.white ? 'You' : this.game?.whitePlayer.name;
+      this.myColor === PlayerColor.white
+        ? this.you
+        : this.game?.whitePlayer.name;
     const bLeft = this.game?.blackPlayer.pointsLeft;
     const wLeft = this.game?.whitePlayer.pointsLeft;
-
-    this.blacksName = this.game ? `${bName} - ${bLeft} left` : '';
-    this.whitesName = this.game ? `${wName} - ${wLeft} left` : '';
+    const left = this.translateService.instant('gameboard.left');
+    this.blacksName = this.game ? `${bName} - ${bLeft} ${left}` : '';
+    this.whitesName = this.game ? `${wName} - ${wLeft} ${left}` : '';
     // console.log(this.game?.playState);
   }
 
@@ -629,7 +640,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.fillStyle = this.theme.border;
     cx.font = homeFntSize;
     cx.fillText(
-      'Black',
+      this.black,
       this.borderWidth / 2 + 2,
       -this.borderWidth / 2 - 2,
       this.blackHome.height
@@ -646,7 +657,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.font = homeFntSize;
 
     cx.fillText(
-      'White',
+      this.white,
       this.borderWidth / 2 + 2,
       -this.borderWidth / 2 - 2,
       this.whiteHome.height
