@@ -8,10 +8,7 @@ namespace Ai
 {
     public class Config
     {
-        /// <summary>
-        /// Bloats are hitables checkers. Below this threshold does not reduce score.
-        /// </summary>
-        public int BloatsThreshold { get; set; }
+        
 
         internal Config Clone()
         {
@@ -24,6 +21,11 @@ namespace Ai
                 RunOrBlockFactor = RunOrBlockFactor
             };
         }
+
+        /// <summary>
+        /// Bloats are hitables checkers. Below this threshold does not reduce score.
+        /// </summary>
+        public int BloatsThreshold { get; set; }
 
         /// <summary>
         /// The point divided by this factor reduces score for bloats.
