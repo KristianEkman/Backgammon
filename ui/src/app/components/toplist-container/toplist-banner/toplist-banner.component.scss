@@ -4,9 +4,10 @@
   display: block;
   overflow: hidden;
   white-space: nowrap;
-  height: 20px;
+  height: 25px;
   width: 340px;
   position: relative;
+  padding-top: 5px;
 
   @include hovershadow;
 

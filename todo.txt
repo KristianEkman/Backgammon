@@ -1,3 +1,5 @@
+Språk, franska, arabiska, ryska.
+
 När gameboard sidan refresha översätts inte white black you.
 
 Lägga Invite i route.
@@ -7,8 +9,6 @@ Tar bort ett meddelande, visar inte nästa
 Finns det en bugg som gör att AI slår bloats med låg point?
 
 Translate "Please wait".
-
-Fel uppstår när man loggar ut i debug-läge. Finns det i prod?
 
 Release 1.1 - mål att öka logins
 ===========

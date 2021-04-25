@@ -11,12 +11,16 @@
     </button>
     <div *ngIf="open" class="overlay-content">
       <button class="flat-button" (click)="flipClick()">
-        {{ 'menu.rotate' | translate }}</button
-      ><br />
+        <i class="fas fa-sync"></i>
+        {{ 'menu.rotate' | translate }}
+      </button>
+      <br />
       <!-- <button class="flat-button">Change theme</button><br /> -->
       <button class="flat-button" (click)="resignClick()">
-        {{ 'menu.resign' | translate }}</button
-      ><br />
+        <i class="fas fa-flag"></i>
+        {{ 'menu.resign' | translate }}
+      </button>
+      <br />
     </div>
   </div>
 </div>

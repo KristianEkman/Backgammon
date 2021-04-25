@@ -1,0 +1,95 @@
+{
+  "backgammon": "طاولة زهر",
+  "invite": {
+    "copylink": "انسخ هذا الرابط وإرساله إلى صديقك",
+    "cancelinvite": "يلغي",
+    "startgame": "بدء اللعبة"
+  },
+  "loginbuttons": {
+    "signin": "تسجيل الدخول ب"
+  },
+  "logincontainer": {
+    "random": "خصم عشوائي",
+    "friend": "أدع صديقا",
+    "playai": "يلعب ضد Aina",
+    "tip": "نصيحة",
+    "whenyousignin": "عند تسجيل الدخول، يتم تمكين المزيد من الميزات، مجانا!",
+    "accept": "قبول دعوة"
+  },
+  "accountedit": {
+    "editaccount": "تحرير الحساب",
+    "name": "اسم",
+    "required": "مطلوب هذا المجال.",
+    "cancel": "يلغي",
+    "save": "يحفظ",
+    "delete": "حذف الحساب",
+    "allyourgames": "سيتم أيضا حذف جميع الألعاب والبيانات المحفوظة.لا يمكنك التراجع عن هذا.",
+    "sure": "هل أنت واثق؟",
+    "yesdelete": "نعم حذفها"
+  },
+  "accountmenu": {
+    "edit": "تحرير الحساب",
+    "logout": "تسجيل خروج"
+  },
+  "boardbuttons": {
+    "done": "منجز",
+    "undo": "الغاء التحميل",
+    "roll": "تدحرج",
+    "exit": "مخرج",
+    "new": "جديد"
+  },
+  "gameboard": {
+    "black": "أسود",
+    "white": "أبيض",
+    "you": "أنت",
+    "left": "غادر"
+  },
+  "menu": {
+    "rotate": "استدارة",
+    "resign": "استقالة"
+  },
+  "messageread": {
+    "delete": "حذف",
+    "next": "التالي",
+    "from": "من عند",
+    "nomore": "لا مزيد من الرسائل"
+  },
+  "shareprompt": {
+    "hello": "مرحبا!",
+    "thissite": "هذا الموقع لا يزال جديدا جدا ونحتاج إلى المزيد من اللاعبين.",
+    "humantohuman": "لعبة الإنسان إلى الإنسان هي بعد كل المتعة.",
+    "please": "يرجى المشاركة على وسائل التواصل الاجتماعي الخاص بك."
+  },
+  "errorhandler": {
+    "sendreport": "إرسال تقرير",
+    "clearerrors": "أخطاء واضحة",
+    "error": "خطأ"
+  },
+  "homebutton": {
+    "home": "منزل، بيت"
+  },
+  "newmessages": {
+    "one": "{{count}} رسالة",
+    "many": "{{count}} رسائل"
+  },
+  "toplist": {
+    "place": "مكان",
+    "name": "اسم",
+    "score": "نتيجة",
+    "you": "أنت"
+  },
+  "statusmessage": {
+    "yourturn": "({{color}}). دورك للتحرك.",
+    "waitingfor": "في انتظار {{ color }} للتحرك.",
+    "youareblcoked": "أنت محظورة.انقر فوق",
+    "noconnection": "لا يوجد اتصال خادم",
+    "opponentconnectionlost": "اتصال الخصم خسر",
+    "waitingoppcnn": "في انتظار الخصم للاتصال",
+    "newscore": "النتيجة الجديدة {{ score }} ({{ increase }})",
+    "youwon": "مبروك!لقد فزت. {{score}}",
+    "youlost": "آسف.لقد خسرت المباراه. {{score}}",
+    "movenow": "التحرك الآن أو تخسر!"
+  },
+  "black": "أسود",
+  "white": "أبيض"
+}

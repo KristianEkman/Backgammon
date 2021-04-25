@@ -25,7 +25,8 @@ export class Language {
       new Language('en', 'English'),
       new Language('sv', 'Svenska'),
       new Language('zh', '中國人'),
-      new Language('es', 'Español')
+      new Language('es', 'Español'),
+      new Language('ar', 'عربى')
       // new Language('x', 'X')
     ];
   }
