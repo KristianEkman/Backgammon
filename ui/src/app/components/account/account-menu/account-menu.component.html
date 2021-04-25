@@ -1,14 +1,17 @@
 <div>
   <button *ngIf="user" class="flat-button" (click)="nameClick()">
+    <i class="fas fa-user"></i>
     {{ Name }}
   </button>
 </div>
 <div *ngIf="toggle" class="app-account__menu-panel">
   <app-select-language (changed)="toggle = false"></app-select-language>
   <button class="flat-button" (click)="editAccount()">
+    <i class="fas fa-edit"></i>
     {{ 'accountmenu.edit' | translate }}
   </button>
   <button class="flat-button" (click)="logoutClick()">
+    <i class="fas fa-sign-out-alt"></i>
     {{ 'accountmenu.logout' | translate }}
   </button>
   <button *ngIf="user?.isAdmin" class="flat-button" (click)="adminPage()">

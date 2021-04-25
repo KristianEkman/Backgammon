@@ -1,19 +1,14 @@
 När gameboard sidan refresha översätts inte white black you.
 
-
-För små board buttons mobil.
-
-Visa home button när man inte är i lobbyn, men ej gameboard
+Lägga Invite i route.
 
 Tar bort ett meddelande, visar inte nästa
 
-
-Ikoner på knappar
-
 Finns det en bugg som gör att AI slår bloats med låg point?
 
-Translate Please wait.
+Translate "Please wait".
 
+Fel uppstår när man loggar ut i debug-läge. Finns det i prod?
 
 Release 1.1 - mål att öka logins
 ===========
