@@ -41,8 +41,10 @@ export class AppComponent {
     this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
       // this is for helping screen readers and external translation tools
       this.document.documentElement.lang = event.lang;
+      const currentUser = AppState.Singleton.user.getValue();
+      if (!currentUser) return;
       const userDto = {
-        ...AppState.Singleton.user.getValue(),
+        ...currentUser,
         preferredLanguage: event.lang
       };
       this.accountService.saveUser(userDto).subscribe();

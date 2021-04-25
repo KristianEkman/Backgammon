@@ -10,4 +10,8 @@
   border: 2px solid #222;
   position: relative;
   border-radius: 15px;
+
+  @media screen and (max-height: 750px) {
+    border: none;
+  }
 }

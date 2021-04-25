@@ -95,7 +95,6 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   playAiClick(): void {
-    console.log({ a: this.playAiAsGuestMessage });
     if (this.playAiAsGuestMessage || this.isLoggedIn()) {
       this.router.navigate(['game'], { queryParams: { playAi: true } });
       return;

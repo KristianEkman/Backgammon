@@ -22,6 +22,11 @@ html {
 
 body {
   background-color: rgb(9, 29, 32);
+
+  @media screen and (max-height: 750px) {
+    background-color: #111;
+  }
+
   color: #aaa;
   overflow: hidden;
   display: flex;

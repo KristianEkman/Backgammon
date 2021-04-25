@@ -61,13 +61,14 @@ export class AccountService {
   signOut(): void {
     AppState.Singleton.user.clearValue();
     this.storage.remove(Keys.loginKey);
+    this.trans.use('en');
   }
 
   // If the user account is stored in local storage, it will be restored without contacting social provider
   repair(): void {
     const user = this.storage.get(Keys.loginKey) as UserDto;
     AppState.Singleton.user.setValue(user);
-    this.trans.use(user.preferredLanguage);
+    this.trans.use(user?.preferredLanguage ?? 'en');
   }
 
   saveUser(user: UserDto): Observable<void> {
