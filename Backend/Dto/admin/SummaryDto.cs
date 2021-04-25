@@ -7,7 +7,7 @@ namespace Backend.Dto.admin
 {
     public class SummaryDto
     {
-        public int reggedUsersToday;
+        public int reggedUsersToday { get; set; }
         public int reggedUsers { get; set; }
         public int ongoingGames { get; set; }
         public int playedGamesTotal { get; set; }
