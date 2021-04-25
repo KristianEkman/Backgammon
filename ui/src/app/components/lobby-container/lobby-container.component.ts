@@ -2,13 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { Observable } from 'rxjs';
-import { MessageDto, Toplist, UserDto } from 'src/app/dto';
+import { MessageDto, UserDto } from 'src/app/dto';
 import { InviteResponseDto } from 'src/app/dto/rest';
 import {
   AccountService,
   InviteService,
-  MessageService,
-  ToplistService
+  MessageService
 } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { Busy } from 'src/app/state/busy';
