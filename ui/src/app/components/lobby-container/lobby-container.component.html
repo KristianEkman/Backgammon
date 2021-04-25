@@ -1,8 +1,8 @@
 <div class="lobby-container">
   <div class="top-list" *ngIf="(user$ | async) && !playInvite && !inviteId">
     <app-toplist-container
-      [toplist]="toplist$ | async"
-      (showing)="showingTopList($event)"
+      [banner]="true"
+      (bannerClick)="topListBannerClick()"
     ></app-toplist-container>
   </div>
   <ng-container *ngIf="!toplist">

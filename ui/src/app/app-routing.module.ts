@@ -5,6 +5,7 @@ import { AdminContainerComponent } from './components/admin-container/admin-cont
 import { GameContainerComponent } from './components/game/game-container/game-container.component';
 import { LobbyContainerComponent } from './components/lobby-container/lobby-container.component';
 import { MessageContainerComponent } from './components/message-container/message-container.component';
+import { ToplistContainerComponent } from './components/toplist-container/toplist-container.component';
 import { LoginGuard } from './guards/login.guard';
 
 const routes: Routes = [
@@ -29,6 +30,11 @@ const routes: Routes = [
   {
     path: 'messages',
     component: MessageContainerComponent,
+    canActivate: [LoginGuard]
+  },
+  {
+    path: 'toplist',
+    component: ToplistContainerComponent,
     canActivate: [LoginGuard]
   },
   {

@@ -25,17 +25,14 @@ export class LobbyContainerComponent implements OnInit {
     private authService: SocialAuthService,
     private accountService: AccountService,
     private inviteService: InviteService,
-    private topListService: ToplistService,
     private messageService: MessageService
   ) {
     this.user$ = AppState.Singleton.user.observe();
-    this.toplist$ = AppState.Singleton.toplist.observe();
     this.messages$ = AppState.Singleton.messages.observe();
   }
 
   user$: Observable<UserDto>;
   invite$: Observable<InviteResponseDto> | null = null;
-  toplist$: Observable<Toplist>;
   messages$: Observable<MessageDto[]>;
 
   playInvite = false;
@@ -74,7 +71,6 @@ export class LobbyContainerComponent implements OnInit {
     ];
 
     if (this.accountService.isLoggedIn()) {
-      this.topListService.loadToplist();
       this.messageService.loadMessages();
     }
   }
@@ -119,8 +115,8 @@ export class LobbyContainerComponent implements OnInit {
 
   acceptInviteClick(): void {}
 
-  showingTopList(flag: boolean): void {
-    this.toplist = flag;
+  topListBannerClick(): void {
+    this.router.navigateByUrl('/toplist');
   }
 
   isLoggedIn(): boolean {

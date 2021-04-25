@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Toplist, ToplistResult } from 'src/app/dto';
 
@@ -7,16 +7,9 @@ import { Toplist, ToplistResult } from 'src/app/dto';
   templateUrl: './toplist.component.html',
   styleUrls: ['./toplist.component.scss']
 })
-export class ToplistComponent implements OnInit {
+export class ToplistComponent {
   @Input() toplist: Toplist | null = null;
-  @Output() closed = new EventEmitter<void>();
   constructor(private trans: TranslateService) {}
-
-  ngOnInit(): void {}
-
-  closeClick(): void {
-    this.closed.emit();
-  }
 
   getName(item: ToplistResult): string {
     const you = this.trans.instant('toplist.you');
