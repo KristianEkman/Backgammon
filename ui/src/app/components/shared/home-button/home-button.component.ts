@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,8 +6,17 @@ import { Router } from '@angular/router';
   templateUrl: './home-button.component.html',
   styleUrls: ['./home-button.component.scss']
 })
-export class HomeButtonComponent implements OnInit {
+export class HomeButtonComponent {
   constructor(public router: Router) {}
 
-  ngOnInit(): void {}
+  get Visible(): boolean {
+    const hiddenOn = ['/lobby', '/game'];
+    for (let i = 0; i < hiddenOn.length; i++) {
+      const route = hiddenOn[i];
+      if (this.router.url.startsWith(route)) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

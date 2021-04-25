@@ -86,7 +86,6 @@ export class LobbyContainerComponent implements OnInit {
 
   logout(): void {
     this.accountService.signOut();
-
     this.authService.signOut(true);
   }
 

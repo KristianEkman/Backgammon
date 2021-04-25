@@ -1,4 +1,7 @@
-<router-outlet></router-outlet>
+<div class="app-component">
+  <app-home-button></app-home-button>
+  <router-outlet></router-outlet>
+</div>
 <app-busy [busy]="busy$ | async"></app-busy>
 <app-error-handler
   [errors]="errors$ | async"

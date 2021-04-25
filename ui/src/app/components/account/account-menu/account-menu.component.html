@@ -4,7 +4,7 @@
   </button>
 </div>
 <div *ngIf="toggle" class="app-account__menu-panel">
-  <app-select-language></app-select-language>
+  <app-select-language (changed)="toggle = false"></app-select-language>
   <button class="flat-button" (click)="editAccount()">
     {{ 'accountmenu.edit' | translate }}
   </button>

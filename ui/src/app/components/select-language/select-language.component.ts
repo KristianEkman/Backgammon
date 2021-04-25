@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -9,10 +9,12 @@ import { TranslateService } from '@ngx-translate/core';
 export class SelectLanguageComponent {
   Language = Language;
 
+  @Output() changed = new EventEmitter<void>();
   constructor(public translateService: TranslateService) {}
 
   useLang(lang: string): void {
     this.translateService.use(lang);
+    this.changed.emit();
   }
 }
 

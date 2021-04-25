@@ -1,2 +1,4 @@
-<app-home-button></app-home-button>
-<app-message-read [messages]="messages$ | async" (delete)="deleteMessage($event)"></app-message-read>
+<app-message-read
+  [messages]="messages$ | async"
+  (delete)="deleteMessage($event)"
+></app-message-read>
