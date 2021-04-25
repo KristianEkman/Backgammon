@@ -1,0 +1,95 @@
+{
+  "backgammon": "Jacquet",
+  "invite": {
+    "copylink": "Copiez ce lien et envoyez-le à votre ami",
+    "cancelinvite": "Annuler",
+    "startgame": "Démarrer jeu"
+  },
+  "loginbuttons": {
+    "signin": "Se connecter avec"
+  },
+  "logincontainer": {
+    "random": "Adversaire aléatoire",
+    "friend": "Invite un ami",
+    "playai": "Jouer à Aina",
+    "tip": "Conseil",
+    "whenyousignin": "Lorsque vous vous connectez, plus de fonctionnalités sont activées, gratuitement!",
+    "accept": "Accepter l'invitation"
+  },
+  "accountedit": {
+    "editaccount": "Modifier le compte",
+    "name": "Nom",
+    "required": "Ce champ est requis.",
+    "cancel": "Annuler",
+    "save": "Sauvegarder",
+    "delete": "Supprimer le compte",
+    "allyourgames": "Toutes vos jeux et données sauvegardées seront également supprimées.Vous ne pouvez pas annuler cela.",
+    "sure": "Êtes-vous sûr?",
+    "yesdelete": "Oui supprimez-le"
+  },
+  "accountmenu": {
+    "edit": "Modifier le compte",
+    "logout": "Se déconnecter"
+  },
+  "boardbuttons": {
+    "done": "Fait",
+    "undo": "annuler",
+    "roll": "Rouleau",
+    "exit": "Sortir",
+    "new": "Nouvelle"
+  },
+  "gameboard": {
+    "black": "Noire",
+    "white": "Blanche",
+    "you": "Toi",
+    "left": "la gauche"
+  },
+  "menu": {
+    "rotate": "Tourner",
+    "resign": "Démissionner"
+  },
+  "messageread": {
+    "delete": "Effacer",
+    "next": "Suivante",
+    "from": "De",
+    "nomore": "Pas plus de messages"
+  },
+  "shareprompt": {
+    "hello": "Bonjour!",
+    "thissite": "Ce site est toujours très nouveau et nous avons besoin de plus de joueurs.",
+    "humantohuman": "L'homme au jeu humain est après tout le plus amusant.",
+    "please": "S'il vous plaît partager vos médias sociaux."
+  },
+  "errorhandler": {
+    "sendreport": "Envoyer un rapport",
+    "clearerrors": "Erreurs claires",
+    "error": "Erreur"
+  },
+  "homebutton": {
+    "home": "Domicile"
+  },
+  "newmessages": {
+    "one": "{{ count }} message",
+    "many": "{{count}} messages"
+  },
+  "toplist": {
+    "place": "Endroit",
+    "name": "Nom",
+    "score": "But",
+    "you": "Toi"
+  },
+  "statusmessage": {
+    "yourturn": "Votre tour de déplacement. ({{color}})",
+    "waitingfor": "En attente de {{ color }} se déplacer.",
+    "youareblcoked": "Vous êtes bloqué. Cliquer sur Terminé",
+    "noconnection": "Aucun raccordeur de serveur",
+    "opponentconnectionlost": "Connexion adversaire perdue",
+    "waitingoppcnn": "En attente de l'adversaire de se connecter",
+    "newscore": "Nouveau score {{ score }} ({{ increase }})",
+    "youwon": "Félicitations!Tu as gagné. {{score}}",
+    "youlost": "Pardon.Tu as perdu le jeu. {{score}}",
+    "movenow": "Déplacer maintenant ou perdre!"
+  },
+  "black": "noire",
+  "white": "blanche"
+}
