@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Busy } from 'src/app/state/busy';
 
 @Component({
@@ -6,16 +7,14 @@ import { Busy } from 'src/app/state/busy';
   templateUrl: './busy.component.html',
   styleUrls: ['./busy.component.scss']
 })
-export class BusyComponent implements OnInit {
-  constructor() {}
+export class BusyComponent {
+  constructor(private trans: TranslateService) {
+    trans.onLangChange.subscribe(() => {
+      this.text = trans.instant('pleasewait');
+    });
+  }
 
   @Input() busy: Busy | null = null;
-  @Input() text = 'Please wait';
   @Input() overlay = true;
-
-  ngOnInit(): void {}
-
-  ngOnChanges(): void {
-    // console.log(this.busy);
-  }
+  text = '';
 }

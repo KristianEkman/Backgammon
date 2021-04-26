@@ -13,7 +13,7 @@ export class HomeButtonComponent {
     const hiddenOn = ['/', '/lobby', '/game'];
     for (let i = 0; i < hiddenOn.length; i++) {
       const route = hiddenOn[i];
-      if (this.router.url.startsWith(route)) {
+      if (this.router.url === route) {
         return false;
       }
     }

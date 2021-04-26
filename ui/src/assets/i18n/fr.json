@@ -91,5 +91,7 @@
     "movenow": "Déplacer maintenant ou perdre!"
   },
   "black": "noire",
-  "white": "blanche"
+  "white": "blanche",
+  "pleasewait": "Attendez"
+
 }

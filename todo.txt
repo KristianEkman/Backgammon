@@ -1,6 +1,12 @@
-Språk, franska, arabiska, ryska.
+
+Annat ljud för till bar och home
+Ibland spelas ljud vid fel tillfällen. Vid start.
+
+Visa dubbelslag för första.
 
 När gameboard sidan refresha översätts inte white black you.
+
+Språk, ryska.
 
 Lägga Invite i route.
 
@@ -10,10 +16,13 @@ Finns det en bugg som gör att AI slår bloats med låg point?
 
 Translate "Please wait".
 
+Chat.
+
+Messages.
+
 Release 1.1 - mål att öka logins
 ===========
 Ljust tema.
-Språk, svenska, mandarin, spanska, arabiska, tyska, franska, ryska.
 Player photos
 New game --> same opponnet efter avslutat invite.
 
