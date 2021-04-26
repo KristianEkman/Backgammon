@@ -10,7 +10,7 @@ export class HomeButtonComponent {
   constructor(public router: Router) {}
 
   get Visible(): boolean {
-    const hiddenOn = ['/lobby', '/game'];
+    const hiddenOn = ['/', '/lobby', '/game'];
     for (let i = 0; i < hiddenOn.length; i++) {
       const route = hiddenOn[i];
       if (this.router.url.startsWith(route)) {

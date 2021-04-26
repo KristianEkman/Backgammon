@@ -2,7 +2,7 @@
   background: none;
   border: none;
   padding: 10px;
-  color: #aaa;
+  color: #999;
   font-size: 20px;
   padding: 8px 16px;
   @include hovershadow();
@@ -40,11 +40,11 @@
     content: '';
     position: absolute;
     border-radius: 10px;
-    top: 2px;
-    left: 2px;
-    width: calc(100% - 4px);
+    top: 0px;
+    left: 0px;
+    width: calc(100% - 0px);
     height: 50%;
-    background: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.01));
+    background: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
   }
 }
 
