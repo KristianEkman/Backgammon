@@ -53,9 +53,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   whitesName = '';
   blacksName = '';
   theme: IThemes = new DarkTheme();
+
+  // translated phrases
   you = '';
   white = '';
   black = '';
+  left = '';
 
   constructor(private translateService: TranslateService) {
     for (let r = 0; r < 26; r++) {
@@ -94,10 +97,21 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
+
+    this.translate();
     this.requestDraw();
+
+    this.translateService.onLangChange.subscribe(() => {
+      this.translate();
+    });
+  }
+
+  translate(): void {
     this.you = this.translateService.instant('gameboard.you');
     this.white = this.translateService.instant('gameboard.white');
     this.black = this.translateService.instant('gameboard.black');
+    this.left = this.translateService.instant('gameboard.left');
+    this.requestDraw();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -115,9 +129,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         : this.game?.whitePlayer.name;
     const bLeft = this.game?.blackPlayer.pointsLeft;
     const wLeft = this.game?.whitePlayer.pointsLeft;
-    const left = this.translateService.instant('gameboard.left');
-    this.blacksName = this.game ? `${bName} - ${bLeft} ${left}` : '';
-    this.whitesName = this.game ? `${wName} - ${wLeft} ${left}` : '';
+    this.blacksName = this.game ? `${bName} - ${bLeft} ${this.left}` : '';
+    this.whitesName = this.game ? `${wName} - ${wLeft} ${this.left}` : '';
     // console.log(this.game?.playState);
   }
 

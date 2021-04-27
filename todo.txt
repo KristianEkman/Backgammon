@@ -1,12 +1,19 @@
+Om man refreshar en sida, hinner inte översättningen hämta rätt språk innan den används.
+    status-message-service 
 
 Annat ljud för till bar och home
+
 Ibland spelas ljud vid fel tillfällen. Vid start.
+
+Visa antal checkers home.
+
+Visa points left på annat ställe.
 
 Visa dubbelslag för första.
 
 När gameboard sidan refresha översätts inte white black you.
 
-Språk, ryska.
+Språk, ryska, grekiska.
 
 Lägga Invite i route.
 

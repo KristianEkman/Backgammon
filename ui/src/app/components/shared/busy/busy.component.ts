@@ -9,8 +9,8 @@ import { Busy } from 'src/app/state/busy';
 })
 export class BusyComponent {
   constructor(private trans: TranslateService) {
-    trans.onLangChange.subscribe(() => {
-      this.text = trans.instant('pleasewait');
+    this.trans.onLangChange.subscribe(() => {
+      this.text = this.trans.instant('pleasewait');
     });
   }
 
