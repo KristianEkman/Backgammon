@@ -116,6 +116,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.gameSubs.unsubscribe();
     this.diceSubs.unsubscribe();
+    this.service.exitGame();
   }
 
   moveAnimFinished(): void {

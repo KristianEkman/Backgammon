@@ -2,6 +2,7 @@ export class Sound {
   click: HTMLAudioElement;
   dice: HTMLAudioElement;
   checker: HTMLAudioElement;
+  checkerWood: HTMLAudioElement;
   looser: HTMLAudioElement;
   swish: HTMLAudioElement;
   warning: HTMLAudioElement;
@@ -19,6 +20,10 @@ export class Sound {
     this.checker = new Audio();
     this.checker.src = '../assets/sound/checker.wav';
     this.checker.load();
+
+    this.checkerWood = new Audio();
+    this.checkerWood.src = '../assets/sound/checker-wood.wav';
+    this.checkerWood.load();
 
     this.looser = new Audio();
     this.looser.src = '../assets/sound/looser.wav';
@@ -55,6 +60,10 @@ export class Sound {
 
   static playChecker(): void {
     this.Singleton.checker.play();
+  }
+
+  static playCheckerWood(): void {
+    this.Singleton.checkerWood.play();
   }
 
   static playLooser(): void {

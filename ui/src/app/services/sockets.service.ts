@@ -178,12 +178,14 @@ export class SocketsService implements OnDestroy {
   }
 
   timerStarted = false;
+  timerId: any;
+
   startTimer(): void {
     if (this.timerStarted) {
       return;
     }
     this.timerStarted = true;
-    setInterval(() => {
+    this.timerId = setInterval(() => {
       let time = AppState.Singleton.moveTimer.getValue();
       time--;
       AppState.Singleton.moveTimer.setValue(time);
@@ -251,7 +253,7 @@ export class SocketsService implements OnDestroy {
     );
 
     if (hit) {
-      Sound.playChecker();
+      Sound.playCheckerWood();
       const hitIdx = gameClone.points[to].checkers.indexOf(hit);
       gameClone.points[to].checkers.splice(hitIdx, 1);
       const barIdx = isWhite ? 0 : 25;
@@ -359,6 +361,8 @@ export class SocketsService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.socket?.close();
+    clearTimeout(this.timerId);
+    this.timerStarted = false;
   }
 
   resignGame(): void {
@@ -373,6 +377,8 @@ export class SocketsService implements OnDestroy {
       actionName: ActionNames.exitGame
     };
     this.sendMessage(JSON.stringify(action));
+    clearTimeout(this.timerId);
+    this.timerStarted = false;
   }
 
   resetGame(): void {

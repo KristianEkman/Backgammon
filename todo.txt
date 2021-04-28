@@ -1,13 +1,16 @@
-Om man refreshar en sida, hinner inte översättningen hämta rätt språk innan den används.
-    status-message-service 
+Om man refreshar en sida, hinner inte översättningen häta rätt språk innan den används.
+Det är när man använder instant.
+
+    Lösningar:
+    Använd inte instant utan mellan lagra texterna i componenter, lyssna på on lang change.
+    i dom mall när async pipe inte kan användas.
+
+    Använd inte http, läs in json-filerna på ngt annat sätt.
+        + jsonfilerna måste skrivas om.
 
 Annat ljud för till bar och home
 
 Ibland spelas ljud vid fel tillfällen. Vid start.
-
-Visa antal checkers home.
-
-Visa points left på annat ställe.
 
 Visa dubbelslag för första.
 
