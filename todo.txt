@@ -1,15 +1,11 @@
 
-Annat ljud för till bar och home
+Annat ljud för till home
 
 Ibland spelas ljud vid fel tillfällen. Vid start.
 
 Visa dubbelslag för första.
 
-När gameboard sidan refresha översätts inte white black you.
-
 Språk, ryska, grekiska.
-
-Lägga Invite i route.
 
 Tar bort ett meddelande, visar inte nästa
 
@@ -18,6 +14,9 @@ Finns det en bugg som gör att AI slår bloats med låg point?
 Chat.
 
 Messages.
+
+Lägga Invite i route.
+
 
 Release 1.1 - mål att öka logins
 ===========
@@ -33,9 +32,11 @@ About button
 
     - link to code project article.
     - link to git hub
-Feedback
+
+Leave Feedback
 
 Fula tärningar på FF mobile    
+
 canvas banner
 animera app routing
 candeactivate
