@@ -461,9 +461,24 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     const maxHblack = (this.blackHome.height - 2 * bw) / blackCount - 1;
     const chb = Math.min(5, maxHblack);
-
+    const fntSize = Math.round(this.blackHome.width / 3);
+    const homeCountFntSize = 'bold ' + fntSize + 'px Arial';
+    cx.font = homeCountFntSize;
+    const wi = this.sideBoardWidth / 2 - bw;
     for (let i = 0; i < blackCount; i++) {
-      cx.fillRect(x, y - i * (chb + 1), this.sideBoardWidth / 2 - bw, chb);
+      cx.fillRect(x, y - i * (chb + 1), wi, chb);
+    }
+
+    if (blackCount > 0) {
+      if (this.flipped) {
+        cx.save();
+        cx.translate(x, y - blackCount * (chb + 1) - fntSize / 2);
+        cx.rotate(Math.PI);
+        cx.fillText(`${blackCount}`, -wi, 0);
+        cx.restore();
+      } else {
+        cx.fillText(`${blackCount}`, x, y - blackCount * (chb + 1) + 3);
+      }
     }
 
     // white
@@ -480,6 +495,18 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     for (let i = 0; i < whiteCount; i++) {
       cx.fillRect(x, y + i * (chw + 1), this.sideBoardWidth / 2 - bw, chw);
+    }
+
+    if (whiteCount > 0) {
+      if (this.flipped) {
+        cx.save();
+        cx.translate(x, y + whiteCount * (chw + 1));
+        cx.rotate(Math.PI);
+        cx.fillText(`${whiteCount}`, -wi, 0);
+        cx.restore();
+      } else {
+        cx.fillText(`${whiteCount}`, x, y + whiteCount * (chw + 1) + fntSize);
+      }
     }
 
     //draw homes if can be moved to

@@ -1,12 +1,3 @@
-Om man refreshar en sida, hinner inte översättningen häta rätt språk innan den används.
-Det är när man använder instant.
-
-    Lösningar:
-    Använd inte instant utan mellan lagra texterna i componenter, lyssna på on lang change.
-    i dom mall när async pipe inte kan användas.
-
-    Använd inte http, läs in json-filerna på ngt annat sätt.
-        + jsonfilerna måste skrivas om.
 
 Annat ljud för till bar och home
 
@@ -23,8 +14,6 @@ Lägga Invite i route.
 Tar bort ett meddelande, visar inte nästa
 
 Finns det en bugg som gör att AI slår bloats med låg point?
-
-Translate "Please wait".
 
 Chat.
 
