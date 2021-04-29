@@ -253,7 +253,7 @@ export class SocketsService implements OnDestroy {
     );
 
     if (hit) {
-      Sound.playCheckerWood();
+      if (move.to < 25) Sound.playCheckerWood();
       const hitIdx = gameClone.points[to].checkers.indexOf(hit);
       gameClone.points[to].checkers.splice(hitIdx, 1);
       const barIdx = isWhite ? 0 : 25;
