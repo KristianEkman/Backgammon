@@ -7,7 +7,7 @@ Visa dubbelslag för första.
 
 Språk, ryska, grekiska.
 
-Tar bort ett meddelande, visar inte nästa
+Tar bort ett meddelande, visar inte nästa.
 
 Finns det en bugg som gör att AI slår bloats med låg point?
 

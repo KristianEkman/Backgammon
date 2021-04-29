@@ -212,9 +212,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   setDicesVisible(): void {
+    const wasVisible = this.dicesVisible;
     if (!this.myTurn()) {
-      if (!this.dicesVisible) Sound.playDice();
       this.dicesVisible = true;
+      if (!wasVisible) Sound.playDice();
       return;
     }
     this.dicesVisible = !this.rollButtonVisible;
