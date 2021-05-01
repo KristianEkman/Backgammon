@@ -1,11 +1,10 @@
-
-Annat ljud för till home
-
-Ibland spelas ljud vid fel tillfällen. Vid start.
-
-Visa dubbelslag för första.
+Animation när game öppnas.
+    Route change.
 
 Språk, ryska, grekiska.
+Visa dubbelslag för första.
+
+Tärningsanimation.
 
 Tar bort ett meddelande, visar inte nästa.
 
