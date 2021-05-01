@@ -1,8 +1,3 @@
-Lägga Invite i route.
-    - vad händer om man inte är inloggad men inbjuden?
-
-Animation när game öppnas.
-    Route change.
 
 Språk, ryska, grekiska.
 Visa dubbelslag för första.

@@ -53,6 +53,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SelectLanguageComponent } from './components/select-language/select-language.component';
 import { InviteContainerComponent } from './components/invite-container/invite-container.component';
+import { DiceComponent } from './components/game/dice/dice.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -86,7 +87,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     SharePromptComponent,
     HomeButtonComponent,
     SelectLanguageComponent,
-    InviteContainerComponent
+    InviteContainerComponent,
+    DiceComponent
   ],
   imports: [
     BrowserModule,
