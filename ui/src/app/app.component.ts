@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { AppState } from './state/app-state';
 import { AccountService, ErrorReportService } from './services';
 import { Observable } from 'rxjs';
@@ -7,6 +7,7 @@ import { ErrorReportDto } from './dto';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Language } from './components/select-language/select-language.component';
 import { DOCUMENT } from '@angular/common';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,6 +15,7 @@ import { DOCUMENT } from '@angular/common';
 })
 export class AppComponent {
   title = 'Backgammon';
+  hide = false;
   busy$ = AppState.Singleton.busy.observe();
   errors$: Observable<ErrorState>;
 
@@ -21,7 +23,8 @@ export class AppComponent {
     private accountService: AccountService,
     private errorReportService: ErrorReportService,
     private translateService: TranslateService,
-    @Inject(DOCUMENT) private document: Document
+    @Inject(DOCUMENT) private document: Document,
+    private router: Router
   ) {
     this.errors$ = AppState.Singleton.errors.observe();
     this.accountService.repair();
@@ -51,6 +54,18 @@ export class AppComponent {
     });
 
     // this.translateService.use(startLang);
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.hide = true;
+      }
+
+      if (event instanceof NavigationEnd) {
+        setTimeout(() => {
+          this.hide = false;
+        }, 1);
+      }
+    });
   }
 
   saveErrorReport(errorDto: ErrorReportDto): void {
