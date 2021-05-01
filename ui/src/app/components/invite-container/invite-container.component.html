@@ -1,0 +1,12 @@
+<app-invite
+  *ngIf="!inviteId"
+  (start)="startInvitedGame($event)"
+  (cancel)="cancelInvite()"
+  [gameId]="(invite$ | async)?.gameId"
+>
+</app-invite>
+<div *ngIf="inviteId && (user$ | async)">
+  <button class="default-button" (click)="startInvitedGame(inviteId)">
+    {{ 'logincontainer.accept' | translate }}
+  </button>
+</div>

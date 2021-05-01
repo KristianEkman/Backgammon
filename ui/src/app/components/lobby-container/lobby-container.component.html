@@ -1,5 +1,5 @@
 <div class="lobby-container">
-  <div class="top-list" *ngIf="(user$ | async) && !playInvite && !inviteId">
+  <div class="top-list" *ngIf="user$ | async">
     <app-toplist-container
       [banner]="true"
       (bannerClick)="topListBannerClick()"
@@ -18,7 +18,7 @@
       (onLogin)="login($event)"
       [isLoggedIn]="!!(user$ | async)"
     ></app-login-buttons>
-    <div *ngIf="!playInvite && !inviteId" class="lobby">
+    <div class="lobby">
       <!-- <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
         Play as guest&nbsp;&nbsp;<i class="fas fa-info-circle" title="Guests can only play other guests"></i>
       </button> -->
@@ -27,7 +27,7 @@
           <i class="fas fa-dice"></i>
           {{ 'logincontainer.random' | translate }}</button
         ><br />
-        <button class="black-button" (click)="playFriendClick()">
+        <button class="black-button" (click)="inviteFriendClick()">
           {{ 'logincontainer.friend' | translate }}
         </button>
       </ng-container>
@@ -43,19 +43,6 @@
           <em>{{ 'logincontainer.whenyousignin' | translate }}</em>
         </div>
       </div>
-    </div>
-    <div *ngIf="inviteId && (user$ | async)">
-      <button class="default-button" (click)="startInvitedGame(inviteId)">
-        {{ 'logincontainer.accept' | translate }}
-      </button>
-    </div>
-    <div *ngIf="playInvite">
-      <app-invite
-        (start)="startInvitedGame($event)"
-        (cancel)="cancelInvite()"
-        [gameId]="(invite$ | async)?.gameId"
-      >
-      </app-invite>
     </div>
   </ng-container>
   <div class="account">

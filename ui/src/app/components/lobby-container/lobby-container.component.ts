@@ -3,15 +3,9 @@ import { Router } from '@angular/router';
 import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { Observable } from 'rxjs';
 import { MessageDto, UserDto } from 'src/app/dto';
-import { InviteResponseDto } from 'src/app/dto/rest';
-import {
-  AccountService,
-  InviteService,
-  MessageService
-} from 'src/app/services';
+import { AccountService, MessageService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { Busy } from 'src/app/state/busy';
-import { Keys } from 'src/app/utils';
 
 @Component({
   selector: 'app-lobby-container',
@@ -23,7 +17,6 @@ export class LobbyContainerComponent implements OnInit {
     public router: Router,
     private authService: SocialAuthService,
     private accountService: AccountService,
-    private inviteService: InviteService,
     private messageService: MessageService
   ) {
     this.user$ = AppState.Singleton.user.observe();
@@ -31,11 +24,8 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   user$: Observable<UserDto>;
-  invite$: Observable<InviteResponseDto> | null = null;
   messages$: Observable<MessageDto[]>;
 
-  playInvite = false;
-  inviteId = '';
   toplist = false;
   loginClicked = false;
   playAiAsGuestMessage = false;
@@ -65,10 +55,6 @@ export class LobbyContainerComponent implements OnInit {
 
     this.accountService.repair();
 
-    this.inviteId = this.router.parseUrl(this.router.url).queryParams[
-      Keys.inviteId
-    ];
-
     if (this.accountService.isLoggedIn()) {
       this.messageService.loadMessages();
     }
@@ -88,9 +74,8 @@ export class LobbyContainerComponent implements OnInit {
     this.router.navigateByUrl('game');
   }
 
-  playFriendClick(): void {
-    this.playInvite = true;
-    this.invite$ = this.inviteService.createInvite();
+  inviteFriendClick(): void {
+    this.router.navigateByUrl('invite');
   }
 
   playAiClick(): void {
@@ -105,10 +90,6 @@ export class LobbyContainerComponent implements OnInit {
 
   startInvitedGame(id: string): void {
     this.router.navigateByUrl('game?gameId=' + id);
-  }
-
-  cancelInvite(): void {
-    this.playInvite = false;
   }
 
   acceptInviteClick(): void {}

@@ -29,7 +29,7 @@ import {
   HttpClientModule,
   HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { InviteComponent } from './components/lobby-container/invite/invite.component';
+import { InviteComponent } from './components/invite-container/invite/invite.component';
 import { ToplistContainerComponent } from './components/toplist-container/toplist-container.component';
 import { ToplistComponent } from './components/toplist-container/toplist/toplist.component';
 import { ToplistBannerComponent } from './components/toplist-container/toplist-banner/toplist-banner.component';
@@ -52,6 +52,7 @@ import { HomeButtonComponent } from './components/shared/home-button/home-button
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SelectLanguageComponent } from './components/select-language/select-language.component';
+import { InviteContainerComponent } from './components/invite-container/invite-container.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -84,7 +85,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MessageReadComponent,
     SharePromptComponent,
     HomeButtonComponent,
-    SelectLanguageComponent
+    SelectLanguageComponent,
+    InviteContainerComponent
   ],
   imports: [
     BrowserModule,

@@ -1,3 +1,6 @@
+Lägga Invite i route.
+    - vad händer om man inte är inloggad men inbjuden?
+
 Animation när game öppnas.
     Route change.
 
@@ -13,9 +16,6 @@ Finns det en bugg som gör att AI slår bloats med låg point?
 Chat.
 
 Messages.
-
-Lägga Invite i route.
-
 
 Release 1.1 - mål att öka logins
 ===========
