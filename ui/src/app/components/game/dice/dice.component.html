@@ -1,10 +1,22 @@
 <div class="scene">
   <div class="cube" [ngClass]="side">
-    <div class="cube__face cube__face--front"><span>1</span></div>
-    <div class="cube__face cube__face--back"><span>6</span></div>
-    <div class="cube__face cube__face--right"><span>2</span></div>
-    <div class="cube__face cube__face--left"><span>5</span></div>
-    <div class="cube__face cube__face--top"><span>3</span></div>
-    <div class="cube__face cube__face--bottom"><span>4</span></div>
+    <div class="cube__face cube__face--front" [ngStyle]="getColorStyle()">
+      <span>1</span>
+    </div>
+    <div class="cube__face cube__face--back" [ngStyle]="getColorStyle()">
+      <span>6</span>
+    </div>
+    <div class="cube__face cube__face--right" [ngStyle]="getColorStyle()">
+      <span>2</span>
+    </div>
+    <div class="cube__face cube__face--left" [ngStyle]="getColorStyle()">
+      <span>5</span>
+    </div>
+    <div class="cube__face cube__face--top" [ngStyle]="getColorStyle()">
+      <span>3</span>
+    </div>
+    <div class="cube__face cube__face--bottom" [ngStyle]="getColorStyle()">
+      <span>4</span>
+    </div>
   </div>
 </div>

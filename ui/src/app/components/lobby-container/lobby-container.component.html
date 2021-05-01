@@ -1,5 +1,6 @@
 <div class="lobby-container">
-  <!-- <app-dice></app-dice> -->
+  <!-- <app-dice [color]="'white'"></app-dice>
+  <app-dice [color]="'black'" style="margin-left: 40px"></app-dice> -->
   <div class="top-list" *ngIf="user$ | async">
     <app-toplist-container
       [banner]="true"

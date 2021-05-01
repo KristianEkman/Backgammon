@@ -1,23 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-dice',
   templateUrl: './dice.component.html',
   styleUrls: ['./dice.component.scss']
 })
-export class DiceComponent implements OnInit {
+export class DiceComponent {
+  @Input() color: 'black' | 'white' | undefined;
+
   constructor() {
     setInterval(() => {
-      // const i = this.getRandomInt(0, 6);
-      // this.side = this.sides[i];
-
       this.sideNo++;
       if (this.sideNo > 6) this.sideNo = 0;
       this.side = this.sides[this.sideNo];
     }, 2000);
   }
 
-  ngOnInit(): void {}
   sideNo = 0;
 
   sides = [
@@ -28,11 +27,13 @@ export class DiceComponent implements OnInit {
     'show-back',
     'show-bottom'
   ];
+
   side = '';
 
-  getRandomInt(min: number, max: number): number {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
+  getColorStyle(): any {
+    if (this.color == 'black') {
+      return { backgroundColor: '#111', color: '#ccc' };
+    }
+    return { backgroundColor: '#ccc', color: '#111' };
   }
 }
