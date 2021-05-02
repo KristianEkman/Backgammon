@@ -1,21 +1,16 @@
-import { NgStyle } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-dice',
   templateUrl: './dice.component.html',
   styleUrls: ['./dice.component.scss']
 })
-export class DiceComponent {
+export class DiceComponent implements OnChanges {
   @Input() color: 'black' | 'white' | undefined;
+  @Input() value = 1;
+  @Input() disabled = false;
 
-  constructor() {
-    setInterval(() => {
-      this.sideNo++;
-      if (this.sideNo > 6) this.sideNo = 0;
-      this.side = this.sides[this.sideNo];
-    }, 2000);
-  }
+  constructor() {}
 
   sideNo = 0;
 
@@ -23,17 +18,61 @@ export class DiceComponent {
     'show-front',
     'show-right',
     'show-top',
+    'show-bottom',
     'show-left',
-    'show-back',
-    'show-bottom'
+    'show-back'
   ];
 
   side = '';
 
-  getColorStyle(): any {
+  randomTransform = {};
+
+  getColorStyle(v: number): any {
+    let c = 'w';
+    let color = 'white';
     if (this.color == 'black') {
-      return { backgroundColor: '#111', color: '#ccc' };
+      c = 'b';
+      color = 'black';
     }
-    return { backgroundColor: '#ccc', color: '#111' };
+    return {
+      backgroundColor: color,
+      backgroundImage: `url(/assets/images/dice/${c}${v}.png)`,
+      backgroundSize: 'calc(100% - 12px)',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      border: '1px solid #777'
+    };
+  }
+
+  getDisabledStyle(): any {
+    if (this.disabled) {
+      return {
+        opacity: '0.2'
+      };
+    }
+    return {
+      opacity: '0.8'
+    };
+  }
+
+  ngOnChanges(change: SimpleChanges): void {
+    if (change['value']) {
+      const x = this.randomIntFromInterval(20, 350);
+      const y = this.randomIntFromInterval(20, 350);
+      const z = this.randomIntFromInterval(20, 350);
+      this.randomTransform = {
+        transform: `translateZ(-25px) rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`
+      };
+
+      setTimeout(() => {
+        this.randomTransform = {};
+        this.side = this.sides[this.value - 1];
+      }, 1000);
+    }
+  }
+
+  // min and max included
+  randomIntFromInterval(min: number, max: number): number {
+    return Math.floor(Math.random() * (max - min + 1) + min);
   }
 }

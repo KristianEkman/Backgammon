@@ -1,22 +1,19 @@
-<div class="scene">
-  <div class="cube" [ngClass]="side">
-    <div class="cube__face cube__face--front" [ngStyle]="getColorStyle()">
-      <span>1</span>
-    </div>
-    <div class="cube__face cube__face--back" [ngStyle]="getColorStyle()">
-      <span>6</span>
-    </div>
-    <div class="cube__face cube__face--right" [ngStyle]="getColorStyle()">
-      <span>2</span>
-    </div>
-    <div class="cube__face cube__face--left" [ngStyle]="getColorStyle()">
-      <span>5</span>
-    </div>
-    <div class="cube__face cube__face--top" [ngStyle]="getColorStyle()">
-      <span>3</span>
-    </div>
-    <div class="cube__face cube__face--bottom" [ngStyle]="getColorStyle()">
-      <span>4</span>
-    </div>
+<div class="scene" [ngStyle]="getDisabledStyle()">
+  <div class="cube" [ngClass]="side" [ngStyle]="randomTransform">
+    <div
+      class="cube__face cube__face--front"
+      [ngStyle]="getColorStyle(1)"
+    ></div>
+    <div class="cube__face cube__face--back" [ngStyle]="getColorStyle(6)"></div>
+    <div
+      class="cube__face cube__face--right"
+      [ngStyle]="getColorStyle(2)"
+    ></div>
+    <div class="cube__face cube__face--left" [ngStyle]="getColorStyle(5)"></div>
+    <div class="cube__face cube__face--top" [ngStyle]="getColorStyle(3)"></div>
+    <div
+      class="cube__face cube__face--bottom"
+      [ngStyle]="getColorStyle(4)"
+    ></div>
   </div>
 </div>

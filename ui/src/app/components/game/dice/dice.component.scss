@@ -10,7 +10,7 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 2s;
+  transition: transform 1s linear;
 }
 
 .cube__face {
@@ -18,18 +18,8 @@
   width: 50px;
   height: 50px;
   text-align: center;
-  opacity: 0.9;
-
-  span {
-    opacity: 1;
-    position: relative;
-    left: 1px;
-    top: -4px;
-    font-family: 'Dice';
-    font-size: 65px;
-    opacity: 1;
-    // border: 1px solid red;
-  }
+  // opacity: 0.5;
+  background-size: auto;
 }
 
 .cube__face--front {
