@@ -11,6 +11,7 @@ export class AccountMenuComponent {
   @Output() logout = new EventEmitter<void>();
   @Output() onEditAccount = new EventEmitter<void>();
   @Output() onAdminPage = new EventEmitter<void>();
+  @Output() onAboutPage = new EventEmitter<void>();
   toggle = false;
 
   logoutClick(): void {
@@ -39,5 +40,9 @@ export class AccountMenuComponent {
 
   adminPage(): void {
     this.onAdminPage.emit();
+  }
+
+  aboutClick(): void {
+    this.onAboutPage.emit();
   }
 }

@@ -29,7 +29,8 @@
   },
   "accountmenu": {
     "edit": "Edit account",
-    "logout": "Logout"
+    "logout": "Logout",
+    "about": "About"
   },
   "boardbuttons": {
     "done": "Done",
@@ -92,5 +93,12 @@
   },
   "black": "black",
   "white": "white",
-  "pleasewait": "Please wait"
+  "pleasewait": "Please wait",
+  "about": {
+    "aboutbackgammon": "About Backgammon",
+    "thisisanopen": "This is an open, just for fun, free-time hobby-project.",
+    "andyouarewelcome": "And You are very welcome to play.",
+    "orifyouareadeveloper": "Or if you are a developer you might be interested in the links below with all the details.",
+    "ongithub": "On GitHub, you can request or vote for new features, or even contribute with pull requests."
+  }
 }

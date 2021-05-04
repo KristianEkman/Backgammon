@@ -1,4 +1,8 @@
-<div>
+<div class="app-about-container">
+  <button (click)="aboutClick()" class="flat-button">
+    <i class="fas fa-info-circle"></i>
+    {{ 'accountmenu.about' | translate }}
+  </button>
   <button *ngIf="user" class="flat-button" (click)="nameClick()">
     <i class="fas fa-user"></i>
     {{ Name }}

@@ -62,13 +62,13 @@ export class DiceComponent implements OnChanges {
       const y = this.randomIntFromInterval(200, 400);
       const z = this.randomIntFromInterval(200, 400);
       this.randomTransform = {
-        transform: `translateZ(50px) rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`
+        transform: `translateZ(100px) rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`
       };
 
       setTimeout(() => {
         this.randomTransform = {};
         this.side = this.sides[this.value - 1];
-      }, 1000);
+      }, 3000);
     }
   }
 

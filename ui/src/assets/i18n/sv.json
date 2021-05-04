@@ -29,7 +29,8 @@
   },
   "accountmenu": {
     "edit": "Redigera konto",
-    "logout": "Logga ut"
+    "logout": "Logga ut",
+    "about": "Om"
   },
   "boardbuttons": {
     "done": "Klar",
@@ -92,5 +93,12 @@
   },
   "black": "svart",
   "white": "vit",
-  "pleasewait": "Vänta"
+  "pleasewait": "Vänta",
+  "about": {
+    "aboutbackgammon": "Om Backgammon",
+    "thisisanopen": "Detta är ett öppet, bara för skojs skull, hobby-projekt.",
+    "andyouarewelcome": "Och du är mycket välkommen att spela.",
+    "orifyouareadeveloper": "Eller om du är en utvecklare kan du vara intresserad av länkarna nedan med alla detaljer.",
+    "ongithub": "På GitHub kan du begära eller rösta på nya funktioner, eller till och med bidra med pull requests."
+  }
 }

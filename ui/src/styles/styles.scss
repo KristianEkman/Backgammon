@@ -42,3 +42,11 @@ body {
 .yellow {
   color: yellow;
 }
+
+a {
+  color: rgb(158, 158, 255);
+
+  &:visited {
+    color: rgb(158, 158, 255);
+  }
+}

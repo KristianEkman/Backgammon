@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AboutContainerComponent } from './components/about-container/about-container.component';
 import { AccountEditContainerComponent } from './components/account/account-edit-container/account-edit-container.component';
 import { AdminContainerComponent } from './components/admin-container/admin-container.component';
 import { GameContainerComponent } from './components/game/game-container/game-container.component';
@@ -42,6 +43,10 @@ const routes: Routes = [
     path: 'invite',
     component: InviteContainerComponent,
     canActivate: [LoginGuard]
+  },
+  {
+    path: 'about',
+    component: AboutContainerComponent
   },
   {
     path: '**',

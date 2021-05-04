@@ -1,0 +1,17 @@
+p {
+  font-size: 18px;
+  line-height: 25px;
+
+}
+
+.about-container {
+  position: relative;
+}
+
+.dice {
+  position: absolute;
+  display: inline-block;
+  opacity: .6;
+  margin-left: 15px;
+  cursor: pointer;
+}

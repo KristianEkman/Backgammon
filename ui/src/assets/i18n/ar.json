@@ -46,7 +46,8 @@
   },
   "menu": {
     "rotate": "استدارة",
-    "resign": "استقالة"
+    "resign": "استقالة",
+    "about": "حول"
   },
   "messageread": {
     "delete": "حذف",
@@ -92,6 +93,12 @@
   },
   "black": "أسود",
   "white": "أبيض",
-  "pleasewait": "أرجو الإنتظار"
-
+  "pleasewait": "أرجو الإنتظار",
+  "about": {
+    "aboutbackgammon": "حول الطاولة",
+    "thisisanopen": "هذا مفتوح، فقط للمتعة، Hobby-Projekt.",
+    "andyouarewelcome": "وأنت مرحب بك جدا للعب.",
+    "orifyouareadeveloper": "أو إذا كنت مطورا قد تكون مهتما بالروابط أدناه مع كل التفاصيل.",
+    "ongithub": "على جيثب، يمكنك طلب أو تصويت لميزات جديدة، أو حتى المساهمة مع طلبات السحب."
+  }
 }

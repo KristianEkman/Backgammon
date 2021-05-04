@@ -1,0 +1,38 @@
+<div class="about-container">
+  <h1>
+    {{ 'about.aboutbackgammon' | translate }}
+    <div
+      class="dice"
+      draggable="true"
+      (click)="onClick()"
+      (dblclick)="onDoubleClick()"
+    >
+      <app-dice [color]="diceColor" [value]="diceValue"></app-dice>
+    </div>
+  </h1>
+  <p>
+    {{ 'about.thisisanopen' | translate }}<br />
+    {{ 'about.andyouarewelcome' | translate }}
+  </p>
+  <p>
+    {{ 'about.orifyouareadeveloper' | translate }}<br />
+    <a
+      href="https://www.codeproject.com/Articles/5297405/Online-Backgammon"
+      target="_blank"
+      >Online Backgammon</a
+    ><br />
+    <a
+      href="https://www.codeproject.com/Articles/5300469/Backgammon-Artificial-Intelligence"
+      target="_blank"
+      >Backgammon Artificial Intelligence</a
+    >
+  </p>
+
+  <div></div>
+  <p>
+    {{ 'about.ongithub' | translate }}<br />
+    <a href="https://github.com/KristianEkman/Backgammon" target="_blank"
+      >Source on Github</a
+    >
+  </p>
+</div>

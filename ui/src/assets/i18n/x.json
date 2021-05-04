@@ -29,7 +29,8 @@
   },
   "accountmenu": {
     "edit": "x",
-    "logout": "x"
+    "logout": "x",
+    "about": "x"
   },
   "boardbuttons": {
     "done": "x",
@@ -92,5 +93,12 @@
   },
   "black": "x",
   "white": "x",
-  "pleasewait": "x"
+  "pleasewait": "x",
+  "about": {
+    "aboutbackgammon": "x",
+    "thisisanopen": "x.",
+    "andyouarewelcome": "x",
+    "orifyouareadeveloper": "x",
+    "ongithub": "x"
+  }
 }

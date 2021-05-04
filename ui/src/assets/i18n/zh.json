@@ -29,7 +29,8 @@
   },
   "accountmenu": {
     "edit": "編輯帳戶",
-    "logout": "登出"
+    "logout": "登出",
+    "about": "關於"
   },
   "boardbuttons": {
     "done": "完畢",
@@ -92,5 +93,12 @@
   },
   "black": "黑色的",
   "white": "白色的",
-  "pleasewait": "請稍等"
+  "pleasewait": "請稍等",
+  "about": {
+    "aboutbackgammon": "關於步步高",
+    "thisisanopen": "這是一個開放的，只是為了有趣，自由時的愛好項目。",
+    "andyouarewelcome": "你非常歡迎來玩。",
+    "orifyouareadeveloper": "或者，如果您是開發人員，您可能對下面的鏈接感興趣，並包含所有詳細信息。",
+    "ongithub": "在GitHub上，您可以請求或投票給新功能，甚至可以使用拉拔請求。"
+  }
 }
