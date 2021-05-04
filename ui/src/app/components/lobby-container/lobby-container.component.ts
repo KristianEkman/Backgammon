@@ -21,15 +21,6 @@ export class LobbyContainerComponent implements OnInit {
   ) {
     this.user$ = AppState.Singleton.user.observe();
     this.messages$ = AppState.Singleton.messages.observe();
-
-    // setInterval(() => {
-    //   this.v1++;
-    //   this.v2++;
-    //   if (this.v1 > 6) {
-    //     this.v1 = 1;
-    //     this.v2 = 1;
-    //   }
-    // }, 3000);
   }
 
   user$: Observable<UserDto>;

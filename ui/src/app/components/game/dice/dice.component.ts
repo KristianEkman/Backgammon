@@ -34,6 +34,7 @@ export class DiceComponent implements OnChanges {
       c = 'b';
       color = 'black';
     }
+
     return {
       backgroundColor: color,
       backgroundImage: `url(/assets/images/dice/${c}${v}.png)`,
@@ -57,11 +58,11 @@ export class DiceComponent implements OnChanges {
 
   ngOnChanges(change: SimpleChanges): void {
     if (change['value']) {
-      const x = this.randomIntFromInterval(20, 350);
-      const y = this.randomIntFromInterval(20, 350);
-      const z = this.randomIntFromInterval(20, 350);
+      const x = this.randomIntFromInterval(200, 400);
+      const y = this.randomIntFromInterval(200, 400);
+      const z = this.randomIntFromInterval(200, 400);
       this.randomTransform = {
-        transform: `translateZ(-25px) rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`
+        transform: `translateZ(50px) rotateX(${x}deg) rotateY(${y}deg) rotateZ(${z}deg)`
       };
 
       setTimeout(() => {
