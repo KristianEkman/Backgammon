@@ -37,7 +37,7 @@ import { TranslateService } from '@ngx-translate/core';
         }),
         { params: { shown: 0 } }
       ),
-      transition('initial => shown', [animate('20s')]),
+      transition('initial => shown', [animate('40s')]),
       transition('show => initial', [animate('0.1s')])
     ])
   ]
@@ -49,6 +49,7 @@ export class ToplistBannerComponent implements OnChanges {
   @ViewChild('bannerItems') bannerItemsRef: ElementRef | null = null;
 
   reversedList: ToplistResult[] = [];
+  reversedListThisWeek: ToplistResult[] = [];
   initial = 340;
   shown = 0;
   rollingState = '';
@@ -61,6 +62,9 @@ export class ToplistBannerComponent implements OnChanges {
     if (this.toplist) {
       const temp = [...this.toplist.results];
       this.reversedList = temp.reverse();
+
+      const tempThisWeek = [...this.toplist.thisWeek];
+      this.reversedListThisWeek = tempThisWeek.reverse();
 
       this.timeoutHandle = setTimeout(() => {
         if (this.bannerRef) {

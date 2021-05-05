@@ -9,5 +9,7 @@ namespace Backend.Dto.toplist
     {
         public ToplistResult[] results { get; set; }
         public ToplistResult you { get; set; }
+        public ToplistResult[] thisWeek { get; set; }
+
     }
 }

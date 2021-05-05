@@ -1,5 +1,5 @@
 .toplist {
-  position: relative;
+  display: flex;
 }
 
 .left {
@@ -32,4 +32,14 @@ td {
 .you {
   color: rgb(251, 251, 116);
   text-shadow: 0 0 5px rgb(251, 251, 116);
+}
+
+caption {
+  font-size: 20px;
+  text-decoration: underline;
+  text-align: left;
+}
+
+table {
+  margin-right: 30px;
 }

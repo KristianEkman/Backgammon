@@ -77,7 +77,9 @@
     "place": "Place",
     "name": "Name",
     "score": "Score",
-    "you": "You"
+    "you": "You",
+    "alltime": "All time",
+    "thisweek": "This week"
   },
   "statusmessage": {
     "yourturn": "Your turn to move.  ({{color}})",

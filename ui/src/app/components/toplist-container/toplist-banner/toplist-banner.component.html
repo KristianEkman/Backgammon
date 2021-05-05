@@ -13,10 +13,24 @@
     }"
     (@scrollBanner.done)="scrollFinished()"
   >
+    <span class="type-label">{{ 'toplist.alltime' | translate }}:</span>
     <span
       class="toplist-banner__item"
       *ngFor="let item of reversedList"
       [ngClass]="{ you: item?.you }"
+    >
+      <ng-container *ngIf="item">
+        <strong>
+          {{ item.place }}. {{ getName(item) }}&nbsp;&nbsp;&nbsp;
+        </strong>
+        ({{ item.elo }})
+      </ng-container>
+    </span>
+
+    <span class="type-label">{{ 'toplist.thisweek' | translate }}:</span>
+    <span
+      class="toplist-banner__item"
+      *ngFor="let item of reversedListThisWeek"
     >
       <ng-container *ngIf="item">
         <strong>

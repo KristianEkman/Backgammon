@@ -1,5 +1,10 @@
 <div class="toplist" *ngIf="toplist">
   <table>
+    <caption>
+      {{
+        'toplist.thisweek' | translate
+      }}
+    </caption>
     <thead>
       <tr>
         <th class="left">{{ 'toplist.place' | translate }}</th>
@@ -8,8 +13,27 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of toplist.results" [ngClass]="{ you: item.you }">
+      <tr *ngFor="let item of toplist.thisWeek" [ngClass]="{ you: item.you }">
         <td class="left">{{ item.place }}.</td>
+        <td class="left">{{ getName(item) }}</td>
+        <td class="right">{{ item.elo }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <caption>
+      {{
+        'toplist.alltime' | translate
+      }}
+    </caption>
+    <thead>
+      <tr>
+        <th class="left">{{ 'toplist.name' | translate }}</th>
+        <th>{{ 'toplist.score' | translate }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of toplist.results" [ngClass]="{ you: item.you }">
         <td class="left">{{ getName(item) }}</td>
         <td class="right">{{ item.elo }}</td>
       </tr>

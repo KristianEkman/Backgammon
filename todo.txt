@@ -2,7 +2,6 @@
 Språk, ryska, grekiska.
 Visa dubbelslag för första.
 
-Tärningsanimation.
 
 Tar bort ett meddelande, visar inte nästa.
 
@@ -26,6 +25,8 @@ canvas banner
 candeactivate
 
 Animation på firefox suger.
+
+Tärningsanimation.
 
 Backa upp Managers till DB, så man kan göra en swap vid release.
 Visa statistik på startsidan.

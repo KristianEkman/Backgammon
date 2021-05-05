@@ -77,7 +77,9 @@
     "place": "مكان",
     "name": "اسم",
     "score": "نتيجة",
-    "you": "أنت"
+    "you": "أنت",
+    "alltime": "في المجموع",
+    "thisweek": "هذا الاسبوع"
   },
   "statusmessage": {
     "yourturn": "({{color}}). دورك للتحرك.",
