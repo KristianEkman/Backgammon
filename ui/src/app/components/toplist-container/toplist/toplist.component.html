@@ -1,42 +1,60 @@
-<div class="toplist" *ngIf="toplist">
-  <table>
-    <caption>
-      {{
-        'toplist.thisweek' | translate
-      }}
-    </caption>
-    <thead>
-      <tr>
-        <th class="left">{{ 'toplist.place' | translate }}</th>
-        <th class="left">{{ 'toplist.name' | translate }}</th>
-        <th>{{ 'toplist.score' | translate }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of toplist.thisWeek" [ngClass]="{ you: item.you }">
-        <td class="left">{{ item.place }}.</td>
-        <td class="left">{{ getName(item) }}</td>
-        <td class="right">{{ item.elo }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <table>
-    <caption>
-      {{
-        'toplist.alltime' | translate
-      }}
-    </caption>
-    <thead>
-      <tr>
-        <th class="left">{{ 'toplist.name' | translate }}</th>
-        <th>{{ 'toplist.score' | translate }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let item of toplist.results" [ngClass]="{ you: item.you }">
-        <td class="left">{{ getName(item) }}</td>
-        <td class="right">{{ item.elo }}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="flip-card toplist" *ngIf="toplist">
+  <div class="flip-card-inner" [ngClass]="{ flipped: flipped }">
+    <div class="flip-card-front">
+      <div class="caption">
+        <span>{{ 'toplist.thisweek' | translate }}</span>
+        <button class="black-button" (click)="flipped = true">
+          {{ 'toplist.alltime' | translate }}
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th class="left">{{ 'toplist.place' | translate }}</th>
+            <th class="left">{{ 'toplist.name' | translate }}</th>
+            <th>{{ 'toplist.score' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of toplist.thisWeek"
+            [ngClass]="{ you: item.you }"
+          >
+            <td class="left">{{ item.place }}.</td>
+            <td class="left">{{ getName(item) }}</td>
+            <td class="right">{{ item.elo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="flip-card-back">
+      <div class="caption">
+        <span>{{ 'toplist.alltime' | translate }}</span>
+        <button class="black-button" (click)="flipped = false">
+          <i class="fas fa-chevron-left"></i>
+          {{ 'toplist.thisweek' | translate }}
+        </button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th class="left">{{ 'toplist.place' | translate }}</th>
+            <th class="left">{{ 'toplist.name' | translate }}</th>
+            <th>{{ 'toplist.score' | translate }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of toplist.results"
+            [ngClass]="{ you: item.you }"
+          >
+            <td class="left">{{ item.place }}.</td>
+            <td class="left">{{ getName(item) }}</td>
+            <td class="right">{{ item.elo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
