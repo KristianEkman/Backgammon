@@ -16,24 +16,15 @@ Release 1.1 - mål att öka logins
 ===========
 Ljust tema.
 Player photos
-New game --> same opponnet efter avslutat invite.
-
-About button
-    This is an open, just for fun, free-time hobby-projekt.
-    You are very welcome to play.
-    Or if you are a developer you might be intrested in the links below with all the details on this application.
-    On GitHub, you can request or vote for issues/new features, or even contribute with a pull request.
-
-    - link to code project article.
-    - link to git hub
 
 Leave Feedback
 
 Fula tärningar på FF mobile    
 
 canvas banner
-animera app routing
+
 candeactivate
+
 Animation på firefox suger.
 
 Backa upp Managers till DB, så man kan göra en swap vid release.
