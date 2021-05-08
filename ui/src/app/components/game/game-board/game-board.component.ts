@@ -664,9 +664,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   drawBorders(cx: CanvasRenderingContext2D): void {
     cx.strokeStyle = this.theme.border;
     cx.lineWidth = this.borderWidth;
-    this.whiteHome.fill(cx, this.theme.boardBackground);
+    this.whiteHome.fill(cx, this.theme.homeBackground);
     this.whiteHome.drawBorder(cx, false);
-    this.blackHome.fill(cx, this.theme.boardBackground);
+    this.blackHome.fill(cx, this.theme.homeBackground);
     this.blackHome.drawBorder(cx, false);
     const homeFntSize = this.blackHome.width / 2 + 'px Arial';
     // names of players

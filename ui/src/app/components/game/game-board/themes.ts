@@ -1,5 +1,6 @@
 export interface IThemes {
   boardBackground: string | CanvasGradient | CanvasPattern;
+  homeBackground: string | CanvasGradient | CanvasPattern;
   border: string | CanvasGradient | CanvasPattern;
   whiteTriangle: string | CanvasGradient | CanvasPattern;
   blackTriangle: string | CanvasGradient | CanvasPattern;
@@ -12,6 +13,7 @@ export interface IThemes {
 
 export class DarkTheme implements IThemes {
   boardBackground = '#222';
+  homeBackground = '#444';
   border = '#333';
   whiteTriangle = '#666';
   blackTriangle = '#333';

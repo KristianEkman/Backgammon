@@ -282,7 +282,7 @@ export class SocketsService implements OnDestroy {
 
     if (diceIdx < 0) {
       diceIdx = diceClone.findIndex(
-        (d) => move.to === 25 && move.to - move.from <= d.value
+        (d) => !d.used && move.to === 25 && move.to - move.from <= d.value
       );
     }
     const dice = diceClone[diceIdx];
