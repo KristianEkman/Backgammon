@@ -7,9 +7,7 @@ Tar bort ett meddelande, visar inte nästa.
 
 Finns det en bugg som gör att AI slår bloats med låg point?
 
-Chat.
-
-Messages.
+Chat. Messages. Guest book.
 
 Release 1.1 - mål att öka logins
 ===========
