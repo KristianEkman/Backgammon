@@ -70,7 +70,7 @@ export class AccountService {
     const user = this.storage.get(Keys.loginKey) as UserDto;
     AppState.Singleton.user.setValue(user);
     this.trans.use(user?.preferredLanguage ?? 'en');
-    Theme.change(user.theme);
+    if (user) Theme.change(user.theme);
   }
 
   saveUser(user: UserDto): Observable<void> {
