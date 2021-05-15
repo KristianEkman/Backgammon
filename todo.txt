@@ -1,7 +1,22 @@
+Skicka e-post vid nytt meddelande.
+    - Avbeställa aviseringar
+    - Subject: Message from backgammon.
+    - Body: You have a new message from Kristian at Backgammon.
+    
+    Go to the message.
+    Unsubscribe from further notifications.
+    Adminfunktion för att skicka meddelande.
+
+Hi! There have been some updates to Backgammon.
+* Smarter AI
+* Select your language.
+* Select a brighter UI.
+* Email notifications
+
 
 Språk, ryska, grekiska.
-Visa dubbelslag för första.
 
+Visa dubbelslag för första.
 
 Tar bort ett meddelande, visar inte nästa.
 
