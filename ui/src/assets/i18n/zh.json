@@ -25,7 +25,12 @@
     "delete": "刪除帳戶",
     "allyourgames": "所有您的遊戲和保存數據也將被刪除。你不能撤消這個。",
     "sure": "你確定嗎？",
-    "yesdelete": "是刪除它"
+    "yesdelete": "是刪除它",
+    "theme": "主題"
+  },
+  "theme": {
+    "dark": "黑暗的",
+    "light": "光"
   },
   "accountmenu": {
     "edit": "編輯帳戶",

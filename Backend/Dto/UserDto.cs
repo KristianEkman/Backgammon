@@ -16,5 +16,6 @@ namespace Backend.Dto
         public bool createdNew { get; set; }
         public bool isAdmin { get; set; }
         public string preferredLanguage { get; set; }
+        public string theme { get; set; }
     }
 }

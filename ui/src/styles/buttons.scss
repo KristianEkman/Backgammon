@@ -2,22 +2,14 @@
   background: none;
   border: none;
   padding: 10px;
-  color: #999;
   font-size: 20px;
   padding: 8px 16px;
   @include hovershadow();
-
-  &:hover {
-    color: #ccc;
-  }
 
   &:focus {
     outline: 0 !important;
   }
 
-  &:active {
-    color: #777;
-  }
 }
 
 @mixin hovershadow {
@@ -52,7 +44,7 @@
   @include button();
   @include glass();
   background-image: linear-gradient(rgb(31, 71, 38), rgb(53, 121, 66));
-  color: #fff;
+  color: #fff !important;
 }
 
 .secondary-button {
@@ -67,8 +59,7 @@
   @include button();
   @include glass();
   background-image: linear-gradient(#000000, #252525);
-
-
+  color: #999 !important;
 }
 
 .flat-button {

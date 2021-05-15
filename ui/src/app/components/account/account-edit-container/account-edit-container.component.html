@@ -5,8 +5,19 @@
       <label
         >{{ 'accountedit.name' | translate }}: <input formControlName="name"
       /></label>
+
       <div class="error" *ngIf="formGroup.get('name')?.errors?.required">
         {{ 'accountedit.required' | translate }}
+      </div>
+      <div>
+        <label
+          >{{ 'accountedit.theme' | translate }}
+          <app-theme
+            ngDefaultControl
+            formControlName="theme"
+            [currentTheme]="user?.theme"
+          ></app-theme>
+        </label>
       </div>
       <div class="spread-out mt">
         <button type="button" (click)="cancel()" class="black-button">
@@ -18,6 +29,7 @@
       </div>
       <div class="delete mt">
         <button type="button" (click)="deleteUser()" class="flat-button">
+          <i class="fas fa-trash-alt"></i>
           {{ 'accountedit.delete' | translate }}
         </button>
       </div>

@@ -25,7 +25,12 @@
     "delete": "x",
     "allyourgames": "x",
     "sure": "x",
-    "yesdelete": "x"
+    "yesdelete": "x",
+    "theme": "x"
+  },
+  "theme": {
+    "dark": "x",
+    "light": "x"
   },
   "accountmenu": {
     "edit": "x",

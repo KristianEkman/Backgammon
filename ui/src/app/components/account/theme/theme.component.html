@@ -1,0 +1,9 @@
+<select #themeselect>
+  <option
+    *ngFor="let theme of themes"
+    [value]="theme"
+    [selected]="currentTheme === theme"
+  >
+    {{ 'theme.' + theme | translate }}
+  </option>
+</select>

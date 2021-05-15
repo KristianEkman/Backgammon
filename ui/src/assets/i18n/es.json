@@ -25,7 +25,12 @@
     "delete": "Borrar cuenta",
     "allyourgames": "Todos los juegos y los datos guardados también se eliminarán.No puedes deshacer esto.",
     "sure": "¿Está seguro?",
-    "yesdelete": "Si eliminarlo"
+    "yesdelete": "Si eliminarlo",
+    "theme": "Tema"
+  },
+  "theme": {
+    "dark": "Oscura",
+    "light": "Luz"
   },
   "accountmenu": {
     "edit": "Editar cuenta",

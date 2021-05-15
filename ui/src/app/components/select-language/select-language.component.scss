@@ -1,7 +1,9 @@
+@import '../../../styles/colors';
+
 .smaller-font {
   font-size: 16px;
 }
 
 option {
-  color: black
+  color: $option-text-color;
 }

@@ -25,7 +25,12 @@
     "delete": "Ta bort kontot",
     "allyourgames": "Alla din matcher och sparad data tas bort. Det går inte att ångra.",
     "sure": "Är du säker?",
-    "yesdelete": "Ja tabort det"
+    "yesdelete": "Ja tabort det",
+    "theme": "Tema"
+  },
+  "theme": {
+    "dark": "Mörkt",
+    "light": "Ljust"
   },
   "accountmenu": {
     "edit": "Redigera konto",

@@ -13,6 +13,7 @@ import { Busy } from '../state/busy';
 import { SocialAuthService } from 'angularx-social-login';
 import { MessageService } from './message.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Theme } from '../components/account/theme/theme';
 
 @Injectable({
   providedIn: 'root'
@@ -69,6 +70,7 @@ export class AccountService {
     const user = this.storage.get(Keys.loginKey) as UserDto;
     AppState.Singleton.user.setValue(user);
     this.trans.use(user?.preferredLanguage ?? 'en');
+    Theme.change(user.theme);
   }
 
   saveUser(user: UserDto): Observable<void> {

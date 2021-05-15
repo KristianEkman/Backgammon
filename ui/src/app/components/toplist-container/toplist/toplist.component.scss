@@ -1,6 +1,4 @@
-.toplist {
-  /* Remove this if you don't want the 3D effect */
-}
+@import '../../../../styles/colors';
 
 .left {
   text-align: left;
@@ -15,8 +13,8 @@ td {
 }
 
 .you {
-  color: rgb(251, 251, 116);
-  text-shadow: 0 0 5px rgb(251, 251, 116);
+  color: $yellow;
+  text-shadow: 0 0 5px $yellow;
 }
 
 .caption {
@@ -55,7 +53,6 @@ td {
 
 .flip-card-front,
 .flip-card-back {
-  background-color: #111;
   position: absolute;
   width: 100%;
   height: 100%;

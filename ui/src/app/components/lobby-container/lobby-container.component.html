@@ -8,6 +8,7 @@
   <ng-container *ngIf="!toplist">
     <div class="title-container">
       <h1
+        class="title-color"
         [attr.data-content]="'backgammon' | translate"
         [ngClass]="{ chinese: (user$ | async)?.preferredLanguage === 'zh' }"
       >

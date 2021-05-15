@@ -25,7 +25,12 @@
     "delete": "Supprimer le compte",
     "allyourgames": "Toutes vos jeux et données sauvegardées seront également supprimées.Vous ne pouvez pas annuler cela.",
     "sure": "Êtes-vous sûr?",
-    "yesdelete": "Oui supprimez-le"
+    "yesdelete": "Oui supprimez-le",
+    "theme": "Thème"
+  },
+  "theme": {
+    "dark": "Sombre",
+    "light": "Lumière"
   },
   "accountmenu": {
     "edit": "Modifier le compte",

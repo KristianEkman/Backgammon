@@ -1,6 +1,10 @@
 // @import url('https://fonts.googleapis.com/css2?family=Bebas%20Neue&display=swap');
 @import './buttons';
 
+@import './colors';
+
+@import './themes';
+
 @font-face {
   font-family: 'Bebas Neue';
   src: url(../assets/fonts/BebasNeue-Regular.ttf) format("truetype");
@@ -21,13 +25,6 @@ html {
 }
 
 body {
-  background-color: rgb(37, 37, 37);
-
-  @media screen and (max-height: 750px) {
-    background-color: #111;
-  }
-
-  color: #aaa;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -36,17 +33,9 @@ body {
 }
 
 .red {
-  color: red;
+  color: $red;
 }
 
 .yellow {
-  color: yellow;
-}
-
-a {
-  color: rgb(158, 158, 255);
-
-  &:visited {
-    color: rgb(158, 158, 255);
-  }
+  color: $yellow;
 }

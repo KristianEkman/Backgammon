@@ -25,7 +25,12 @@
     "delete": "Delete Account",
     "allyourgames": "All you games and saved data will also be deleted. You can not undo this.",
     "sure": "Are you sure?",
-    "yesdelete": "Yes delete it"
+    "yesdelete": "Yes delete it",
+    "theme": "Theme"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light"
   },
   "accountmenu": {
     "edit": "Edit account",

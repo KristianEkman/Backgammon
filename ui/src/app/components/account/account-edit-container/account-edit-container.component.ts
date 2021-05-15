@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
+import { Theme } from '../theme/theme';
 
 @Component({
   selector: 'app-account-edit-container',
@@ -17,14 +18,20 @@ export class AccountEditContainerComponent {
     private router: Router
   ) {
     this.formGroup = this.formBuidler.group({
-      name: ['', [Validators.required, Validators.maxLength(100)]]
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      theme: ['']
+    });
+
+    this.formGroup.get('theme')?.valueChanges.subscribe((theme) => {
+      Theme.change(theme);
     });
 
     AppState.Singleton.user.observe().subscribe((userDto) => {
       this.user = userDto;
       if (userDto) {
         this.formGroup.patchValue({
-          name: userDto.name
+          name: userDto.name,
+          theme: userDto.theme
         });
       }
     });
@@ -37,6 +44,7 @@ export class AccountEditContainerComponent {
   submit(): void {
     if (this.formGroup.valid) {
       const user = { ...this.user, ...this.formGroup.value };
+
       this.service.saveUser(user).subscribe(() => {
         this.router.navigateByUrl('/lobby');
       });

@@ -1,3 +1,5 @@
+@import '../../../../styles/colors';
+
 .error-handler-button {
   position: fixed;
   right: 4px;
@@ -6,7 +8,7 @@
 
   button {
     font-size: 12px;
-    color: rgb(253, 82, 82);
+    color: $red;
 
   }
 }

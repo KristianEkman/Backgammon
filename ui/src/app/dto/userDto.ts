@@ -10,4 +10,5 @@ export interface UserDto {
   createdNew: boolean;
   isAdmin: boolean;
   preferredLanguage: string;
+  theme: string;
 }

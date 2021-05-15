@@ -1,0 +1,89 @@
+.dark {
+  background-color: rgb(37, 37, 37);
+  color: #aaa;
+
+  button {
+    color: #aaa;
+  }
+
+  .text-color {
+    color: #aaa;
+  }
+
+  @media screen and (max-height: 750px) {
+    background-color: #111;
+  }
+
+  .app-colors {
+    background-color: #111;
+    // border: 2px solid #222;
+  }
+
+  .banner-gradient {
+    background-image: linear-gradient(to right, rgba(17, 17, 17, 1), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(17, 17, 17, 1));
+  }
+
+  .title-color {
+    color: $title-color;
+
+    &:before {
+      background: linear-gradient(0deg, $title-color 0, transparent 80%);
+
+    }
+  }
+
+  a {
+    color: rgb(158, 158, 255);
+    ;
+
+    &:visited {
+      color: rgb(158, 158, 255);
+      ;
+    }
+  }
+}
+
+.light {
+  background-color: #888;
+  color: #222;
+
+  button {
+    color: #222;
+  }
+
+  .text-color {
+    color: #222;
+  }
+
+  @media screen and (max-height: 750px) {
+    background-color: #ddd;
+  }
+
+  .app-colors {
+    background-color: #aaa;
+    // border: 2px solid #888;
+  }
+
+  .banner-gradient {
+    background-image: linear-gradient(to right, rgba(170, 170, 170, 1), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(170, 170, 170, 1));
+  }
+
+
+  .title-color {
+    color: white;
+
+    &:before {
+      background: linear-gradient(0deg, white 0, transparent 80%);
+
+    }
+  }
+
+  a {
+    color: rgb(71, 71, 112);
+    ;
+
+    &:visited {
+      color: rgb(71, 71, 112);
+    }
+  }
+}
