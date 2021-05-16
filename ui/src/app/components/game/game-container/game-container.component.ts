@@ -8,7 +8,14 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { DiceDto, GameDto, GameState, MoveDto, PlayerColor } from 'src/app/dto';
+import {
+  DiceDto,
+  GameDto,
+  GameState,
+  MoveDto,
+  PlayerColor,
+  UserDto
+} from 'src/app/dto';
 import { AccountService, SocketsService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { StatusMessage } from 'src/app/dto/local/status-message';
@@ -39,6 +46,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       .subscribe(this.gameChanged.bind(this));
     this.message$ = AppState.Singleton.statusMessage.observe();
     this.timeLeft$ = AppState.Singleton.moveTimer.observe();
+    this.user$ = AppState.Singleton.user.observe();
 
     // if game page is refreshed, restore user from login cookie
     if (!AppState.Singleton.user.getValue()) {
@@ -56,6 +64,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   playerColor$: Observable<PlayerColor>;
   message$: Observable<StatusMessage>;
   timeLeft$: Observable<number>;
+  user$: Observable<UserDto>;
   gameSubs: Subscription;
   diceSubs: Subscription;
 

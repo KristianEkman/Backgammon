@@ -14,7 +14,7 @@ import { AppState } from 'src/app/state/app-state';
 import { Sound } from 'src/app/utils';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
 import { Checker } from './checker';
-import { DarkTheme, IThemes } from './themes';
+import { BlueTheme, DarkTheme, IThemes, LightTheme, PinkTheme } from './themes';
 
 @Component({
   selector: 'app-game-board',
@@ -30,6 +30,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() myColor: PlayerColor | null = PlayerColor.black;
   @Input() dicesVisible: boolean | null = false;
   @Input() flipped = false;
+  @Input() themeName: string | undefined = 'dark';
 
   @Output() addMove = new EventEmitter<MoveDto>();
   @Output() moveAnimFinished = new EventEmitter<void>();
@@ -52,7 +53,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   hasTouch = false;
   whitesName = '';
   blacksName = '';
-  theme: IThemes = new DarkTheme();
 
   // translated phrases
   you = '';
@@ -104,6 +104,20 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.translateService.onLangChange.subscribe(() => {
       this.translate();
     });
+  }
+
+  private _theme: IThemes | undefined = undefined;
+  get theme(): IThemes {
+    // todo, how to change theme?
+
+    if (this._theme !== undefined) return this._theme;
+
+    if (this.themeName === 'dark') this._theme = new DarkTheme();
+    if (this.themeName === 'light') this._theme = new LightTheme();
+    if (this.themeName === 'blue') this._theme = new BlueTheme();
+    if (this.themeName === 'pink') this._theme = new PinkTheme();
+
+    return this._theme as IThemes;
   }
 
   translate(): void {
