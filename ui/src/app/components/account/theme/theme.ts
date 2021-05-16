@@ -1,5 +1,5 @@
 export class Theme {
-  public static Themes = ['dark', 'light'];
+  public static Themes = ['dark', 'light', 'blue', 'pink'];
 
   public static change(theme: string): void {
     if (!theme || theme.length === 0) theme = 'dark';

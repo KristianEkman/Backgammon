@@ -30,7 +30,9 @@
   },
   "theme": {
     "dark": "x",
-    "light": "x"
+    "light": "x",
+    "blue": "x",
+    "pink": "x"
   },
   "accountmenu": {
     "edit": "x",

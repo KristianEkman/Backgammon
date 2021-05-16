@@ -30,7 +30,9 @@
   },
   "theme": {
     "dark": "Oscura",
-    "light": "Luz"
+    "light": "Luz",
+    "blue": "Azul",
+    "pink": "Rosa"
   },
   "accountmenu": {
     "edit": "Editar cuenta",

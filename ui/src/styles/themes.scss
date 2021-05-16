@@ -95,3 +95,104 @@
     color: #962b2b;
   }
 }
+
+
+.blue {
+  background-color: #889;
+  color: #224;
+
+  button {
+    color: #224;
+  }
+
+  .text-color {
+    color: #224;
+  }
+
+  @media screen and (max-height: 750px) {
+    background-color: #ddf;
+  }
+
+  .app-colors {
+    background-color: #aac;
+    // border: 2px solid #888;
+  }
+
+  .banner-gradient {
+    background-image: linear-gradient(to right, rgba(170, 170, 204, 1), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(170, 170, 204, 1));
+  }
+
+
+  .title-color {
+    color: white;
+
+    &:before {
+      background: linear-gradient(0deg, white 0, transparent 80%);
+
+    }
+  }
+
+  a {
+    color: rgb(71, 71, 112);
+    ;
+
+    &:visited {
+      color: rgb(71, 71, 112);
+    }
+  }
+
+  .error-color {
+    color: #962b2b;
+  }
+}
+
+
+
+.pink {
+  background-color: #988;
+  color: #422;
+
+  button {
+    color: #422;
+  }
+
+  .text-color {
+    color: #422;
+  }
+
+  @media screen and (max-height: 750px) {
+    background-color: #fdd;
+  }
+
+  .app-colors {
+    background-color: #caa;
+    // border: 2px solid #888;
+  }
+
+  .banner-gradient {
+    background-image: linear-gradient(to right, rgba(204, 170, 170, 1), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(204, 170, 170, 1));
+  }
+
+
+  .title-color {
+    color: white;
+
+    &:before {
+      background: linear-gradient(0deg, white 0, transparent 80%);
+
+    }
+  }
+
+  a {
+    color: rgb(112, 71, 71);
+    ;
+
+    &:visited {
+      color: rgb(112, 71, 71);
+    }
+  }
+
+  .error-color {
+    color: #962b2b;
+  }
+}
