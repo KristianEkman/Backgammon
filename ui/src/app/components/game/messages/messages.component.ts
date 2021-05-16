@@ -78,7 +78,7 @@ export class MessagesComponent implements OnChanges, AfterViewInit {
 
   getIcon(): string {
     if (this.message?.level === MessageLevel.error) {
-      return 'fas fa-exclamation-circle red';
+      return 'fas fa-exclamation-circle error-color';
     }
 
     if (this.message?.level === MessageLevel.warning) {

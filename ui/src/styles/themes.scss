@@ -41,6 +41,10 @@
       ;
     }
   }
+
+  .error-color {
+    color: rgb(253, 82, 82);
+  }
 }
 
 .light {
@@ -85,5 +89,9 @@
     &:visited {
       color: rgb(71, 71, 112);
     }
+  }
+
+  .error-color {
+    color: #962b2b;
   }
 }

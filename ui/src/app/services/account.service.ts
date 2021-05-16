@@ -48,6 +48,7 @@ export class AccountService {
         this.trans.use(userDto.preferredLanguage);
         this.storage.set(Keys.loginKey, userDto);
         AppState.Singleton.user.setValue(userDto);
+        if (userDto) Theme.change(userDto.theme);
         Busy.hide();
         if (userDto?.createdNew) {
           this.router.navigateByUrl('/edit-user');

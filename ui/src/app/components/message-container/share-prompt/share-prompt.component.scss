@@ -4,11 +4,11 @@ p {
 
 .share-buttons {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 
   &__twitter {
     background-color: #1DA1F2;
-    color: white;
+    color: white !important;
     text-decoration: none;
     padding: 6px 20px 6px 10px;
     border-radius: 5px;

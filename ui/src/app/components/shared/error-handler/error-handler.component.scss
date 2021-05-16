@@ -8,8 +8,6 @@
 
   button {
     font-size: 12px;
-    color: $red;
-
   }
 }
 
@@ -17,6 +15,7 @@
   position: fixed;
   left: 5%;
   top: 5%;
+  z-index: 1;
 
   display: inline-block;
   width: 85%;
@@ -51,5 +50,6 @@
   button {
     font-size: 14px;
     font-weight: 600;
+    color: rgb(182, 178, 159);
   }
 }
