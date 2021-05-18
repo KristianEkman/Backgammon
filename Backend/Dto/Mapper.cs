@@ -102,7 +102,9 @@ namespace Backend.Dto
                 socialProvider = dbUser.SocialProvider,
                 isAdmin = dbUser.Admin,
                 socialProviderId = dbUser.ProviderId,
-                preferredLanguage = dbUser.PreferredLanguage ?? "en"
+                preferredLanguage = dbUser.PreferredLanguage ?? "en",
+                emailNotification = dbUser.EmailNotifications,
+                theme = dbUser.Theme
             };
         }
     }

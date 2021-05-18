@@ -60,7 +60,8 @@
     "delete": "Tabort",
     "next": "Nästa",
     "from": "Från",
-    "nomore": "Inga fler meddelanden"
+    "nomore": "Inga fler meddelanden",
+    "version2Info": "Hej!<br>Jag har just släppt Backgammon 2.0<br><br><strong>Det här är de nya funktionerna.</strong><ul><li>Färgteman</li><li>Stöd för flera språk.</li><li>Ljud</li><li>Smartare AI</li></ul>Jag hoppas att du kommer att tycka om dem.<br><br>Vänliga Hälsningar<br>/Kristian"
   },
   "shareprompt": {
     "hello": "Hej!",

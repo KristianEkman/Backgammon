@@ -17,5 +17,7 @@ namespace Backend.Dto
         public bool isAdmin { get; set; }
         public string preferredLanguage { get; set; }
         public string theme { get; set; }
+        public bool emailNotification { get; set; }
+
     }
 }

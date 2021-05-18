@@ -19,8 +19,10 @@ namespace Backend.Db
         public int GameCount { get; set; }
         public bool Admin { get; set; }
         public DateTime? Registered { get; set; }
-
         public string PreferredLanguage { get; set; }
+        public string Theme { get; set; }
+        public bool EmailNotifications { get; set; }
+        public Guid EmailUnsubscribeId { get; set; }
         public ICollection<Player> Players { get; set; } = new List<Player>();
         [InverseProperty("Receiver")]
         public ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();

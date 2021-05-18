@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { finalize, map } from 'rxjs/operators';
+import { finalize, map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { MessageType } from '../dto';
 import { MessageDto } from '../dto/message/messageDto';
 import { AppState } from '../state/app-state';
 import { Busy } from '../state/busy';
@@ -33,15 +34,22 @@ export class MessageService {
   deleteMessage(id: number): void {
     this.http.delete(this.url + '/delete?id=' + id).subscribe(() => {
       const messages = AppState.Singleton.messages.getValue();
-      AppState.Singleton.messages.setValue(
-        messages.filter((m) => {
-          m.id !== id;
-        })
-      );
+      const filtered = messages.filter((m) => m.id !== id);
+      AppState.Singleton.messages.setValue(filtered);
     });
   }
 
   addallsharepromptmessages(): void {
     this.http.put(this.url + '/addallsharepromptmessages', {}).subscribe();
+  }
+
+  sendMessages(type: MessageType): void {
+    Busy.show();
+    this.http
+      .post(this.url + '/sendToAll?type=' + type, {})
+      .pipe(take(1))
+      .subscribe(() => {
+        Busy.hide();
+      });
   }
 }

@@ -56,6 +56,7 @@ import { InviteContainerComponent } from './components/invite-container/invite-c
 import { DiceComponent } from './components/game/dice/dice.component';
 import { AboutContainerComponent } from './components/about-container/about-container.component';
 import { ThemeComponent } from './components/account/theme/theme.component';
+import { MailingComponent } from './components/admin-container/mailing/mailing.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -92,7 +93,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     InviteContainerComponent,
     DiceComponent,
     AboutContainerComponent,
-    ThemeComponent
+    ThemeComponent,
+    MailingComponent
   ],
   imports: [
     BrowserModule,

@@ -1,13 +1,37 @@
-<app-admin-summary
-  *ngIf="!allGames"
-  [summary]="summary$ | async"
-  (onShowGame)="allGames = true"
-></app-admin-summary>
-<div *ngIf="allGames" class="admin-container">
-  <app-played-games
-    [list]="playedGames$ | async"
-    (loadAfter)="onLoadAfter($event)"
-  ></app-played-games>
+<div class="admin-container">
+  <form
+    [formGroup]="formGroup"
+    style="position: absolute; top: 20px; left: 200px"
+  >
+    <label>
+      <input type="radio" formControlName="view" value="summary" />
+      Summary
+    </label>
+    <label>
+      <input type="radio" formControlName="view" value="games" />
+      Games
+    </label>
+    <label>
+      <input type="radio" formControlName="view" value="mailing" />
+      Mailing
+    </label>
+  </form>
+  <div>
+    <app-admin-summary
+      *ngIf="view === 'summary'"
+      [summary]="summary$ | async"
+      (onShowGame)="allGames = true"
+    ></app-admin-summary>
+    <div *ngIf="view === 'games'" class="admin-container">
+      <app-played-games
+        [list]="playedGames$ | async"
+        (loadAfter)="onLoadAfter($event)"
+      ></app-played-games>
+    </div>
+    <div *ngIf="view === 'mailing'">
+      <app-mailing (onSend)="sendMessages($event)"></app-mailing>
+    </div>
+  </div>
 </div>
 <!-- TODO: disable this when used once -->
 <!-- <button class="send-all-button secondary-button" (click)="addSharePrompts()">

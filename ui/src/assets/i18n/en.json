@@ -60,7 +60,8 @@
     "delete": "Delete",
     "next": "Next",
     "from": "From",
-    "nomore": "No more messages"
+    "nomore": "No more messages",
+    "version2Info": "Hi!<br>I´ve just released Backgammon 2.0<br><br><strong>These are the new features.</strong><ul><li>Color themes</li><li>Support for multiple languages.</li><li>Sounds</li><li>Smarter AI</li></ul>I hope you will like them.<br><br>Kind regards<br>/Kristian"
   },
   "shareprompt": {
     "hello": "Hello!",

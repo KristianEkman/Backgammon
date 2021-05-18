@@ -9,12 +9,17 @@
         <i class="far fa-arrow-alt-circle-right"></i>
       </button>
     </div>
-    <p>{{ message.date }}</p>
-    <p>{{ 'messageread.from' | translate }}: {{ message.sender }}</p>
-    <app-share-prompt
-      *ngIf="message.type === MessageType.sharePrompt"
-    ></app-share-prompt>
-    <p *ngIf="message.type === MessageType.sharePrompt">{{ message.text }}</p>
+    <div class="message-container message-background">
+      <p>
+        {{ message.date }}<br />{{ 'messageread.from' | translate }}:
+        {{ message.sender }}
+      </p>
+      <app-share-prompt
+        *ngIf="message.type === MessageType.sharePrompt"
+      ></app-share-prompt>
+      <p [innerHtml]="getTypeText(message.type) | translate"></p>
+      <p>{{ message.text }}</p>
+    </div>
   </div>
 </ng-container>
 <ng-container *ngIf="!message">

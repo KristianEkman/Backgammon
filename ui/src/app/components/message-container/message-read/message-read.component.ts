@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MessageDto, MessageType } from 'src/app/dto';
+import { MessageTypeText } from './messageTypeTexts';
 
 @Component({
   selector: 'app-message-read',
@@ -18,6 +19,8 @@ export class MessageReadComponent implements OnInit {
   deleteClick(): void {
     if (this.messages) {
       this.delete.emit(this.messages[this.currentIndex].id);
+      this.currentIndex = 0;
+      // little bit ugly to jump first here, but will do for now.
     }
   }
 
@@ -30,5 +33,9 @@ export class MessageReadComponent implements OnInit {
 
   nextClick(): void {
     this.currentIndex++;
+  }
+
+  getTypeText(type: MessageType): string {
+    return MessageTypeText.find((m) => m.type === type)?.message ?? '';
   }
 }

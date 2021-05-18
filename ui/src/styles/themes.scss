@@ -1,3 +1,4 @@
+// ******************* Dark Theme ********************
 .dark {
   background-color: rgb(37, 37, 37);
   color: #aaa;
@@ -45,8 +46,13 @@
   .error-color {
     color: rgb(253, 82, 82);
   }
+
+  .message-background {
+    background-color: #333;
+  }
 }
 
+// ******************* Light Theme ********************
 .light {
   background-color: #888;
   color: #222;
@@ -94,9 +100,13 @@
   .error-color {
     color: #962b2b;
   }
+
+  .message-background {
+    background-color: #eee;
+  }
 }
 
-
+// ******************* Blue Theme ********************
 .blue {
   background-color: #889;
   color: #224;
@@ -144,10 +154,13 @@
   .error-color {
     color: #962b2b;
   }
+
+  .message-background {
+    background-color: #eee;
+  }
 }
 
-
-
+// ******************* Pink Theme ********************
 .pink {
   background-color: #988;
   color: #422;
@@ -194,5 +207,9 @@
 
   .error-color {
     color: #962b2b;
+  }
+
+  .message-background {
+    background-color: #eee;
   }
 }

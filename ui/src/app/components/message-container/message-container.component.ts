@@ -15,7 +15,6 @@ export class MessageContainerComponent implements OnInit {
   }
 
   messages$: Observable<MessageDto[]>;
-  current = 0;
   ngOnInit(): void {
     this.service.loadMessages();
   }

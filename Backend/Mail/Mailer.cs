@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Backend.Db;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -13,27 +14,37 @@ namespace Backend.Mail
     {
         public static void SendTest()
         {
-            // trusting my own self sign certificate on my smtp server.
+            Send("kristian.ekman.swe@gmail.com", "Testar SMTP client.", @"<div><img src='https://backgammon.azurewebsites.net/assets/images/facebook.png'></div><p>Test Tjurgränd 47.</p><a href='https://backgammon.azurewebsites.com'>Testar en html länk.<a/>");
+        }
+
+        internal static void Send(string email, string subject, string text)
+        {
+            // I trust my own self signed certificate on my smtp server.
             ServicePointManager.ServerCertificateValidationCallback =
             delegate (
                 object s,
                 X509Certificate certificate,
                 X509Chain chain,
                 SslPolicyErrors sslPolicyErrors
-            ) {
+            )
+            {
                 return true;
             };
 
-            var client = new SmtpClient("smtp1.kristianekman.com", 2525);
-            string to = "kristian.ekman.swe@gmail.com";
-            string from = "kristian@kristianekman.com";
-            string subject = "Testar SMTP client.";
-            string body = @"Test Tjurgränd 47.";
-            MailMessage message = new MailMessage(from, to, subject, body);
-            client.Credentials = new NetworkCredential("kristian", "***");
-            client.EnableSsl = true;
+            using (var client = new SmtpClient("smtp1.kristianekman.com", 2525))
+            {
+                string from = "backgammon@kristianekman.com";
+                var message = new MailMessage(from, email, subject, text)
+                {
+                    IsBodyHtml = true
+                };                
 
-            client.Send(message);
+                //var pw = Secrets.GetPw();
+                client.Credentials = new NetworkCredential("kristian", "Vpakotte7889");
+                client.EnableSsl = true;
+
+                client.Send(message);
+            }
         }
     }
 }

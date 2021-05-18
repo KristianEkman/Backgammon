@@ -92,7 +92,11 @@ namespace Backend.Controllers
                         SocialProvider = userDto.socialProvider,
                         Elo = 1200,
                         Registered = DateTime.Now,
-                        Admin = false
+                        Admin = false,
+                        EmailNotifications = true,
+                        EmailUnsubscribeId = Guid.NewGuid(),
+                        Theme = "dark",
+                        PreferredLanguage = "en"
                     };
                     db.Users.Add(dbUser);
                     
@@ -101,7 +105,7 @@ namespace Backend.Controllers
                     dbUser.ReceivedMessages.Add(new Message
                     {
                         Text = "",
-                        Type = MessageType.SharePrompt,
+                        Type = Dto.message.MessageType.SharePrompt,
                         Sender = admin,
                         Sent = DateTime.Now
                     });
@@ -126,6 +130,8 @@ namespace Backend.Controllers
                 var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
                 dbUser.Name = userDto.name;
                 dbUser.PreferredLanguage = userDto.preferredLanguage;
+                dbUser.Theme = userDto.theme;
+                dbUser.EmailNotifications = userDto.emailNotification;
                 db.SaveChanges();
             }
         }

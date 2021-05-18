@@ -43,12 +43,11 @@ namespace Backend.Controllers
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);
                 foreach (var user in db.Users)
                 {
-                    // todo: Add this when a user is registered.
                     // Do not waste space in db for a generic message.
                     user.ReceivedMessages.Add(new Message
                     {
                         Text = "",
-                        Type = MessageType.SharePrompt,
+                        Type = Dto.message.MessageType.SharePrompt,
                         Sender = admin,
                         Sent = DateTime.Now
                     });
@@ -70,6 +69,76 @@ namespace Backend.Controllers
                 user.ReceivedMessages.Remove(message);
                 db.SaveChanges();
             }
+        }
+
+        [HttpPost]
+        [Route("api/message/sendToAll")]
+        public void SendToAll(Dto.message.MessageType type)
+        {
+            // For each user, add the message. If the user has notification flag, send mail.
+            AssertAdmin();
+            string adminId = Request.Headers["user-id"].ToString();
+            using (var db = new BgDbContext())
+            {
+                var admin = db.Users.First(u => u.Id.ToString() == adminId);
+               
+                foreach (var user in db.Users)
+                {
+                    (string Subject, string Text) st = GetSubjectAndText(type, user.EmailUnsubscribeId, user.Name);
+                    var subject = st.Subject;
+                    var text = st.Text;
+                    user.ReceivedMessages.Add(new Message
+                    {
+                        Text = "",
+                        Type = type,
+                        Sender = admin,
+                        Sent = DateTime.Now
+                    });
+
+                    if (user.EmailNotifications && !string.IsNullOrWhiteSpace(user.Email))
+                    {
+                        Mail.Mailer.Send(user.Email, subject, text);
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
+
+        private (string, string) GetSubjectAndText(MessageType type, Guid unsbsciberId, string name)
+        {
+            switch (type)
+            {
+                case MessageType.SharePrompt:
+                    return ("", "");
+                case MessageType.Version2Info:
+                    return ("New version of Backgammon", @$"<p>Hi {name}!</p>
+<p>You have a new Backgammon message.</p>
+<p><a href='https://backgammon.azurewebsites.net/messages'>Go there and read the news.<a/></p>
+<p><a href='https://localhost:44394/api/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from all email notifications.</a></p>
+<p>
+    Kind Regards<br/>
+    /Kristian
+</p>
+");
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+//<p href='https://backgammon.azurewebsites.net/message/unsubscribe?id={unsbsciberId}'>
+
+        [HttpGet]
+        [Route("api/message/unsubscribe")]
+        public async void Unsubscribe(Guid id)
+        {
+            using (var db = new BgDbContext())
+            {
+                var user = db.Users.Single(u => u.EmailUnsubscribeId == id);
+                user.EmailNotifications = false;
+                db.SaveChanges();
+            }
+
+            await Response.WriteAsync("You will not receive any more notifications.");
         }
     }
 }

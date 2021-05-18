@@ -26,10 +26,10 @@ td {
 
 .table-container {
   display: inline-block;
-  height: 70vh;
+  height: 50vh;
   overflow-y: auto;
   scrollbar-width: none;
-  max-height: 600px;
+  max-height: 500px;
 }
 
 ::-webkit-scrollbar {

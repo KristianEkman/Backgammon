@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SummaryDto } from 'src/app/dto';
 
 @Component({
@@ -8,14 +8,9 @@ import { SummaryDto } from 'src/app/dto';
 })
 export class AdminSummaryComponent implements OnInit {
   @Input() summary: SummaryDto | null;
-  @Output() onShowGame = new EventEmitter<void>();
   constructor() {
     this.summary = null;
   }
 
   ngOnInit(): void {}
-
-  showAllGames(): void {
-    this.onShowGame.emit();
-  }
 }

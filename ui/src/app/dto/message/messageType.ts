@@ -1,5 +1,6 @@
 ﻿/* Auto Generated */
 
 export enum MessageType {
-  sharePrompt
+  sharePrompt,
+  version2Info
 }
