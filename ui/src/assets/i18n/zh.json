@@ -19,7 +19,10 @@
   "accountedit": {
     "editaccount": "編輯帳戶",
     "name": "名稱",
-    "required": "該領域是必需的。",
+    "requiredname": "名稱是強制性的",
+    "email": "電子郵件",
+    "emailNotification": "發電子郵件",
+    "language": "語",
     "cancel": "取消",
     "save": "保存",
     "delete": "刪除帳戶",

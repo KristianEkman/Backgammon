@@ -11,4 +11,5 @@ export interface UserDto {
   isAdmin: boolean;
   preferredLanguage: string;
   theme: string;
+  emailNotification: boolean;
 }

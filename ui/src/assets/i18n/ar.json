@@ -19,7 +19,10 @@
   "accountedit": {
     "editaccount": "تحرير الحساب",
     "name": "اسم",
-    "required": "مطلوب هذا المجال.",
+    "email": "بريد إلكتروني",
+    "emailNotification": "إرسال رسائل البريد الإلكتروني",
+    "language": "لغة",
+    "requiredname": "الاسم إلزامي",
     "cancel": "يلغي",
     "save": "يحفظ",
     "delete": "حذف الحساب",

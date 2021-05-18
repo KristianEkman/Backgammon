@@ -19,7 +19,10 @@
   "accountedit": {
     "editaccount": "Redigera kontot",
     "name": "Namn",
-    "required": "Fältet är obligatoriskt.",
+    "email": "E-post",
+    "emailNotification": "Skicka e-post",
+    "language": "Språk",
+    "requiredname": "Namn är obligatoriskt",
     "cancel": "Avbryt",
     "save": "Spara",
     "delete": "Ta bort kontot",

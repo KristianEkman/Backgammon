@@ -19,7 +19,10 @@
   "accountedit": {
     "editaccount": "Modifier le compte",
     "name": "Nom",
-    "required": "Ce champ est requis.",
+    "email": "E-mail",
+    "emailNotification": "Envoyer des emails",
+    "language": "Langue",
+    "requiredname": "Le nom est obligatoire",
     "cancel": "Annuler",
     "save": "Sauvegarder",
     "delete": "Supprimer le compte",

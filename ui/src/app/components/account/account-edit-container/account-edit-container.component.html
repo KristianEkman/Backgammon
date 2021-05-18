@@ -2,16 +2,34 @@
   <ng-container *ngIf="!confirm">
     <h1>{{ 'accountedit.editaccount' | translate }}</h1>
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
-      <label
-        >{{ 'accountedit.name' | translate }}: <input formControlName="name"
-      /></label>
-
-      <div class="error" *ngIf="formGroup.get('name')?.errors?.required">
-        {{ 'accountedit.required' | translate }}
-      </div>
       <div>
+        <label [ngClass]="{ 'error-color': nameMissing() }"
+          >{{
+            nameMissing()
+              ? ('accountedit.requiredname' | translate)
+              : ('accountedit.name' | translate)
+          }}<br />
+          <input formControlName="name" class="longInput"
+        /></label>
+      </div>
+      <div class="mt">
+        <label class="container"
+          >{{ 'accountedit.emailNotification' | translate }}<br />
+          <input type="checkbox" formControlName="emailNotification" />
+          <span class="checkmark"></span> </label
+        ><br />
+        <i class="email">({{ user.email }})</i>
+      </div>
+      <div class="mt">
         <label
-          >{{ 'accountedit.theme' | translate }}
+          >{{ 'accountedit.language' | translate }}<br />
+          <app-select-language formControlName="language"></app-select-language>
+        </label>
+      </div>
+
+      <div class="mt">
+        <label
+          >{{ 'accountedit.theme' | translate }}<br />
           <app-theme
             ngDefaultControl
             formControlName="theme"

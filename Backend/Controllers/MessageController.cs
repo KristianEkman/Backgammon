@@ -2,6 +2,7 @@
 using Backend.Dto.message;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,12 @@ namespace Backend.Controllers
     [ApiController]
     public class MessageController : AuthorizedController
     {
+        private readonly ILogger<MessageController> logger;
+        public MessageController(ILogger<MessageController> logger)
+        {
+            this.logger = logger;
+        }
+
         [HttpGet]
         [Route("api/message/users")]
         public MessageDto[] GetMessages()
@@ -47,7 +54,7 @@ namespace Backend.Controllers
                     user.ReceivedMessages.Add(new Message
                     {
                         Text = "",
-                        Type = Dto.message.MessageType.SharePrompt,
+                        Type = MessageType.SharePrompt,
                         Sender = admin,
                         Sent = DateTime.Now
                     });
@@ -80,9 +87,8 @@ namespace Backend.Controllers
             string adminId = Request.Headers["user-id"].ToString();
             using (var db = new BgDbContext())
             {
-                var admin = db.Users.First(u => u.Id.ToString() == adminId);
-               
-                foreach (var user in db.Users)
+                var admin = db.Users.First(u => u.Id.ToString() == adminId);               
+                foreach (var user in db.Users.Where(u => u.Admin))
                 {
                     (string Subject, string Text) st = GetSubjectAndText(type, user.EmailUnsubscribeId, user.Name);
                     var subject = st.Subject;
@@ -97,7 +103,14 @@ namespace Backend.Controllers
 
                     if (user.EmailNotifications && !string.IsNullOrWhiteSpace(user.Email))
                     {
-                        Mail.Mailer.Send(user.Email, subject, text);
+                        try
+                        {
+                            Mail.Mailer.Send(user.Email, subject, text);
+                        }
+                        catch (Exception exc)
+                        {
+                            logger.LogError(exc.ToString());
+                        }
                     }
                 }
                 db.SaveChanges();
@@ -112,9 +125,10 @@ namespace Backend.Controllers
                     return ("", "");
                 case MessageType.Version2Info:
                     return ("New version of Backgammon", @$"<p>Hi {name}!</p>
+<img src='https://backgammon.azurewebsites.net/assets/images/banner.jpg'>
 <p>You have a new Backgammon message.</p>
 <p><a href='https://backgammon.azurewebsites.net/messages'>Go there and read the news.<a/></p>
-<p><a href='https://localhost:44394/api/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from all email notifications.</a></p>
+<p><a href='https://backgammon.azurewebsites.net/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from all email notifications.</a></p>
 <p>
     Kind Regards<br/>
     /Kristian
@@ -124,8 +138,6 @@ namespace Backend.Controllers
                     throw new NotImplementedException();
             }
         }
-
-//<p href='https://backgammon.azurewebsites.net/message/unsubscribe?id={unsbsciberId}'>
 
         [HttpGet]
         [Route("api/message/unsubscribe")]

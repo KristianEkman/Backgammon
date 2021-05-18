@@ -19,7 +19,10 @@
   "accountedit": {
     "editaccount": "x",
     "name": "x",
-    "required": "x",
+    "email": "x",
+    "emailNotification": "x",
+    "language": "x",
+    "requiredname": "x",
     "cancel": "x",
     "save": "x",
     "delete": "x",

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
+import { Busy } from 'src/app/state/busy';
 import { Theme } from '../theme/theme';
 
 @Component({
@@ -19,6 +20,8 @@ export class AccountEditContainerComponent {
   ) {
     this.formGroup = this.formBuidler.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
+      emailNotification: [false],
+      language: [''],
       theme: ['']
     });
 
@@ -31,6 +34,8 @@ export class AccountEditContainerComponent {
       if (userDto) {
         this.formGroup.patchValue({
           name: userDto.name,
+          emailNotification: userDto.emailNotification,
+          language: userDto.preferredLanguage,
           theme: userDto.theme
         });
       }
@@ -44,8 +49,9 @@ export class AccountEditContainerComponent {
   submit(): void {
     if (this.formGroup.valid) {
       const user = { ...this.user, ...this.formGroup.value };
-
+      Busy.show();
       this.service.saveUser(user).subscribe(() => {
+        Busy.hide();
         this.router.navigateByUrl('/lobby');
       });
     }
@@ -61,5 +67,9 @@ export class AccountEditContainerComponent {
 
   doDeletion(): void {
     this.service.deleteUser();
+  }
+
+  nameMissing(): boolean {
+    return this.formGroup.get('name')?.errors?.required;
   }
 }

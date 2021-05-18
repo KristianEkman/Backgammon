@@ -19,7 +19,10 @@
   "accountedit": {
     "editaccount": "Edit Account",
     "name": "Name",
-    "required": "The field is required.",
+    "email": "E-mail",
+    "emailNotification": "Send e-mails",
+    "language": "Language",
+    "requiredname": "Name is mandatory",
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete Account",

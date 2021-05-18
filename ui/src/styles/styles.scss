@@ -16,8 +16,14 @@ div,
 label,
 td,
 th,
-h2 {
+h2,
+select {
   font-family: Helvetica, Arial, sans-serif;
+}
+
+select {
+  font-size: 20px;
+  padding: 1px 2px;
 }
 
 html {

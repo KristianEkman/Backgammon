@@ -1,8 +1,4 @@
-<select
-  #langselect
-  (change)="useLang(langselect.value)"
-  class="flat-button smaller-font text-color"
->
+<select #langselect (change)="useLang(langselect.value)">
   <option
     *ngFor="let lang of Language.List"
     [value]="lang.code"
