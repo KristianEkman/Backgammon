@@ -39,8 +39,8 @@ namespace Backend.Mail
                     IsBodyHtml = true
                 };                
 
-                //var pw = Secrets.GetPw();
-                client.Credentials = new NetworkCredential("kristian", "Vpakotte7889");
+                var pw = Secrets.GetPw();
+                client.Credentials = new NetworkCredential("backgammon", pw);
                 client.EnableSsl = true;
 
                 client.Send(message);
