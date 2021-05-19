@@ -33,7 +33,7 @@ export class AccountEditContainerComponent {
     });
 
     this.formGroup.get('preferredLanguage')?.valueChanges.subscribe((lang) => {
-      this.translateService.use(lang);
+      this.translateService.use(lang ?? 'en');
     });
 
     AppState.Singleton.user.observe().subscribe((userDto) => {

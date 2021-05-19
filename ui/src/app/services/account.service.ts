@@ -45,7 +45,7 @@ export class AccountService {
         })
       )
       .subscribe((userDto: UserDto) => {
-        this.trans.use(userDto.preferredLanguage);
+        this.trans.use(userDto.preferredLanguage ?? 'en');
         this.storage.set(Keys.loginKey, userDto);
         AppState.Singleton.user.setValue(userDto);
         if (userDto) Theme.change(userDto.theme);
