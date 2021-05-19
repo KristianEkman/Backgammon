@@ -23,7 +23,11 @@
       <div class="mt">
         <label
           >{{ 'accountedit.language' | translate }}<br />
-          <app-select-language formControlName="language"></app-select-language>
+          <select formControlName="preferredLanguage">
+            <option *ngFor="let lang of Language.List" [ngValue]="lang.code">
+              {{ lang.name }}
+            </option>
+          </select>
         </label>
       </div>
 

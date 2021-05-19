@@ -1,9 +1,0 @@
-<select #langselect (change)="useLang(langselect.value)">
-  <option
-    *ngFor="let lang of Language.List"
-    [value]="lang.code"
-    [selected]="translateService.currentLang === lang.code"
-  >
-    {{ lang.name }}
-  </option>
-</select>

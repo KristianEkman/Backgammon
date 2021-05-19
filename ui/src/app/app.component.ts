@@ -1,13 +1,13 @@
-import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { AppState } from './state/app-state';
 import { AccountService, ErrorReportService } from './services';
 import { Observable } from 'rxjs';
 import { ErrorState } from './state/ErrorState';
 import { ErrorReportDto } from './dto';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { Language } from './components/select-language/select-language.component';
 import { DOCUMENT } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { Language } from './utils';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

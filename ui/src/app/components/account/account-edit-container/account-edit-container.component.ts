@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { Busy } from 'src/app/state/busy';
 import { Theme } from '../theme/theme';
+import { Language } from '../../../utils';
 
 @Component({
   selector: 'app-account-edit-container',
@@ -16,17 +18,22 @@ export class AccountEditContainerComponent {
   constructor(
     private service: AccountService,
     private formBuidler: FormBuilder,
-    private router: Router
+    private router: Router,
+    private translateService: TranslateService
   ) {
     this.formGroup = this.formBuidler.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
       emailNotification: [false],
-      language: [''],
+      preferredLanguage: [''],
       theme: ['']
     });
 
     this.formGroup.get('theme')?.valueChanges.subscribe((theme) => {
       Theme.change(theme);
+    });
+
+    this.formGroup.get('preferredLanguage')?.valueChanges.subscribe((lang) => {
+      this.translateService.use(lang);
     });
 
     AppState.Singleton.user.observe().subscribe((userDto) => {
@@ -35,7 +42,7 @@ export class AccountEditContainerComponent {
         this.formGroup.patchValue({
           name: userDto.name,
           emailNotification: userDto.emailNotification,
-          language: userDto.preferredLanguage,
+          preferredLanguage: userDto.preferredLanguage,
           theme: userDto.theme
         });
       }
@@ -45,6 +52,7 @@ export class AccountEditContainerComponent {
   formGroup: FormGroup;
   user: UserDto | null = null;
   confirm = false;
+  Language = Language;
 
   submit(): void {
     if (this.formGroup.valid) {

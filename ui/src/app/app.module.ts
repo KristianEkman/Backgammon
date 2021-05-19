@@ -51,7 +51,6 @@ import { SharePromptComponent } from './components/message-container/share-promp
 import { HomeButtonComponent } from './components/shared/home-button/home-button.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { SelectLanguageComponent } from './components/select-language/select-language.component';
 import { InviteContainerComponent } from './components/invite-container/invite-container.component';
 import { DiceComponent } from './components/game/dice/dice.component';
 import { AboutContainerComponent } from './components/about-container/about-container.component';
@@ -89,7 +88,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MessageReadComponent,
     SharePromptComponent,
     HomeButtonComponent,
-    SelectLanguageComponent,
     InviteContainerComponent,
     DiceComponent,
     AboutContainerComponent,
