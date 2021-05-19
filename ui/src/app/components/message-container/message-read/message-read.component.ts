@@ -12,16 +12,25 @@ export class MessageReadComponent implements OnInit {
   @Output() delete = new EventEmitter<number>();
   MessageType = MessageType;
   currentIndex = 0;
+  hide = false;
   constructor() {}
 
   ngOnInit(): void {}
 
   deleteClick(): void {
     if (this.messages) {
+      this.animateHide();
       this.delete.emit(this.messages[this.currentIndex].id);
       this.currentIndex = 0;
       // little bit ugly to jump first here, but will do for now.
     }
+  }
+
+  animateHide(): void {
+    this.hide = true;
+    setTimeout(() => {
+      this.hide = false;
+    }, 600);
   }
 
   get message(): MessageDto | null {
@@ -32,6 +41,8 @@ export class MessageReadComponent implements OnInit {
   }
 
   nextClick(): void {
+    this.animateHide();
+
     this.currentIndex++;
   }
 

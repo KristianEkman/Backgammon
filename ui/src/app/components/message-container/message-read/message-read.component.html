@@ -9,7 +9,10 @@
         <i class="far fa-arrow-alt-circle-right"></i>
       </button>
     </div>
-    <div class="message-container message-background">
+    <div
+      class="message-container message-background"
+      [ngClass]="{ hide: hide }"
+    >
       <p>
         {{ message.date }}<br />{{ 'messageread.from' | translate }}:
         {{ message.sender }}

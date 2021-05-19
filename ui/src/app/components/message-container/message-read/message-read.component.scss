@@ -15,6 +15,14 @@
 }
 
 .message-container {
+  position: relative;
+  top: 0;
   padding: 16px;
   border-radius: 5px;
+  transition: opacity 300ms, top 300ms;
+}
+
+.hide {
+  opacity: 0;
+  top: 300px;
 }

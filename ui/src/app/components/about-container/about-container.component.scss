@@ -15,3 +15,12 @@ p {
   margin-left: 15px;
   cursor: pointer;
 }
+
+.share-container {
+  text-align: right;
+
+  .share {
+    display: inline-block;
+    width: 300px;
+  }
+}
