@@ -54,11 +54,13 @@ export class LobbyContainerComponent implements OnInit {
         this.accountService.signIn(userDto, user.idToken || user.authToken);
       }
     });
-
     this.accountService.repair();
 
     if (this.accountService.isLoggedIn()) {
-      this.messageService.loadMessages();
+      setTimeout(() => {
+        // Wait some ms or I get that funny state was changed angualar exception.
+        this.messageService.loadMessages();
+      }, 100);
     }
   }
 
