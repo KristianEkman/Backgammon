@@ -112,7 +112,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     if (this._theme !== undefined) return this._theme;
 
-    if (this.themeName === 'dark') this._theme = new DarkTheme();
+    this._theme = new DarkTheme();
     if (this.themeName === 'light') this._theme = new LightTheme();
     if (this.themeName === 'blue') this._theme = new BlueTheme();
     if (this.themeName === 'pink') this._theme = new PinkTheme();

@@ -88,7 +88,7 @@ namespace Backend.Controllers
             using (var db = new BgDbContext())
             {
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);               
-                foreach (var user in db.Users.Where(u => u.Admin))
+                foreach (var user in db.Users)
                 {
                     (string Subject, string Text) st = GetSubjectAndText(type, user.EmailUnsubscribeId, user.Name);
                     var subject = st.Subject;
@@ -128,7 +128,7 @@ namespace Backend.Controllers
 <img src='https://backgammon.azurewebsites.net/assets/images/banner.jpg'>
 <p>You have a new Backgammon message.</p>
 <p><a href='https://backgammon.azurewebsites.net/messages'>Go there and read the news.<a/></p>
-<p><a href='https://backgammon.azurewebsites.net/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from all email notifications.</a></p>
+<p><a href='https://backgammon.azurewebsites.net/api/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from all email notifications.</a></p>
 <p>
     Kind Regards<br/>
     /Kristian
