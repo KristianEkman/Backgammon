@@ -1,3 +1,4 @@
+using Backend.Controllers;
 using Backend.Dto;
 using Backend.Dto.Actions;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -39,7 +41,8 @@ namespace Backend
         {
             services.AddCors();
 
-            services.AddControllers();
+            services.AddControllers(
+                options => options.Filters.Add(new ServiceInterceptor())).SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Backend", Version = "v1" });
@@ -64,7 +67,7 @@ namespace Backend
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowAnyOrigin()
-            );
+            );            
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -72,7 +75,7 @@ namespace Backend
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
+                endpoints.MapControllers();                
             });
             app.UseWebSockets();
             app.UseDefaultFiles();
@@ -80,6 +83,7 @@ namespace Backend
             {
                 if (context.Request.Path == "/ws/game")
                 {
+                    ServiceInterceptor.AssertOrigin(context.Request);
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         logger.LogInformation($"New web socket request.");
@@ -117,7 +121,7 @@ namespace Backend
                         await next();
                     }
                 }
-            });
+            });                        
 
             app.UseEndpoints(endpoints =>
             {
@@ -125,7 +129,7 @@ namespace Backend
             });
 
             app.UseStaticFiles();
-        }
+        }               
 
         private void TryRestoreState(ILogger<GameManager> logger)
         {
@@ -154,6 +158,31 @@ namespace Backend
             {
                 logger.LogError(e.ToString());
             }
+        }
+    }
+
+    public class ServiceInterceptor : IActionFilter
+    {
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            AssertOrigin(context.HttpContext.Request);
+        }
+
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+            // do something after 
+        }
+
+        public static void AssertOrigin(HttpRequest request)
+        {
+            var origin = request.Headers["Origin"].ToString();
+            var allowed = new List<string>();
+            allowed.Add("https://backgammon.azurewebsites.net");            
+#if DEBUG
+            allowed.Add("http://localhost");
+#endif
+            if (!allowed.Any(x => origin.StartsWith(x)))
+                throw new UnauthorizedAccessException("Origin not allowed");
         }
     }
 }

@@ -57,6 +57,6 @@ namespace Backend.Controllers
                     throw new UnauthorizedAccessException();
                 }
             }
-        }
+        }        
     }
 }
