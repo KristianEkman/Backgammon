@@ -175,7 +175,7 @@ namespace Backend
 
         public static void AssertOrigin(HttpRequest request)
         {
-            var origin = request.Headers["Origin"].ToString();
+            var origin = request.Headers["Referer"].ToString();
             var allowed = new List<string>();
             allowed.Add("https://backgammon.azurewebsites.net");            
 #if DEBUG
