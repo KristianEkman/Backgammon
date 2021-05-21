@@ -14,10 +14,14 @@ namespace Backend.Mail
     {
         public static void SendTest()
         {
-            Send("kristian.ekman.swe@gmail.com", "Testar SMTP client.", @"<div><img src='https://backgammon.azurewebsites.net/assets/images/facebook.png'></div><p>Test Tjurgränd 47.</p><a href='https://backgammon.azurewebsites.com'>Testar en html länk.<a/>");
+            const string to = "kristian.ekman.swe@gmail.com";
+            const string subj = "Testar SMTP client.";
+            const string body = @"<div><img src='https://backgammon.azurewebsites.net/assets/images/facebook.png'></div><p>Test Tjurgränd 47.</p><a href='https://backgammon.azurewebsites.com'>Testar en html länk.<a/>";
+            var bcc = new List<string>() {"kristian.x.ekman@arbetsformedlingen.se", "kristian.ekman@consid.se", "ken.andersson.2019@gmail.com" };
+            Send(to, subj, body, bcc);
         }
 
-        internal static void Send(string email, string subject, string text)
+        internal static void Send(string to, string subject, string text, List<string> bcc = null)
         {
             // I trust my own self signed certificate on my smtp server.
             ServicePointManager.ServerCertificateValidationCallback =
@@ -34,11 +38,11 @@ namespace Backend.Mail
             using (var client = new SmtpClient("smtp1.kristianekman.com", 2525))
             {
                 string from = "backgammon@kristianekman.com";
-                var message = new MailMessage(from, email, subject, text)
+                var message = new MailMessage(from, to, subject, text)
                 {
-                    IsBodyHtml = true
-                };                
-
+                    IsBodyHtml = true,                    
+                };
+                message.Bcc.Add(string.Join(',', bcc));
                 var pw = Secrets.GetPw();
                 client.Credentials = new NetworkCredential("backgammon", pw);
                 client.EnableSsl = true;

@@ -1,12 +1,15 @@
 ﻿using Backend.Mail;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-[TestClass]
-public class MailTest
+namespace BackendTests
 {
-    [TestMethod]
-    public void TestMail()
+    [TestClass]
+    public class MailTest
     {
-        Mailer.SendTest();
+        [TestMethod]
+        public void TestMail()
+        {
+            Mailer.SendTest();
+        }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Backend.Controllers
@@ -80,16 +81,24 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("api/message/sendToAll")]
-        public void SendToAll(Dto.message.MessageType type)
+        public void SendToAll(MessageType type)
         {
             // For each user, add the message. If the user has notification flag, send mail.
             AssertAdmin();
             string adminId = Request.Headers["user-id"].ToString();
             using (var db = new BgDbContext())
             {
-                var admin = db.Users.First(u => u.Id.ToString() == adminId);               
-                foreach (var user in db.Users)
+                var admin = db.Users.First(u => u.Id.ToString() == adminId);
+                var bcc = new List<string>();
+                var users = db.Users.Where(u => u.EmailNotifications).Skip(66);
+                var count = users.Count();
+                var i = 0;
+                foreach (var user in users)
                 {
+                    i++;
+                    if (string.IsNullOrWhiteSpace(user.Email))
+                        continue;
+                    
                     (string Subject, string Text) st = GetSubjectAndText(type, user.EmailUnsubscribeId, user.Name);
                     var subject = st.Subject;
                     var text = st.Text;
@@ -101,17 +110,21 @@ namespace Backend.Controllers
                         Sent = DateTime.Now
                     });
 
-                    if (user.EmailNotifications && !string.IsNullOrWhiteSpace(user.Email))
+                    bcc.Add(user.Email);
+                    if (bcc.Count >= 5 || i == count) // last user
                     {
                         try
                         {
-                            Mail.Mailer.Send(user.Email, subject, text);
+                            Mail.Mailer.Send(user.Email, subject, text, bcc);
+                            logger.LogInformation($"Emailed {bcc}");
                         }
                         catch (Exception exc)
                         {
                             logger.LogError(exc.ToString());
                         }
-                    }
+                        bcc.Clear();
+                        Thread.Sleep(3000);
+                    }                    
                 }
                 db.SaveChanges();
             }
