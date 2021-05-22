@@ -83,7 +83,6 @@ namespace Backend
             {
                 if (context.Request.Path == "/ws/game")
                 {
-                    ServiceInterceptor.AssertOrigin(context.Request);
                     if (context.WebSockets.IsWebSocketRequest)
                     {
                         logger.LogInformation($"New web socket request.");

@@ -26,7 +26,7 @@ namespace Backend.Controllers
         {
             using (var db = new BgDbContext())
             {
-                var user = GetUser(db);                
+                var user = GetUser(db);
                 var ms = db.Messages.Where(m => m.Receiver == user).Select(m => new MessageDto
                 {
                     Text = m.Text,
@@ -89,16 +89,13 @@ namespace Backend.Controllers
             using (var db = new BgDbContext())
             {
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);
-                var bcc = new List<string>();
                 var users = db.Users.Where(u => u.EmailNotifications).Skip(66);
                 var count = users.Count();
-                var i = 0;
                 foreach (var user in users)
                 {
-                    i++;
                     if (string.IsNullOrWhiteSpace(user.Email))
                         continue;
-                    
+
                     (string Subject, string Text) st = GetSubjectAndText(type, user.EmailUnsubscribeId, user.Name);
                     var subject = st.Subject;
                     var text = st.Text;
@@ -110,22 +107,18 @@ namespace Backend.Controllers
                         Sent = DateTime.Now
                     });
 
-                    bcc.Add(user.Email);
-                    if (bcc.Count >= 5 || i == count) // last user
+                    try
                     {
-                        try
-                        {
-                            Mail.Mailer.Send(user.Email, subject, text, bcc);
-                            logger.LogInformation($"Emailed {bcc}");
-                        }
-                        catch (Exception exc)
-                        {
-                            logger.LogError(exc.ToString());
-                        }
-                        bcc.Clear();
-                        Thread.Sleep(3000);
-                    }                    
+                        Mail.Mailer.Send(user.Email, subject, text);
+                        logger.LogInformation($"Emailed {user.Email}");
+                    }
+                    catch (Exception exc)
+                    {
+                        logger.LogError(exc.ToString());
+                    }
+                    Thread.Sleep(1000);
                 }
+
                 db.SaveChanges();
             }
         }
