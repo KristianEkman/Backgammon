@@ -73,7 +73,7 @@ button {
   color: var(--title-color);
 
   &:before {
-    background: linear-gradient(0deg, var(--title-color) 0, transparent 80%);
+    background: linear-gradient(to top, var(--title-color) 0, transparent 80%);
   }
 }
 

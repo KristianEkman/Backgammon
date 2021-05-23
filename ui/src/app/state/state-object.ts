@@ -30,7 +30,7 @@ export class StateObject<T> {
 
   public clearValue(): void {
     this._value = undefined;
-    this._replaySubject.next(undefined);
+    this._replaySubject.next(this._value);
   }
 
   private static deepFreeze(obj: any): any {

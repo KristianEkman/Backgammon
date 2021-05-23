@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MessageDto } from 'src/app/dto';
 import { MessageService } from 'src/app/services';
@@ -9,15 +9,13 @@ import { AppState } from 'src/app/state/app-state';
   templateUrl: './message-container.component.html',
   styleUrls: ['./message-container.component.scss']
 })
-export class MessageContainerComponent implements OnInit {
+export class MessageContainerComponent {
   constructor(private service: MessageService) {
     this.messages$ = AppState.Singleton.messages.observe();
+    this.service.loadMessages();
   }
 
   messages$: Observable<MessageDto[]>;
-  ngOnInit(): void {
-    this.service.loadMessages();
-  }
 
   deleteMessage(id: number): void {
     this.service.deleteMessage(id);
