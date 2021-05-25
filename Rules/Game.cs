@@ -22,6 +22,9 @@ namespace Backend.Rules
         public DateTime Created { get; set; }
         public DateTime ThinkStart { get; set; }
         public Point[] Bars { get; set; }
+        public int GoldMultiplier { get; set; }
+        public bool IsGoldGame { get; set; }
+        public Player.Color? LastDoubler { get; set; }
 
         public Game Clone()
         {
@@ -32,11 +35,15 @@ namespace Backend.Rules
                     WhitePlayer = WhitePlayer.Clone(),
                     Points = Points.Select(p => p.Clone()).ToList(),
                     BlackStarts = BlackStarts,
+                    WhiteStarts = WhiteStarts,
                     Created = Created,
                     CurrentPlayer = CurrentPlayer,
                     PlayState = PlayState,
                     Roll = Roll.Select(r => new Dice { Used = r.Used, Value = r.Value }).ToList(),
-                    ThinkStart = ThinkStart,                        
+                    ThinkStart = ThinkStart,       
+                    GoldMultiplier = GoldMultiplier         ,
+                    IsGoldGame = IsGoldGame,
+                    LastDoubler = LastDoubler
                 };
                 game.Bars = new Point[2];
                 game.Bars[(int)Player.Color.Black] = game.Points[0];
@@ -73,7 +80,10 @@ namespace Backend.Rules
                 },
                 Points = new List<Point>(new Point[26]), // 24 points, 1 bar and 1 home,
                 Created = DateTime.Now,
-                PlayState = State.OpponentConnectWaiting
+                PlayState = State.OpponentConnectWaiting,
+                GoldMultiplier = 1,
+                IsGoldGame = true, //TODO: not always true
+                LastDoubler = null,                
             };
 
             for (int i = 0; i < 26; i++)
@@ -87,6 +97,8 @@ namespace Backend.Rules
             game.Bars[(int)Player.Color.White] = game.Points[25];
 
             game.SetStartPosition();
+            game.GoldMultiplier = 1;
+
             CalcPointsLeft(game);
             return game;
         }

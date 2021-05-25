@@ -293,6 +293,25 @@ namespace Backend
                 var action = (UndoActionDto)JsonSerializer.Deserialize(actionText, typeof(UndoActionDto));
                 _ = Send(otherSocket, action);
             }
+            else if (actionName == ActionNames.requestedDoubling)
+            {
+                var action = (DoublingActionDto)JsonSerializer.Deserialize(actionText, typeof(DoublingActionDto));
+                action.moveTimer = Game.ClientCountDown;
+
+                Game.ThinkStart = DateTime.Now;
+                Game.SwitchPlayer();
+                _ = Send(otherSocket, action);
+            }
+            else if (actionName == ActionNames.acceptedDoubling)
+            {
+                var action = (DoublingActionDto)JsonSerializer.Deserialize(actionText, typeof(DoublingActionDto));
+                action.moveTimer = Game.ClientCountDown;
+                Game.ThinkStart = DateTime.Now;
+                Game.GoldMultiplier *= 2;
+                Game.LastDoubler = Game.CurrentPlayer;
+                Game.SwitchPlayer();
+                _ = Send(otherSocket, action);
+            }
             else if (actionName == ActionNames.connectionInfo)
             {
                 var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(actionText, typeof(ConnectionInfoActionDto));
@@ -391,7 +410,7 @@ namespace Backend
         private async Task Resign(PlayerColor winner)
         {
             await EndGame(winner);
-            Logger.LogInformation($"{winner} won game Game {Game.Id} by resignition.");
+            Logger.LogInformation($"{winner} won Game {Game.Id} by resignition.");
         }
 
         private async Task CloseConnections(WebSocket socket)

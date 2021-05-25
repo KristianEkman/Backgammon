@@ -4,5 +4,6 @@ export enum GameState {
     opponentConnectWaiting,
     firstThrow,
     playing,
+    requestedDoubling,
     ended,
 }

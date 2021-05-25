@@ -8,3 +8,4 @@ export * from './opponentMoveActionDto';
 export * from './undoActionDto';
 export * from './connectionInfoActionDto';
 export * from './gameRestoreActionDto';
+export * from './doublingActionDto';

@@ -19,7 +19,10 @@ namespace Backend.Dto
                 playState = (GameState)game.PlayState,
                 points = game.Points.Select(p => p.ToDto()).ToArray(),
                 validMoves = game.ValidMoves.Select(m => m.ToDto()).ToArray(),
-                thinkTime = Game.ClientCountDown - (DateTime.Now - game.ThinkStart).TotalSeconds
+                thinkTime = Game.ClientCountDown - (DateTime.Now - game.ThinkStart).TotalSeconds,
+                goldMultiplier = game.GoldMultiplier,
+                isGoldGame = game.IsGoldGame,
+                lastDoubler = game.LastDoubler.HasValue ? (PlayerColor)game.LastDoubler : null
             };
             return gameDto;
         }
@@ -104,7 +107,9 @@ namespace Backend.Dto
                 socialProviderId = dbUser.ProviderId,
                 preferredLanguage = dbUser.PreferredLanguage ?? "en",
                 emailNotification = dbUser.EmailNotifications,
-                theme = dbUser.Theme
+                theme = dbUser.Theme,
+                gold = dbUser.Gold,
+                lastFreeGold = dbUser.LastFreeGold
             };
         }
     }

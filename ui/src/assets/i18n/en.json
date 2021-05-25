@@ -47,7 +47,9 @@
     "undo": "Undo",
     "roll": "Roll",
     "exit": "Exit",
-    "new": "New"
+    "new": "New",
+    "acceptDoubling": "Accept",
+    "resign": "Resign"
   },
   "gameboard": {
     "black": "Black",

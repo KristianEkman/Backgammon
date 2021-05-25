@@ -12,12 +12,18 @@ export class BoardButtonsComponent {
   @Input() rollButtonVisible = false;
   @Input() newVisible = false;
   @Input() exitVisible = true;
+  @Input() acceptDoublingVisible = false;
+  @Input() requestDoublingVisible = false;
+  @Input() doublingFactor = 1;
 
   @Output() onUndoMove = new EventEmitter<void>();
   @Output() onSendMoves = new EventEmitter<void>();
   @Output() onRoll = new EventEmitter<void>();
   @Output() onNew = new EventEmitter<void>();
   @Output() onExit = new EventEmitter<void>();
+  @Output() onAcceptDoubling = new EventEmitter<void>();
+  @Output() onRequestDoubling = new EventEmitter<void>();
+  @Output() onResign = new EventEmitter<void>();
 
   undoMove(): void {
     this.onUndoMove.emit();
@@ -38,5 +44,17 @@ export class BoardButtonsComponent {
 
   exitGame(): void {
     this.onExit.emit();
+  }
+
+  acceptDoubling(): void {
+    this.onAcceptDoubling.emit();
+  }
+
+  requestDoubling(): void {
+    this.onRequestDoubling.emit();
+  }
+
+  resign(): void {
+    this.onResign.emit();
   }
 }

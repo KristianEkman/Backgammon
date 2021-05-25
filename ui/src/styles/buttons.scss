@@ -9,7 +9,6 @@
   &:focus {
     outline: 0 !important;
   }
-
 }
 
 @mixin hovershadow {
@@ -60,6 +59,20 @@
   @include glass();
   background-image: linear-gradient(#000000, #252525);
   color: #999 !important;
+}
+
+.blue-button {
+  @include button();
+  @include glass();
+  background-image: linear-gradient(rgb(31, 32, 71), rgb(38, 35, 184));
+  color: #fff !important;
+}
+
+.red-button {
+  @include button();
+  @include glass();
+  background-image: linear-gradient(rgb(71, 31, 31), rgb(136, 27, 27));
+  color: #fff !important;
 }
 
 .flat-button {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace Backend.Dto
 {
     public class UserDto
-    {        
+    {
         public string id { get; set; }        
         public string name { get; set; }
         public string email { get; set; }
@@ -18,6 +18,8 @@ namespace Backend.Dto
         public string preferredLanguage { get; set; }
         public string theme { get; set; }
         public bool emailNotification { get; set; }
+        public int gold { get; set; }
+        public DateTime lastFreeGold { get; set; }
 
     }
 }

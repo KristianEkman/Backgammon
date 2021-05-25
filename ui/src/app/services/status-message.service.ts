@@ -51,7 +51,7 @@ export class StatusMessageService {
   }
 
   setGameEnded(game: GameDto, newScore: NewScoreDto): void {
-    // console.log(this.myColor, this.game.winner);
+    console.log('game ended', game, newScore);
     const myColor = AppState.Singleton.myColor.getValue();
     let score = '';
     if (newScore) {

@@ -23,6 +23,8 @@ namespace Backend.Db
         public string Theme { get; set; }
         public bool EmailNotifications { get; set; }
         public Guid EmailUnsubscribeId { get; set; }
+        public int Gold { get; set; }
+        public DateTime LastFreeGold { get; set; }
         public ICollection<Player> Players { get; set; } = new List<Player>();
         [InverseProperty("Receiver")]
         public ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();

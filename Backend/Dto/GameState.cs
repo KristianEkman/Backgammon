@@ -6,6 +6,7 @@ namespace Backend.Dto
         opponentConnectWaiting,
         firstThrow,
         playing,
+        requestedDoubling,
         ended
     }
 }

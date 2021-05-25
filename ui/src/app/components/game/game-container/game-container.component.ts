@@ -75,6 +75,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   messageCenter = 0;
   flipped = false;
   playAiFlag = false;
+  goldMultiplier = 1;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -99,16 +100,36 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     return AppState.Singleton.myTurn();
   }
 
+  doublingRequested(): boolean {
+    return AppState.Singleton.doublingRequested();
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   gameChanged(dto: GameDto): void {
     this.setRollButtonVisible();
     this.setDicesVisible();
     this.setSendVisible();
     this.setUndoVisible();
+    this.setDoublingVisible(dto);
     this.diceColor = dto?.currentPlayer;
     this.fireResize();
     this.newVisible = dto?.playState === GameState.ended;
-    this.exitVisible = dto?.playState !== GameState.playing;
+    this.exitVisible =
+      dto?.playState !== GameState.playing &&
+      dto?.playState !== GameState.requestedDoubling;
+    if (dto) this.goldMultiplier = dto.goldMultiplier * 2;
+  }
+
+  setDoublingVisible(gameDto: GameDto) {
+    if (!gameDto) return;
+    this.acceptDoublingVisible =
+      gameDto.playState === GameState.requestedDoubling && this.myTurn();
+    // Visible if it is a gold-game and if it is my turn to double.
+    const turn = AppState.Singleton.myColor.getValue() !== gameDto.lastDoubler;
+    console.log('turn', turn);
+    const rightType = gameDto.isGoldGame;
+    this.requestDoublingVisible =
+      turn && rightType && this.myTurn() && this.rollButtonVisible;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -118,8 +139,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setSendVisible();
     this.setUndoVisible();
     this.fireResize();
+    const game = AppState.Singleton.game.getValue();
     this.exitVisible =
-      AppState.Singleton.game.getValue()?.playState !== GameState.playing;
+      game?.playState !== GameState.playing &&
+      game?.playState !== GameState.requestedDoubling;
   }
 
   ngOnDestroy(): void {
@@ -178,6 +201,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   dicesVisible = false;
   newVisible = false;
   exitVisible = true;
+  acceptDoublingVisible = false;
+  requestDoublingVisible = false;
 
   rollButtonClick(): void {
     this.rollButtonClicked = true;
@@ -185,6 +210,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setDicesVisible();
     this.setSendVisible();
     this.fireResize();
+    this.requestDoublingVisible = false;
     const gme = AppState.Singleton.game.getValue();
     if (!gme.validMoves || gme.validMoves.length === 0) {
       this.statusMessageService.setBlockedMessage();
@@ -192,7 +218,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   setRollButtonVisible(): void {
-    if (!this.myTurn()) {
+    if (!this.myTurn() || this.doublingRequested()) {
       this.rollButtonVisible = false;
       return;
     }
@@ -201,7 +227,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   setSendVisible(): void {
-    if (!this.myTurn() || !this.rollButtonClicked) {
+    if (!this.myTurn() || !this.rollButtonClicked || this.doublingRequested()) {
       this.sendVisible = false;
       return;
     }
@@ -211,7 +237,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   setUndoVisible(): void {
-    if (!this.myTurn()) {
+    if (!this.myTurn() || this.doublingRequested()) {
       this.undoVisible = false;
       return;
     }
@@ -222,7 +248,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   setDicesVisible(): void {
     const wasVisible = this.dicesVisible;
-    if (!this.myTurn()) {
+    if (!this.myTurn() || this.doublingRequested()) {
       this.dicesVisible = true;
       if (!wasVisible) Sound.playDice();
       return;
@@ -244,5 +270,15 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.service.exitGame();
     Busy.hide();
     this.router.navigateByUrl('/lobby');
+  }
+
+  requestDoubling(): void {
+    this.requestDoublingVisible = false;
+    this.service.requestDoubling();
+  }
+
+  acceptDoubling(): void {
+    this.acceptDoublingVisible = false;
+    this.service.acceptDoubling();
   }
 }

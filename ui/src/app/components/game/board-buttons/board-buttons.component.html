@@ -17,3 +17,25 @@
 <button (click)="exitGame()" *ngIf="exitVisible" class="secondary-button">
   {{ 'boardbuttons.exit' | translate }}
 </button>
+<button
+  (click)="resign()"
+  *ngIf="acceptDoublingVisible"
+  class="red-button smaller"
+>
+  {{ 'boardbuttons.resign' | translate }}
+</button>
+<button
+  (click)="acceptDoubling()"
+  *ngIf="acceptDoublingVisible"
+  class="blue-button smaller"
+>
+  {{ 'boardbuttons.acceptDoubling' | translate }}
+  {{ doublingFactor }}<i class="fas fa-times"></i>
+</button>
+<button
+  (click)="requestDoubling()"
+  *ngIf="requestDoublingVisible"
+  class="blue-button"
+>
+  {{ doublingFactor }}<i class="fas fa-times"></i>
+</button>

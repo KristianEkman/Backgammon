@@ -38,11 +38,17 @@
       [rollButtonVisible]="rollButtonVisible"
       [newVisible]="newVisible"
       [exitVisible]="exitVisible"
+      [acceptDoublingVisible]="acceptDoublingVisible"
+      [requestDoublingVisible]="requestDoublingVisible"
+      [doublingFactor]="goldMultiplier"
       (onUndoMove)="undoMove()"
       (onSendMoves)="sendMoves()"
       (onRoll)="rollButtonClick()"
       (onNew)="newGame()"
       (onExit)="exitGame()"
+      (onRequestDoubling)="requestDoubling()"
+      (onAcceptDoubling)="acceptDoubling()"
+      (onResign)="resignGame()"
     ></app-board-buttons>
   </div>
   <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div>

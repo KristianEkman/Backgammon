@@ -1,6 +1,7 @@
 ﻿using Backend.Db;
 using Backend.Dto;
 using Backend.Dto.message;
+using Backend.Dto.rest;
 using Google.Apis.Auth;
 using Google.Apis.Util;
 using Microsoft.AspNetCore.Authorization;
@@ -96,10 +97,12 @@ namespace Backend.Controllers
                         EmailNotifications = true,
                         EmailUnsubscribeId = Guid.NewGuid(),
                         Theme = "dark",
-                        PreferredLanguage = "en"
+                        PreferredLanguage = "en",
+                        Gold = 200,
+                        LastFreeGold = DateTime.Now,                        
                     };
                     db.Users.Add(dbUser);
-                    
+
                     // Give new users a prompt message to share the site.
                     var admin = db.Users.First(u => u.Admin);
                     dbUser.ReceivedMessages.Add(new Message
@@ -159,6 +162,34 @@ namespace Backend.Controllers
                 dbUser.PreferredLanguage = "";
                 dbUser.Admin = false;
                 db.SaveChanges();
+            }
+        }
+
+        [HttpPost]
+        [Route("/api/account/requestgold")]
+        public GoldGiftDto RequestGold()
+        {
+            var usId = GetUserId();
+            using (var db = new Db.BgDbContext())
+            {
+                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+                if (dbUser.Gold < GoldGiftDto.Gift && DateTime.Now > dbUser.LastFreeGold.AddDays(1))
+                {
+                    dbUser.Gold = GoldGiftDto.Gift;
+                    dbUser.LastFreeGold = DateTime.Now;
+                    db.SaveChanges();
+                    return new GoldGiftDto
+                    {
+                        Gold = GoldGiftDto.Gift,
+                        NextGiftAllowed = DateTime.Now.AddDays(1)
+                    };
+                }
+
+                return new GoldGiftDto
+                {
+                    Gold = 0,
+                    NextGiftAllowed = dbUser.LastFreeGold.AddDays(1)
+                };
             }
         }
 

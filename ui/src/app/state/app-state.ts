@@ -69,4 +69,15 @@ export class AppState {
       game.currentPlayer === this.myColor.getValue()
     );
   }
+
+  doublingRequested(): boolean {
+    const game = this.game.getValue();
+    return game && game.playState === GameState.requestedDoubling;
+  }
+
+  getOtherPlayer(): PlayerColor {
+    return this.myColor.getValue() === PlayerColor.black
+      ? PlayerColor.white
+      : PlayerColor.black;
+  }
 }

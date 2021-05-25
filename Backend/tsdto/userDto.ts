@@ -12,4 +12,6 @@ export interface UserDto {
     preferredLanguage: string;
     theme: string;
     emailNotification: boolean;
+    gold: number;
+    lastFreeGold: Date;
 }

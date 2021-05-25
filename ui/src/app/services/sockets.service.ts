@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, ɵPlayState } from '@angular/core';
 import { environment } from '../../environments/environment';
 import {
   CheckerDto,
@@ -20,7 +20,8 @@ import {
   OpponentMoveActionDto,
   UndoActionDto,
   ConnectionInfoActionDto,
-  GameRestoreActionDto
+  GameRestoreActionDto,
+  DoublingActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
 import { Keys, Sound } from '../utils';
@@ -130,12 +131,48 @@ export class SocketsService implements OnDestroy {
       case ActionNames.gameEnded: {
         const endedAction = JSON.parse(message.data) as GameEndedActionDto;
         // console.log('game ended', endedAction.game.winner);
-        AppState.Singleton.game.setValue(endedAction.game);
-        AppState.Singleton.moveTimer.setValue(0);
+        AppState.Singleton.game.setValue({
+          ...endedAction.game,
+          playState: GameState.ended
+        });
         this.statusMessageService.setGameEnded(
           endedAction.game,
           endedAction.newScore
         );
+        AppState.Singleton.moveTimer.setValue(0);
+        break;
+      }
+      case ActionNames.requestedDoubling: {
+        // Opponent has requested
+        const action = JSON.parse(message.data) as DoublingActionDto;
+        AppState.Singleton.moveTimer.setValue(action.moveTimer);
+
+        console.log(
+          'Requested Received',
+          AppState.Singleton.myColor.getValue()
+        );
+        AppState.Singleton.game.setValue({
+          ...game,
+          playState: GameState.requestedDoubling,
+          currentPlayer: AppState.Singleton.myColor.getValue()
+        });
+        console.log(AppState.Singleton.game.getValue());
+        break;
+      }
+      case ActionNames.acceptedDoubling: {
+        const action = JSON.parse(message.data) as DoublingActionDto;
+        AppState.Singleton.moveTimer.setValue(action.moveTimer);
+        // Opponent has accepted
+        console.log('Accepted Received', AppState.Singleton.myColor.getValue());
+        AppState.Singleton.game.setValue({
+          ...game,
+          playState: GameState.playing,
+          goldMultiplier: game.goldMultiplier * 2,
+          lastDoubler: AppState.Singleton.myColor.getValue(),
+          currentPlayer: AppState.Singleton.myColor.getValue()
+        });
+        console.log(AppState.Singleton.game.getValue());
+
         break;
       }
       case ActionNames.opponentMove: {
@@ -387,5 +424,51 @@ export class SocketsService implements OnDestroy {
     this.gameHistory = [];
     this.dicesHistory = [];
     this.connectTime = new Date();
+  }
+
+  //This is when this player accepts a doubling.
+  acceptDoubling() {
+    const action: DoublingActionDto = {
+      actionName: ActionNames.acceptedDoubling,
+      moveTimer: 0 // Set on the server
+    };
+    const game = AppState.Singleton.game.getValue();
+    console.log('Sending accepted', AppState.Singleton.myColor.getValue());
+    AppState.Singleton.game.setValue({
+      ...game,
+      playState: GameState.playing,
+      goldMultiplier: game.goldMultiplier * 2,
+      lastDoubler: AppState.Singleton.getOtherPlayer(),
+      currentPlayer: AppState.Singleton.getOtherPlayer()
+    });
+    console.log(AppState.Singleton.game.getValue());
+
+    // TODO: The client countdown is currently only a constant on the backend.
+    // What is the best design here?
+    AppState.Singleton.moveTimer.setValue(40);
+    this.sendMessage(JSON.stringify(action));
+  }
+
+  //This player requests doubling.
+  requestDoubling() {
+    console.log('Sending requested', AppState.Singleton.myColor.getValue());
+    const game = AppState.Singleton.game.getValue();
+    AppState.Singleton.game.setValue({
+      ...game,
+      playState: GameState.requestedDoubling,
+      currentPlayer: AppState.Singleton.getOtherPlayer()
+    });
+
+    console.log(AppState.Singleton.game.getValue());
+
+    const action: DoublingActionDto = {
+      actionName: ActionNames.requestedDoubling,
+      moveTimer: 0 // set on the server
+    };
+
+    // TODO: The client countdown is currently only a constant on the backend.
+    // What is the best design here? Where to store the constant? One extra server message for this case?
+    AppState.Singleton.moveTimer.setValue(40);
+    this.sendMessage(JSON.stringify(action));
   }
 }
