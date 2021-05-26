@@ -11,6 +11,9 @@ namespace Backend.Rules
         public string Name { get; set; }
         public Color PlayerColor { get; set; }
         public int PointsLeft { get; set; }
+        public string Photo { get; set; }
+        public int Gold { get; set; }
+        public int Elo { get; set; }
 
         /// <summary>
         /// Do not map this to the dto. Opponnents id should never be revealed to anyone else.
@@ -44,7 +47,10 @@ namespace Backend.Rules
                 Id = Id,
                 Name = Name,
                 PlayerColor = PlayerColor,
-                PointsLeft = PointsLeft
+                PointsLeft = PointsLeft,
+                Photo = Photo,
+                Gold = Gold,
+                Elo = Elo
             };
         }
     }

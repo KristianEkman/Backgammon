@@ -7,7 +7,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import {
   DiceDto,
   GameDto,
@@ -22,6 +22,7 @@ import { StatusMessage } from 'src/app/dto/local/status-message';
 import { Busy } from 'src/app/state/busy';
 import { StatusMessageService } from 'src/app/services/status-message.service';
 import { Sound } from 'src/app/utils';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game',
@@ -85,7 +86,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   messageCenter = 0;
   flipped = false;
   playAiFlag = false;
-  goldMultiplier = 1;
+  PlayerColor = PlayerColor;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -130,7 +131,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.exitVisible =
       dto?.playState !== GameState.playing &&
       dto?.playState !== GameState.requestedDoubling;
-    if (dto) this.goldMultiplier = dto.goldMultiplier * 2;
   }
 
   setDoublingVisible(gameDto: GameDto) {
@@ -291,5 +291,21 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   acceptDoubling(): void {
     this.acceptDoublingVisible = false;
     this.service.acceptDoubling();
+  }
+
+  getDoubling(color: PlayerColor): Observable<number> {
+    return this.gameDto$.pipe(
+      map((game) => {
+        return game?.lastDoubler === color ? game?.goldMultiplier : 0;
+      })
+    );
+  }
+
+  nextDoublingFactor(): Observable<number> {
+    return this.gameDto$.pipe(
+      map((game) => {
+        return game?.goldMultiplier * 2;
+      })
+    );
   }
 }

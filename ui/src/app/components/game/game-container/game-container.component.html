@@ -12,6 +12,20 @@
     (flip)="this.flipped = !this.flipped"
     (resign)="resignGame()"
   ></app-menu>
+  <div
+    class="players"
+    [ngStyle]="{ height: height + 'px' }"
+    [ngClass]="{ flipped: flipped }"
+  >
+    <app-player
+      [playerDto]="(gameDto$ | async)?.whitePlayer"
+      [doubling]="getDoubling(PlayerColor.white) | async"
+    ></app-player>
+    <app-player
+      [playerDto]="(gameDto$ | async)?.blackPlayer"
+      [doubling]="getDoubling(PlayerColor.black) | async"
+    ></app-player>
+  </div>
   <app-game-board
     class="game-board"
     [width]="width"
@@ -40,7 +54,7 @@
       [exitVisible]="exitVisible"
       [acceptDoublingVisible]="acceptDoublingVisible"
       [requestDoublingVisible]="requestDoublingVisible"
-      [doublingFactor]="goldMultiplier"
+      [doublingFactor]="nextDoublingFactor() | async"
       (onUndoMove)="undoMove()"
       (onSendMoves)="sendMoves()"
       (onRoll)="rollButtonClick()"
@@ -51,5 +65,5 @@
       (onResign)="resignGame()"
     ></app-board-buttons>
   </div>
-  <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div>
+  <!-- <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div> -->
 </div>

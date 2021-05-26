@@ -14,4 +14,5 @@ export interface UserDto {
     emailNotification: boolean;
     gold: number;
     lastFreeGold: Date;
+    elo: number;
 }

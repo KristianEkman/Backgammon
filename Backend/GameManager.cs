@@ -128,6 +128,9 @@ namespace Backend
                 Client1 = webSocket;
                 Game.BlackPlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
                 Game.BlackPlayer.Name = dbUser != null ? dbUser.Name : "Guest";
+                Game.BlackPlayer.Photo = dbUser != null ? dbUser.PhotoUrl : "";
+                Game.BlackPlayer.Elo = dbUser != null ? dbUser.Elo : 1200;   // TODO: Randomize?
+                Game.BlackPlayer.Gold = dbUser != null ? dbUser.Gold : 1500; // TODO: Randomize?
                 if (playAi)
                 {
                     var aiUser = Db.BgDbContext.GetDbUser(Db.User.AiUser);
@@ -148,6 +151,9 @@ namespace Backend
                 Client2 = webSocket;
                 Game.WhitePlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
                 Game.WhitePlayer.Name = dbUser != null ? dbUser.Name : "Guest";
+                Game.WhitePlayer.Photo = dbUser != null ? dbUser.PhotoUrl : "";
+                Game.WhitePlayer.Elo = dbUser != null ? dbUser.Elo : 1200;   // TODO: Randomize?
+                Game.WhitePlayer.Gold = dbUser != null ? dbUser.Gold : 1500; // TODO: Randomize?
                 CreateDbGame();
                 StartGame();
                 await ListenOn(webSocket);

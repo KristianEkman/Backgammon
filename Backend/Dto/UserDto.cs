@@ -20,6 +20,8 @@ namespace Backend.Dto
         public bool emailNotification { get; set; }
         public int gold { get; set; }
         public DateTime lastFreeGold { get; set; }
+        public int elo { get; set; }
+
 
     }
 }

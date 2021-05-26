@@ -14,7 +14,7 @@ export class BoardButtonsComponent {
   @Input() exitVisible = true;
   @Input() acceptDoublingVisible = false;
   @Input() requestDoublingVisible = false;
-  @Input() doublingFactor = 1;
+  @Input() doublingFactor: number | null = 1;
 
   @Output() onUndoMove = new EventEmitter<void>();
   @Output() onSendMoves = new EventEmitter<void>();

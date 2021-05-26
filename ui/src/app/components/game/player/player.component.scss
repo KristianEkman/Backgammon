@@ -1,0 +1,24 @@
+.player {
+  max-width: 90%;
+  font-size: 12px;
+  position: relative;
+
+  img {
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  .double-cube {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: rgb(31, 31, 97);
+    line-height: 24px;
+    text-align: center;
+    color: white;
+    border-radius: 3px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+}
