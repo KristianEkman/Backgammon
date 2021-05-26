@@ -44,6 +44,13 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.gameSubs = AppState.Singleton.game
       .observe()
       .subscribe(this.gameChanged.bind(this));
+    this.rolledSubs = AppState.Singleton.rolled
+      .observe()
+      .subscribe(this.opponentRolled.bind(this));
+
+    this.oponnetDoneSubs = AppState.Singleton.opponentDone
+      .observe()
+      .subscribe(this.oponnentDone.bind(this));
     this.message$ = AppState.Singleton.statusMessage.observe();
     this.timeLeft$ = AppState.Singleton.moveTimer.observe();
     this.user$ = AppState.Singleton.user.observe();
@@ -65,8 +72,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   message$: Observable<StatusMessage>;
   timeLeft$: Observable<number>;
   user$: Observable<UserDto>;
+
   gameSubs: Subscription;
   diceSubs: Subscription;
+  rolledSubs: Subscription;
+  oponnetDoneSubs: Subscription;
 
   width = 450;
   height = 450;
@@ -84,6 +94,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   sendMoves(): void {
     this.service.sendMoves();
     this.rollButtonClicked = false;
+    this.dicesVisible = false;
   }
 
   doMove(move: MoveDto): void {
@@ -104,10 +115,12 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     return AppState.Singleton.doublingRequested();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  oponnentDone(): void {
+    this.dicesVisible = false;
+  }
+
   gameChanged(dto: GameDto): void {
     this.setRollButtonVisible();
-    this.setDicesVisible();
     this.setSendVisible();
     this.setUndoVisible();
     this.setDoublingVisible(dto);
@@ -126,7 +139,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       gameDto.playState === GameState.requestedDoubling && this.myTurn();
     // Visible if it is a gold-game and if it is my turn to double.
     const turn = AppState.Singleton.myColor.getValue() !== gameDto.lastDoubler;
-    console.log('turn', turn);
     const rightType = gameDto.isGoldGame;
     this.requestDoublingVisible =
       turn && rightType && this.myTurn() && this.rollButtonVisible;
@@ -135,7 +147,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   diceChanged(dto: DiceDto[]): void {
     this.setRollButtonVisible();
-    this.setDicesVisible();
     this.setSendVisible();
     this.setUndoVisible();
     this.fireResize();
@@ -148,6 +159,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.gameSubs.unsubscribe();
     this.diceSubs.unsubscribe();
+    this.rolledSubs.unsubscribe();
+    this.oponnetDoneSubs.unsubscribe();
     this.service.exitGame();
   }
 
@@ -205,9 +218,12 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   requestDoublingVisible = false;
 
   rollButtonClick(): void {
+    this.service.sendRolled();
     this.rollButtonClicked = true;
     this.setRollButtonVisible();
-    this.setDicesVisible();
+    this.dicesVisible = true;
+    Sound.playDice();
+
     this.setSendVisible();
     this.fireResize();
     this.requestDoublingVisible = false;
@@ -215,6 +231,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     if (!gme.validMoves || gme.validMoves.length === 0) {
       this.statusMessageService.setBlockedMessage();
     }
+  }
+
+  opponentRolled(): void {
+    this.dicesVisible = true;
+    Sound.playDice();
   }
 
   setRollButtonVisible(): void {
@@ -244,16 +265,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
     const dices = AppState.Singleton.dices.getValue();
     this.undoVisible = dices && dices.filter((d) => d.used).length > 0;
-  }
-
-  setDicesVisible(): void {
-    const wasVisible = this.dicesVisible;
-    if (!this.myTurn() || this.doublingRequested()) {
-      this.dicesVisible = true;
-      if (!wasVisible) Sound.playDice();
-      return;
-    }
-    this.dicesVisible = !this.rollButtonVisible;
   }
 
   resignGame(): void {

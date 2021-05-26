@@ -122,6 +122,7 @@ export class SocketsService implements OnDestroy {
         AppState.Singleton.game.setValue(cGame);
         this.statusMessageService.setTextMessage(cGame);
         AppState.Singleton.moveTimer.setValue(dicesAction.moveTimer);
+        AppState.Singleton.opponentDone.setValue(true);
         break;
       }
       case ActionNames.movesMade: {
@@ -147,23 +148,17 @@ export class SocketsService implements OnDestroy {
         const action = JSON.parse(message.data) as DoublingActionDto;
         AppState.Singleton.moveTimer.setValue(action.moveTimer);
 
-        console.log(
-          'Requested Received',
-          AppState.Singleton.myColor.getValue()
-        );
         AppState.Singleton.game.setValue({
           ...game,
           playState: GameState.requestedDoubling,
           currentPlayer: AppState.Singleton.myColor.getValue()
         });
-        console.log(AppState.Singleton.game.getValue());
         break;
       }
       case ActionNames.acceptedDoubling: {
         const action = JSON.parse(message.data) as DoublingActionDto;
         AppState.Singleton.moveTimer.setValue(action.moveTimer);
         // Opponent has accepted
-        console.log('Accepted Received', AppState.Singleton.myColor.getValue());
         AppState.Singleton.game.setValue({
           ...game,
           playState: GameState.playing,
@@ -171,8 +166,6 @@ export class SocketsService implements OnDestroy {
           lastDoubler: AppState.Singleton.myColor.getValue(),
           currentPlayer: AppState.Singleton.myColor.getValue()
         });
-        console.log(AppState.Singleton.game.getValue());
-
         break;
       }
       case ActionNames.opponentMove: {
@@ -183,6 +176,11 @@ export class SocketsService implements OnDestroy {
       case ActionNames.undoMove: {
         // const action = JSON.parse(message.data) as UndoActionDto;
         this.undoMove();
+        break;
+      }
+      case ActionNames.rolled: {
+        // this is just to fire the changed event. The value is not important.
+        AppState.Singleton.rolled.setValue(true);
         break;
       }
       case ActionNames.connectionInfo: {
@@ -396,6 +394,13 @@ export class SocketsService implements OnDestroy {
     this.sendMessage(JSON.stringify(action));
   }
 
+  sendRolled() {
+    const action: ActionDto = {
+      actionName: ActionNames.rolled
+    };
+    this.sendMessage(JSON.stringify(action));
+  }
+
   ngOnDestroy(): void {
     this.socket?.close();
     clearTimeout(this.timerId);
@@ -433,7 +438,6 @@ export class SocketsService implements OnDestroy {
       moveTimer: 0 // Set on the server
     };
     const game = AppState.Singleton.game.getValue();
-    console.log('Sending accepted', AppState.Singleton.myColor.getValue());
     AppState.Singleton.game.setValue({
       ...game,
       playState: GameState.playing,
@@ -441,7 +445,6 @@ export class SocketsService implements OnDestroy {
       lastDoubler: AppState.Singleton.getOtherPlayer(),
       currentPlayer: AppState.Singleton.getOtherPlayer()
     });
-    console.log(AppState.Singleton.game.getValue());
 
     // TODO: The client countdown is currently only a constant on the backend.
     // What is the best design here?
@@ -451,15 +454,12 @@ export class SocketsService implements OnDestroy {
 
   //This player requests doubling.
   requestDoubling() {
-    console.log('Sending requested', AppState.Singleton.myColor.getValue());
     const game = AppState.Singleton.game.getValue();
     AppState.Singleton.game.setValue({
       ...game,
       playState: GameState.requestedDoubling,
       currentPlayer: AppState.Singleton.getOtherPlayer()
     });
-
-    console.log(AppState.Singleton.game.getValue());
 
     const action: DoublingActionDto = {
       actionName: ActionNames.requestedDoubling,

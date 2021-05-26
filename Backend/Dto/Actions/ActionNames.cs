@@ -18,6 +18,7 @@ namespace Backend.Dto
         resign,
         exitGame,
         requestedDoubling,
-        acceptedDoubling
+        acceptedDoubling,
+        rolled
     }
 }

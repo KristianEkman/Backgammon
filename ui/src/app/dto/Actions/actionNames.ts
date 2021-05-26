@@ -12,5 +12,6 @@ export enum ActionNames {
   resign,
   exitGame,
   requestedDoubling,
-  acceptedDoubling
+  acceptedDoubling,
+  rolled
 }

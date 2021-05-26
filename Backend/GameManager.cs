@@ -293,6 +293,11 @@ namespace Backend
                 var action = (UndoActionDto)JsonSerializer.Deserialize(actionText, typeof(UndoActionDto));
                 _ = Send(otherSocket, action);
             }
+            else if (actionName == ActionNames.rolled)
+            {
+                var action = (ActionDto)JsonSerializer.Deserialize(actionText, typeof(ActionDto));
+                _ = Send(otherSocket, action);
+            }
             else if (actionName == ActionNames.requestedDoubling)
             {
                 var action = (DoublingActionDto)JsonSerializer.Deserialize(actionText, typeof(DoublingActionDto));
