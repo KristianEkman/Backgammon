@@ -46,7 +46,9 @@
     "undo": "الغاء التحميل",
     "roll": "تدحرج",
     "exit": "مخرج",
-    "new": "جديد"
+    "new": "جديد",
+    "acceptDoubling": "قبول",
+    "resign": "استقالة"
   },
   "gameboard": {
     "black": "أسود",
@@ -102,7 +104,10 @@
     "newscore": "النتيجة الجديدة {{ score }} ({{ increase }})",
     "youwon": "مبروك!لقد فزت. {{score}}",
     "youlost": "آسف.لقد خسرت المباراه. {{score}}",
-    "movenow": "التحرك الآن أو تخسر!"
+    "movenow": "التحرك الآن أو تخسر!",
+    "dblaccepted": "لم يقبل الخصم.دورك للتحرك.",
+    "dblrequested": "مضاعفة رهانك أو الاستسلام.",
+    "waitfordblresponse": "في انتظار الخصم للرد."
   },
   "black": "أسود",
   "white": "أبيض",

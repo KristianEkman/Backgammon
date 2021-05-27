@@ -19,4 +19,5 @@ export interface GameDto {
     goldMultiplier: number;
     isGoldGame: boolean;
     lastDoubler?: PlayerColor;
+    stake: number;
 }

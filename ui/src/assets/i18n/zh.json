@@ -53,7 +53,9 @@
     "black": "黑色的",
     "white": "白色的",
     "you": "你",
-    "left": "剩下"
+    "left": "剩下",
+    "acceptDoubling": "接受",
+    "resign": "辭職"
   },
   "menu": {
     "rotate": "旋轉",
@@ -102,7 +104,10 @@
     "newscore": "新分數 {{ score }} ({{ increase }})",
     "youwon": "恭喜！你贏了。 {{score}}",
     "youlost": "對不起。你失去了比賽。 {{score}}",
-    "movenow": "現在搬家或丟失！"
+    "movenow": "現在搬家或丟失！",
+    "dblaccepted": "對手確實接受了。輪到你了。",
+    "dblrequested": "雙倍你的賭注或放棄。",
+    "waitfordblresponse": "等待對手回應。"
   },
   "black": "黑色的",
   "white": "白色的",

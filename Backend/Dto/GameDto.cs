@@ -17,5 +17,6 @@ namespace Backend.Dto
         public int goldMultiplier { get; set; }
         public bool isGoldGame { get; set; }
         public PlayerColor? lastDoubler { get; set; }
+        public int stake { get; set; }
     }
 }

@@ -47,7 +47,9 @@
     "undo": "annuler",
     "roll": "Rouleau",
     "exit": "Sortir",
-    "new": "Nouvelle"
+    "new": "Nouvelle",
+    "acceptDoubling": "J'accepte",
+    "resign": "Démissionner"
   },
   "gameboard": {
     "black": "Noire",
@@ -102,7 +104,10 @@
     "newscore": "Nouveau score {{ score }} ({{ increase }})",
     "youwon": "Félicitations!Tu as gagné. {{score}}",
     "youlost": "Pardon.Tu as perdu le jeu. {{score}}",
-    "movenow": "Déplacer maintenant ou perdre!"
+    "movenow": "Déplacer maintenant ou perdre!",
+    "dblaccepted": "Adversaire a accepté.Votre tour de déplacement.",
+    "dblrequested": "Doublez votre pari ou abandonnez.",
+    "waitfordblresponse": "En attente de l'adversaire de répondre."
   },
   "black": "noire",
   "white": "blanche",

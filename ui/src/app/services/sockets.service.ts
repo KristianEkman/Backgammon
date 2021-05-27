@@ -153,6 +153,7 @@ export class SocketsService implements OnDestroy {
           playState: GameState.requestedDoubling,
           currentPlayer: AppState.Singleton.myColor.getValue()
         });
+        this.statusMessageService.setDoublingRequested();
         break;
       }
       case ActionNames.acceptedDoubling: {
@@ -166,6 +167,7 @@ export class SocketsService implements OnDestroy {
           lastDoubler: AppState.Singleton.myColor.getValue(),
           currentPlayer: AppState.Singleton.myColor.getValue()
         });
+        this.statusMessageService.setDoublingAccepted();
         break;
       }
       case ActionNames.opponentMove: {
@@ -450,15 +452,19 @@ export class SocketsService implements OnDestroy {
     // What is the best design here?
     AppState.Singleton.moveTimer.setValue(40);
     this.sendMessage(JSON.stringify(action));
+    this.statusMessageService.setTextMessage(
+      AppState.Singleton.game.getValue()
+    );
   }
 
   //This player requests doubling.
   requestDoubling() {
     const game = AppState.Singleton.game.getValue();
+    const otherPlyr = AppState.Singleton.getOtherPlayer();
     AppState.Singleton.game.setValue({
       ...game,
       playState: GameState.requestedDoubling,
-      currentPlayer: AppState.Singleton.getOtherPlayer()
+      currentPlayer: otherPlyr
     });
 
     const action: DoublingActionDto = {
@@ -470,5 +476,6 @@ export class SocketsService implements OnDestroy {
     // What is the best design here? Where to store the constant? One extra server message for this case?
     AppState.Singleton.moveTimer.setValue(40);
     this.sendMessage(JSON.stringify(action));
+    this.statusMessageService.setWaitingForDoubleResponse();
   }
 }

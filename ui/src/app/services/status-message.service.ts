@@ -87,4 +87,22 @@ export class StatusMessageService {
     Sound.playWarning();
     AppState.Singleton.statusMessage.setValue(message);
   }
+
+  setDoublingAccepted() {
+    const text = this.trans.instant('statusmessage.dblaccepted');
+    const msg = StatusMessage.info(text);
+    AppState.Singleton.statusMessage.setValue(msg);
+  }
+
+  setDoublingRequested() {
+    const text = this.trans.instant('statusmessage.dblrequested');
+    const msg = StatusMessage.info(text);
+    AppState.Singleton.statusMessage.setValue(msg);
+  }
+
+  setWaitingForDoubleResponse() {
+    const text = this.trans.instant('statusmessage.waitfordblresponse');
+    const msg = StatusMessage.info(text);
+    AppState.Singleton.statusMessage.setValue(msg);
+  }
 }

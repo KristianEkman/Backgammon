@@ -47,7 +47,9 @@
     "undo": "Ångra",
     "roll": "Rulla",
     "exit": "Hem",
-    "new": "Nytt"
+    "new": "Nytt",
+    "acceptDoubling": "Acceptera",
+    "resign": "Ge upp"
   },
   "gameboard": {
     "black": "Svart",
@@ -102,7 +104,10 @@
     "newscore": "Ny poäng {{ score }} ({{ increase }})",
     "youwon": "Grattis! Du vann. {{score}}",
     "youlost": "Ledsen. Du förlorade. {{score}}",
-    "movenow": "Om du inte flyttar nu förlorar du!"
+    "movenow": "Om du inte flyttar nu förlorar du!",
+    "dblaccepted": "Motståndaren accepterade. Din tur att flytta.",
+    "dblrequested": "Dubblera insattsen eller ge upp.",
+    "waitfordblresponse": "Väntar på motståndarens svar."
   },
   "black": "svart",
   "white": "vit",

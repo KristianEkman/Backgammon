@@ -47,7 +47,9 @@
     "undo": "Deshacer",
     "roll": "Tirar",
     "exit": "Salida",
-    "new": "Nueva"
+    "new": "Nueva",
+    "acceptDoubling": "Aceptar",
+    "resign": "Renunciar"
   },
   "gameboard": {
     "black": "Negra",
@@ -102,7 +104,10 @@
     "newscore": "Nueva puntuación {{ score }} ({{ increase }})",
     "youwon": "¡Felicitaciones! Ganaste. {{score}}",
     "youlost": "Lo siento. Perdiste el juego. {{score}}",
-    "movenow": "¡Muévete ahora o pierde!"
+    "movenow": "¡Muévete ahora o pierde!",
+    "dblaccepted": "El oponente aceptó.Tu turno para moverte.",
+    "dblrequested": "Duplique su apuesta o renuncie.",
+    "waitfordblresponse": "Esperando a que el oponente responda."
   },
   "black": "negra",
   "white": "blanca",

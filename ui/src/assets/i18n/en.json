@@ -104,7 +104,10 @@
     "newscore": "New score {{ score }} ({{ increase }})",
     "youwon": "Congrats! You won. {{score}}",
     "youlost": "Sorry. You lost the game. {{score}}",
-    "movenow": "Move now or lose!"
+    "movenow": "Move now or lose!",
+    "dblaccepted": "Opponent did accept. Your turn to move..",
+    "dblrequested": "Double your bet or give up.",
+    "waitfordblresponse": "Waiting for opponent to respond."
   },
   "black": "black",
   "white": "white",
