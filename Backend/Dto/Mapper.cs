@@ -98,6 +98,8 @@ namespace Backend.Dto
 
         public static UserDto ToDto(this Db.User dbUser)
         {
+            int unixTimestamp = (int)dbUser.LastFreeGold.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
             return new UserDto
             {
                 email = dbUser.Email,
@@ -111,7 +113,7 @@ namespace Backend.Dto
                 emailNotification = dbUser.EmailNotifications,
                 theme = dbUser.Theme,
                 gold = dbUser.Gold,
-                lastFreeGold = dbUser.LastFreeGold,
+                lastFreeGold = unixTimestamp,
                 elo = dbUser.Elo
             };
         }

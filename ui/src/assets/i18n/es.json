@@ -118,5 +118,8 @@
     "andyouarewelcome": "Y eres muy bienvenido a jugar.",
     "orifyouareadeveloper": "O si usted es un desarrollador, podría estar interesado en los enlaces a continuación con todos los detalles.",
     "ongithub": "En GitHub, puede solicitar o votar por nuevas características, o incluso contribuir con las solicitudes de tracción."
+  },
+  "goldbutton": {
+    "getgold": "consigue oro"
   }
 }

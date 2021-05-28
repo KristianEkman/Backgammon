@@ -1,0 +1,6 @@
+<button class="flat-button" (click)="getGoldClicked()">
+  {{ this.user?.gold }}
+  <i class="fas fa-coins"></i>
+  &nbsp;&nbsp;
+  {{ getButtonText() | async }}
+</button>

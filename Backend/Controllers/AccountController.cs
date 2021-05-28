@@ -64,7 +64,17 @@ namespace Backend.Controllers
                 return null;
 
             return GetOrCreateLogin(userDto);
+        }
 
+        [HttpGet]
+        [Route("/api/account/getuser")]
+        public UserDto GetUser(Guid userId)
+        {
+            using (var db = new BgDbContext())
+            {
+                var user = db.Users.Single((u) => u.Id == userId);
+                return user.ToDto();
+            }
         }
 
         private UserDto GetOrCreateLogin(UserDto userDto)
@@ -165,7 +175,7 @@ namespace Backend.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("/api/account/requestgold")]
         public GoldGiftDto RequestGold()
         {
@@ -173,22 +183,18 @@ namespace Backend.Controllers
             using (var db = new Db.BgDbContext())
             {
                 var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
-                if (dbUser.Gold < GoldGiftDto.Gift && DateTime.Now > dbUser.LastFreeGold.AddDays(1))
+                if (dbUser.Gold < GoldGiftDto.Gift && DateTime.UtcNow > dbUser.LastFreeGold.AddDays(1))
                 {
-                    dbUser.Gold = GoldGiftDto.Gift;
-                    dbUser.LastFreeGold = DateTime.Now;
+                    dbUser.Gold += GoldGiftDto.Gift;
+                    dbUser.LastFreeGold = DateTime.UtcNow;
                     db.SaveChanges();
-                    return new GoldGiftDto
-                    {
-                        Gold = GoldGiftDto.Gift,
-                        NextGiftAllowed = DateTime.Now.AddDays(1)
-                    };
                 }
 
+                int unixTimestamp = (int)dbUser.LastFreeGold.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
                 return new GoldGiftDto
                 {
-                    Gold = 0,
-                    NextGiftAllowed = dbUser.LastFreeGold.AddDays(1)
+                    gold = dbUser.Gold,
+                    lastFreeGold = unixTimestamp
                 };
             }
         }

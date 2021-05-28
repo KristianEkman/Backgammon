@@ -118,5 +118,9 @@
     "andyouarewelcome": "And You are very welcome to play.",
     "orifyouareadeveloper": "Or if you are a developer you might be interested in the links below with all the details.",
     "ongithub": "On GitHub, you can request or vote for new features, or even contribute with pull requests."
+  },
+  "goldbutton": {
+    "getgold": "Get Gold"
   }
+
 }

@@ -118,5 +118,8 @@
     "andyouarewelcome": "Och du är mycket välkommen att spela.",
     "orifyouareadeveloper": "Eller om du är en utvecklare kan du vara intresserad av länkarna nedan med alla detaljer.",
     "ongithub": "På GitHub kan du begära eller rösta på nya funktioner, eller till och med bidra med pull requests."
+  },
+  "goldbutton": {
+    "getgold": "Hämta guld"
   }
 }

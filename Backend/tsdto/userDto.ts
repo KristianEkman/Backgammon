@@ -13,6 +13,6 @@ export interface UserDto {
     theme: string;
     emailNotification: boolean;
     gold: number;
-    lastFreeGold: Date;
+    lastFreeGold: number;
     elo: number;
 }

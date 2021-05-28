@@ -1,0 +1,11 @@
+button {
+  font-size: 16px;
+}
+
+i::before {
+  background: linear-gradient(69deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+  font-size: 22px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

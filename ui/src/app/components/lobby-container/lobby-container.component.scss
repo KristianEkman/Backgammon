@@ -53,6 +53,12 @@
   }
 }
 
+.button-row {
+  position: absolute;
+  top: 5px;
+  left: 4px;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;

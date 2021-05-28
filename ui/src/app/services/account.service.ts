@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { UserDto } from '../dto/userDto';
 import { AppState } from '../state/app-state';
 import { Keys } from '../utils';
@@ -14,6 +14,7 @@ import { SocialAuthService } from 'angularx-social-login';
 import { MessageService } from './message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Theme } from '../components/account/theme/theme';
+import { GoldGiftDto } from '../dto/rest';
 
 @Injectable({
   providedIn: 'root'
@@ -71,7 +72,10 @@ export class AccountService {
     const user = this.storage.get(Keys.loginKey) as UserDto;
     AppState.Singleton.user.setValue(user);
     this.trans.use(user?.preferredLanguage ?? 'en');
-    if (user) Theme.change(user.theme);
+    if (user) {
+      Theme.change(user.theme);
+      this.synchUser();
+    }
   }
 
   saveUser(user: UserDto): Observable<void> {
@@ -95,5 +99,42 @@ export class AccountService {
 
   isLoggedIn(): boolean {
     return !!AppState.Singleton.user.getValue();
+  }
+
+  getGold(): void {
+    this.http
+      .get(`${this.url}/requestgold`)
+      .pipe(
+        map((response) => {
+          const dto = response as GoldGiftDto;
+          const user = AppState.Singleton.user.getValue();
+          AppState.Singleton.user.setValue({
+            ...user,
+            gold: dto.gold,
+            lastFreeGold: dto.lastFreeGold
+          });
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
+
+  synchUser(): void {
+    const user = AppState.Singleton.user.getValue();
+    Busy.showNoOverlay();
+    this.http
+      .get(`${this.url}/getuser?userId=${user.id}`)
+      .pipe(
+        map((response) => {
+          const userDto = response as UserDto;
+          this.trans.use(userDto.preferredLanguage ?? 'en');
+          this.storage.set(Keys.loginKey, userDto);
+          AppState.Singleton.user.setValue(userDto);
+          if (userDto) Theme.change(userDto.theme);
+          Busy.hide();
+        }),
+        take(1)
+      )
+      .subscribe();
   }
 }

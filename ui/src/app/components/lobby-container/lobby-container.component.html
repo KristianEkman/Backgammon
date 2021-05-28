@@ -57,10 +57,16 @@
     </app-account-menu>
   </div>
   <ng-container *ngIf="isLoggedIn()">
-    <app-new-messages
-      [messages]="messages$ | async"
-      (showMessages)="router.navigateByUrl('messages')"
-    >
-    </app-new-messages>
+    <div class="button-row">
+      <app-gold-button
+        [user]="user$ | async"
+        (getGold)="getGold()"
+      ></app-gold-button>
+      <app-new-messages
+        [messages]="messages$ | async"
+        (showMessages)="router.navigateByUrl('messages')"
+      >
+      </app-new-messages>
+    </div>
   </ng-container>
 </div>

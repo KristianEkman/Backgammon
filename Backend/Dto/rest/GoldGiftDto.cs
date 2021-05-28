@@ -8,7 +8,7 @@ namespace Backend.Dto.rest
     public class GoldGiftDto
     {
         public const int Gift = 200;
-        public int Gold { get; set; }
-        public DateTime NextGiftAllowed { get; set; }
+        public int gold { get; set; }
+        public int lastFreeGold { get; set; }
     }
 }

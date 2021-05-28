@@ -105,4 +105,8 @@ export class LobbyContainerComponent implements OnInit {
   isLoggedIn(): boolean {
     return !!AppState.Singleton.user.getValue();
   }
+
+  getGold(): void {
+    this.accountService.getGold();
+  }
 }
