@@ -165,7 +165,16 @@ export class SocketsService implements OnDestroy {
           playState: GameState.playing,
           goldMultiplier: game.goldMultiplier * 2,
           lastDoubler: AppState.Singleton.myColor.getValue(),
-          currentPlayer: AppState.Singleton.myColor.getValue()
+          currentPlayer: AppState.Singleton.myColor.getValue(),
+          stake: game.stake + game.stake * 2,
+          whitePlayer: {
+            ...game.whitePlayer,
+            gold: game.whitePlayer.gold - game.stake
+          },
+          blackPlayer: {
+            ...game.blackPlayer,
+            gold: game.blackPlayer.gold - game.stake
+          }
         });
         this.statusMessageService.setDoublingAccepted();
         break;
@@ -445,7 +454,16 @@ export class SocketsService implements OnDestroy {
       playState: GameState.playing,
       goldMultiplier: game.goldMultiplier * 2,
       lastDoubler: AppState.Singleton.getOtherPlayer(),
-      currentPlayer: AppState.Singleton.getOtherPlayer()
+      currentPlayer: AppState.Singleton.getOtherPlayer(),
+      whitePlayer: {
+        ...game.whitePlayer,
+        gold: game.whitePlayer.gold - game.stake
+      },
+      blackPlayer: {
+        ...game.blackPlayer,
+        gold: game.blackPlayer.gold - game.stake
+      },
+      stake: game.stake + game.stake * 2
     });
 
     // TODO: The client countdown is currently only a constant on the backend.

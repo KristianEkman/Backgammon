@@ -25,6 +25,7 @@ namespace Backend.Rules
         public int GoldMultiplier { get; set; }
         public bool IsGoldGame { get; set; }
         public Player.Color? LastDoubler { get; set; }
+        public int Stake { get; set; }
 
         public Game Clone()
         {
@@ -43,7 +44,8 @@ namespace Backend.Rules
                     ThinkStart = ThinkStart,       
                     GoldMultiplier = GoldMultiplier         ,
                     IsGoldGame = IsGoldGame,
-                    LastDoubler = LastDoubler
+                    LastDoubler = LastDoubler,
+                    Stake = Stake
                 };
                 game.Bars = new Point[2];
                 game.Bars[(int)Player.Color.Black] = game.Points[0];

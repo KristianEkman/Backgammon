@@ -3,6 +3,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnInit,
   SimpleChanges
 } from '@angular/core';
 import {
@@ -49,7 +50,7 @@ import { StatusMessage, MessageLevel } from '../../../dto/local/status-message';
     ])
   ]
 })
-export class MessagesComponent implements OnChanges, AfterViewInit {
+export class MessagesComponent implements OnChanges, OnInit {
   @Input() message: StatusMessage | null = StatusMessage.getDefault();
   // changing the coordinates will affect all animations coordinates.
   @Input() initial = 0;
@@ -62,7 +63,7 @@ export class MessagesComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.animate();
   }
 

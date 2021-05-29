@@ -1,3 +1,5 @@
+@import '../../../../styles/buttons';
+
 .game-container {
   animation: fadein 2s;
   position: relative;
@@ -58,4 +60,9 @@
     right: 0;
     flex-direction: column-reverse;
   }
+}
+
+.stake {
+  font-size: 20px;
+  @include glod-text();
 }

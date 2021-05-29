@@ -1,9 +1,9 @@
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   OnDestroy,
+  OnInit,
   Output
 } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,7 +20,7 @@ import { UserDto } from 'src/app/dto';
   templateUrl: './gold-button.component.html',
   styleUrls: ['./gold-button.component.scss']
 })
-export class GoldButtonComponent implements OnDestroy, AfterViewInit {
+export class GoldButtonComponent implements OnDestroy, OnInit {
   @Input() user: UserDto | null = null;
   @Output() getGold = new EventEmitter<void>();
 
@@ -29,7 +29,8 @@ export class GoldButtonComponent implements OnDestroy, AfterViewInit {
   constructor(private translate: TranslateService) {
     this.buttonGetText = this.getButtonText();
   }
-  ngAfterViewInit(): void {
+
+  ngOnInit(): void {
     this.intervalHandle = setInterval(() => {
       this.buttonGetText = this.getButtonText();
     }, 1000);

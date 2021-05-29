@@ -21,6 +21,10 @@
       [playerDto]="(gameDto$ | async)?.whitePlayer"
       [doubling]="getDoubling(PlayerColor.white) | async"
     ></app-player>
+    <div class="stake">
+      {{ (gameDto$ | async)?.stake }}
+      <i class="fas fa-coins"></i>
+    </div>
     <app-player
       [playerDto]="(gameDto$ | async)?.blackPlayer"
       [doubling]="getDoubling(PlayerColor.black) | async"

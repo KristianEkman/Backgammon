@@ -141,7 +141,18 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     const turn = AppState.Singleton.myColor.getValue() !== gameDto.lastDoubler;
     const rightType = gameDto.isGoldGame;
     this.requestDoublingVisible =
-      turn && rightType && this.myTurn() && this.rollButtonVisible;
+      turn &&
+      rightType &&
+      this.myTurn() &&
+      this.rollButtonVisible &&
+      this.hasFundsForDoubling(gameDto);
+  }
+
+  hasFundsForDoubling(gameDto: GameDto): boolean {
+    return (
+      gameDto.blackPlayer.gold >= gameDto.stake &&
+      gameDto.whitePlayer.gold >= gameDto.stake
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

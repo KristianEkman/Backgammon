@@ -22,7 +22,8 @@ namespace Backend.Dto
                 thinkTime = Game.ClientCountDown - (DateTime.Now - game.ThinkStart).TotalSeconds,
                 goldMultiplier = game.GoldMultiplier,
                 isGoldGame = game.IsGoldGame,
-                lastDoubler = game.LastDoubler.HasValue ? (PlayerColor)game.LastDoubler : null
+                lastDoubler = game.LastDoubler.HasValue ? (PlayerColor)game.LastDoubler : null,
+                stake = game.Stake
             };
             return gameDto;
         }
