@@ -14,6 +14,12 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
+- task: AngularCLI@1
+  inputs:
+    command: 'build'
+    project: 'ui'
+    DisableAnalytics: false
+
 steps:
 - task: NuGetToolInstaller@1
 
