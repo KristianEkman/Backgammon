@@ -15,6 +15,11 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'ui'
+    
 - task: AngularCLI@1
   inputs:
     command: 'build'
