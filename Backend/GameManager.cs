@@ -129,14 +129,18 @@ namespace Backend
                 Game.BlackPlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
                 Game.BlackPlayer.Name = dbUser != null ? dbUser.Name : "Guest";
                 Game.BlackPlayer.Photo = dbUser != null ? dbUser.PhotoUrl : "";
-                Game.BlackPlayer.Elo = dbUser != null ? dbUser.Elo : 1200;   // TODO: Randomize?
-                Game.BlackPlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 1500; // TODO: Randomize?
+                Game.BlackPlayer.Elo = dbUser != null ? dbUser.Elo : 0;
+                Game.BlackPlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 0;
                 Game.Stake = firstBet * 2;
                 if (playAi)
                 {
                     var aiUser = Db.BgDbContext.GetDbUser(Db.User.AiUser);
                     Game.WhitePlayer.Id = aiUser.Id;
                     Game.WhitePlayer.Name = aiUser.Name;
+                    // TODO
+                    Game.WhitePlayer.Photo = "";
+                    Game.WhitePlayer.Elo = dbUser.Elo;
+                    Game.WhitePlayer.Gold = dbUser.Gold;
                     Engine = new Ai.Engine(Game);
                     CreateDbGame();
                     StartGame();
@@ -153,8 +157,8 @@ namespace Backend
                 Game.WhitePlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
                 Game.WhitePlayer.Name = dbUser != null ? dbUser.Name : "Guest";
                 Game.WhitePlayer.Photo = dbUser != null ? dbUser.PhotoUrl : "";
-                Game.WhitePlayer.Elo = dbUser != null ? dbUser.Elo : 1200;   // TODO: Randomize?
-                Game.WhitePlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 1500; // TODO: Randomize?
+                Game.WhitePlayer.Elo = dbUser != null ? dbUser.Elo : 0;
+                Game.WhitePlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 0;
                 CreateDbGame();
                 StartGame();
                 await ListenOn(webSocket);
@@ -328,8 +332,8 @@ namespace Backend
                 action.moveTimer = Game.ClientCountDown;
                 Game.ThinkStart = DateTime.Now;
                 Game.GoldMultiplier *= 2;
-                Game.BlackPlayer.Gold -= Game.Stake;
-                Game.WhitePlayer.Gold -= Game.Stake;
+                Game.BlackPlayer.Gold -= Game.Stake / 2;
+                Game.WhitePlayer.Gold -= Game.Stake / 2;
                 
                 if (Game.WhitePlayer.Gold < 0 || Game.BlackPlayer.Gold < 0)
                     throw new ApplicationException("Player out of gold. Should not be allowd.");
@@ -343,7 +347,7 @@ namespace Backend
                     db.SaveChanges();
                 }
 
-                Game.Stake += Game.Stake * 2;
+                Game.Stake += Game.Stake;
                 Game.LastDoubler = Game.CurrentPlayer;
 
                 Game.SwitchPlayer();
@@ -417,7 +421,18 @@ namespace Backend
                 return null;
 
             if (!Game.BlackPlayer.FirstMoveMade || !Game.WhitePlayer.FirstMoveMade)
+            {
+                using (var db = new Db.BgDbContext())
+                {
+                    var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
+                    var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
+                    black.Gold += Game.Stake / 2;
+                    white.Gold += Game.Stake / 2;
+                    db.SaveChanges();
+                }
                 return null; // todo: return stakes
+            }
+
             using (var db = new Db.BgDbContext())
             {
                 var dbGame = db.Games.Single(g => g.Id == this.Game.Id);

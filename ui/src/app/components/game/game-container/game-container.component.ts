@@ -150,8 +150,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   hasFundsForDoubling(gameDto: GameDto): boolean {
     return (
-      gameDto.blackPlayer.gold >= gameDto.stake &&
-      gameDto.whitePlayer.gold >= gameDto.stake
+      gameDto.blackPlayer.gold >= gameDto.stake / 2 &&
+      gameDto.whitePlayer.gold >= gameDto.stake / 2
     );
   }
 

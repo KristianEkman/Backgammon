@@ -21,7 +21,7 @@
       [playerDto]="(gameDto$ | async)?.whitePlayer"
       [doubling]="getDoubling(PlayerColor.white) | async"
     ></app-player>
-    <div class="stake">
+    <div *ngIf="gameDto$ | async" class="stake">
       {{ (gameDto$ | async)?.stake }}
       <i class="fas fa-coins"></i>
     </div>
