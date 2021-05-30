@@ -59,6 +59,7 @@ import { MailingComponent } from './components/admin-container/mailing/mailing.c
 import { ShareButtonsComponent } from './components/shared/share-buttons/share-buttons.component';
 import { PlayerComponent } from './components/game/player/player.component';
 import { GoldButtonComponent } from './components/shared/gold-button/gold-button.component';
+import { ToLittleGoldComponent } from './components/to-little-gold/to-little-gold.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -98,7 +99,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     MailingComponent,
     ShareButtonsComponent,
     PlayerComponent,
-    GoldButtonComponent
+    GoldButtonComponent,
+    ToLittleGoldComponent
   ],
   imports: [
     BrowserModule,

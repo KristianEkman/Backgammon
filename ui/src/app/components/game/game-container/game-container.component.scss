@@ -54,7 +54,7 @@
   top: 0;
   width: calc(10% - 8px);
   overflow: hidden;
-  margin-left: 6px;
+  margin-left: 8px;
 
   &.flipped {
     right: 0;
@@ -63,6 +63,7 @@
 }
 
 .stake {
-  font-size: 20px;
+  text-align: center;
+  font-size: 18px;
   @include glod-text();
 }
