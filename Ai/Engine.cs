@@ -325,6 +325,26 @@ namespace Ai
                 }
             }
         }
+
+        private double Evaluate(Player.Color color, Game game)
+        {
+            var score = EvaluatePoints(color, game) + EvaluateCheckers(color, game);
+            return score;
+        }
+
+        public bool AcceptDoubling()
+        {
+            var myScore = Evaluate(EngineGame.CurrentPlayer, EngineGame);
+            var oponent = EngineGame.CurrentPlayer == Player.Color.Black ? Player.Color.White : Player.Color.Black;
+            var otherScore = Evaluate(oponent, EngineGame);
+            var oppPips = EngineGame.CurrentPlayer == Player.Color.White ? 
+                EngineGame.BlackPlayer.PointsLeft : 
+                EngineGame.WhitePlayer.PointsLeft;
+
+            var k = (myScore - otherScore) / oppPips;
+
+            return k > -0.15; // Just my best guess.
+        }
     }
 }
 

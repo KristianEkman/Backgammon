@@ -324,7 +324,16 @@ namespace Backend
 
                 Game.ThinkStart = DateTime.Now;
                 Game.SwitchPlayer();
-                _ = Send(otherSocket, action);
+                if (AisTurn())
+                    if (Engine.AcceptDoubling())
+                    {
+                        Game.SwitchPlayer();
+                        _ = Send(socket, new DoublingActionDto { actionName = ActionNames.acceptedDoubling });
+                    }
+                    else
+                        await Resign((PlayerColor)Game.CurrentPlayer);
+                else
+                    _ = Send(otherSocket, action);
             }
             else if (actionName == ActionNames.acceptedDoubling)
             {
@@ -378,10 +387,15 @@ namespace Backend
             else
             {
                 SendNewRoll();
-                var plyr = Game.CurrentPlayer == Player.Color.Black ? Game.BlackPlayer : Game.WhitePlayer;
-                if (IsAi(plyr))
+                if (AisTurn())
                     await EnginMoves(socket);
             }
+        }
+
+        private bool AisTurn()
+        {
+            var plyr = Game.CurrentPlayer == Player.Color.Black ? Game.BlackPlayer : Game.WhitePlayer;
+            return IsAi(plyr);
         }
 
         private async Task EnginMoves(WebSocket client)
