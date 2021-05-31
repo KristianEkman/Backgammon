@@ -2,7 +2,7 @@
   <div>Score {{ playerDto.elo }}</div>
   <img class="user-photo" [src]="playerDto.photoUrl" />
   <div>
-    {{ lokalGold }}
+    {{ this.playerDto?.gold }}
     <i class="fas fa-coins"></i>
   </div>
   <div *ngIf="doubling" class="double-cube">{{ doubling }}</div>

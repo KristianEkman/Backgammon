@@ -328,7 +328,11 @@ namespace Backend
                     if (Engine.AcceptDoubling())
                     {
                         Game.SwitchPlayer();
-                        _ = Send(socket, new DoublingActionDto { actionName = ActionNames.acceptedDoubling });
+                        await Task.Delay(1000);
+                        _ = Send(socket, new DoublingActionDto { 
+                            actionName = ActionNames.acceptedDoubling, 
+                            moveTimer = Game.ClientCountDown 
+                        });
                     }
                     else
                         await Resign((PlayerColor)Game.CurrentPlayer);
@@ -387,6 +391,7 @@ namespace Backend
             else
             {
                 SendNewRoll();
+
                 if (AisTurn())
                     await EnginMoves(socket);
             }
@@ -400,6 +405,9 @@ namespace Backend
 
         private async Task EnginMoves(WebSocket client)
         {
+            var rnd = new Random();
+            await Task.Delay(rnd.Next(800, 1500));
+            await Send(client, new ActionDto { actionName = ActionNames.rolled });
             var moves = Engine.GetBestMoves();
             var noMoves = true;
             for (int i = 0; i < moves.Length; i++)
@@ -407,7 +415,7 @@ namespace Backend
                 var move = moves[i];
                 if (move == null)
                     continue;
-                await Task.Delay(1500);
+                await Task.Delay(rnd.Next(800, 1500));
                 var moveDto = move.ToDto();
                 moveDto.animate = true;
                 var dto = new OpponentMoveActionDto

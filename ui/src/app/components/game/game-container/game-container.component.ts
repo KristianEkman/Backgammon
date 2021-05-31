@@ -65,6 +65,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     const playAi = this.router.parseUrl(this.router.url).queryParams['playAi'];
     service.connect(gameId, playAi);
     this.playAiFlag = playAi === 'true';
+    this.lokalStake = 0;
   }
 
   gameDto$: Observable<GameDto>;
@@ -88,6 +89,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   playAiFlag = false;
   PlayerColor = PlayerColor;
   lokalStake = 0;
+  animatingStake = false;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -133,19 +135,27 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       dto?.playState !== GameState.playing &&
       dto?.playState !== GameState.requestedDoubling;
 
+    this.animateStake(dto);
+  }
+
+  animateStake(dto: GameDto) {
     if (dto && dto.stake !== this.lokalStake) {
-      var step = dto.stake > this.lokalStake ? 1 : -1;
-      const handle = setInterval(() => {
-        this.lokalStake += step;
-        if (
-          (step > 0 && this.lokalStake >= dto.stake) ||
-          (step < 0 && this.lokalStake <= dto.stake)
-        ) {
-          this.lokalStake = dto.stake;
-          clearInterval(handle);
-          return;
-        }
-      }, 10);
+      this.animatingStake = true;
+      const step = Math.ceil((dto.stake - this.lokalStake) / 10);
+      setTimeout(() => {
+        Sound.playCoin();
+        const handle = setInterval(() => {
+          this.lokalStake += step;
+          if (
+            (step > 0 && this.lokalStake >= dto.stake) ||
+            (step < 0 && this.lokalStake <= dto.stake)
+          ) {
+            clearInterval(handle);
+            this.lokalStake = dto.stake;
+            this.animatingStake = false;
+          }
+        }, 100);
+      }, 1000); // Give time to show everythin
     }
   }
 

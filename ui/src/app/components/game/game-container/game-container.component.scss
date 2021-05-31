@@ -67,3 +67,8 @@
   font-size: 18px;
   @include glod-text();
 }
+
+.hilightStake {
+  font-weight: 600;
+  text-shadow: 0px 0px 5px rgba(251, 245, 183, 0.5);
+}

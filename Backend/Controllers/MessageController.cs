@@ -109,14 +109,13 @@ namespace Backend.Controllers
 
                     try
                     {
-                        Mail.Mailer.Send(user.Email, subject, text);
+                        _ = Mail.Mailer.Send(user.Email, subject, text);
                         logger.LogInformation($"Emailed {user.Email}");
                     }
                     catch (Exception exc)
                     {
                         logger.LogError(exc.ToString());
                     }
-                    Thread.Sleep(1000);
                 }
 
                 db.SaveChanges();
