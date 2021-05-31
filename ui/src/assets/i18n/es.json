@@ -97,7 +97,7 @@
   "statusmessage": {
     "yourturn": "Tu turno para moverte.  ({{color}})",
     "waitingfor": "Esperando que el {{ color }} se mueva.",
-    "youareblcoked": "Estás bloqueado.Haga clic en \"hecho \"",
+    "youareblocked": "Estás bloqueado.Haga clic en \"hecho \"",
     "noconnection": "No hay conexión del servidor",
     "opponentconnectionlost": "Conexión oponente perdida",
     "waitingoppcnn": "Esperando a que el oponente se conecte",
@@ -121,5 +121,10 @@
   },
   "goldbutton": {
     "getgold": "consigue oro"
+  },
+  "tolittlegold": {
+    "youdonthave": "No tienes suficiente oro.",
+    "youcangetmore": "Puedes obtener más oro cada 24 horas.",
+    "untilthen": "Hasta entonces puedes jugar siempre los juegos de práctica contra la AI."
   }
 }

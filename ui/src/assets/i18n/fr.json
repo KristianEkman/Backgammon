@@ -97,7 +97,7 @@
   "statusmessage": {
     "yourturn": "Votre tour de déplacement. ({{color}})",
     "waitingfor": "En attente de {{ color }} se déplacer.",
-    "youareblcoked": "Vous êtes bloqué. Cliquer sur Terminé",
+    "youareblocked": "Vous êtes bloqué. Cliquer sur Terminé",
     "noconnection": "Aucun raccordeur de serveur",
     "opponentconnectionlost": "Connexion adversaire perdue",
     "waitingoppcnn": "En attente de l'adversaire de se connecter",
@@ -121,5 +121,10 @@
   },
   "goldbutton": {
     "getgold": "obtenir de l'or"
+  },
+  "tolittlegold": {
+    "youdonthave": "Vous n'avez pas assez d'or.",
+    "youcangetmore": "Vous pouvez obtenir plus d'or toutes les 24 heures.",
+    "untilthen": "Jusque-là, vous pouvez toujours jouer à des jeux de pratique contre l'IA."
   }
 }

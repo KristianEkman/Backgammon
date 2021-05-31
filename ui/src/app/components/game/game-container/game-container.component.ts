@@ -87,6 +87,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   flipped = false;
   playAiFlag = false;
   PlayerColor = PlayerColor;
+  lokalStake = 0;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -131,6 +132,21 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.exitVisible =
       dto?.playState !== GameState.playing &&
       dto?.playState !== GameState.requestedDoubling;
+
+    if (dto && dto.stake !== this.lokalStake) {
+      var step = dto.stake > this.lokalStake ? 1 : -1;
+      const handle = setInterval(() => {
+        this.lokalStake += step;
+        if (
+          (step > 0 && this.lokalStake >= dto.stake) ||
+          (step < 0 && this.lokalStake <= dto.stake)
+        ) {
+          this.lokalStake = dto.stake;
+          clearInterval(handle);
+          return;
+        }
+      }, 10);
+    }
   }
 
   setDoublingVisible(gameDto: GameDto) {

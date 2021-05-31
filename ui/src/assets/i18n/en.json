@@ -97,7 +97,7 @@
   "statusmessage": {
     "yourturn": "Your turn to move.  ({{color}})",
     "waitingfor": "Waiting for {{color}} to move.",
-    "youareblcoked": "You are blocked. Click \"Done\"",
+    "youareblocked": "You are blocked. Click \"Done\"",
     "noconnection": "No server connection",
     "opponentconnectionlost": "Opponent connection lost",
     "waitingoppcnn": "Waiting for opponent to connect",
@@ -121,6 +121,10 @@
   },
   "goldbutton": {
     "getgold": "Get Gold"
+  },
+  "tolittlegold": {
+    "youdonthave": "You don't have enough gold.",
+    "youcangetmore": "You can get more gold every 24 hours.",
+    "untilthen": "Until then you can always play practice games against the AI."
   }
-
 }

@@ -97,7 +97,7 @@
   "statusmessage": {
     "yourturn": "Din tur. ({{color}})",
     "waitingfor": "Väntar på {{color}}",
-    "youareblcoked": "Du är blockerad, klicka på \"Klar\"",
+    "youareblocked": "Du är blockerad, klicka på \"Klar\"",
     "noconnection": "Ingen serveranslutning",
     "opponentconnectionlost": "Motståndaren tappade anslutningen",
     "waitingoppcnn": "Väntar på motståndaren att ansluta",
@@ -121,5 +121,10 @@
   },
   "goldbutton": {
     "getgold": "Hämta guld"
+  },
+  "tolittlegold": {
+    "youdonthave": "Du har inte tillräckligt med guld.",
+    "youcangetmore": "Du kan få mer guld var 24:e timme.",
+    "untilthen": "Fram till dess kan du alltid spela träningsspel mot AIt."
   }
 }

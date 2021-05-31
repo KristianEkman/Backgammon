@@ -22,7 +22,7 @@
       [doubling]="getDoubling(PlayerColor.white) | async"
     ></app-player>
     <div *ngIf="gameDto$ | async" class="stake">
-      {{ (gameDto$ | async)?.stake }}
+      {{ lokalStake }}
       <i class="fas fa-coins"></i>
     </div>
     <app-player
