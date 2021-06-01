@@ -44,6 +44,7 @@ export class Sound {
 
     this.coin = new Audio();
     this.coin.src = '../assets/sound/coin.wav';
+    this.coin.preload = 'true';
     this.coin.load();
   }
 

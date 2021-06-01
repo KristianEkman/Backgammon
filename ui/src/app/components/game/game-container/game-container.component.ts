@@ -236,6 +236,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.lokalStake = 0;
     this.fireResize();
   }
 

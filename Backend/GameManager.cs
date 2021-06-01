@@ -328,7 +328,7 @@ namespace Backend
                     if (Engine.AcceptDoubling())
                     {
                         Game.SwitchPlayer();
-                        await Task.Delay(1000);
+                        await Task.Delay(2000);
                         _ = Send(socket, new DoublingActionDto { 
                             actionName = ActionNames.acceptedDoubling, 
                             moveTimer = Game.ClientCountDown 
