@@ -13,7 +13,7 @@ namespace Ai
     {
         public Trainer(Config config = null)
         {
-            Game = Game.Create();
+            Game = Game.Create(false);
             Black = new Engine(Game);
             White = new Engine(Game);
             if (config != null)

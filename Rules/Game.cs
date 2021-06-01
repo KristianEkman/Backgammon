@@ -65,7 +65,7 @@ namespace Backend.Rules
             Ended
         }
 
-        public static Game Create()
+        public static Game Create(bool forGold)
         {
             var game = new Game
             {
@@ -84,7 +84,7 @@ namespace Backend.Rules
                 Created = DateTime.Now,
                 PlayState = State.OpponentConnectWaiting,
                 GoldMultiplier = 1,
-                IsGoldGame = true, //TODO: not always true
+                IsGoldGame = forGold,
                 LastDoubler = null,                
             };
 

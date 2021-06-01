@@ -22,9 +22,9 @@ namespace Backend
 
         }
 
-        internal GameManager(ILogger<GameManager> logger)
+        internal GameManager(ILogger<GameManager> logger, bool forGold)
         {
-            Game = Game.Create();
+            Game = Game.Create(forGold);
             Created = DateTime.Now;
             Logger = logger;
         }
@@ -130,17 +130,22 @@ namespace Backend
                 Game.BlackPlayer.Name = dbUser != null ? dbUser.Name : "Guest";
                 Game.BlackPlayer.Photo = dbUser != null ? dbUser.PhotoUrl : "";
                 Game.BlackPlayer.Elo = dbUser != null ? dbUser.Elo : 0;
-                Game.BlackPlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 0;
-                Game.Stake = firstBet * 2;
+                if (Game.IsGoldGame)
+                {
+                    Game.BlackPlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 0;
+                    Game.Stake = firstBet * 2;
+                }
+
                 if (playAi)
                 {
                     var aiUser = Db.BgDbContext.GetDbUser(Db.User.AiUser);
                     Game.WhitePlayer.Id = aiUser.Id;
                     Game.WhitePlayer.Name = aiUser.Name;
-                    // TODO
+                    // TODO: AI image
                     Game.WhitePlayer.Photo = "";
                     Game.WhitePlayer.Elo = dbUser.Elo;
-                    Game.WhitePlayer.Gold = dbUser.Gold;
+                    if (Game.IsGoldGame)
+                        Game.WhitePlayer.Gold = dbUser.Gold;
                     Engine = new Ai.Engine(Game);
                     CreateDbGame();
                     StartGame();
@@ -158,7 +163,8 @@ namespace Backend
                 Game.WhitePlayer.Name = dbUser != null ? dbUser.Name : "Guest";
                 Game.WhitePlayer.Photo = dbUser != null ? dbUser.PhotoUrl : "";
                 Game.WhitePlayer.Elo = dbUser != null ? dbUser.Elo : 0;
-                Game.WhitePlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 0;
+                if (Game.IsGoldGame)
+                    Game.WhitePlayer.Gold = dbUser != null ? dbUser.Gold - firstBet : 0;
                 CreateDbGame();
                 StartGame();
                 await ListenOn(webSocket);
@@ -174,7 +180,8 @@ namespace Backend
                 var blackUser = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
                 if (blackUser.Gold < firstBet)
                     throw new ApplicationException("Black player dont have enough gold"); // Should be guarder earlier
-                blackUser.Gold -= firstBet;
+                if (Game.IsGoldGame)
+                    blackUser.Gold -= firstBet;
                 var black = new Db.Player
                 {
                     Id = Guid.NewGuid(), // A player is not the same as a user.
@@ -184,9 +191,11 @@ namespace Backend
                 blackUser.Players.Add(black);
 
                 var whiteUser = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
-                if (whiteUser.Gold < firstBet)
+                if (Game.IsGoldGame && whiteUser.Gold < firstBet)
                     throw new ApplicationException("White player dont have enough gold"); // Should be guarder earlier
-                whiteUser.Gold -= firstBet;
+                
+                if (Game.IsGoldGame)
+                    whiteUser.Gold -= firstBet;
                 var white = new Db.Player
                 {
                     Id = Guid.NewGuid(),
@@ -319,6 +328,9 @@ namespace Backend
             }
             else if (actionName == ActionNames.requestedDoubling)
             {
+                if (!Game.IsGoldGame)
+                    throw new ApplicationException("requestedDoubling should not be possible in a non gold game");
+
                 var action = (DoublingActionDto)JsonSerializer.Deserialize(actionText, typeof(DoublingActionDto));
                 action.moveTimer = Game.ClientCountDown;
 
@@ -327,11 +339,13 @@ namespace Backend
                 if (AisTurn())
                     if (Engine.AcceptDoubling())
                     {
+                        DoDoubling();
                         Game.SwitchPlayer();
                         await Task.Delay(2000);
-                        _ = Send(socket, new DoublingActionDto { 
-                            actionName = ActionNames.acceptedDoubling, 
-                            moveTimer = Game.ClientCountDown 
+                        _ = Send(socket, new DoublingActionDto
+                        {
+                            actionName = ActionNames.acceptedDoubling,
+                            moveTimer = Game.ClientCountDown
                         });
                     }
                     else
@@ -341,28 +355,12 @@ namespace Backend
             }
             else if (actionName == ActionNames.acceptedDoubling)
             {
+                if (!Game.IsGoldGame)
+                    throw new ApplicationException("acceptedDoubling should not be possible in a non gold game");
                 var action = (DoublingActionDto)JsonSerializer.Deserialize(actionText, typeof(DoublingActionDto));
                 action.moveTimer = Game.ClientCountDown;
                 Game.ThinkStart = DateTime.Now;
-                Game.GoldMultiplier *= 2;
-                Game.BlackPlayer.Gold -= Game.Stake / 2;
-                Game.WhitePlayer.Gold -= Game.Stake / 2;
-                
-                if (Game.WhitePlayer.Gold < 0 || Game.BlackPlayer.Gold < 0)
-                    throw new ApplicationException("Player out of gold. Should not be allowd.");
-                
-                using (var db = new Db.BgDbContext())
-                {
-                    var black = db.Users.Single(u => Game.BlackPlayer.Id == u.Id);
-                    var white = db.Users.Single(u => Game.WhitePlayer.Id == u.Id);
-                    black.Gold = Game.BlackPlayer.Gold;
-                    white.Gold = Game.WhitePlayer.Gold;
-                    db.SaveChanges();
-                }
-
-                Game.Stake += Game.Stake;
-                Game.LastDoubler = Game.CurrentPlayer;
-
+                DoDoubling();
                 Game.SwitchPlayer();
                 _ = Send(otherSocket, action);
             }
@@ -380,6 +378,28 @@ namespace Backend
             {
                 _ = CloseConnections(socket);
             }
+        }
+
+        private void DoDoubling()
+        {
+            Game.GoldMultiplier *= 2;
+            Game.BlackPlayer.Gold -= Game.Stake / 2;
+            Game.WhitePlayer.Gold -= Game.Stake / 2;
+
+            if (Game.WhitePlayer.Gold < 0 || Game.BlackPlayer.Gold < 0)
+                throw new ApplicationException("Player out of gold. Should not be allowd.");
+
+            using (var db = new Db.BgDbContext())
+            {
+                var black = db.Users.Single(u => Game.BlackPlayer.Id == u.Id);
+                var white = db.Users.Single(u => Game.WhitePlayer.Id == u.Id);
+                black.Gold = Game.BlackPlayer.Gold; // non gold games guarded earlier in block.
+                white.Gold = Game.WhitePlayer.Gold;
+                db.SaveChanges();
+            }
+
+            Game.Stake += Game.Stake;
+            Game.LastDoubler = Game.CurrentPlayer;
         }
 
         private async Task NewTurn(WebSocket socket)
@@ -473,26 +493,29 @@ namespace Backend
                 black.Elo = computed.black;
                 white.Elo = computed.white;
 
-                lock (StakeLock) // Preventing other thread to do the same transaction.
+                if (Game.IsGoldGame)
                 {
-                    Logger.LogInformation("Locked " + Thread.CurrentThread.ManagedThreadId);
-                    var stake = Game.Stake;
-                    Game.Stake = 0;
-                    Logger.LogInformation("Stake" + stake);
-                    Logger.LogInformation($"Initial gold: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
+                    lock (StakeLock) // Preventing other thread to do the same transaction.
+                    {
+                        Logger.LogInformation("Locked " + Thread.CurrentThread.ManagedThreadId);
+                        var stake = Game.Stake;
+                        Game.Stake = 0;
+                        Logger.LogInformation("Stake" + stake);
+                        Logger.LogInformation($"Initial gold: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
 
-                    if (color == PlayerColor.black)
-                    {
-                        black.Gold += stake;
-                        Game.BlackPlayer.Gold += stake;
+                        if (color == PlayerColor.black)
+                        {
+                            black.Gold += stake;
+                            Game.BlackPlayer.Gold += stake;
+                        }
+                        else
+                        {
+                            white.Gold += stake;
+                            Game.WhitePlayer.Gold += stake;
+                        }
+                        Logger.LogInformation($"After transfer: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
+                        Logger.LogInformation("Release Thread " + Thread.CurrentThread.ManagedThreadId);
                     }
-                    else
-                    {
-                        white.Gold += stake;
-                        Game.WhitePlayer.Gold += stake;
-                    }
-                    Logger.LogInformation($"After transfer: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
-                    Logger.LogInformation("Release Thread " + Thread.CurrentThread.ManagedThreadId);
                 }
 
                 dbGame.Winner = color;

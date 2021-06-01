@@ -62,6 +62,14 @@
   }
 }
 
+.stake-container {
+  background-color: #111;
+  display: inline-block;
+  width: calc(100% - 8px);
+  border-radius: 7px;
+  padding: 4px 0 4px 0;
+}
+
 .stake {
   text-align: center;
   font-size: 18px;

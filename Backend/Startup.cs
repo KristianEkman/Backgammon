@@ -91,9 +91,10 @@ namespace Backend
                         var userId = context.Request.Query.FirstOrDefault(q => q.Key == "userId").Value;
                         var gameId = context.Request.Query.FirstOrDefault(q => q.Key == "gameId").Value;
                         var playAi = context.Request.Query.FirstOrDefault(q => q.Key == "playAi").Value == "true";
+                        var forGold = context.Request.Query.FirstOrDefault(q => q.Key == "forGold").Value == "true";
                         try
                         {
-                            await GamesService.Connect(webSocket, context, logger, userId, gameId, playAi);
+                            await GamesService.Connect(webSocket, context, logger, userId, gameId, playAi, forGold);
                         }
                         catch (Exception exc)
                         {

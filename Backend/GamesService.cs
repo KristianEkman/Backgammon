@@ -16,7 +16,7 @@ namespace Backend
     {
         internal static List<GameManager> AllGames = new List<GameManager>();
 
-        internal static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId, bool playAi)
+        internal static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId, bool playAi, bool forGold)
         {
             if (Maintenance())
             {
@@ -59,7 +59,7 @@ namespace Backend
             var manager = managers.FirstOrDefault();
             if (manager == null || playAi)
             {
-                manager = new GameManager(logger);
+                manager = new GameManager(logger, forGold);
                 manager.Ended += Game_Ended;
                 manager.SearchingOpponent = !playAi;
                 AllGames.Add(manager);
@@ -119,7 +119,7 @@ namespace Backend
             for (int i = existing.Length - 1; i >= 0; i--)
                 AllGames.Remove(existing[i]);
 
-            var manager = new GameManager(logger);
+            var manager = new GameManager(logger, true);
             manager.Ended += Game_Ended;
             manager.Inviter = userId;
             manager.SearchingOpponent = false;

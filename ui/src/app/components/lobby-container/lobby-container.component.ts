@@ -83,12 +83,18 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   playAiClick(): void {
-    if (this.playAiAsGuestMessage || this.isLoggedIn()) {
-      this.router.navigate(['game'], { queryParams: { playAi: true } });
+    if (this.isLoggedIn()) {
+      this.router.navigate(['game'], {
+        queryParams: { playAi: true, forGold: true }
+      });
+      return;
+    } else if (this.playAiAsGuestMessage) {
+      this.router.navigate(['game'], {
+        queryParams: { playAi: true, forGold: false }
+      });
       return;
     }
     this.playAiAsGuestMessage = true;
-
     // The user has to click button twice.
   }
 

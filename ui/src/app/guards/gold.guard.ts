@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+  UrlTree
+} from '@angular/router';
 import { Observable } from 'rxjs';
 import { AppState } from '../state/app-state';
 
@@ -8,19 +14,24 @@ import { AppState } from '../state/app-state';
 })
 export class GoldGuard implements CanActivate {
   constructor(private router: Router) {}
-  canActivate():
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    routerState: RouterStateSnapshot
+  ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
     const user = AppState.Singleton.user.getValue();
+    const urlTree = this.router.parseUrl(routerState.url);
+    const forGold = urlTree.queryParams['forGold'] === 'true';
 
-    if (!user) {
+    if (!user && forGold) {
       this.router.navigateByUrl('/lobby');
       return false;
     }
 
-    if (user.gold < 50) {
+    if (user?.gold < 50 && forGold) {
       this.router.navigateByUrl('/tolittlegold');
     }
 

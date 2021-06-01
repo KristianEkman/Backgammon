@@ -13,6 +13,7 @@
     (resign)="resignGame()"
   ></app-menu>
   <div
+    *ngIf="(gameDto$ | async)?.isGoldGame"
     class="players"
     [ngStyle]="{ height: height + 'px' }"
     [ngClass]="{ flipped: flipped }"
@@ -21,13 +22,11 @@
       [playerDto]="(gameDto$ | async)?.whitePlayer"
       [doubling]="getDoubling(PlayerColor.white) | async"
     ></app-player>
-    <div
-      *ngIf="gameDto$ | async"
-      class="stake"
-      [ngClass]="{ hilightStake: animatingStake }"
-    >
-      {{ lokalStake }}
-      <i class="fas fa-coins"></i>
+    <div class="stake-container">
+      <div class="stake" [ngClass]="{ hilightStake: animatingStake }">
+        {{ lokalStake }}
+        <i class="fas fa-coins"></i>
+      </div>
     </div>
     <app-player
       [playerDto]="(gameDto$ | async)?.blackPlayer"

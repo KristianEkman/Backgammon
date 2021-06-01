@@ -46,7 +46,7 @@ export class SocketsService implements OnDestroy {
     private serializer: UrlSerializer
   ) {}
 
-  connect(gameId: string, playAi: boolean): void {
+  connect(gameId: string, playAi: boolean, forGold: boolean): void {
     if (this.socket) {
       this.socket.close();
     }
@@ -54,7 +54,12 @@ export class SocketsService implements OnDestroy {
     const user = AppState.Singleton.user.getValue();
     const userId = user ? user.id : '';
     const tree = this.router.createUrlTree([], {
-      queryParams: { userId: userId, gameId: gameId, playAi: playAi }
+      queryParams: {
+        userId: userId,
+        gameId: gameId,
+        playAi: playAi,
+        forGold: forGold
+      }
     });
     const url = this.url + this.serializer.serialize(tree);
 

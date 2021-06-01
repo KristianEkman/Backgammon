@@ -63,8 +63,12 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
     const gameId = this.router.parseUrl(this.router.url).queryParams['gameId'];
     const playAi = this.router.parseUrl(this.router.url).queryParams['playAi'];
-    service.connect(gameId, playAi);
+    const forGold = this.router.parseUrl(this.router.url).queryParams[
+      'forGold'
+    ];
+    service.connect(gameId, playAi, forGold);
     this.playAiFlag = playAi === 'true';
+    this.forGodlFlag = forGold === 'true';
     this.lokalStake = 0;
   }
 
@@ -87,6 +91,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   messageCenter = 0;
   flipped = false;
   playAiFlag = false;
+  forGodlFlag = false;
   PlayerColor = PlayerColor;
   lokalStake = 0;
   animatingStake = false;
@@ -139,7 +144,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   animateStake(dto: GameDto) {
-    if (dto && dto.stake !== this.lokalStake) {
+    if (dto && dto.isGoldGame && dto.stake !== this.lokalStake) {
       this.animatingStake = true;
       const step = Math.ceil((dto.stake - this.lokalStake) / 10);
       setTimeout(() => {
@@ -162,7 +167,9 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   setDoublingVisible(gameDto: GameDto) {
     if (!gameDto) return;
     this.acceptDoublingVisible =
-      gameDto.playState === GameState.requestedDoubling && this.myTurn();
+      gameDto.isGoldGame &&
+      gameDto.playState === GameState.requestedDoubling &&
+      this.myTurn();
     // Visible if it is a gold-game and if it is my turn to double.
     const turn = AppState.Singleton.myColor.getValue() !== gameDto.lastDoubler;
     const rightType = gameDto.isGoldGame;
@@ -171,6 +178,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       rightType &&
       this.myTurn() &&
       this.rollButtonVisible &&
+      gameDto.isGoldGame &&
       this.hasFundsForDoubling(gameDto);
   }
 
@@ -312,7 +320,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   newGame(): void {
     this.newVisible = false;
     this.service.resetGame();
-    this.service.connect('', this.playAiFlag);
+    this.service.connect('', this.playAiFlag, this.forGodlFlag);
   }
 
   exitGame(): void {
