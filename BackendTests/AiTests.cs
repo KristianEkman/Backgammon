@@ -39,7 +39,7 @@ namespace BackendTests
         [TestMethod]
         public void GetBestMoveWhite1()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             var ai = new Ai.Engine(game);
             game.ClearCheckers();
 
