@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -34,7 +35,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     private service: SocketsService,
     private accountService: AccountService,
     private router: Router,
-    private statusMessageService: StatusMessageService
+    private statusMessageService: StatusMessageService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.gameDto$ = AppState.Singleton.game.observe();
     this.dices$ = AppState.Singleton.dices.observe();
@@ -151,6 +153,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
         Sound.playCoin();
         const handle = setInterval(() => {
           this.lokalStake += step;
+          this.changeDetector.detectChanges();
+
           if (
             (step > 0 && this.lokalStake >= dto.stake) ||
             (step < 0 && this.lokalStake <= dto.stake)

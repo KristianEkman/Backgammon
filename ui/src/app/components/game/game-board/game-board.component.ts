@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   EventEmitter,
   HostListener,
   OnChanges,
@@ -19,7 +20,8 @@ import { BlueTheme, DarkTheme, IThemes, LightTheme, PinkTheme } from './themes';
 @Component({
   selector: 'app-game-board',
   templateUrl: './game-board.component.html',
-  styleUrls: ['./game-board.component.scss']
+  styleUrls: ['./game-board.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameBoardComponent implements AfterViewInit, OnChanges {
   @ViewChild('canvas') public canvas: ElementRef | undefined;

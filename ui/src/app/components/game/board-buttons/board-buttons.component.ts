@@ -1,10 +1,17 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
 import { Sound } from 'src/app/utils';
 
 @Component({
   selector: 'app-board-buttons',
   templateUrl: './board-buttons.component.html',
-  styleUrls: ['./board-buttons.component.scss']
+  styleUrls: ['./board-buttons.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardButtonsComponent {
   @Input() undoVisible = false;

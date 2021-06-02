@@ -1,4 +1,10 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output
+} from '@angular/core';
 import {
   FacebookLoginProvider,
   GoogleLoginProvider
@@ -7,7 +13,8 @@ import {
 @Component({
   selector: 'app-login-buttons',
   templateUrl: './login-buttons.component.html',
-  styleUrls: ['./login-buttons.component.scss']
+  styleUrls: ['./login-buttons.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginButtonsComponent {
   @Output() onLogin = new EventEmitter<string>();
