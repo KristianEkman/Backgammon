@@ -9,11 +9,11 @@
     "signin": "Sign in with"
   },
   "logincontainer": {
-    "random": "Random opponent",
+    "goldgame": "Gold Game",
     "friend": "Invite a friend",
-    "playai": "Play AI",
+    "practice": "Practice",
     "tip": "Tip",
-    "whenyousignin": "When you sign in, more features gets enabled, for free!",
+    "whenyousignin": "Sigin to compete for gold!",
     "accept": "Accept invite"
   },
   "accountedit": {

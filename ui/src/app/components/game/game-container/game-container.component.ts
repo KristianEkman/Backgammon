@@ -86,6 +86,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   rolledSubs: Subscription;
   oponnetDoneSubs: Subscription;
 
+  started = false;
   width = 450;
   height = 450;
   rollButtonClicked = false;
@@ -97,6 +98,9 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   PlayerColor = PlayerColor;
   lokalStake = 0;
   animatingStake = false;
+  playAiQuestion = false;
+  dicesDto: DiceDto[] | undefined;
+  nextDoublingFactor = 1;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -130,7 +134,14 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.dicesVisible = false;
   }
 
+  startedHandle: any;
   gameChanged(dto: GameDto): void {
+    if (!this.started && dto) {
+      clearTimeout(this.startedHandle);
+      this.started = true;
+      this.playAiQuestion = false;
+    }
+    // console.log(dto?.id);
     this.setRollButtonVisible();
     this.setSendVisible();
     this.setUndoVisible();
@@ -141,6 +152,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.exitVisible =
       dto?.playState !== GameState.playing &&
       dto?.playState !== GameState.requestedDoubling;
+    this.nextDoublingFactor = dto?.goldMultiplier * 2;
 
     this.animateStake(dto);
   }
@@ -164,7 +176,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
             this.animatingStake = false;
           }
         }, 100);
-      }, 1000); // Give time to show everythin
+      }, 1000); // Give time to show everything
     }
   }
 
@@ -193,8 +205,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   diceChanged(dto: DiceDto[]): void {
+    this.dicesDto = dto;
     this.setRollButtonVisible();
     this.setSendVisible();
     this.setUndoVisible();
@@ -210,6 +222,13 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.diceSubs.unsubscribe();
     this.rolledSubs.unsubscribe();
     this.oponnetDoneSubs.unsubscribe();
+    clearTimeout(this.startedHandle);
+    AppState.Singleton.game.clearValue();
+    AppState.Singleton.myColor.clearValue();
+    AppState.Singleton.dices.clearValue();
+    AppState.Singleton.messages.clearValue();
+    AppState.Singleton.moveTimer.clearValue();
+    this.started = false;
     this.service.exitGame();
   }
 
@@ -248,7 +267,14 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.playAiQuestion = false;
     this.lokalStake = 0;
+
+    this.startedHandle = setTimeout(() => {
+      if (!this.started) {
+        this.playAiQuestion = true;
+      }
+    }, 15000);
     this.fireResize();
   }
 
@@ -272,6 +298,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.rollButtonClicked = true;
     this.setRollButtonVisible();
     this.dicesVisible = true;
+
     Sound.playDice();
 
     this.setSendVisible();
@@ -281,6 +308,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     if (!gme.validMoves || gme.validMoves.length === 0) {
       this.statusMessageService.setBlockedMessage();
     }
+    this.changeDetector.detectChanges();
   }
 
   opponentRolled(): void {
@@ -328,6 +356,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   exitGame(): void {
+    clearTimeout(this.startedHandle);
     this.service.exitGame();
     Busy.hide();
     this.router.navigateByUrl('/lobby');
@@ -351,11 +380,14 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     );
   }
 
-  nextDoublingFactor(): Observable<number> {
-    return this.gameDto$.pipe(
-      map((game) => {
-        return game?.goldMultiplier * 2;
-      })
-    );
+  playAi(): void {
+    this.playAiQuestion = false;
+    this.service.exitGame();
+    this.playAiFlag = true;
+    this.service.connect('', this.playAiFlag, this.forGodlFlag);
+  }
+
+  keepWaiting(): void {
+    this.playAiQuestion = false;
   }
 }

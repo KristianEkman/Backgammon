@@ -8,7 +8,7 @@ import { DiceDto } from 'src/app/dto/diceDto';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DicesComponent {
-  @Input() dices: DiceDto[] | null = [];
+  @Input() dices: DiceDto[] | undefined = [];
   @Input() color: PlayerColor | null = PlayerColor.neither;
 
   PlayerColor = PlayerColor;

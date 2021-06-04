@@ -1,6 +1,6 @@
 <div *ngIf="playerDto" class="player">
   <div>Score {{ playerDto.elo }}</div>
-  <img class="user-photo" [src]="playerDto.photoUrl" />
+  <img class="user-photo" [src]="playerDto.photoUrl || ainaUrl" />
   <div>
     {{ this.playerDto?.gold }}
     <i class="fas fa-coins"></i>

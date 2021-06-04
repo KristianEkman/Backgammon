@@ -349,7 +349,7 @@ namespace Backend
                         });
                     }
                     else
-                        await Resign((PlayerColor)Game.CurrentPlayer);
+                        await Resign((PlayerColor)Game.OtherPlayer());
                 else
                     _ = Send(otherSocket, action);
             }

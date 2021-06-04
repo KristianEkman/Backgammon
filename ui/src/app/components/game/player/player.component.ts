@@ -16,6 +16,7 @@ import { PlayerDto } from 'src/app/dto';
 export class PlayerComponent {
   constructor() {}
 
+  ainaUrl = '/assets/images/aina.png';
   @Input() playerDto?: PlayerDto;
   @Input() doubling: number | null = null;
 }

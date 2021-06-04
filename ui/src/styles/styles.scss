@@ -41,3 +41,7 @@ body {
 .yellow {
   color: $yellow;
 }
+
+.gold-text {
+  @include glod-text();
+}

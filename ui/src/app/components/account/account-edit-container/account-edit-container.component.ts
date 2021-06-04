@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,13 +19,16 @@ export class AccountEditContainerComponent {
     private service: AccountService,
     private formBuidler: FormBuilder,
     private router: Router,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private changeDetector: ChangeDetectorRef
   ) {
+    this.user = AppState.Singleton.user.getValue();
+
     this.formGroup = this.formBuidler.group({
-      name: ['', [Validators.required, Validators.maxLength(100)]],
-      emailNotification: [false],
-      preferredLanguage: [''],
-      theme: ['']
+      name: [this.user.name, [Validators.required, Validators.maxLength(100)]],
+      emailNotification: [this.user.email],
+      preferredLanguage: [this.user.preferredLanguage],
+      theme: [this.user.theme]
     });
 
     this.formGroup.get('theme')?.valueChanges.subscribe((theme) => {
@@ -38,6 +41,7 @@ export class AccountEditContainerComponent {
 
     AppState.Singleton.user.observe().subscribe((userDto) => {
       this.user = userDto;
+      this.changeDetector.detectChanges();
       if (userDto) {
         this.formGroup.patchValue({
           name: userDto.name,

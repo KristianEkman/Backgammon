@@ -48,7 +48,7 @@
   <div class="dices" #dices>
     <app-dices
       *ngIf="dicesVisible"
-      [dices]="dices$ | async"
+      [dices]="dicesDto"
       [color]="diceColor"
     ></app-dices>
   </div>
@@ -61,7 +61,7 @@
       [exitVisible]="exitVisible"
       [acceptDoublingVisible]="acceptDoublingVisible"
       [requestDoublingVisible]="requestDoublingVisible"
-      [doublingFactor]="nextDoublingFactor() | async"
+      [doublingFactor]="nextDoublingFactor"
       (onUndoMove)="undoMove()"
       (onSendMoves)="sendMoves()"
       (onRoll)="rollButtonClick()"
@@ -71,6 +71,12 @@
       (onAcceptDoubling)="acceptDoubling()"
       (onResign)="resignGame()"
     ></app-board-buttons>
+  </div>
+  <div *ngIf="playAiQuestion" class="playAiQuestion app-colors">
+    <app-play-ai-question
+      (onPlayAi)="playAi()"
+      (onKeepWaiting)="keepWaiting()"
+    ></app-play-ai-question>
   </div>
   <!-- <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div> -->
 </div>
