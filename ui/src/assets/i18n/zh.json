@@ -126,5 +126,11 @@
     "youdonthave": "你沒有足夠的黃金。",
     "youcangetmore": "每24小時，您可以獲得更多的黃金。",
     "untilthen": "在那之前，您可以隨時播放練習遊戲對抗AI。"
+  },
+  "playaiquestion": {
+    "icantfind": "目前我找不到別人玩。",
+    "doyouwanttoplay": "你想對抗AI嗎？",
+    "playai": "玩AI.",
+    "keepwaiting": "繼續等待"
   }
 }

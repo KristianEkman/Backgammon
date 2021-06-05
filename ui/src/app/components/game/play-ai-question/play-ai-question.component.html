@@ -1,6 +1,13 @@
 <p>
-  I can't find anyone else playing at the moment.<br />Do you want to play
-  against the AI?
+  {{ 'playaiquestion.icantfind' | translate }}<br />{{
+    'playaiquestion.doyouwanttoplay' | translate
+  }}
 </p>
-<button class="black-button" (click)="playAi()">Play the AI</button>&nbsp;
-<button class="black-button" (click)="continueWait()">Keep waiting</button>
+<div class="buttons">
+  <button class="black-button" (click)="playAi()">
+    {{ 'playaiquestion.playai' | translate }}</button
+  >&nbsp;
+  <button class="black-button" (click)="continueWait()">
+    {{ 'playaiquestion.keepwaiting' | translate }}
+  </button>
+</div>

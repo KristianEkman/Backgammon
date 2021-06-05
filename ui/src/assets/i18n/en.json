@@ -126,5 +126,11 @@
     "youdonthave": "You don't have enough gold.",
     "youcangetmore": "You can get more gold every 24 hours.",
     "untilthen": "Until then you can always play practice games against the AI."
+  },
+  "playaiquestion": {
+    "icantfind": "I can't find anyone else playing at the moment.",
+    "doyouwanttoplay": "Do you want to play against the AI?",
+    "playai": "Play AI",
+    "keepwaiting": "Keep waiting"
   }
 }

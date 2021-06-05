@@ -126,5 +126,11 @@
     "youdonthave": "Du har inte tillräckligt med guld.",
     "youcangetmore": "Du kan få mer guld var 24:e timme.",
     "untilthen": "Fram till dess kan du alltid spela träningsspel mot AIt."
+  },
+  "playaiquestion": {
+    "icantfind": "Jag kan inte hitta någon annan som spelar för tillfället.",
+    "doyouwanttoplay": "Vill du spela mot AI?",
+    "playai": "Spela mot AIt",
+    "keepwaiting": "Fortsätt vänta"
   }
 }

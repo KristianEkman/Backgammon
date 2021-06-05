@@ -126,5 +126,11 @@
     "youdonthave": "No tienes suficiente oro.",
     "youcangetmore": "Puedes obtener más oro cada 24 horas.",
     "untilthen": "Hasta entonces puedes jugar siempre los juegos de práctica contra la AI."
+  },
+  "playaiquestion": {
+    "icantfind": "No puedo encontrar a nadie más jugando en este momento.",
+    "doyouwanttoplay": "¿Quieres jugar contra el AI?",
+    "playai": "Jugar ai",
+    "keepwaiting": "Seguir esperando"
   }
 }
