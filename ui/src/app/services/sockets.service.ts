@@ -181,6 +181,7 @@ export class SocketsService implements OnDestroy {
             gold: game.blackPlayer.gold - game.stake / 2
           }
         });
+        Sound.playCoin();
         this.statusMessageService.setDoublingAccepted();
         break;
       }

@@ -72,6 +72,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.playAiFlag = playAi === 'true';
     this.forGodlFlag = forGold === 'true';
     this.lokalStake = 0;
+    // For some reason i could not use an observable. Maybe ill figure out why someday.
+    this.themeName = AppState.Singleton.user.getValue()?.theme ?? 'dark';
   }
 
   gameDto$: Observable<GameDto>;
@@ -80,6 +82,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   message$: Observable<StatusMessage>;
   timeLeft$: Observable<number>;
   user$: Observable<UserDto>;
+  themeName: string;
 
   gameSubs: Subscription;
   diceSubs: Subscription;
@@ -140,6 +143,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       clearTimeout(this.startedHandle);
       this.started = true;
       this.playAiQuestion = false;
+      if (dto.isGoldGame) Sound.playCoin();
     }
     // console.log(dto?.id);
     this.setRollButtonVisible();
@@ -162,7 +166,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       this.animatingStake = true;
       const step = Math.ceil((dto.stake - this.lokalStake) / 10);
       setTimeout(() => {
-        Sound.playCoin();
         const handle = setInterval(() => {
           this.lokalStake += step;
           this.changeDetector.detectChanges();
@@ -270,11 +273,12 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.playAiQuestion = false;
     this.lokalStake = 0;
 
-    this.waitForOpponent();
+    if (!this.playAiFlag) this.waitForOpponent();
     this.fireResize();
   }
 
   private waitForOpponent() {
+    Sound.playBlues();
     this.startedHandle = setTimeout(() => {
       if (!this.started) {
         this.playAiQuestion = true;
@@ -393,6 +397,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   keepWaiting(): void {
+    Sound.playBlues();
     this.playAiQuestion = false;
   }
 }

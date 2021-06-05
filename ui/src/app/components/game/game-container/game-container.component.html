@@ -41,7 +41,7 @@
     [myColor]="playerColor$ | async"
     [dicesVisible]="dicesVisible"
     [flipped]="flipped"
-    [themeName]="(user$ | async)?.theme"
+    [themeName]="themeName"
     (addMove)="doMove($event)"
     (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>

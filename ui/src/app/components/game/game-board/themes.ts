@@ -1,4 +1,5 @@
 export interface IThemes {
+  name: string;
   boardBackground: string | CanvasGradient | CanvasPattern;
   homeBackground: string | CanvasGradient | CanvasPattern;
   border: string | CanvasGradient | CanvasPattern;
@@ -12,6 +13,7 @@ export interface IThemes {
 }
 
 export class DarkTheme implements IThemes {
+  name = 'dark';
   boardBackground = '#222';
   homeBackground = '#444';
   border = '#333';
@@ -25,11 +27,12 @@ export class DarkTheme implements IThemes {
 }
 
 export class LightTheme implements IThemes {
+  name = 'light';
   boardBackground = '#808080';
   homeBackground = '#444';
   border = '#333';
   whiteTriangle = '#666';
-  blackTriangle = '#333';
+  blackTriangle = '#444';
   whiteChecker = '#aaa';
   blackChecker = '#000';
   textColor = '#222';
@@ -38,6 +41,7 @@ export class LightTheme implements IThemes {
 }
 
 export class BlueTheme implements IThemes {
+  name = 'blue';
   boardBackground = '#808096';
   homeBackground = '#445';
   border = '#334';
@@ -51,6 +55,7 @@ export class BlueTheme implements IThemes {
 }
 
 export class PinkTheme implements IThemes {
+  name = 'pink';
   boardBackground = '#968080';
   homeBackground = '#544';
   border = '#433';

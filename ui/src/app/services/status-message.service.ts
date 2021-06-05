@@ -70,6 +70,10 @@ export class StatusMessageService {
     AppState.Singleton.statusMessage.setValue(message);
     if (myColor === game.winner) {
       Sound.playWinner();
+      if (game.isGoldGame)
+        setTimeout(() => {
+          Sound.playCoin;
+        }, 2000);
     } else {
       Sound.playLooser();
     }

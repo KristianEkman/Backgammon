@@ -9,9 +9,9 @@
     "signin": "Se connecter avec"
   },
   "logincontainer": {
-    "random": "Adversaire aléatoire",
+    "goldgame": "Gold jeu",
+    "practice": "Entraine toi",
     "friend": "Invite un ami",
-    "playai": "Jouer à Aina",
     "tip": "Conseil",
     "whenyousignin": "Lorsque vous vous connectez, plus de fonctionnalités sont activées, gratuitement!",
     "accept": "Accepter l'invitation"

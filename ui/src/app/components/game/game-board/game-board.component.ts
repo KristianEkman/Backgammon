@@ -32,7 +32,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() myColor: PlayerColor | null = PlayerColor.black;
   @Input() dicesVisible: boolean | null = false;
   @Input() flipped = false;
-  @Input() themeName: string | undefined = 'dark';
+  @Input() themeName: string | null = 'dark';
 
   @Output() addMove = new EventEmitter<MoveDto>();
   @Output() moveAnimFinished = new EventEmitter<void>();
@@ -110,9 +110,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   private _theme: IThemes | undefined = undefined;
   get theme(): IThemes {
-    // todo, how to change theme?
-
-    if (this._theme !== undefined) return this._theme;
+    if (!!this._theme && this._theme.name === this.themeName)
+      return this._theme;
 
     this._theme = new DarkTheme();
     if (this.themeName === 'light') this._theme = new LightTheme();

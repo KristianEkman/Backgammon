@@ -9,9 +9,9 @@
     "signin": "Logga in med"
   },
   "logincontainer": {
-    "random": "Slumpmässig motståndare",
+    "goldgame": "Guldspel",
+    "practice": "Öva",
     "friend": "Bjud in någon",
-    "playai": "Spela mot Aina",
     "tip": "Tips",
     "whenyousignin": "När du loggar in aktiveras fler funktioner, gratis!",
     "accept": "Godta inbjudan"

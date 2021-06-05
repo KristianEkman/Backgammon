@@ -8,6 +8,7 @@ export class Sound {
   warning: HTMLAudioElement;
   winner: HTMLAudioElement;
   coin: HTMLAudioElement;
+  blues: HTMLAudioElement;
 
   private constructor() {
     this.click = new Audio();
@@ -46,6 +47,11 @@ export class Sound {
     this.coin.src = '../assets/sound/coin.wav';
     this.coin.preload = 'true';
     this.coin.load();
+
+    this.blues = new Audio();
+    this.blues.src = '../assets/sound/blues.mp3';
+    this.blues.preload = 'true';
+    this.blues.load();
   }
 
   private static _singleton: Sound;
@@ -90,5 +96,9 @@ export class Sound {
 
   static playCoin(): void {
     this.Singleton.coin.play();
+  }
+
+  static playBlues(): void {
+    this.Singleton.blues.play();
   }
 }

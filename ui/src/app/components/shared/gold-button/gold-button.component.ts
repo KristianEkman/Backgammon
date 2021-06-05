@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -28,13 +29,17 @@ export class GoldButtonComponent implements OnDestroy, OnInit {
 
   buttonGetText: Observable<string>;
   intervalHandle: any;
-  constructor(private translate: TranslateService) {
+  constructor(
+    private translate: TranslateService,
+    private changeDetector: ChangeDetectorRef
+  ) {
     this.buttonGetText = this.getButtonText();
   }
 
   ngOnInit(): void {
     this.intervalHandle = setInterval(() => {
       this.buttonGetText = this.getButtonText();
+      this.changeDetector.detectChanges();
     }, 1000);
   }
 

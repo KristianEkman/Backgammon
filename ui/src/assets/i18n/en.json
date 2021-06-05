@@ -10,8 +10,8 @@
   },
   "logincontainer": {
     "goldgame": "Gold Game",
-    "friend": "Invite a friend",
     "practice": "Practice",
+    "friend": "Invite a friend",
     "tip": "Tip",
     "whenyousignin": "Sigin to compete for gold!",
     "accept": "Accept invite"

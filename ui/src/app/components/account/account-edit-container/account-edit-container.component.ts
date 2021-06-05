@@ -26,7 +26,7 @@ export class AccountEditContainerComponent {
 
     this.formGroup = this.formBuidler.group({
       name: [this.user.name, [Validators.required, Validators.maxLength(100)]],
-      emailNotification: [this.user.email],
+      emailNotification: [this.user.emailNotification],
       preferredLanguage: [this.user.preferredLanguage],
       theme: [this.user.theme]
     });

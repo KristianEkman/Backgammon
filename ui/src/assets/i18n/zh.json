@@ -9,9 +9,9 @@
     "signin": "登陸使用"
   },
   "logincontainer": {
-    "random": "隨機對手",
+    "goldgame": "黃金遊戲",
+    "practice": "實踐",
     "friend": "邀請朋友",
-    "playai": "玩 Aina.",
     "tip": "小費",
     "whenyousignin": "登錄時，免費啟用更多功能！",
     "accept": "接受邀請"

@@ -121,6 +121,11 @@ namespace Backend
             return player.Id.ToString().Equals(Db.User.AiUser, StringComparison.OrdinalIgnoreCase);
         }
 
+        private bool IsAi(Guid id)
+        {
+            return id.ToString().Equals(Db.User.AiUser, StringComparison.OrdinalIgnoreCase);
+        }
+
         internal async Task ConnectAndListen(WebSocket webSocket, Player.Color color, Db.User dbUser, bool playAi)
         {
             if (color == Player.Color.Black)
@@ -157,7 +162,7 @@ namespace Backend
             else
             {
                 if (playAi)
-                    throw new ApplicationException("Ai always playes as white. This is not expected");
+                    throw new ApplicationException("Ai always plays as white. This is not expected");
                 Client2 = webSocket;
                 Game.WhitePlayer.Id = dbUser != null ? dbUser.Id : Guid.Empty;
                 Game.WhitePlayer.Name = dbUser != null ? dbUser.Name : "Guest";
@@ -180,7 +185,7 @@ namespace Backend
                 var blackUser = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
                 if (blackUser.Gold < firstBet)
                     throw new ApplicationException("Black player dont have enough gold"); // Should be guarder earlier
-                if (Game.IsGoldGame)
+                if (Game.IsGoldGame && !IsAi(blackUser.Id))
                     blackUser.Gold -= firstBet;
                 var black = new Db.Player
                 {
@@ -193,8 +198,8 @@ namespace Backend
                 var whiteUser = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
                 if (Game.IsGoldGame && whiteUser.Gold < firstBet)
                     throw new ApplicationException("White player dont have enough gold"); // Should be guarder earlier
-                
-                if (Game.IsGoldGame)
+
+                if (Game.IsGoldGame && !IsAi(whiteUser.Id))
                     whiteUser.Gold -= firstBet;
                 var white = new Db.Player
                 {
@@ -393,8 +398,10 @@ namespace Backend
             {
                 var black = db.Users.Single(u => Game.BlackPlayer.Id == u.Id);
                 var white = db.Users.Single(u => Game.WhitePlayer.Id == u.Id);
-                black.Gold = Game.BlackPlayer.Gold; // non gold games guarded earlier in block.
-                white.Gold = Game.WhitePlayer.Gold;
+                if (!IsAi(black.Id)) // gold for ai remains in the db
+                    black.Gold = Game.BlackPlayer.Gold; // non gold games guarded earlier in block.
+                if (!IsAi(white.Id))
+                    white.Gold = Game.WhitePlayer.Gold;
                 db.SaveChanges();
             }
 
@@ -468,8 +475,10 @@ namespace Backend
                 {
                     var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
                     var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
-                    black.Gold += Game.Stake / 2;
-                    white.Gold += Game.Stake / 2;
+                    if (!IsAi(black.Id))
+                        black.Gold += Game.Stake / 2;
+                    if (!IsAi(white.Id))
+                        white.Gold += Game.Stake / 2;
                     db.SaveChanges();
                 }
                 return null; // todo: return stakes
@@ -505,12 +514,14 @@ namespace Backend
 
                         if (color == PlayerColor.black)
                         {
-                            black.Gold += stake;
+                            if (!IsAi(black.Id))
+                                black.Gold += stake;
                             Game.BlackPlayer.Gold += stake;
                         }
                         else
                         {
-                            white.Gold += stake;
+                            if (!IsAi(white.Id))
+                                white.Gold += stake;
                             Game.WhitePlayer.Gold += stake;
                         }
                         Logger.LogInformation($"After transfer: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
@@ -549,7 +560,7 @@ namespace Backend
             PlayerColor? winner = null;
             if (Game.CurrentPlayer == Player.Color.Black)
             {
-                if (Game.GetHome(Player.Color.Black).Checkers.Count == 15)
+                if (Game.GetHome(Player.Color.Black).Checkers.Count(c => c.Color == Player.Color.Black) == 15)
                 {
                     Game.PlayState = Game.State.Ended;
                     winner = PlayerColor.black;
@@ -557,7 +568,7 @@ namespace Backend
             }
             else
             {
-                if (Game.GetHome(Player.Color.White).Checkers.Count == 15)
+                if (Game.GetHome(Player.Color.White).Checkers.Count(c => c.Color == Player.Color.White) == 15)
                 {
                     Game.PlayState = Game.State.Ended;
                     winner = PlayerColor.white;

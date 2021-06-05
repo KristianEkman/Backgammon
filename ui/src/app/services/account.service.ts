@@ -4,7 +4,7 @@ import { environment } from '../../environments/environment';
 import { map, take } from 'rxjs/operators';
 import { UserDto } from '../dto/userDto';
 import { AppState } from '../state/app-state';
-import { Keys } from '../utils';
+import { Keys, Sound } from '../utils';
 import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -109,6 +109,7 @@ export class AccountService {
         map((response) => {
           const dto = response as GoldGiftDto;
           const user = AppState.Singleton.user.getValue();
+          if (dto.gold > user.gold) Sound.playCoin();
           AppState.Singleton.user.setValue({
             ...user,
             gold: dto.gold,
