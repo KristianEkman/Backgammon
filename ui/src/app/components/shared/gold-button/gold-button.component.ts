@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
@@ -18,7 +19,8 @@ import { UserDto } from 'src/app/dto';
 @Component({
   selector: 'app-gold-button',
   templateUrl: './gold-button.component.html',
-  styleUrls: ['./gold-button.component.scss']
+  styleUrls: ['./gold-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoldButtonComponent implements OnDestroy, OnInit {
   @Input() user: UserDto | null = null;

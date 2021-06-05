@@ -47,7 +47,7 @@
     <br />
     <app-login-buttons
       (onLogin)="login($event)"
-      [isLoggedIn]="!!(user$ | async)"
+      [isLoggedIn]="isLoggedIn()"
     ></app-login-buttons>
   </ng-container>
   <div class="account">
@@ -60,17 +60,15 @@
     >
     </app-account-menu>
   </div>
-  <ng-container *ngIf="isLoggedIn()">
-    <div class="button-row">
-      <app-gold-button
-        [user]="user$ | async"
-        (getGold)="getGold()"
-      ></app-gold-button>
-      <app-new-messages
-        [messages]="messages$ | async"
-        (showMessages)="router.navigateByUrl('messages')"
-      >
-      </app-new-messages>
-    </div>
-  </ng-container>
+  <div class="button-row">
+    <app-gold-button
+      [user]="user$ | async"
+      (getGold)="getGold()"
+    ></app-gold-button>
+    <app-new-messages
+      [messages]="messages$ | async"
+      (showMessages)="router.navigateByUrl('messages')"
+    >
+    </app-new-messages>
+  </div>
 </div>

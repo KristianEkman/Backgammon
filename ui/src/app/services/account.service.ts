@@ -43,7 +43,8 @@ export class AccountService {
       .pipe(
         map((data) => {
           return data;
-        })
+        }),
+        take(1) // unsubscribes
       )
       .subscribe((userDto: UserDto) => {
         this.trans.use(userDto.preferredLanguage ?? 'en');

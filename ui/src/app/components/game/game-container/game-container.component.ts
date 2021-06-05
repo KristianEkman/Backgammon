@@ -270,12 +270,16 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.playAiQuestion = false;
     this.lokalStake = 0;
 
+    this.waitForOpponent();
+    this.fireResize();
+  }
+
+  private waitForOpponent() {
     this.startedHandle = setTimeout(() => {
       if (!this.started) {
         this.playAiQuestion = true;
       }
     }, 15000);
-    this.fireResize();
   }
 
   fireResize(): void {
@@ -351,8 +355,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   newGame(): void {
     this.newVisible = false;
+    this.started = false;
     this.service.resetGame();
     this.service.connect('', this.playAiFlag, this.forGodlFlag);
+    this.waitForOpponent();
   }
 
   exitGame(): void {
@@ -383,8 +389,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   playAi(): void {
     this.playAiQuestion = false;
     this.service.exitGame();
-    this.playAiFlag = true;
-    this.service.connect('', this.playAiFlag, this.forGodlFlag);
+    this.service.connect('', true, this.forGodlFlag);
   }
 
   keepWaiting(): void {
