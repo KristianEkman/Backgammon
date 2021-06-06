@@ -67,7 +67,8 @@
     "next": "Nästa",
     "from": "Från",
     "nomore": "Inga fler meddelanden",
-    "version2Info": "Hej!<br>Jag har just släppt Backgammon 2.0<br><br><strong>Det här är de nya funktionerna.</strong><ul><li>Färgteman</li><li>Stöd för flera språk.</li><li>Ljud</li><li>Smartare AI</li></ul>Jag hoppas att du kommer att tycka om dem.<br><br>Vänliga Hälsningar<br>/Kristian"
+    "version2Info": "Hej!<br>Jag har just släppt Backgammon 2.0<br><br><strong>Det här är de nya funktionerna.</strong><ul><li>Färgteman</li><li>Stöd för flera språk.</li><li>Ljud</li><li>Smartare AI</li></ul>Jag hoppas att du kommer att tycka om dem.<br><br>Vänliga Hälsningar<br>/Kristian",
+    "version3Info": "Hej!<br>Jag har just släppt backgammon 3.0<br><br><strong>Det här är de nya funktionerna.</strong><ul><li>Guldspel</li><li>Spelarbilder</li></ul>Jag hoppas att du kommer att tycka om den nya versionen.<br><br>Vänliga Hälsningar<br>/Kristian"
   },
   "shareprompt": {
     "hello": "Hej!",

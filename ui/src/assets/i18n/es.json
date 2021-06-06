@@ -67,7 +67,8 @@
     "next": "Próxima",
     "from": "De",
     "nomore": "No más mensajes",
-    "version2Info": "¡Hola!<br>Acabo de lanzar Backgammon 2.0<br><br><strong>Estas son las nuevas características.</strong><ul><li>Temas de color</li><li>Soporte para múltiples idiomas.</li><li>Sonidos</li><li>Inteligente ai</li></ul>Espero que te gusten.<br><br>Saludos cordiales<br>/Kristian"
+    "version2Info": "¡Hola!<br>Acabo de lanzar Backgammon 2.0<br><br><strong>Estas son las nuevas características.</strong><ul><li>Temas de color</li><li>Soporte para múltiples idiomas.</li><li>Sonidos</li><li>Inteligente ai</li></ul>Espero que te gusten.<br><br>Saludos cordiales<br>/Kristian",
+    "version3Info": "¡Hola!<br>Acabo de lanzar Backgammon 3.0<br><br><strong>Estas son las nuevas características.</strong><ul><li>Juegos de oro</li><li>Imágenes de jugador</li></ul>Espero que te guste la nueva versión.<br><br>Saludos cordiales<br>/Kristian"
   },
   "shareprompt": {
     "hello": "¡Hola!",

@@ -129,6 +129,7 @@ namespace Backend.Controllers
                 case MessageType.SharePrompt:
                     return ("", "");
                 case MessageType.Version2Info:
+                case MessageType.Version3Info:
                     return ("New version of Backgammon", @$"<p>Hi {name}!</p>
 <img src='https://backgammon.azurewebsites.net/assets/images/banner.jpg'>
 <p>You have a new Backgammon message.</p>

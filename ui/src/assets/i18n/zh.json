@@ -67,7 +67,8 @@
     "next": "下一個",
     "from": "從",
     "nomore": "沒有更多的消息",
-    "version2Info": "你好<br>我剛剛發布了步步高2.0<br><br><strong>這些是新功能</strong><ul><li>顏色主題</li><li>支持多種語言</li><li>聲音</li><li>更聰明的ai.</li></ul>我希望你能喜歡他們<br><br>親切的問候<br>/Kristian"
+    "version2Info": "你好<br>我剛剛發布了步步高2.0<br><br><strong>這些是新功能</strong><ul><li>顏色主題</li><li>支持多種語言</li><li>聲音</li><li>更聰明的ai.</li></ul>我希望你能喜歡他們<br><br>親切的問候<br>/Kristian",
+    "version3Info": "你好！<br>我剛剛發布了3.0<br><br><strong>這些是新功能。</strong><ul><li>黃金遊戲</li><li>玩家圖像</li></ul>我希望你能喜歡新版本。<br><br>親切的問候<br>/Kristian"
   },
   "shareprompt": {
     "hello": "你好！",
