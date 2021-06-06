@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { default as versionInfo } from '../../../../package.json';
 
 @Component({
   selector: 'app-about-container',
@@ -12,6 +13,8 @@ export class AboutContainerComponent implements OnInit {
 
   diceValue = 1;
   diceColor: 'black' | 'white' = 'black';
+
+  version = versionInfo.version;
 
   onClick(): void {
     let d = this.diceValue;
