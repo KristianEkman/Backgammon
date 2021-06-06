@@ -283,7 +283,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       if (!this.started) {
         this.playAiQuestion = true;
       }
-    }, 15000);
+    }, 11000);
   }
 
   fireResize(): void {

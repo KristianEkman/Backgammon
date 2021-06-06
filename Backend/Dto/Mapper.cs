@@ -107,6 +107,7 @@ namespace Backend.Dto
                 name = dbUser.Name,
                 id = dbUser.Id.ToString(),
                 photoUrl = dbUser.PhotoUrl,
+                showPhoto = dbUser.ShowPhoto,
                 socialProvider = dbUser.SocialProvider,
                 isAdmin = dbUser.Admin,
                 socialProviderId = dbUser.ProviderId,

@@ -29,7 +29,8 @@
     "allyourgames": "Alla din matcher och sparad data tas bort. Det går inte att ångra.",
     "sure": "Är du säker?",
     "yesdelete": "Ja tabort det",
-    "theme": "Tema"
+    "theme": "Tema",
+    "showPhoto": "Visa"
   },
   "theme": {
     "dark": "Mörkt",

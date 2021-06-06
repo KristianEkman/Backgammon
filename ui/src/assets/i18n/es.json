@@ -29,7 +29,8 @@
     "allyourgames": "Todos los juegos y los datos guardados también se eliminarán.No puedes deshacer esto.",
     "sure": "¿Está seguro?",
     "yesdelete": "Si eliminarlo",
-    "theme": "Tema"
+    "theme": "Tema",
+    "showPhoto": "show"
   },
   "theme": {
     "dark": "Oscura",

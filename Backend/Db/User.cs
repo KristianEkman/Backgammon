@@ -14,6 +14,7 @@ namespace Backend.Db
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhotoUrl { get; set; }
+        public bool ShowPhoto { get; set; }
         public string SocialProvider { get; set; }
         public int Elo { get; set; }
         public int GameCount { get; set; }

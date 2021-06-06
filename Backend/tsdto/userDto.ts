@@ -5,6 +5,7 @@ export interface UserDto {
     name: string;
     email: string;
     photoUrl: string;
+    showPhoto: boolean;
     socialProvider: string;
     socialProviderId: string;
     createdNew: boolean;

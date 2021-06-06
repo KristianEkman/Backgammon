@@ -28,7 +28,8 @@ export class AccountEditContainerComponent {
       name: [this.user.name, [Validators.required, Validators.maxLength(100)]],
       emailNotification: [this.user.emailNotification],
       preferredLanguage: [this.user.preferredLanguage],
-      theme: [this.user.theme]
+      theme: [this.user.theme],
+      showPhoto: [this.user.showPhoto]
     });
 
     this.formGroup.get('theme')?.valueChanges.subscribe((theme) => {
@@ -47,7 +48,8 @@ export class AccountEditContainerComponent {
           name: userDto.name,
           emailNotification: userDto.emailNotification,
           preferredLanguage: userDto.preferredLanguage,
-          theme: userDto.theme
+          theme: userDto.theme,
+          showPhoto: userDto.showPhoto
         });
       }
     });

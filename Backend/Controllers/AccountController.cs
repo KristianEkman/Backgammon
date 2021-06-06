@@ -99,6 +99,7 @@ namespace Backend.Controllers
                         Email = userDto.email,
                         Name = userDto.name,
                         PhotoUrl = userDto.photoUrl,
+                        ShowPhoto = true,
                         ProviderId = userDto.socialProviderId,
                         SocialProvider = userDto.socialProvider,
                         Elo = 1200,
@@ -145,6 +146,7 @@ namespace Backend.Controllers
                 dbUser.PreferredLanguage = userDto.preferredLanguage;
                 dbUser.Theme = userDto.theme;
                 dbUser.EmailNotifications = userDto.emailNotification;
+                dbUser.ShowPhoto = userDto.showPhoto;
                 db.SaveChanges();
             }
         }
@@ -168,6 +170,7 @@ namespace Backend.Controllers
                 dbUser.Email = "";
                 dbUser.GameCount = 0;
                 dbUser.PhotoUrl = "";
+                dbUser.ShowPhoto = false;
                 dbUser.ProviderId = "";
                 dbUser.PreferredLanguage = "";
                 dbUser.Admin = false;

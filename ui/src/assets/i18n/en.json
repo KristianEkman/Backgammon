@@ -29,7 +29,8 @@
     "allyourgames": "All you games and saved data will also be deleted. You can not undo this.",
     "sure": "Are you sure?",
     "yesdelete": "Yes delete it",
-    "theme": "Theme"
+    "theme": "Theme",
+    "showPhoto": "Show"
   },
   "theme": {
     "dark": "Dark",

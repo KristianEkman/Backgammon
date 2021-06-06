@@ -3,8 +3,20 @@
   font-size: 14px;
   position: relative;
 
-  img {
+  .user-photo {
     width: 100%;
+    border-radius: 4px;
+  }
+
+  .initials {
+    display: inline-block;
+    border: 2px solid var(--text-color);
+    background-color: rgba($color: white, $alpha: 0.1);
+    text-align: center;
+    width: 100%;
+    font-size: 32px;
+    padding-top: calc(50% - 16px);
+    padding-bottom: calc(50% - 16px);
     border-radius: 4px;
   }
 

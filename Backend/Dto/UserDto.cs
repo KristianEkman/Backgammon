@@ -7,10 +7,12 @@ namespace Backend.Dto
 {
     public class UserDto
     {
+
         public string id { get; set; }        
         public string name { get; set; }
         public string email { get; set; }
         public string photoUrl { get; set; }
+        public bool showPhoto { get; set; }
         public string socialProvider { get; set; }
         public string socialProviderId { get; set; }
         public bool createdNew { get; set; }
