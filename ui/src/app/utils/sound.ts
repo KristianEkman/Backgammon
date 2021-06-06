@@ -109,7 +109,6 @@ export class Sound {
     const interval = 50; //ms
     const fadeLength = 1000;
     const fadeStep = startVol / (fadeLength / interval);
-    console.log(fadeStep);
     const handle = setInterval(() => {
       let v = this.Singleton.blues.volume;
       v -= fadeStep;

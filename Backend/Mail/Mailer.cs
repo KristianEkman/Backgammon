@@ -42,7 +42,6 @@ namespace Backend.Mail
                 {
                     IsBodyHtml = true,                    
                 };
-                message.Bcc.Add(string.Join(',', bcc));
                 var pw = Secrets.GetPw();
                 client.Credentials = new NetworkCredential("backgammon", pw);
                 client.EnableSsl = true;

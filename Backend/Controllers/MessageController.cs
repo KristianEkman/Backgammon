@@ -89,7 +89,7 @@ namespace Backend.Controllers
             using (var db = new BgDbContext())
             {
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);
-                var users = db.Users.Where(u => u.EmailNotifications).Skip(66);
+                var users = db.Users.Where(u => u.EmailNotifications);
                 var count = users.Count();
                 foreach (var user in users)
                 {

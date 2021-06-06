@@ -21,7 +21,6 @@ export class PlayerComponent {
   @Input() doubling: number | null = null;
 
   getPhotoUrl(): string {
-    console.log(this.playerDto?.photoUrl);
     if (!this.playerDto?.photoUrl) return '';
 
     return this.playerDto.photoUrl === 'aina'
