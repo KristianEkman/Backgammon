@@ -114,6 +114,7 @@ export class SocketsService implements OnDestroy {
         this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
         this.statusMessageService.setTextMessage(dto.game);
         AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
+        Sound.fadeBlues();
         this.startTimer();
         break;
       }

@@ -99,6 +99,25 @@ export class Sound {
   }
 
   static playBlues(): void {
+    this.Singleton.blues.volume = 1;
     this.Singleton.blues.play();
+  }
+
+  static fadeBlues(): void {
+    const startVol = this.Singleton.blues.volume;
+    if (startVol === 0) return;
+    const interval = 50; //ms
+    const fadeLength = 1000;
+    const fadeStep = startVol / (fadeLength / interval);
+    console.log(fadeStep);
+    const handle = setInterval(() => {
+      let v = this.Singleton.blues.volume;
+      v -= fadeStep;
+      if (v < 0) {
+        v = 0;
+        clearInterval(handle);
+      }
+      this.Singleton.blues.volume = v;
+    }, interval);
   }
 }
