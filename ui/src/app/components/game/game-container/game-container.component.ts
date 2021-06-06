@@ -179,7 +179,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
             this.animatingStake = false;
           }
         }, 100);
-      }, 1000); // Give time to show everything
+      }, 100); // Give time to show everything
     }
   }
 

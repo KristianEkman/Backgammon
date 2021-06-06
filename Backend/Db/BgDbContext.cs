@@ -29,6 +29,7 @@ namespace Backend.Db
 #else
             var cnn = ConnectionsString["prod"];
 #endif
+
             var connectionString = cnn.Replace("{pw}", pw);
             options.UseSqlServer(connectionString);
             // options.LogTo(Console.WriteLine);

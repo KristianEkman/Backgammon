@@ -51,6 +51,9 @@ export class SocketsService implements OnDestroy {
       this.socket.close();
     }
     this.url = environment.socketServiceUrl;
+    if (environment.production) {
+      this.url = origin.replace('https://', 'wss://') + '/ws';
+    }
     const user = AppState.Singleton.user.getValue();
     const userId = user ? user.id : '';
     const tree = this.router.createUrlTree([], {

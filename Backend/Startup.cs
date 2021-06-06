@@ -178,6 +178,7 @@ namespace Backend
             var origin = request.Headers["Referer"].ToString();
             var allowed = new List<string>();
             allowed.Add("https://backgammon.azurewebsites.net");            
+            allowed.Add("https://backgammon-slot1.azurewebsites.net");
 #if DEBUG
             allowed.Add("http://localhost");
 #endif

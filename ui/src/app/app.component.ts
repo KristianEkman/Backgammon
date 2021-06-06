@@ -9,6 +9,7 @@ import { DOCUMENT } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Language } from './utils';
 import { Busy } from './state/busy';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
