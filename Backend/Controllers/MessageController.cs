@@ -84,7 +84,7 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("api/message/sendToAll")]
-        public void SendToAll(MessageType type)
+        public async Task SendToAll(MessageType type)
         {
             // For each user, add the message. If the user has notification flag, send mail.
             AssertAdmin();
@@ -94,7 +94,7 @@ namespace Backend.Controllers
             using (var db = new BgDbContext())
             {
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);
-                var users = db.Users.Where(u => u.EmailNotifications);
+                var users = db.Users.Where(u => u.EmailNotifications).Skip(66);
                 var count = users.Count();
                 foreach (var user in users)
                 {
@@ -114,7 +114,7 @@ namespace Backend.Controllers
 
                     try
                     {
-                        _ = Mail.Mailer.Send(user.Email, subject, text, pw);
+                        await Mail.Mailer.Send(user.Email, subject, text, pw);
                         logger.LogInformation($"Emailed {user.Email}");
                     }
                     catch (Exception exc)
