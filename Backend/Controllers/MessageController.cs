@@ -2,6 +2,7 @@
 using Backend.Dto.message;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,11 @@ namespace Backend.Controllers
     public class MessageController : AuthorizedController
     {
         private readonly ILogger<MessageController> logger;
-        public MessageController(ILogger<MessageController> logger)
+        private readonly IConfiguration config;
+        public MessageController(ILogger<MessageController> logger, IConfiguration configuration)
         {
             this.logger = logger;
+            this.config = configuration;
         }
 
         [HttpGet]
@@ -86,6 +89,8 @@ namespace Backend.Controllers
             // For each user, add the message. If the user has notification flag, send mail.
             AssertAdmin();
             string adminId = Request.Headers["user-id"].ToString();
+            string pw = config.GetValue<string>("smtppw");
+
             using (var db = new BgDbContext())
             {
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);
@@ -109,7 +114,7 @@ namespace Backend.Controllers
 
                     try
                     {
-                        _ = Mail.Mailer.Send(user.Email, subject, text);
+                        _ = Mail.Mailer.Send(user.Email, subject, text, pw);
                         logger.LogInformation($"Emailed {user.Email}");
                     }
                     catch (Exception exc)
