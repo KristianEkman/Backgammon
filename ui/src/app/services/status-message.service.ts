@@ -51,7 +51,6 @@ export class StatusMessageService {
   }
 
   setGameEnded(game: GameDto, newScore: NewScoreDto): void {
-    // console.log(this.myColor, this.game.winner);
     const myColor = AppState.Singleton.myColor.getValue();
     let score = '';
     if (newScore) {
@@ -71,6 +70,10 @@ export class StatusMessageService {
     AppState.Singleton.statusMessage.setValue(message);
     if (myColor === game.winner) {
       Sound.playWinner();
+      if (game.isGoldGame)
+        setTimeout(() => {
+          Sound.playCoin;
+        }, 2000);
     } else {
       Sound.playLooser();
     }
@@ -87,5 +90,23 @@ export class StatusMessageService {
     const message = StatusMessage.warning(m);
     Sound.playWarning();
     AppState.Singleton.statusMessage.setValue(message);
+  }
+
+  setDoublingAccepted() {
+    const text = this.trans.instant('statusmessage.dblaccepted');
+    const msg = StatusMessage.info(text);
+    AppState.Singleton.statusMessage.setValue(msg);
+  }
+
+  setDoublingRequested() {
+    const text = this.trans.instant('statusmessage.dblrequested');
+    const msg = StatusMessage.info(text);
+    AppState.Singleton.statusMessage.setValue(msg);
+  }
+
+  setWaitingForDoubleResponse() {
+    const text = this.trans.instant('statusmessage.waitfordblresponse');
+    const msg = StatusMessage.info(text);
+    AppState.Singleton.statusMessage.setValue(msg);
   }
 }

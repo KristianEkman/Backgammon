@@ -14,7 +14,7 @@ namespace BackendTests
         [TestInitialize]
         public void InitTests()
         {
-            game = Game.Create();
+            game = Game.Create(false);
             game.PlayState = Game.State.Playing;
         }
 

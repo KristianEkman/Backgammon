@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, ɵPlayState } from '@angular/core';
 import { environment } from '../../environments/environment';
 import {
   CheckerDto,
@@ -20,7 +20,8 @@ import {
   OpponentMoveActionDto,
   UndoActionDto,
   ConnectionInfoActionDto,
-  GameRestoreActionDto
+  GameRestoreActionDto,
+  DoublingActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
 import { Keys, Sound } from '../utils';
@@ -45,15 +46,23 @@ export class SocketsService implements OnDestroy {
     private serializer: UrlSerializer
   ) {}
 
-  connect(gameId: string, playAi: boolean): void {
+  connect(gameId: string, playAi: boolean, forGold: boolean): void {
     if (this.socket) {
       this.socket.close();
     }
     this.url = environment.socketServiceUrl;
+    if (environment.production) {
+      this.url = origin.replace('https://', 'wss://') + '/ws';
+    }
     const user = AppState.Singleton.user.getValue();
     const userId = user ? user.id : '';
     const tree = this.router.createUrlTree([], {
-      queryParams: { userId: userId, gameId: gameId, playAi: playAi }
+      queryParams: {
+        userId: userId,
+        gameId: gameId,
+        playAi: playAi,
+        forGold: forGold
+      }
     });
     const url = this.url + this.serializer.serialize(tree);
 
@@ -105,6 +114,7 @@ export class SocketsService implements OnDestroy {
         this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
         this.statusMessageService.setTextMessage(dto.game);
         AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
+        Sound.fadeBlues();
         this.startTimer();
         break;
       }
@@ -121,6 +131,7 @@ export class SocketsService implements OnDestroy {
         AppState.Singleton.game.setValue(cGame);
         this.statusMessageService.setTextMessage(cGame);
         AppState.Singleton.moveTimer.setValue(dicesAction.moveTimer);
+        AppState.Singleton.opponentDone.setValue(true);
         break;
       }
       case ActionNames.movesMade: {
@@ -130,12 +141,52 @@ export class SocketsService implements OnDestroy {
       case ActionNames.gameEnded: {
         const endedAction = JSON.parse(message.data) as GameEndedActionDto;
         // console.log('game ended', endedAction.game.winner);
-        AppState.Singleton.game.setValue(endedAction.game);
-        AppState.Singleton.moveTimer.setValue(0);
+        AppState.Singleton.game.setValue({
+          ...endedAction.game,
+          playState: GameState.ended
+        });
         this.statusMessageService.setGameEnded(
           endedAction.game,
           endedAction.newScore
         );
+        AppState.Singleton.moveTimer.setValue(0);
+        break;
+      }
+      case ActionNames.requestedDoubling: {
+        // Opponent has requested
+        const action = JSON.parse(message.data) as DoublingActionDto;
+        AppState.Singleton.moveTimer.setValue(action.moveTimer);
+
+        AppState.Singleton.game.setValue({
+          ...game,
+          playState: GameState.requestedDoubling,
+          currentPlayer: AppState.Singleton.myColor.getValue()
+        });
+        this.statusMessageService.setDoublingRequested();
+        break;
+      }
+      case ActionNames.acceptedDoubling: {
+        const action = JSON.parse(message.data) as DoublingActionDto;
+        AppState.Singleton.moveTimer.setValue(action.moveTimer);
+        // Opponent has accepted
+        AppState.Singleton.game.setValue({
+          ...game,
+          playState: GameState.playing,
+          goldMultiplier: game.goldMultiplier * 2,
+          lastDoubler: AppState.Singleton.myColor.getValue(),
+          currentPlayer: AppState.Singleton.myColor.getValue(),
+          stake: game.stake * 2,
+          whitePlayer: {
+            ...game.whitePlayer,
+            gold: game.whitePlayer.gold - game.stake / 2
+          },
+          blackPlayer: {
+            ...game.blackPlayer,
+            gold: game.blackPlayer.gold - game.stake / 2
+          }
+        });
+        Sound.playCoin();
+        this.statusMessageService.setDoublingAccepted();
         break;
       }
       case ActionNames.opponentMove: {
@@ -146,6 +197,11 @@ export class SocketsService implements OnDestroy {
       case ActionNames.undoMove: {
         // const action = JSON.parse(message.data) as UndoActionDto;
         this.undoMove();
+        break;
+      }
+      case ActionNames.rolled: {
+        // this is just to fire the changed event. The value is not important.
+        AppState.Singleton.rolled.setValue(true);
         break;
       }
       case ActionNames.connectionInfo: {
@@ -359,6 +415,13 @@ export class SocketsService implements OnDestroy {
     this.sendMessage(JSON.stringify(action));
   }
 
+  sendRolled() {
+    const action: ActionDto = {
+      actionName: ActionNames.rolled
+    };
+    this.sendMessage(JSON.stringify(action));
+  }
+
   ngOnDestroy(): void {
     this.socket?.close();
     clearTimeout(this.timerId);
@@ -387,5 +450,60 @@ export class SocketsService implements OnDestroy {
     this.gameHistory = [];
     this.dicesHistory = [];
     this.connectTime = new Date();
+  }
+
+  //This is when this player accepts a doubling.
+  acceptDoubling() {
+    const action: DoublingActionDto = {
+      actionName: ActionNames.acceptedDoubling,
+      moveTimer: 0 // Set on the server
+    };
+    const game = AppState.Singleton.game.getValue();
+    AppState.Singleton.game.setValue({
+      ...game,
+      playState: GameState.playing,
+      goldMultiplier: game.goldMultiplier * 2,
+      lastDoubler: AppState.Singleton.getOtherPlayer(),
+      currentPlayer: AppState.Singleton.getOtherPlayer(),
+      whitePlayer: {
+        ...game.whitePlayer,
+        gold: game.whitePlayer.gold - game.stake / 2
+      },
+      blackPlayer: {
+        ...game.blackPlayer,
+        gold: game.blackPlayer.gold - game.stake / 2
+      },
+      stake: game.stake * 2
+    });
+
+    // TODO: The client countdown is currently only a constant on the backend.
+    // What is the best design here?
+    AppState.Singleton.moveTimer.setValue(40);
+    this.sendMessage(JSON.stringify(action));
+    this.statusMessageService.setTextMessage(
+      AppState.Singleton.game.getValue()
+    );
+  }
+
+  //This player requests doubling.
+  requestDoubling() {
+    const game = AppState.Singleton.game.getValue();
+    const otherPlyr = AppState.Singleton.getOtherPlayer();
+    AppState.Singleton.game.setValue({
+      ...game,
+      playState: GameState.requestedDoubling,
+      currentPlayer: otherPlyr
+    });
+
+    const action: DoublingActionDto = {
+      actionName: ActionNames.requestedDoubling,
+      moveTimer: 0 // set on the server
+    };
+
+    // TODO: The client countdown is currently only a constant on the backend.
+    // What is the best design here? Where to store the constant? One extra server message for this case?
+    AppState.Singleton.moveTimer.setValue(40);
+    this.sendMessage(JSON.stringify(action));
+    this.statusMessageService.setWaitingForDoubleResponse();
   }
 }

@@ -15,7 +15,7 @@ namespace BackendTests
         [TestMethod]
         public void GetBestMoveBlack1()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             var ai = new Ai.Engine(game);
             game.ClearCheckers();
 
@@ -39,7 +39,7 @@ namespace BackendTests
         [TestMethod]
         public void GetBestMoveWhite1()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             var ai = new Ai.Engine(game);
             game.ClearCheckers();
 
@@ -65,7 +65,7 @@ namespace BackendTests
         [TestMethod]
         public void DoubleDice()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             var ai = new Ai.Engine(game);
             game.FakeRoll(2, 2);
             var moves = ai.GetBestMoves();
@@ -75,7 +75,7 @@ namespace BackendTests
         [TestMethod]
         public void FirstDiceBlocked()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             game.ClearCheckers();
             game.AddCheckers(1, Player.Color.White, 0);
             game.AddCheckers(1, Player.Color.White, 1);
@@ -105,7 +105,7 @@ namespace BackendTests
         [TestMethod]
         public void BearOffEffectivelyBlack()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             game.ClearCheckers();
             game.AddCheckers(1, Player.Color.Black, 19);
             game.AddCheckers(1, Player.Color.White, 19);
@@ -132,7 +132,7 @@ namespace BackendTests
         [TestMethod]
         public void BearOffEffectivelyWhite()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             game.ClearCheckers();
             game.AddCheckers(1, Player.Color.Black, 19);
             game.AddCheckers(1, Player.Color.White, 19);
@@ -160,7 +160,7 @@ namespace BackendTests
         [TestMethod]
         public void DontHitBloat1()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             game.ClearCheckers();
             game.AddCheckers(1, Player.Color.Black, 1);
             game.AddCheckers(1, Player.Color.Black, 2);
@@ -186,7 +186,7 @@ namespace BackendTests
         [TestMethod]
         public void DontHitBloat2()
         {
-            var game = Game.Create();
+            var game = Game.Create(false);
             game.ClearCheckers();
             game.AddCheckers(1, Player.Color.Black, 3);
             game.AddCheckers(1, Player.Color.Black, 4);

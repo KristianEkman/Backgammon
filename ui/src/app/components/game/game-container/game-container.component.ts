@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -7,7 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import {
   DiceDto,
   GameDto,
@@ -22,6 +23,7 @@ import { StatusMessage } from 'src/app/dto/local/status-message';
 import { Busy } from 'src/app/state/busy';
 import { StatusMessageService } from 'src/app/services/status-message.service';
 import { Sound } from 'src/app/utils';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-game',
@@ -33,7 +35,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     private service: SocketsService,
     private accountService: AccountService,
     private router: Router,
-    private statusMessageService: StatusMessageService
+    private statusMessageService: StatusMessageService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.gameDto$ = AppState.Singleton.game.observe();
     this.dices$ = AppState.Singleton.dices.observe();
@@ -44,6 +47,13 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.gameSubs = AppState.Singleton.game
       .observe()
       .subscribe(this.gameChanged.bind(this));
+    this.rolledSubs = AppState.Singleton.rolled
+      .observe()
+      .subscribe(this.opponentRolled.bind(this));
+
+    this.oponnetDoneSubs = AppState.Singleton.opponentDone
+      .observe()
+      .subscribe(this.oponnentDone.bind(this));
     this.message$ = AppState.Singleton.statusMessage.observe();
     this.timeLeft$ = AppState.Singleton.moveTimer.observe();
     this.user$ = AppState.Singleton.user.observe();
@@ -55,8 +65,15 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
     const gameId = this.router.parseUrl(this.router.url).queryParams['gameId'];
     const playAi = this.router.parseUrl(this.router.url).queryParams['playAi'];
-    service.connect(gameId, playAi);
+    const forGold = this.router.parseUrl(this.router.url).queryParams[
+      'forGold'
+    ];
+    service.connect(gameId, playAi, forGold);
     this.playAiFlag = playAi === 'true';
+    this.forGodlFlag = forGold === 'true';
+    this.lokalStake = 0;
+    // For some reason i could not use an observable. Maybe ill figure out why someday.
+    this.themeName = AppState.Singleton.user.getValue()?.theme ?? 'dark';
   }
 
   gameDto$: Observable<GameDto>;
@@ -65,9 +82,14 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   message$: Observable<StatusMessage>;
   timeLeft$: Observable<number>;
   user$: Observable<UserDto>;
+  themeName: string;
+
   gameSubs: Subscription;
   diceSubs: Subscription;
+  rolledSubs: Subscription;
+  oponnetDoneSubs: Subscription;
 
+  started = false;
   width = 450;
   height = 450;
   rollButtonClicked = false;
@@ -75,6 +97,13 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   messageCenter = 0;
   flipped = false;
   playAiFlag = false;
+  forGodlFlag = false;
+  PlayerColor = PlayerColor;
+  lokalStake = 0;
+  animatingStake = false;
+  playAiQuestion = false;
+  dicesDto: DiceDto[] | undefined;
+  nextDoublingFactor = 1;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -83,6 +112,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   sendMoves(): void {
     this.service.sendMoves();
     this.rollButtonClicked = false;
+    this.dicesVisible = false;
   }
 
   doMove(move: MoveDto): void {
@@ -99,32 +129,109 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     return AppState.Singleton.myTurn();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  doublingRequested(): boolean {
+    return AppState.Singleton.doublingRequested();
+  }
+
+  oponnentDone(): void {
+    this.dicesVisible = false;
+  }
+
+  startedHandle: any;
   gameChanged(dto: GameDto): void {
+    if (!this.started && dto) {
+      clearTimeout(this.startedHandle);
+      this.started = true;
+      this.playAiQuestion = false;
+      if (dto.isGoldGame) Sound.playCoin();
+    }
+    // console.log(dto?.id);
     this.setRollButtonVisible();
-    this.setDicesVisible();
     this.setSendVisible();
     this.setUndoVisible();
+    this.setDoublingVisible(dto);
     this.diceColor = dto?.currentPlayer;
     this.fireResize();
     this.newVisible = dto?.playState === GameState.ended;
-    this.exitVisible = dto?.playState !== GameState.playing;
+    this.exitVisible =
+      dto?.playState !== GameState.playing &&
+      dto?.playState !== GameState.requestedDoubling;
+    this.nextDoublingFactor = dto?.goldMultiplier * 2;
+
+    this.animateStake(dto);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  animateStake(dto: GameDto) {
+    if (dto && dto.isGoldGame && dto.stake !== this.lokalStake) {
+      this.animatingStake = true;
+      const step = Math.ceil((dto.stake - this.lokalStake) / 10);
+      setTimeout(() => {
+        const handle = setInterval(() => {
+          this.lokalStake += step;
+          this.changeDetector.detectChanges();
+
+          if (
+            (step > 0 && this.lokalStake >= dto.stake) ||
+            (step < 0 && this.lokalStake <= dto.stake)
+          ) {
+            clearInterval(handle);
+            this.lokalStake = dto.stake;
+            this.animatingStake = false;
+          }
+        }, 100);
+      }, 100); // Give time to show everything
+    }
+  }
+
+  setDoublingVisible(gameDto: GameDto) {
+    if (!gameDto) return;
+    this.acceptDoublingVisible =
+      gameDto.isGoldGame &&
+      gameDto.playState === GameState.requestedDoubling &&
+      this.myTurn();
+    // Visible if it is a gold-game and if it is my turn to double.
+    const turn = AppState.Singleton.myColor.getValue() !== gameDto.lastDoubler;
+    const rightType = gameDto.isGoldGame;
+    this.requestDoublingVisible =
+      turn &&
+      rightType &&
+      this.myTurn() &&
+      this.rollButtonVisible &&
+      gameDto.isGoldGame &&
+      this.hasFundsForDoubling(gameDto);
+  }
+
+  hasFundsForDoubling(gameDto: GameDto): boolean {
+    return (
+      gameDto.blackPlayer.gold >= gameDto.stake / 2 &&
+      gameDto.whitePlayer.gold >= gameDto.stake / 2
+    );
+  }
+
   diceChanged(dto: DiceDto[]): void {
+    this.dicesDto = dto;
     this.setRollButtonVisible();
-    this.setDicesVisible();
     this.setSendVisible();
     this.setUndoVisible();
     this.fireResize();
+    const game = AppState.Singleton.game.getValue();
     this.exitVisible =
-      AppState.Singleton.game.getValue()?.playState !== GameState.playing;
+      game?.playState !== GameState.playing &&
+      game?.playState !== GameState.requestedDoubling;
   }
 
   ngOnDestroy(): void {
     this.gameSubs.unsubscribe();
     this.diceSubs.unsubscribe();
+    this.rolledSubs.unsubscribe();
+    this.oponnetDoneSubs.unsubscribe();
+    clearTimeout(this.startedHandle);
+    AppState.Singleton.game.clearValue();
+    AppState.Singleton.myColor.clearValue();
+    AppState.Singleton.dices.clearValue();
+    AppState.Singleton.messages.clearValue();
+    AppState.Singleton.moveTimer.clearValue();
+    this.started = false;
     this.service.exitGame();
   }
 
@@ -163,7 +270,20 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.playAiQuestion = false;
+    this.lokalStake = 0;
+
+    if (!this.playAiFlag) this.waitForOpponent();
     this.fireResize();
+  }
+
+  private waitForOpponent() {
+    Sound.playBlues();
+    this.startedHandle = setTimeout(() => {
+      if (!this.started) {
+        this.playAiQuestion = true;
+      }
+    }, 11000);
   }
 
   fireResize(): void {
@@ -178,21 +298,34 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   dicesVisible = false;
   newVisible = false;
   exitVisible = true;
+  acceptDoublingVisible = false;
+  requestDoublingVisible = false;
 
   rollButtonClick(): void {
+    this.service.sendRolled();
     this.rollButtonClicked = true;
     this.setRollButtonVisible();
-    this.setDicesVisible();
+    this.dicesVisible = true;
+
+    Sound.playDice();
+
     this.setSendVisible();
     this.fireResize();
+    this.requestDoublingVisible = false;
     const gme = AppState.Singleton.game.getValue();
     if (!gme.validMoves || gme.validMoves.length === 0) {
       this.statusMessageService.setBlockedMessage();
     }
+    this.changeDetector.detectChanges();
+  }
+
+  opponentRolled(): void {
+    this.dicesVisible = true;
+    Sound.playDice();
   }
 
   setRollButtonVisible(): void {
-    if (!this.myTurn()) {
+    if (!this.myTurn() || this.doublingRequested()) {
       this.rollButtonVisible = false;
       return;
     }
@@ -201,7 +334,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   setSendVisible(): void {
-    if (!this.myTurn() || !this.rollButtonClicked) {
+    if (!this.myTurn() || !this.rollButtonClicked || this.doublingRequested()) {
       this.sendVisible = false;
       return;
     }
@@ -211,7 +344,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   setUndoVisible(): void {
-    if (!this.myTurn()) {
+    if (!this.myTurn() || this.doublingRequested()) {
       this.undoVisible = false;
       return;
     }
@@ -220,29 +353,51 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.undoVisible = dices && dices.filter((d) => d.used).length > 0;
   }
 
-  setDicesVisible(): void {
-    const wasVisible = this.dicesVisible;
-    if (!this.myTurn()) {
-      this.dicesVisible = true;
-      if (!wasVisible) Sound.playDice();
-      return;
-    }
-    this.dicesVisible = !this.rollButtonVisible;
-  }
-
   resignGame(): void {
     this.service.resignGame();
   }
 
   newGame(): void {
     this.newVisible = false;
+    this.started = false;
     this.service.resetGame();
-    this.service.connect('', this.playAiFlag);
+    this.service.connect('', this.playAiFlag, this.forGodlFlag);
+    this.waitForOpponent();
   }
 
   exitGame(): void {
+    clearTimeout(this.startedHandle);
     this.service.exitGame();
     Busy.hide();
     this.router.navigateByUrl('/lobby');
+  }
+
+  requestDoubling(): void {
+    this.requestDoublingVisible = false;
+    this.service.requestDoubling();
+  }
+
+  acceptDoubling(): void {
+    this.acceptDoublingVisible = false;
+    this.service.acceptDoubling();
+  }
+
+  getDoubling(color: PlayerColor): Observable<number> {
+    return this.gameDto$.pipe(
+      map((game) => {
+        return game?.lastDoubler === color ? game?.goldMultiplier : 0;
+      })
+    );
+  }
+
+  playAi(): void {
+    this.playAiQuestion = false;
+    this.service.exitGame();
+    this.service.connect('', true, this.forGodlFlag);
+  }
+
+  keepWaiting(): void {
+    Sound.playBlues();
+    this.playAiQuestion = false;
   }
 }

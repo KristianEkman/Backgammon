@@ -12,6 +12,27 @@
     (flip)="this.flipped = !this.flipped"
     (resign)="resignGame()"
   ></app-menu>
+  <div
+    *ngIf="(gameDto$ | async)?.isGoldGame"
+    class="players"
+    [ngStyle]="{ height: height + 'px' }"
+    [ngClass]="{ flipped: flipped }"
+  >
+    <app-player
+      [playerDto]="(gameDto$ | async)?.whitePlayer"
+      [doubling]="getDoubling(PlayerColor.white) | async"
+    ></app-player>
+    <div class="stake-container">
+      <div class="stake" [ngClass]="{ hilightStake: animatingStake }">
+        {{ lokalStake }}
+        <i class="fas fa-coins"></i>
+      </div>
+    </div>
+    <app-player
+      [playerDto]="(gameDto$ | async)?.blackPlayer"
+      [doubling]="getDoubling(PlayerColor.black) | async"
+    ></app-player>
+  </div>
   <app-game-board
     class="game-board"
     [width]="width"
@@ -20,14 +41,14 @@
     [myColor]="playerColor$ | async"
     [dicesVisible]="dicesVisible"
     [flipped]="flipped"
-    [themeName]="(user$ | async)?.theme"
+    [themeName]="themeName"
     (addMove)="doMove($event)"
     (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>
   <div class="dices" #dices>
     <app-dices
       *ngIf="dicesVisible"
-      [dices]="dices$ | async"
+      [dices]="dicesDto"
       [color]="diceColor"
     ></app-dices>
   </div>
@@ -38,12 +59,24 @@
       [rollButtonVisible]="rollButtonVisible"
       [newVisible]="newVisible"
       [exitVisible]="exitVisible"
+      [acceptDoublingVisible]="acceptDoublingVisible"
+      [requestDoublingVisible]="requestDoublingVisible"
+      [doublingFactor]="nextDoublingFactor"
       (onUndoMove)="undoMove()"
       (onSendMoves)="sendMoves()"
       (onRoll)="rollButtonClick()"
       (onNew)="newGame()"
       (onExit)="exitGame()"
+      (onRequestDoubling)="requestDoubling()"
+      (onAcceptDoubling)="acceptDoubling()"
+      (onResign)="resignGame()"
     ></app-board-buttons>
   </div>
-  <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div>
+  <div *ngIf="playAiQuestion" class="playAiQuestion app-colors">
+    <app-play-ai-question
+      (onPlayAi)="playAi()"
+      (onKeepWaiting)="keepWaiting()"
+    ></app-play-ai-question>
+  </div>
+  <!-- <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div> -->
 </div>

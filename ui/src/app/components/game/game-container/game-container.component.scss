@@ -1,3 +1,5 @@
+@import '../../../../styles/buttons';
+
 .game-container {
   animation: fadein 2s;
   position: relative;
@@ -41,4 +43,50 @@
   text-align: center;
   width: 100%;
   color: #777;
+}
+
+.players {
+  position: absolute;
+  display: flex;
+  padding-top: 20px;
+  flex-direction: column;
+  justify-content: space-around;
+  top: 0;
+  width: calc(10% - 8px);
+  overflow: hidden;
+  margin-left: 8px;
+
+  &.flipped {
+    right: 0;
+    flex-direction: column-reverse;
+  }
+}
+
+.stake-container {
+  background-color: #111;
+  display: inline-block;
+  width: calc(100% - 8px);
+  border-radius: 7px;
+  padding: 4px 0 4px 0;
+}
+
+.stake {
+  text-align: center;
+  font-size: 18px;
+  @include glod-text();
+}
+
+.hilightStake {
+  font-weight: 600;
+  text-shadow: 0px 0px 5px rgba(251, 245, 183, 0.5);
+}
+
+.playAiQuestion {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 16px;
+  border-radius: 4px;
 }

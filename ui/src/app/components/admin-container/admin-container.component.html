@@ -8,7 +8,12 @@
       Summary
     </label>
     <label>
-      <input type="radio" formControlName="view" value="games" />
+      <input
+        type="radio"
+        formControlName="view"
+        value="games"
+        (click)="loadGames()"
+      />
       Games
     </label>
     <label>

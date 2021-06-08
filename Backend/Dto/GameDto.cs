@@ -5,7 +5,6 @@ namespace Backend.Dto
 {
     public class GameDto
     {
-
         public string id { get; set; }
         public PlayerDto blackPlayer { get; set; }
         public PlayerDto whitePlayer { get; set; }
@@ -15,5 +14,9 @@ namespace Backend.Dto
         public PointDto[] points { get; set; }
         public MoveDto[] validMoves { get; set; }
         public double thinkTime { get; set; }
+        public int goldMultiplier { get; set; }
+        public bool isGoldGame { get; set; }
+        public PlayerColor? lastDoubler { get; set; }
+        public int stake { get; set; }
     }
 }

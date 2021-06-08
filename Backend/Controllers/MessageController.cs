@@ -2,6 +2,7 @@
 using Backend.Dto.message;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,11 @@ namespace Backend.Controllers
     public class MessageController : AuthorizedController
     {
         private readonly ILogger<MessageController> logger;
-        public MessageController(ILogger<MessageController> logger)
+        private readonly IConfiguration config;
+        public MessageController(ILogger<MessageController> logger, IConfiguration configuration)
         {
             this.logger = logger;
+            this.config = configuration;
         }
 
         [HttpGet]
@@ -81,11 +84,13 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("api/message/sendToAll")]
-        public void SendToAll(MessageType type)
+        public async Task SendToAll(MessageType type)
         {
             // For each user, add the message. If the user has notification flag, send mail.
             AssertAdmin();
             string adminId = Request.Headers["user-id"].ToString();
+            string pw = config.GetValue<string>("smtppw");
+
             using (var db = new BgDbContext())
             {
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);
@@ -109,14 +114,13 @@ namespace Backend.Controllers
 
                     try
                     {
-                        Mail.Mailer.Send(user.Email, subject, text);
+                        await Mail.Mailer.Send(user.Email, subject, text, pw);
                         logger.LogInformation($"Emailed {user.Email}");
                     }
                     catch (Exception exc)
                     {
                         logger.LogError(exc.ToString());
                     }
-                    Thread.Sleep(1000);
                 }
 
                 db.SaveChanges();
@@ -130,6 +134,7 @@ namespace Backend.Controllers
                 case MessageType.SharePrompt:
                     return ("", "");
                 case MessageType.Version2Info:
+                case MessageType.Version3Info:
                     return ("New version of Backgammon", @$"<p>Hi {name}!</p>
 <img src='https://backgammon.azurewebsites.net/assets/images/banner.jpg'>
 <p>You have a new Backgammon message.</p>

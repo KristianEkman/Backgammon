@@ -17,22 +17,24 @@ namespace Backend.Db
             if (File.Exists("pw.txt"))
                 return File.ReadAllText("pw.txt");
 
-            var options = new SecretClientOptions()
-            {
-                Retry =
-                    {
-                        Delay= TimeSpan.FromSeconds(2),
-                        MaxDelay = TimeSpan.FromSeconds(16),
-                        MaxRetries = 2,
-                        Mode = RetryMode.Exponential
-                     }
-            };
-            var client = new SecretClient(new Uri("https://backgammon-keys.vault.azure.net/"), new DefaultAzureCredential(), options);
+            return "";
 
-            KeyVaultSecret secret = client.GetSecret("bgdbpw");
+            //var options = new SecretClientOptions()
+            //{
+            //    Retry =
+            //        {
+            //            Delay= TimeSpan.FromSeconds(2),
+            //            MaxDelay = TimeSpan.FromSeconds(16),
+            //            MaxRetries = 2,
+            //            Mode = RetryMode.Exponential
+            //         }
+            //};
+            //var client = new SecretClient(new Uri("https://backgammon-keys.vault.azure.net/"), new DefaultAzureCredential(), options);
 
-            string secretValue = secret.Value;
-            return secretValue;
+            //KeyVaultSecret secret = client.GetSecret("bgdbpw");
+
+            //string secretValue = secret.Value;
+            //return secretValue;
         }
 
         internal static string FbAppToken()

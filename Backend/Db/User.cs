@@ -14,6 +14,7 @@ namespace Backend.Db
         public string Name { get; set; }
         public string Email { get; set; }
         public string PhotoUrl { get; set; }
+        public bool ShowPhoto { get; set; }
         public string SocialProvider { get; set; }
         public int Elo { get; set; }
         public int GameCount { get; set; }
@@ -23,6 +24,8 @@ namespace Backend.Db
         public string Theme { get; set; }
         public bool EmailNotifications { get; set; }
         public Guid EmailUnsubscribeId { get; set; }
+        public int Gold { get; set; }
+        public DateTime LastFreeGold { get; set; }
         public ICollection<Player> Players { get; set; } = new List<Player>();
         [InverseProperty("Receiver")]
         public ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();

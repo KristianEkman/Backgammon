@@ -9,7 +9,6 @@
   &:focus {
     outline: 0 !important;
   }
-
 }
 
 @mixin hovershadow {
@@ -62,6 +61,28 @@
   color: #999 !important;
 }
 
+.blue-button {
+  @include button();
+  @include glass();
+  background-image: linear-gradient(rgb(31, 32, 71), rgb(38, 35, 184));
+  color: #fff !important;
+}
+
+.red-button {
+  @include button();
+  @include glass();
+  background-image: linear-gradient(rgb(71, 31, 31), rgb(136, 27, 27));
+  color: #fff !important;
+}
+
 .flat-button {
   @include button();
+}
+
+@mixin glod-text {
+  background: linear-gradient(69deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+  font-size: 22px;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }

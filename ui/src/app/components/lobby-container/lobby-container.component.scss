@@ -32,8 +32,7 @@
   }
 
   button {
-    margin-bottom: 8px;
-    margin-left: 8px;
+    margin-right: 8px;
   }
 
   .guest-play-button {
@@ -53,31 +52,37 @@
   }
 }
 
+.button-row {
+  position: absolute;
+  top: 5px;
+  left: 4px;
+}
+
 @keyframes fadein {
   from {
     opacity: 0;
-    right: -230px;
+    left: -230px;
   }
 
   to {
     opacity: 1;
-    right: 0;
+    left: 0px;
   }
 }
 
 .ai-button-container {
   display: flex;
   position: relative;
-  justify-content: space-between;
+  // justify-content: space-between;
   align-items: flex-start;
 
   .tip-message {
     max-width: 230px;
     width: 230px;
     position: absolute;
-    right: 0;
+    left: 0;
+    top: -45px;
     animation: fadein .5s;
-    text-align: center;
 
     strong {
       color: $tip-color;

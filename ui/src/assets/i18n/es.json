@@ -9,9 +9,9 @@
     "signin": "Inicia sesión con"
   },
   "logincontainer": {
-    "random": "Oponente aleatorio",
+    "goldgame": "Juego de oro",
+    "practice": "Práctica",
     "friend": "Invita a un amigo",
-    "playai": "Jugar contra Aina",
     "tip": "Consejo",
     "whenyousignin": "Cuando inicia sesión, más funciones se habilitan, ¡gratis!",
     "accept": "Aceptar invitación"
@@ -29,7 +29,8 @@
     "allyourgames": "Todos los juegos y los datos guardados también se eliminarán.No puedes deshacer esto.",
     "sure": "¿Está seguro?",
     "yesdelete": "Si eliminarlo",
-    "theme": "Tema"
+    "theme": "Tema",
+    "showPhoto": "show"
   },
   "theme": {
     "dark": "Oscura",
@@ -47,7 +48,9 @@
     "undo": "Deshacer",
     "roll": "Tirar",
     "exit": "Salida",
-    "new": "Nueva"
+    "new": "Nueva",
+    "acceptDoubling": "Aceptar",
+    "resign": "Renunciar"
   },
   "gameboard": {
     "black": "Negra",
@@ -64,7 +67,8 @@
     "next": "Próxima",
     "from": "De",
     "nomore": "No más mensajes",
-    "version2Info": "¡Hola!<br>Acabo de lanzar Backgammon 2.0<br><br><strong>Estas son las nuevas características.</strong><ul><li>Temas de color</li><li>Soporte para múltiples idiomas.</li><li>Sonidos</li><li>Inteligente ai</li></ul>Espero que te gusten.<br><br>Saludos cordiales<br>/Kristian"
+    "version2Info": "¡Hola!<br>Acabo de lanzar Backgammon 2.0<br><br><strong>Estas son las nuevas características.</strong><ul><li>Temas de color</li><li>Soporte para múltiples idiomas.</li><li>Sonidos</li><li>Inteligente ai</li></ul>Espero que te gusten.<br><br>Saludos cordiales<br>/Kristian",
+    "version3Info": "¡Hola!<br>Acabo de lanzar Backgammon 3.0<br><br><strong>Estas son las nuevas características.</strong><ul><li>Juegos de oro</li><li>Imágenes de jugador</li></ul>Espero que te guste la nueva versión.<br><br>Saludos cordiales<br>/Kristian"
   },
   "shareprompt": {
     "hello": "¡Hola!",
@@ -95,14 +99,17 @@
   "statusmessage": {
     "yourturn": "Tu turno para moverte.  ({{color}})",
     "waitingfor": "Esperando que el {{ color }} se mueva.",
-    "youareblcoked": "Estás bloqueado.Haga clic en \"hecho \"",
+    "youareblocked": "Estás bloqueado.Haga clic en \"hecho \"",
     "noconnection": "No hay conexión del servidor",
     "opponentconnectionlost": "Conexión oponente perdida",
     "waitingoppcnn": "Esperando a que el oponente se conecte",
     "newscore": "Nueva puntuación {{ score }} ({{ increase }})",
     "youwon": "¡Felicitaciones! Ganaste. {{score}}",
     "youlost": "Lo siento. Perdiste el juego. {{score}}",
-    "movenow": "¡Muévete ahora o pierde!"
+    "movenow": "¡Muévete ahora o pierde!",
+    "dblaccepted": "El oponente aceptó.Tu turno para moverte.",
+    "dblrequested": "Duplique su apuesta o renuncie.",
+    "waitfordblresponse": "Esperando a que el oponente responda."
   },
   "black": "negra",
   "white": "blanca",
@@ -113,5 +120,19 @@
     "andyouarewelcome": "Y eres muy bienvenido a jugar.",
     "orifyouareadeveloper": "O si usted es un desarrollador, podría estar interesado en los enlaces a continuación con todos los detalles.",
     "ongithub": "En GitHub, puede solicitar o votar por nuevas características, o incluso contribuir con las solicitudes de tracción."
+  },
+  "goldbutton": {
+    "getgold": "consigue oro"
+  },
+  "tolittlegold": {
+    "youdonthave": "No tienes suficiente oro.",
+    "youcangetmore": "Puedes obtener más oro cada 24 horas.",
+    "untilthen": "Hasta entonces puedes jugar siempre los juegos de práctica contra la AI."
+  },
+  "playaiquestion": {
+    "icantfind": "No puedo encontrar a nadie más jugando en este momento.",
+    "doyouwanttoplay": "¿Quieres jugar contra el AI?",
+    "playai": "Jugar ai",
+    "keepwaiting": "Seguir esperando"
   }
 }

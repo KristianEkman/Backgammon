@@ -1,0 +1,9 @@
+@import '../../../../styles/buttons';
+
+button {
+  font-size: 16px;
+}
+
+i::before {
+  @include glod-text();
+}

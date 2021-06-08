@@ -7,6 +7,8 @@ export class Sound {
   swish: HTMLAudioElement;
   warning: HTMLAudioElement;
   winner: HTMLAudioElement;
+  coin: HTMLAudioElement;
+  blues: HTMLAudioElement;
 
   private constructor() {
     this.click = new Audio();
@@ -40,6 +42,16 @@ export class Sound {
     this.winner = new Audio();
     this.winner.src = '../assets/sound/winner.wav';
     this.winner.load();
+
+    this.coin = new Audio();
+    this.coin.src = '../assets/sound/coin.wav';
+    this.coin.preload = 'true';
+    this.coin.load();
+
+    this.blues = new Audio();
+    this.blues.src = '../assets/sound/blues.mp3';
+    this.blues.preload = 'true';
+    this.blues.load();
   }
 
   private static _singleton: Sound;
@@ -80,5 +92,31 @@ export class Sound {
 
   static playWinner(): void {
     this.Singleton.winner.play();
+  }
+
+  static playCoin(): void {
+    this.Singleton.coin.play();
+  }
+
+  static playBlues(): void {
+    this.Singleton.blues.volume = 1;
+    this.Singleton.blues.play();
+  }
+
+  static fadeBlues(): void {
+    const startVol = this.Singleton.blues.volume;
+    if (startVol === 0) return;
+    const interval = 50; //ms
+    const fadeLength = 1000;
+    const fadeStep = startVol / (fadeLength / interval);
+    const handle = setInterval(() => {
+      let v = this.Singleton.blues.volume;
+      v -= fadeStep;
+      if (v < 0) {
+        v = 0;
+        clearInterval(handle);
+      }
+      this.Singleton.blues.volume = v;
+    }, interval);
   }
 }

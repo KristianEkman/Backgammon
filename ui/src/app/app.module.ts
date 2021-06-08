@@ -57,6 +57,10 @@ import { AboutContainerComponent } from './components/about-container/about-cont
 import { ThemeComponent } from './components/account/theme/theme.component';
 import { MailingComponent } from './components/admin-container/mailing/mailing.component';
 import { ShareButtonsComponent } from './components/shared/share-buttons/share-buttons.component';
+import { PlayerComponent } from './components/game/player/player.component';
+import { GoldButtonComponent } from './components/shared/gold-button/gold-button.component';
+import { ToLittleGoldComponent } from './components/to-little-gold/to-little-gold.component';
+import { PlayAiQuestionComponent } from './components/game/play-ai-question/play-ai-question.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -94,7 +98,11 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     AboutContainerComponent,
     ThemeComponent,
     MailingComponent,
-    ShareButtonsComponent
+    ShareButtonsComponent,
+    PlayerComponent,
+    GoldButtonComponent,
+    ToLittleGoldComponent,
+    PlayAiQuestionComponent
   ],
   imports: [
     BrowserModule,

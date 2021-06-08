@@ -5,6 +5,7 @@ export interface UserDto {
   name: string;
   email: string;
   photoUrl: string;
+  showPhoto: boolean;
   socialProvider: string;
   socialProviderId: string;
   createdNew: boolean;
@@ -12,4 +13,7 @@ export interface UserDto {
   preferredLanguage: string;
   theme: string;
   emailNotification: boolean;
+  gold: number;
+  lastFreeGold: number;
+  elo: number;
 }

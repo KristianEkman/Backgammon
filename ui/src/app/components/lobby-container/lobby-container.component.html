@@ -15,28 +15,19 @@
         {{ 'backgammon' | translate }}
       </h1>
     </div>
-    <app-login-buttons
-      (onLogin)="login($event)"
-      [isLoggedIn]="!!(user$ | async)"
-    ></app-login-buttons>
     <div class="lobby">
       <!-- <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
         Play as guest&nbsp;&nbsp;<i class="fas fa-info-circle" title="Guests can only play other guests"></i>
       </button> -->
-      <ng-container *ngIf="isLoggedIn()">
-        <button class="black-button" (click)="playClick()">
-          <i class="fas fa-dice"></i>
-          {{ 'logincontainer.random' | translate }}</button
-        ><br />
-        <button class="black-button" (click)="inviteFriendClick()">
-          {{ 'logincontainer.friend' | translate }}
-        </button>
-      </ng-container>
       <div class="ai-button-container">
-        <button class="black-button" (click)="playAiClick()">
-          {{ 'logincontainer.playai' | translate }}
+        <button class="black-button" (click)="playClick()">
+          <i class="fas fa-coins gold-text"></i>
+          {{ 'logincontainer.goldgame' | translate }}
         </button>
-        <div *ngIf="playAiAsGuestMessage && !isLoggedIn()" class="tip-message">
+        <button class="black-button" (click)="practiceClick()">
+          {{ 'logincontainer.practice' | translate }}
+        </button>
+        <div *ngIf="showLoginTip && !isLoggedIn()" class="tip-message">
           <strong
             >{{ 'logincontainer.tip' | translate }}
             <i class="fas fa-carrot"></i></strong
@@ -44,7 +35,20 @@
           <em>{{ 'logincontainer.whenyousignin' | translate }}</em>
         </div>
       </div>
+      <button
+        style="margin-top: 8px"
+        *ngIf="isLoggedIn()"
+        class="black-button"
+        (click)="inviteFriendClick()"
+      >
+        {{ 'logincontainer.friend' | translate }}
+      </button>
     </div>
+    <br />
+    <app-login-buttons
+      (onLogin)="login($event)"
+      [isLoggedIn]="isLoggedIn()"
+    ></app-login-buttons>
   </ng-container>
   <div class="account">
     <app-account-menu
@@ -56,11 +60,15 @@
     >
     </app-account-menu>
   </div>
-  <ng-container *ngIf="isLoggedIn()">
+  <div class="button-row">
+    <app-gold-button
+      [user]="user$ | async"
+      (getGold)="getGold()"
+    ></app-gold-button>
     <app-new-messages
       [messages]="messages$ | async"
       (showMessages)="router.navigateByUrl('messages')"
     >
     </app-new-messages>
-  </ng-container>
+  </div>
 </div>

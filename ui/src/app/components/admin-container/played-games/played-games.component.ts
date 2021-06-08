@@ -35,7 +35,7 @@ export class PlayedGamesComponent implements OnInit {
 
   onScroll(event: Event): void {
     const div = event.target as HTMLDivElement;
-    if (div.scrollTop + div.clientHeight >= div.scrollHeight) {
+    if (div.scrollTop + div.clientHeight + 1 >= div.scrollHeight) {
       const lastDate = this.list?.games[this.list?.games.length - 1].started;
 
       if (!lastDate) {

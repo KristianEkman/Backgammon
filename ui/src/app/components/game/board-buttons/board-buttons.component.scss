@@ -6,4 +6,12 @@ button {
     padding: 6px 12px 6px 12px !important;
 
   }
+
+  i {
+    margin-left: 3px;
+  }
+
+  &.smaller {
+    font-size: 17px;
+  }
 }

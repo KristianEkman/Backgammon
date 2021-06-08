@@ -1,11 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import { MessageDto, MessageType } from 'src/app/dto';
 import { MessageTypeText } from './messageTypeTexts';
 
 @Component({
   selector: 'app-message-read',
   templateUrl: './message-read.component.html',
-  styleUrls: ['./message-read.component.scss']
+  styleUrls: ['./message-read.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MessageReadComponent implements OnInit {
   @Input() messages: MessageDto[] | null = null;
@@ -13,7 +21,6 @@ export class MessageReadComponent implements OnInit {
   MessageType = MessageType;
   currentIndex = 0;
   hide = false;
-  constructor() {}
 
   ngOnInit(): void {}
 

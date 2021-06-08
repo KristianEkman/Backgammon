@@ -17,10 +17,14 @@ p {
 }
 
 .share-container {
-  text-align: right;
+  text-align: center;
 
   .share {
     display: inline-block;
     width: 300px;
   }
+}
+
+.version {
+  text-align: right;
 }

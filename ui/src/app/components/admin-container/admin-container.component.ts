@@ -21,9 +21,7 @@ export class AdminContainerComponent implements OnInit {
     private fb: FormBuilder
   ) {
     this.playedGames$ = AppState.Singleton.playedGames.observe();
-    const tomorrow = addDays(new Date(), 1);
 
-    this.adminSerivce.loadPlayedGames(format(tomorrow, 'yyyy-MM-dd'));
     this.summary$ = this.adminSerivce.getSummary();
     this.formGroup = this.fb.group({
       view: ['summary']
@@ -49,5 +47,10 @@ export class AdminContainerComponent implements OnInit {
 
   get view(): string {
     return this.formGroup?.get('view')?.value;
+  }
+
+  loadGames(): void {
+    const tomorrow = addDays(new Date(), 1);
+    this.adminSerivce.loadPlayedGames(format(tomorrow, 'yyyy-MM-dd'));
   }
 }

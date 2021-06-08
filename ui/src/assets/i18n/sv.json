@@ -9,9 +9,9 @@
     "signin": "Logga in med"
   },
   "logincontainer": {
-    "random": "Slumpmässig motståndare",
+    "goldgame": "Guldspel",
+    "practice": "Öva",
     "friend": "Bjud in någon",
-    "playai": "Spela mot Aina",
     "tip": "Tips",
     "whenyousignin": "När du loggar in aktiveras fler funktioner, gratis!",
     "accept": "Godta inbjudan"
@@ -29,7 +29,8 @@
     "allyourgames": "Alla din matcher och sparad data tas bort. Det går inte att ångra.",
     "sure": "Är du säker?",
     "yesdelete": "Ja tabort det",
-    "theme": "Tema"
+    "theme": "Tema",
+    "showPhoto": "Visa"
   },
   "theme": {
     "dark": "Mörkt",
@@ -47,7 +48,9 @@
     "undo": "Ångra",
     "roll": "Rulla",
     "exit": "Hem",
-    "new": "Nytt"
+    "new": "Nytt",
+    "acceptDoubling": "Acceptera",
+    "resign": "Ge upp"
   },
   "gameboard": {
     "black": "Svart",
@@ -64,7 +67,8 @@
     "next": "Nästa",
     "from": "Från",
     "nomore": "Inga fler meddelanden",
-    "version2Info": "Hej!<br>Jag har just släppt Backgammon 2.0<br><br><strong>Det här är de nya funktionerna.</strong><ul><li>Färgteman</li><li>Stöd för flera språk.</li><li>Ljud</li><li>Smartare AI</li></ul>Jag hoppas att du kommer att tycka om dem.<br><br>Vänliga Hälsningar<br>/Kristian"
+    "version2Info": "Hej!<br>Jag har just släppt Backgammon 2.0<br><br><strong>Det här är de nya funktionerna.</strong><ul><li>Färgteman</li><li>Stöd för flera språk.</li><li>Ljud</li><li>Smartare AI</li></ul>Jag hoppas att du kommer att tycka om dem.<br><br>Vänliga Hälsningar<br>/Kristian",
+    "version3Info": "Hej!<br>Jag har just släppt backgammon 3.0<br><br><strong>Det här är de nya funktionerna.</strong><ul><li>Guldspel</li><li>Spelarbilder</li></ul>Jag hoppas att du kommer att tycka om den nya versionen.<br><br>Vänliga Hälsningar<br>/Kristian"
   },
   "shareprompt": {
     "hello": "Hej!",
@@ -95,14 +99,17 @@
   "statusmessage": {
     "yourturn": "Din tur. ({{color}})",
     "waitingfor": "Väntar på {{color}}",
-    "youareblcoked": "Du är blockerad, klicka på \"Klar\"",
+    "youareblocked": "Du är blockerad, klicka på \"Klar\"",
     "noconnection": "Ingen serveranslutning",
     "opponentconnectionlost": "Motståndaren tappade anslutningen",
     "waitingoppcnn": "Väntar på motståndaren att ansluta",
     "newscore": "Ny poäng {{ score }} ({{ increase }})",
     "youwon": "Grattis! Du vann. {{score}}",
     "youlost": "Ledsen. Du förlorade. {{score}}",
-    "movenow": "Om du inte flyttar nu förlorar du!"
+    "movenow": "Om du inte flyttar nu förlorar du!",
+    "dblaccepted": "Motståndaren accepterade. Din tur att flytta.",
+    "dblrequested": "Dubblera insattsen eller ge upp.",
+    "waitfordblresponse": "Väntar på motståndarens svar."
   },
   "black": "svart",
   "white": "vit",
@@ -113,5 +120,19 @@
     "andyouarewelcome": "Och du är mycket välkommen att spela.",
     "orifyouareadeveloper": "Eller om du är en utvecklare kan du vara intresserad av länkarna nedan med alla detaljer.",
     "ongithub": "På GitHub kan du begära eller rösta på nya funktioner, eller till och med bidra med pull requests."
+  },
+  "goldbutton": {
+    "getgold": "Hämta guld"
+  },
+  "tolittlegold": {
+    "youdonthave": "Du har inte tillräckligt med guld.",
+    "youcangetmore": "Du kan få mer guld var 24:e timme.",
+    "untilthen": "Fram till dess kan du alltid spela träningsspel mot AIt."
+  },
+  "playaiquestion": {
+    "icantfind": "Jag kan inte hitta någon annan som spelar för tillfället.",
+    "doyouwanttoplay": "Vill du spela mot AI?",
+    "playai": "Spela mot AIt",
+    "keepwaiting": "Fortsätt vänta"
   }
 }

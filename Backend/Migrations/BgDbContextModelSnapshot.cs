@@ -159,6 +159,12 @@ namespace Backend.Migrations
                     b.Property<int>("GameCount")
                         .HasColumnType("int");
 
+                    b.Property<int>("Gold")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("LastFreeGold")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
@@ -173,6 +179,9 @@ namespace Backend.Migrations
 
                     b.Property<DateTime?>("Registered")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("ShowPhoto")
+                        .HasColumnType("bit");
 
                     b.Property<string>("SocialProvider")
                         .HasColumnType("nvarchar(max)");

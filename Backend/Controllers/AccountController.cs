@@ -1,6 +1,7 @@
 ﻿using Backend.Db;
 using Backend.Dto;
 using Backend.Dto.message;
+using Backend.Dto.rest;
 using Google.Apis.Auth;
 using Google.Apis.Util;
 using Microsoft.AspNetCore.Authorization;
@@ -63,7 +64,17 @@ namespace Backend.Controllers
                 return null;
 
             return GetOrCreateLogin(userDto);
+        }
 
+        [HttpGet]
+        [Route("/api/account/getuser")]
+        public UserDto GetUser(Guid userId)
+            {
+            using (var db = new BgDbContext())
+            {
+                var user = db.Users.Single((u) => u.Id == userId);
+                return user.ToDto();
+            }
         }
 
         private UserDto GetOrCreateLogin(UserDto userDto)
@@ -88,6 +99,7 @@ namespace Backend.Controllers
                         Email = userDto.email,
                         Name = userDto.name,
                         PhotoUrl = userDto.photoUrl,
+                        ShowPhoto = true,
                         ProviderId = userDto.socialProviderId,
                         SocialProvider = userDto.socialProvider,
                         Elo = 1200,
@@ -96,10 +108,12 @@ namespace Backend.Controllers
                         EmailNotifications = true,
                         EmailUnsubscribeId = Guid.NewGuid(),
                         Theme = "dark",
-                        PreferredLanguage = "en"
+                        PreferredLanguage = "en",
+                        Gold = 200,
+                        LastFreeGold = DateTime.Now,                        
                     };
                     db.Users.Add(dbUser);
-                    
+
                     // Give new users a prompt message to share the site.
                     var admin = db.Users.First(u => u.Admin);
                     dbUser.ReceivedMessages.Add(new Message
@@ -132,6 +146,7 @@ namespace Backend.Controllers
                 dbUser.PreferredLanguage = userDto.preferredLanguage;
                 dbUser.Theme = userDto.theme;
                 dbUser.EmailNotifications = userDto.emailNotification;
+                dbUser.ShowPhoto = userDto.showPhoto;
                 db.SaveChanges();
             }
         }
@@ -155,10 +170,35 @@ namespace Backend.Controllers
                 dbUser.Email = "";
                 dbUser.GameCount = 0;
                 dbUser.PhotoUrl = "";
+                dbUser.ShowPhoto = false;
                 dbUser.ProviderId = "";
                 dbUser.PreferredLanguage = "";
                 dbUser.Admin = false;
                 db.SaveChanges();
+            }
+        }
+
+        [HttpGet]
+        [Route("/api/account/requestgold")]
+        public GoldGiftDto RequestGold()
+        {
+            var usId = GetUserId();
+            using (var db = new Db.BgDbContext())
+            {
+                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+                if (dbUser.Gold < GoldGiftDto.Gift && DateTime.UtcNow > dbUser.LastFreeGold.AddDays(1))
+                {
+                    dbUser.Gold += GoldGiftDto.Gift;
+                    dbUser.LastFreeGold = DateTime.UtcNow;
+                    db.SaveChanges();
+                }
+
+                int unixTimestamp = (int)dbUser.LastFreeGold.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+                return new GoldGiftDto
+                {
+                    gold = dbUser.Gold,
+                    lastFreeGold = unixTimestamp
+                };
             }
         }
 

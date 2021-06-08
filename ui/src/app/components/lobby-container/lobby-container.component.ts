@@ -28,9 +28,9 @@ export class LobbyContainerComponent implements OnInit {
 
   toplist = false;
   loginClicked = false;
-  playAiAsGuestMessage = false;
   v1 = 0;
   v2 = 0;
+  showLoginTip = false;
 
   ngOnInit(): void {
     this.authService.authState.subscribe((user: SocialUser) => {
@@ -75,21 +75,23 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   playClick(): void {
-    this.router.navigateByUrl('game');
+    if (!this.isLoggedIn()) {
+      this.showLoginTip = true;
+      return;
+    }
+    this.router.navigate(['game'], {
+      queryParams: { playAi: false, forGold: true }
+    });
   }
 
   inviteFriendClick(): void {
     this.router.navigateByUrl('invite');
   }
 
-  playAiClick(): void {
-    if (this.playAiAsGuestMessage || this.isLoggedIn()) {
-      this.router.navigate(['game'], { queryParams: { playAi: true } });
-      return;
-    }
-    this.playAiAsGuestMessage = true;
-
-    // The user has to click button twice.
+  practiceClick(): void {
+    this.router.navigate(['game'], {
+      queryParams: { playAi: true, forGold: false }
+    });
   }
 
   startInvitedGame(id: string): void {
@@ -104,5 +106,9 @@ export class LobbyContainerComponent implements OnInit {
 
   isLoggedIn(): boolean {
     return !!AppState.Singleton.user.getValue();
+  }
+
+  getGold(): void {
+    this.accountService.getGold();
   }
 }

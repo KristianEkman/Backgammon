@@ -10,6 +10,6 @@ export class MailingComponent {
   @Output() onSend = new EventEmitter<MessageType>();
 
   sendInfo(): void {
-    this.onSend.emit(MessageType.version2Info);
+    this.onSend.emit(MessageType.version3Info);
   }
 }

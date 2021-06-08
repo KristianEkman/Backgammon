@@ -1,8 +1,6 @@
-<ng-container *ngIf="toplist$ | async">
-  <app-toplist *ngIf="!banner" [toplist]="toplist$ | async"></app-toplist>
-  <app-toplist-banner
-    *ngIf="banner"
-    [toplist]="toplist$ | async"
-    (clicked)="bannerClicked()"
-  ></app-toplist-banner>
-</ng-container>
+<app-toplist *ngIf="!banner" [toplist]="toplist$ | async"></app-toplist>
+<app-toplist-banner
+  *ngIf="banner"
+  [toplist]="toplist$ | async"
+  (clicked)="bannerClicked()"
+></app-toplist-banner>

@@ -19,7 +19,11 @@ namespace Backend.Dto
                 playState = (GameState)game.PlayState,
                 points = game.Points.Select(p => p.ToDto()).ToArray(),
                 validMoves = game.ValidMoves.Select(m => m.ToDto()).ToArray(),
-                thinkTime = Game.ClientCountDown - (DateTime.Now - game.ThinkStart).TotalSeconds
+                thinkTime = Game.ClientCountDown - (DateTime.Now - game.ThinkStart).TotalSeconds,
+                goldMultiplier = game.GoldMultiplier,
+                isGoldGame = game.IsGoldGame,
+                lastDoubler = game.LastDoubler.HasValue ? (PlayerColor)game.LastDoubler : null,
+                stake = game.Stake
             };
             return gameDto;
         }
@@ -31,8 +35,10 @@ namespace Backend.Dto
                 // Do not mapp id, it should never be sent to opponent.
                 playerColor = (PlayerColor)player.PlayerColor,
                 name = player.Name,
-                pointsLeft = player.PointsLeft
-                // todo: image? But do not force users to show their image. It should be an active choice.
+                pointsLeft = player.PointsLeft,
+                elo = player.Elo,
+                gold = player.Gold,
+                photoUrl = player.Photo
             };
             return playerDto;
         }
@@ -93,18 +99,24 @@ namespace Backend.Dto
 
         public static UserDto ToDto(this Db.User dbUser)
         {
+            int unixTimestamp = (int)dbUser.LastFreeGold.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+
             return new UserDto
             {
                 email = dbUser.Email,
                 name = dbUser.Name,
                 id = dbUser.Id.ToString(),
                 photoUrl = dbUser.PhotoUrl,
+                showPhoto = dbUser.ShowPhoto,
                 socialProvider = dbUser.SocialProvider,
                 isAdmin = dbUser.Admin,
                 socialProviderId = dbUser.ProviderId,
                 preferredLanguage = dbUser.PreferredLanguage ?? "en",
                 emailNotification = dbUser.EmailNotifications,
-                theme = dbUser.Theme
+                theme = dbUser.Theme,
+                gold = dbUser.Gold,
+                lastFreeGold = unixTimestamp,
+                elo = dbUser.Elo
             };
         }
     }

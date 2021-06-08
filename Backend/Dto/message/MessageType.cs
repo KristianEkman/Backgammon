@@ -8,6 +8,7 @@ namespace Backend.Dto.message
     public enum MessageType
     {
         SharePrompt,
-        Version2Info
+        Version2Info,
+        Version3Info
     }
 }

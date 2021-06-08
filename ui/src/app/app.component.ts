@@ -8,6 +8,8 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DOCUMENT } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Language } from './utils';
+import { Busy } from './state/busy';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -16,7 +18,7 @@ import { Language } from './utils';
 export class AppComponent {
   title = 'Backgammon';
   hide = false;
-  busy$ = AppState.Singleton.busy.observe();
+  busy$: Observable<Busy>;
   errors$: Observable<ErrorState>;
 
   constructor(
@@ -27,6 +29,7 @@ export class AppComponent {
     private router: Router
   ) {
     this.errors$ = AppState.Singleton.errors.observe();
+    this.busy$ = AppState.Singleton.busy.observe();
     this.accountService.repair();
 
     const langs = Language.List.map((l) => l.code);

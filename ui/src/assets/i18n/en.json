@@ -9,11 +9,11 @@
     "signin": "Sign in with"
   },
   "logincontainer": {
-    "random": "Random opponent",
+    "goldgame": "Gold Game",
+    "practice": "Practice",
     "friend": "Invite a friend",
-    "playai": "Play AI",
     "tip": "Tip",
-    "whenyousignin": "When you sign in, more features gets enabled, for free!",
+    "whenyousignin": "Sigin to compete for gold!",
     "accept": "Accept invite"
   },
   "accountedit": {
@@ -29,7 +29,8 @@
     "allyourgames": "All you games and saved data will also be deleted. You can not undo this.",
     "sure": "Are you sure?",
     "yesdelete": "Yes delete it",
-    "theme": "Theme"
+    "theme": "Theme",
+    "showPhoto": "Show"
   },
   "theme": {
     "dark": "Dark",
@@ -47,7 +48,9 @@
     "undo": "Undo",
     "roll": "Roll",
     "exit": "Exit",
-    "new": "New"
+    "new": "New",
+    "acceptDoubling": "Accept",
+    "resign": "Resign"
   },
   "gameboard": {
     "black": "Black",
@@ -64,7 +67,8 @@
     "next": "Next",
     "from": "From",
     "nomore": "No more messages",
-    "version2Info": "Hi!<br>I´ve just released Backgammon 2.0<br><br><strong>These are the new features.</strong><ul><li>Color themes</li><li>Support for multiple languages.</li><li>Sounds</li><li>Smarter AI</li></ul>I hope you will like them.<br><br>Kind regards<br>/Kristian"
+    "version2Info": "Hi!<br>I´ve just released Backgammon 2.0<br><br><strong>These are the new features.</strong><ul><li>Color themes</li><li>Support for multiple languages.</li><li>Sounds</li><li>Smarter AI</li></ul>I hope you will like them.<br><br>Kind regards<br>/Kristian",
+    "version3Info": "Hello!<br>I´ve just released Backgammon 3.0<br><br><strong>These are the new features.</strong><ul><li>Gold games</li><li>Player images</li></ul>I hope you will like the new version.<br><br>Kind regards<br>/Kristian"
   },
   "shareprompt": {
     "hello": "Hello!",
@@ -95,14 +99,17 @@
   "statusmessage": {
     "yourturn": "Your turn to move.  ({{color}})",
     "waitingfor": "Waiting for {{color}} to move.",
-    "youareblcoked": "You are blocked. Click \"Done\"",
+    "youareblocked": "You are blocked. Click \"Done\"",
     "noconnection": "No server connection",
     "opponentconnectionlost": "Opponent connection lost",
     "waitingoppcnn": "Waiting for opponent to connect",
     "newscore": "New score {{ score }} ({{ increase }})",
     "youwon": "Congrats! You won. {{score}}",
     "youlost": "Sorry. You lost the game. {{score}}",
-    "movenow": "Move now or lose!"
+    "movenow": "Move now or lose!",
+    "dblaccepted": "Opponent did accept. Your turn to move..",
+    "dblrequested": "Double your bet or give up.",
+    "waitfordblresponse": "Waiting for opponent to respond."
   },
   "black": "black",
   "white": "white",
@@ -113,5 +120,19 @@
     "andyouarewelcome": "And You are very welcome to play.",
     "orifyouareadeveloper": "Or if you are a developer you might be interested in the links below with all the details.",
     "ongithub": "On GitHub, you can request or vote for new features, or even contribute with pull requests."
+  },
+  "goldbutton": {
+    "getgold": "Get Gold"
+  },
+  "tolittlegold": {
+    "youdonthave": "You don't have enough gold.",
+    "youcangetmore": "You can get more gold every 24 hours.",
+    "untilthen": "Until then you can always play practice games against the AI."
+  },
+  "playaiquestion": {
+    "icantfind": "I can't find anyone else playing at the moment.",
+    "doyouwanttoplay": "Do you want to play against the AI?",
+    "playai": "Play AI",
+    "keepwaiting": "Keep waiting"
   }
 }

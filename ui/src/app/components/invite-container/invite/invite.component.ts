@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
@@ -12,7 +13,8 @@ import { Keys } from 'src/app/utils';
 @Component({
   selector: 'app-invite',
   templateUrl: './invite.component.html',
-  styleUrls: ['./invite.component.scss']
+  styleUrls: ['./invite.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InviteComponent implements OnChanges {
   @Input() gameId: string | undefined = '';

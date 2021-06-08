@@ -39,6 +39,11 @@
   .email {
     font-size: 16px;
   }
+
+  .columns {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 
 /* The checkbox */

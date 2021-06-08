@@ -8,5 +8,9 @@ export const MessageTypeText = [
   {
     type: MessageType.version2Info,
     message: 'messageread.version2Info'
+  },
+  {
+    type: MessageType.version3Info,
+    message: 'messageread.version3Info'
   }
 ];

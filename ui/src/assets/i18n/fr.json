@@ -9,9 +9,9 @@
     "signin": "Se connecter avec"
   },
   "logincontainer": {
-    "random": "Adversaire aléatoire",
+    "goldgame": "Gold jeu",
+    "practice": "Entraine toi",
     "friend": "Invite un ami",
-    "playai": "Jouer à Aina",
     "tip": "Conseil",
     "whenyousignin": "Lorsque vous vous connectez, plus de fonctionnalités sont activées, gratuitement!",
     "accept": "Accepter l'invitation"
@@ -29,7 +29,8 @@
     "allyourgames": "Toutes vos jeux et données sauvegardées seront également supprimées.Vous ne pouvez pas annuler cela.",
     "sure": "Êtes-vous sûr?",
     "yesdelete": "Oui supprimez-le",
-    "theme": "Thème"
+    "theme": "Thème",
+    "showPhoto": "spectacle"
   },
   "theme": {
     "dark": "Sombre",
@@ -47,7 +48,9 @@
     "undo": "annuler",
     "roll": "Rouleau",
     "exit": "Sortir",
-    "new": "Nouvelle"
+    "new": "Nouvelle",
+    "acceptDoubling": "J'accepte",
+    "resign": "Démissionner"
   },
   "gameboard": {
     "black": "Noire",
@@ -64,7 +67,8 @@
     "next": "Suivante",
     "from": "De",
     "nomore": "Pas plus de messages",
-    "version2Info": "Salut!<br>Je viens de relâcher Backgammon 2.0<br><br><strong>Ce sont les nouvelles fonctionnalités.</strong><ul><li>Thèmes de couleur</li><li>Prise en charge de plusieurs langues.</li><li>Des sons</li><li>Smarter ai</li></ul>J'espère que vous les aimerez.<br><br>Bien à vous<br>/Kristian"
+    "version2Info": "Salut!<br>Je viens de relâcher Backgammon 2.0<br><br><strong>Ce sont les nouvelles fonctionnalités.</strong><ul><li>Thèmes de couleur</li><li>Prise en charge de plusieurs langues.</li><li>Des sons</li><li>Smarter ai</li></ul>J'espère que vous les aimerez.<br><br>Bien à vous<br>/Kristian",
+    "version3Info": "Bonjour!<br>Je viens de relâcher Backgammon 3.0<br><br><strong>Ce sont les nouvelles fonctionnalités.</strong><ul><li>Jeux d'or</li><li>Images de joueur</li></ul>J'espère que vous aimerez la nouvelle version.<br><br>Bien à vous<br>/Kristian"
   },
   "shareprompt": {
     "hello": "Bonjour!",
@@ -95,14 +99,17 @@
   "statusmessage": {
     "yourturn": "Votre tour de déplacement. ({{color}})",
     "waitingfor": "En attente de {{ color }} se déplacer.",
-    "youareblcoked": "Vous êtes bloqué. Cliquer sur Terminé",
+    "youareblocked": "Vous êtes bloqué. Cliquer sur Terminé",
     "noconnection": "Aucun raccordeur de serveur",
     "opponentconnectionlost": "Connexion adversaire perdue",
     "waitingoppcnn": "En attente de l'adversaire de se connecter",
     "newscore": "Nouveau score {{ score }} ({{ increase }})",
     "youwon": "Félicitations!Tu as gagné. {{score}}",
     "youlost": "Pardon.Tu as perdu le jeu. {{score}}",
-    "movenow": "Déplacer maintenant ou perdre!"
+    "movenow": "Déplacer maintenant ou perdre!",
+    "dblaccepted": "Adversaire a accepté.Votre tour de déplacement.",
+    "dblrequested": "Doublez votre pari ou abandonnez.",
+    "waitfordblresponse": "En attente de l'adversaire de répondre."
   },
   "black": "noire",
   "white": "blanche",
@@ -113,5 +120,19 @@
     "andyouarewelcome": "Et vous êtes très bienvenu pour jouer.",
     "orifyouareadeveloper": "Ou si vous êtes un développeur, vous pourriez être intéressé par les liens ci-dessous avec tous les détails.",
     "ongithub": "Sur GitHub, vous pouvez demander ou voter pour de nouvelles fonctionnalités, voire de contribuer avec les demandes de traction."
+  },
+  "goldbutton": {
+    "getgold": "obtenir de l'or"
+  },
+  "tolittlegold": {
+    "youdonthave": "Vous n'avez pas assez d'or.",
+    "youcangetmore": "Vous pouvez obtenir plus d'or toutes les 24 heures.",
+    "untilthen": "Jusque-là, vous pouvez toujours jouer à des jeux de pratique contre l'IA."
+  },
+  "playaiquestion": {
+    "icantfind": "Je ne trouve personne d'autre jouant pour le moment.",
+    "doyouwanttoplay": "Voulez-vous jouer contre l'IA?",
+    "playai": "Jouer à",
+    "keepwaiting": "Faire attendre"
   }
 }

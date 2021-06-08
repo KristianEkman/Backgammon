@@ -36,6 +36,8 @@ export class AppState {
     this.playedGames.setValue({ games: [] });
     this.messages = new StateObject<MessageDto[]>();
     this.messages.setValue([]);
+    this.rolled = new StateObject<boolean>();
+    this.opponentDone = new StateObject<boolean>();
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -59,6 +61,8 @@ export class AppState {
   errors: StateObject<ErrorState>;
   playedGames: StateObject<PlayedGameListDto>;
   messages: StateObject<MessageDto[]>;
+  rolled: StateObject<boolean>;
+  opponentDone: StateObject<boolean>;
 
   myTurn(): boolean {
     const game = this.game.getValue();
@@ -68,5 +72,16 @@ export class AppState {
       game.playState !== GameState.ended &&
       game.currentPlayer === this.myColor.getValue()
     );
+  }
+
+  doublingRequested(): boolean {
+    const game = this.game.getValue();
+    return game && game.playState === GameState.requestedDoubling;
+  }
+
+  getOtherPlayer(): PlayerColor {
+    return this.myColor.getValue() === PlayerColor.black
+      ? PlayerColor.white
+      : PlayerColor.black;
   }
 }

@@ -16,6 +16,9 @@ namespace Backend.Dto
         connectionInfo,
         gameRestore,
         resign,
-        exitGame
+        exitGame,
+        requestedDoubling,
+        acceptedDoubling,
+        rolled
     }
 }

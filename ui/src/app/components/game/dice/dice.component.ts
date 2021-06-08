@@ -1,16 +1,24 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 
 @Component({
   selector: 'app-dice',
   templateUrl: './dice.component.html',
-  styleUrls: ['./dice.component.scss']
+  styleUrls: ['./dice.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DiceComponent implements OnChanges {
   @Input() color: 'black' | 'white' | undefined;
   @Input() value = 1;
   @Input() disabled = false;
 
-  constructor() {}
+  constructor(private changeDetector: ChangeDetectorRef) {}
 
   sideNo = 0;
 
@@ -68,6 +76,7 @@ export class DiceComponent implements OnChanges {
       setTimeout(() => {
         this.randomTransform = {};
         this.side = this.sides[this.value - 1];
+        this.changeDetector.detectChanges();
       }, 3000);
     }
   }
