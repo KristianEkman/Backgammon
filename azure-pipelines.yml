@@ -35,9 +35,4 @@ steps:
     packagesToPack: '**/*.csproj'
     versioningScheme: 'off'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-  
 
