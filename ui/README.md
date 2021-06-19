@@ -12,7 +12,7 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `yarn build --prod` to build the project. The build artifacts will be stored in the `../Backend/wwwroot` directory. Use the `--prod` flag for a production build.
+Run `yarn build:prod` to build the project. The build artifacts will be stored in the `../Backend/wwwroot` directory.
 
 ## Running unit tests
 

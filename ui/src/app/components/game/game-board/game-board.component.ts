@@ -1047,7 +1047,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.setCanBeMovedTo(x, y);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onTouchEnd(event: TouchEvent): void {
     // console.log('touchend', event);
 

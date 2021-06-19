@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { AppState } from '../state/app-state';
 import { ErrorState } from '../state/ErrorState';

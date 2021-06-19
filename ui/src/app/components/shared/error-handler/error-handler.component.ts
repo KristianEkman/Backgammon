@@ -31,7 +31,6 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
     // console.log(changes);
     this.setTextAreaValue();

@@ -68,8 +68,9 @@ export class ToplistBannerComponent implements OnChanges {
 
       this.timeoutHandle = setTimeout(() => {
         if (this.bannerRef) {
-          this.initial = (this.bannerRef
-            .nativeElement as HTMLElement).clientWidth;
+          this.initial = (
+            this.bannerRef.nativeElement as HTMLElement
+          ).clientWidth;
         }
 
         if (this.bannerItemsRef) {

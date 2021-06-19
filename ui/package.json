@@ -7,7 +7,7 @@
     "build": "ng build",
     "build:prod": "ng build --configuration production",
     "test": "ng test",
-    "lint": "tsc --noEmit && eslint . --ext js,ts,json --quiet --fix",
+    "lint": "tsc --noEmit && eslint . --ext ts,json --quiet --fix",
     "e2e": "ng e2e"
   },
   "private": true,

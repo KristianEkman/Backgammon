@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { AsyncSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 /*
   Represents an object which raises a changed ReplaySubject when its value is changed.

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Inject, Injectable } from '@angular/core';
 import {
   HttpEvent,
