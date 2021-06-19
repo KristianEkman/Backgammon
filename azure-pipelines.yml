@@ -15,16 +15,6 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: Npm@1
-  inputs:
-    command: 'install'
-    workingDir: 'ui'
-    
-- task: AngularCLI@1
-  inputs:
-    command: 'build'
-    project: 'ui'
-    DisableAnalytics: false
     
 - task: NuGetToolInstaller@1
 
@@ -45,9 +35,4 @@ steps:
     packagesToPack: '**/*.csproj'
     versioningScheme: 'off'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-  
 
