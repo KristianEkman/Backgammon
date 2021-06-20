@@ -60,6 +60,22 @@ namespace BackendTests
         }
 
         [TestMethod]
+        public void TestCheckerOnTheBarPArtiallyBlocked()
+        {
+            game.AddCheckers(2, Player.Color.White, 0);
+            game.AddCheckers(2, Player.Color.Black, 19);
+            game.AddCheckers(2, Player.Color.Black, 20);
+            game.AddCheckers(2, Player.Color.Black, 21);
+            //game.AddCheckers(2, Player.Color.Black, 22); // no 3 is free
+            game.AddCheckers(2, Player.Color.Black, 23);
+            game.AddCheckers(2, Player.Color.Black, 24);
+            game.SwitchPlayer();
+            game.FakeRoll(3, 5);
+            var moves = game.GenerateMoves();
+            Assert.AreEqual(1, moves.Count);
+        }
+
+        [TestMethod]
         public void TestBearingOff()
         {
             game.ClearCheckers();
