@@ -163,6 +163,8 @@ namespace Backend.Rules
 
             // AtHomeAndOtherAtBar();
 
+            //AtHomeAndOtherAtBar2();
+
             //Test();
         }
 
@@ -196,6 +198,20 @@ namespace Backend.Rules
             AddCheckers(2, Player.Color.White, 23);
             AddCheckers(1, Player.Color.White, 24);
             AddCheckers(2, Player.Color.White, 0);
+
+        }
+
+
+        private void AtHomeAndOtherAtBar2()
+        {
+            AddCheckers(3, Player.Color.Black, 19);
+            AddCheckers(3, Player.Color.Black, 20);
+            AddCheckers(3, Player.Color.Black, 21);
+            AddCheckers(5, Player.Color.Black, 23);
+            AddCheckers(3, Player.Color.Black, 24);
+
+            AddCheckers(14, Player.Color.White, 25);
+            AddCheckers(1, Player.Color.White, 0);
 
         }
 

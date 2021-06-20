@@ -7,6 +7,7 @@ namespace BackendTests
     public class MailTest
     {
         [TestMethod]
+        [Ignore]
         public void TestMail()
         {
             Mailer.SendTest();
