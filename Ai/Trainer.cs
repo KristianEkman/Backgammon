@@ -23,6 +23,8 @@ namespace Ai
             }
         }
 
+        private const double Improvement = 0.51;
+
         public Game Game { get; }
 
         public Engine Black { get; }
@@ -133,7 +135,7 @@ namespace Ai
         {
             var best = 0d;
             var bestT = 0d;
-            var delta = (end - start) / 10d;
+            var delta = 1;
 
             for (double t = start; t < end; t += delta)
             {
@@ -143,7 +145,30 @@ namespace Ai
                 Console.WriteLine($"=====================");
                 Console.WriteLine($"BloatsThreshold: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.51)
+                if (res > best && res > Improvement)
+                {
+                    best = res;
+                    bestT = t;
+                }
+            }
+            return bestT;
+        }
+
+        public static double OptimizeBloatsFactorPassed(double start = 1, double end = 10, Config config = null)
+        {
+            var best = 0d;
+            var bestT = 0d;
+            var delta = (end - start) / 4;
+
+            for (var t = start; t < end; t += delta)
+            {
+                var runner = new Trainer(config);
+                runner.White.Configuration.BloatsFactorPassed = t;
+                WriteConfigs(runner);
+                Console.WriteLine($"==================");
+                Console.WriteLine($"BloatsFactorPassed: {t}");
+                var res = RunMany(runner);
+                if (res > best && res > Improvement)
                 {
                     best = res;
                     bestT = t;
@@ -156,17 +181,17 @@ namespace Ai
         {
             var best = 0d;
             var bestT = 0d;
-            var delta = (end - start) / 10;
+            var delta = (end - start) / 4;
 
             for (var t = start; t < end; t += delta)
             {
                 var runner = new Trainer(config);
-                runner.White.Configuration.BloatsFactor = t; // 12.2 seems to be best so far.
+                runner.White.Configuration.BloatsFactor = t;
                 WriteConfigs(runner);
                 Console.WriteLine($"==================");
                 Console.WriteLine($"BloatsFactor: {t}");
                 var res = RunMany(runner);
-                if (res > best && res > 0.51)
+                if (res > best && res > Improvement)
                 {
                     best = res;
                     bestT = t;
@@ -179,7 +204,7 @@ namespace Ai
         {
             var best = 0d;
             var bestF = 0d;
-            var delta = (end - start) / 10;
+            var delta = (end - start) / 4;
             for (var f = start; f < end; f += delta) // maximum at 3.6
             {
                 var runner = new Trainer(config);
@@ -187,7 +212,7 @@ namespace Ai
                 WriteConfigs(runner);
                 Console.WriteLine($"===== ConnectedBlocksFactor {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.51)
+                if (res > best && res > Improvement)
                 {
                     best = res;
                     bestF = f;
@@ -200,7 +225,7 @@ namespace Ai
         {
             var best = 0d;
             var bestF = 0d;
-            var delta = (end - start) / 10;
+            var delta = (end - start) / 4;
 
             for (var f = start; f < end; f += delta) // maximum at 3.6
             {
@@ -209,7 +234,7 @@ namespace Ai
                 WriteConfigs(runner);
                 Console.WriteLine($"===== BlockedPointScore {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.51)
+                if (res > best && res > Improvement)
                 {
                     best = res;
                     bestF = f;
@@ -222,7 +247,7 @@ namespace Ai
         {
             var best = 0d;
             var bestF = 0d;
-            var delta = (end - start) / 10;
+            var delta = (end - start) / 4;
 
             for (var f = start; f < end; f += delta) // maximum at 3.6
             {
@@ -231,7 +256,7 @@ namespace Ai
                 WriteConfigs(runner);
                 Console.WriteLine($"===== RunOrBlockFactor {f}=========");
                 var res = RunMany(runner);
-                if (res > best && res > 0.51)
+                if (res > best && res > Improvement)
                 {
                     best = res;
                     bestF = f;
@@ -242,7 +267,7 @@ namespace Ai
 
         public static void OptimizeAll()
         {
-            var config = Config.Zero();
+            var config = Config.Untrained();
 
             Console.WriteLine("*********************");
             Console.WriteLine(config.ToString());
@@ -250,45 +275,51 @@ namespace Ai
             var csvName = $"{Environment.CurrentDirectory}\\MaximizeAll{DateTime.Now.ToString("yyMMddHHmmss")}.csv";
             Console.WriteLine(csvName);
 
-            File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;BloatsFactor;BloatsThreshold;RunOrBlockFactor\n");
+            File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;BloatsFactor;BloatsFactorPassed;BloatsThreshold;RunOrBlockFactor\n");
 
-            const double lr = 0.2; // learning rate
+            const double lr = 0.1; // learning rate
             while (true)
             {
-                var sBt = Math.Max(config.BloatsThreshold -1, 0);
-                var eBt = config.BloatsThreshold + 3;                
+                var sBt = Math.Max(config.BloatsThreshold - 2, 0);
+                var eBt = config.BloatsThreshold + 2;                
                 var bt = OptimizeBloatsThreshold(sBt, eBt, config);                
                 if (bt > 0)
                     config.BloatsThreshold = (int)bt;// config.BloatsThreshold + (bt - config.BloatsThreshold) / 2;
                 
-                var sBf = Math.Max(config.BloatsFactor - 2, 0.1);
-                var eBf = config.BloatsFactor + 3;
+                var sBf = Math.Max(config.BloatsFactor - 0.5, 0.1);
+                var eBf = config.BloatsFactor + 0.5;
                 var bf = OptimizeBloatsFactor(sBf, eBf, config);
                 if (bf > 0)
                     config.BloatsFactor = config.BloatsFactor + (bf - config.BloatsFactor) * lr;
 
-                
-                var sCb = Math.Max(config.ConnectedBlocksFactor - 1, 0);
-                var eCb = config.ConnectedBlocksFactor + 3;
+                var sBfp = Math.Max(config.BloatsFactorPassed - 0.5, 0.1);
+                var eBfp = config.BloatsFactorPassed + 0.5;
+                var bfp = OptimizeBloatsFactorPassed(sBfp, eBfp, config);
+                if (bfp > 0)
+                    config.BloatsFactorPassed = config.BloatsFactorPassed + (bfp - config.BloatsFactorPassed) * lr;
+
+
+                var sCb = Math.Max(config.ConnectedBlocksFactor - 0.5, 0);
+                var eCb = config.ConnectedBlocksFactor + 0.5;
                 var cb = OptimizeConnectedBlocksFactor(sCb, eCb, config);
                 if (cb > 0)
                     config.ConnectedBlocksFactor = config.ConnectedBlocksFactor + (cb - config.ConnectedBlocksFactor) * lr;
 
-                var sBp = Math.Max(config.BlockedPointScore - 1, 0);
-                var eBp = config.BlockedPointScore + 3;
+                var sBp = Math.Max(config.BlockedPointScore - 0.5, 0);
+                var eBp = config.BlockedPointScore + 0.5;
                 var bp = OptimizeBlockedPointScore(sBp, eBp, config);
                 if (bp > 0)
                     config.BlockedPointScore = config.BlockedPointScore + (bp - config.BlockedPointScore) * lr;
 
-                var sRb = Math.Max(config.RunOrBlockFactor - 1, 0);
-                var eRb = config.RunOrBlockFactor + 1.5;
+                var sRb = Math.Max(config.RunOrBlockFactor - 0.5, 0);
+                var eRb = config.RunOrBlockFactor + 0.5;
                 var rb = OptimizeRunOrBlockFactor(sRb, eRb, config);
                 if (rb > 0)
                     config.RunOrBlockFactor = config.RunOrBlockFactor + (rb - config.RunOrBlockFactor) * lr;
 
                 Console.WriteLine("*********************");
                 Console.WriteLine(DateTime.Now.ToString() + " " + config.ToString());
-                File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.BloatsFactor};{config.BloatsThreshold};{config.RunOrBlockFactor}\n");
+                File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.BloatsFactor};{config.BloatsFactorPassed};{config.BloatsThreshold};{config.RunOrBlockFactor}\n");
                 Console.WriteLine("*********************");
             }
         }
@@ -303,7 +334,7 @@ namespace Ai
         {
             var runner = new Trainer();
             runner.Black.Configuration = Config.NoDoubles41Epochs();
-            runner.White.Configuration = Config.Zero();
+            runner.White.Configuration = Config.Untrained();
             var res = RunMany(runner);
         }
 

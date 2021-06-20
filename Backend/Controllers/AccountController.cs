@@ -68,8 +68,7 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Route("/api/account/getuser")]
-        public UserDto GetUser(Guid userId)
-            {
+        public UserDto GetUser(Guid userId) {
             using (var db = new BgDbContext())
             {
                 var user = db.Users.Single((u) => u.Id == userId);

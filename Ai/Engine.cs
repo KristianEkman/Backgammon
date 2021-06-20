@@ -112,9 +112,10 @@ namespace Ai
         {
             double score = 0;
             var inBlock = false;
-            var counter = 0;
+            var blockCount = 0; // consequtive blocks
             var bt = Configuration.BloatsThreshold;
-            var bf = (double)Configuration.BloatsFactor;
+            var bf = Configuration.BloatsFactor;
+            var bfp = Configuration.BloatsFactorPassed;
             var cbf = Configuration.ConnectedBlocksFactor;
             var bps = Configuration.BlockedPointScore;
 
@@ -127,40 +128,39 @@ namespace Ai
 
             for (int i = 1; i < 25; i++)
             {
+                // It is important to reverse looping for white.
                 var point = game.Points[i];
-                // Found that its important to reverse looping for white.
-                // These conditions effects score for some configurations greatly.
-                // But I havnt figured out why.
                 if (myColor == Player.Color.White)
                     point = game.Points[25 - i];
-                // If all opponents checkers has passed this block or bloat, it is not interesting.
-                if (point.GetNumber(myColor) > opponentMax)
-                    break;
 
-                allPassed = false;
-                if (point.MyBlock(myColor))
+                var pointNo = point.GetNumber(myColor);
+
+                // If all opponents checkers has passed this point, bloats are not as bad.
+                allPassed = pointNo > opponentMax;
+
+                if (point.Block(myColor))
                 {
                     if (inBlock)
-                        counter++;
+                        blockCount++;
                     else
-                        counter = 1; // Start of blocks.
+                        blockCount = 1; // Start of blocks.
                     inBlock = true;
                 }
                 else // not a blocked point
                 {
                     if (inBlock) 
                     {
-                        score += Math.Pow(counter * bps, cbf);
-                        counter = 0;
+                        score += Math.Pow(blockCount * bps, cbf);
+                        blockCount = 0;
                     }
                     inBlock = false;
                     if (point.Bloat(myColor) && point.GetNumber(myColor) > bt)
-                        score -= point.GetNumber(myColor) / bf;
+                        score -= point.GetNumber(myColor) / ( allPassed ? bfp : bf);
                 }
             }
 
             if (inBlock) // the last point.
-                score += Math.Pow(counter * bps, cbf);
+                score += Math.Pow(blockCount * bps, cbf);
 
             if (allPassed)
                 score += EvaluatePoints(myColor, game) * Configuration.RunOrBlockFactor;

@@ -17,8 +17,10 @@ namespace Ai
                 BlockedPointScore = BlockedPointScore,
                 ConnectedBlocksFactor = ConnectedBlocksFactor,
                 BloatsFactor = BloatsFactor,
+                BloatsFactorPassed = BloatsFactorPassed,
                 BloatsThreshold = BloatsThreshold,
                 RunOrBlockFactor = RunOrBlockFactor
+
             };
         }
 
@@ -31,6 +33,11 @@ namespace Ai
         /// The point divided by this factor reduces score for bloats.
         /// </summary>
         public double BloatsFactor { get; set; }
+
+        /// <summary>
+        /// The point divided by this factor reduces score for bloats. When opponent has passes this point with all checker.
+        /// </summary>
+        public double BloatsFactorPassed { get; set; }
 
         /// <summary>
         /// Score received for one point blocked.
@@ -51,14 +58,15 @@ namespace Ai
 
         public override string ToString()
         {
-            return $"BF: {BloatsFactor.ToString("0.##")} BT: {BloatsThreshold} CB: {ConnectedBlocksFactor.ToString("0.##")} BP: {BlockedPointScore.ToString("0.##")} RB: {RunOrBlockFactor.ToString("0.##")}";
+            return $"BF: {BloatsFactor.ToString("0.##")}  BFP: {BloatsFactorPassed}  BT: {BloatsThreshold}  CB: {ConnectedBlocksFactor.ToString("0.##")}  BP: {BlockedPointScore.ToString("0.##")}  RB: {RunOrBlockFactor.ToString("0.##")}";
         }
 
-        public static Config Zero()
+        public static Config Untrained()
         {
             return new Config
             {
-                BloatsFactor = 0,
+                BloatsFactor = 1,
+                BloatsFactorPassed = 1,
                 BloatsThreshold = 0,
                 BlockedPointScore = 0,
                 ConnectedBlocksFactor = 0,
