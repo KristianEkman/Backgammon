@@ -11,12 +11,12 @@ namespace Backend.Rules
         public int Value { get; set; }
         public bool Used { get; set; }
 
-        //private static Random Random = new Random();
+        private static Random Random = new Random();
 
         public static int RollOne()
         {
-            //return Random.Next(1, 7);
-            return RandomNumber();
+            return Random.Next(1, 7);
+            // return RandomNumber();
         }
 
         public static Dice[] Roll()
@@ -49,18 +49,18 @@ namespace Backend.Rules
             return Value + (Used ? " Used" : " Not used");
         }
 
-        private static RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
-        private static byte[] byteArray = new byte[1];
+        //private static RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
+        //private static byte[] byteArray = new byte[1];
 
-        public static int RandomNumber()
-        {
-            int randomInteger = 0;
-            while (randomInteger < 1 || randomInteger > 6)
-            {
-                provider.GetBytes(byteArray);
-                randomInteger = byteArray[0] & 7;
-            }
-            return randomInteger;
-        }
+        //public static int RandomNumber()
+        //{
+        //    int randomInteger = 0;
+        //    while (randomInteger < 1 || randomInteger > 6)
+        //    {
+        //        provider.GetBytes(byteArray);
+        //        randomInteger = byteArray[0] & 7;
+        //    }
+        //    return randomInteger;
+        //}
     }
 }
