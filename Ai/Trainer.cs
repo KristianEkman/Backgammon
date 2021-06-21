@@ -267,7 +267,7 @@ namespace Ai
 
         public static void OptimizeAll()
         {
-            var config = Config.Untrained();
+            var config = Config.Trained();
 
             Console.WriteLine("*********************");
             Console.WriteLine(config.ToString());

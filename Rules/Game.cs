@@ -154,18 +154,13 @@ namespace Backend.Rules
             AddCheckers(5, Player.Color.Black, 19);
             AddCheckers(5, Player.Color.White, 19);
 
-            //CloseToVictory();
-            //DebugBar();
-
-            //DebugBlocked();
-
-            //DebugBearingOff();
-
+            // CloseToVictory();
+            // DebugBar();
+            // DebugBlocked();
+            // DebugBearingOff();
             // AtHomeAndOtherAtBar();
-
-            //AtHomeAndOtherAtBar2();
-
-            //Test();
+            // AtHomeAndOtherAtBar2();
+            // Test();
         }
 
         private void Test()

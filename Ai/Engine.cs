@@ -165,7 +165,6 @@ namespace Ai
             if (allPassed)
                 score += EvaluatePoints(myColor, game) * Configuration.RunOrBlockFactor;
 
-            // 
             score += game.GetHome(myColor).Checkers.Count * 10;
             score -= game.GetHome(other).Checkers.Count * 10;
             return score;
