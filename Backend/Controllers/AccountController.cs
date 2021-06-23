@@ -1,5 +1,6 @@
 ﻿using Backend.Db;
 using Backend.Dto;
+using Backend.Dto.account;
 using Backend.Dto.message;
 using Backend.Dto.rest;
 using Google.Apis.Auth;
@@ -33,7 +34,7 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("/api/account/signin")]
-        public async Task<UserDto> Post(UserDto userDto)
+        public async Task<UserDto> SigninSocial(UserDto userDto)
         {
             // todo: 
             //var settings = new GoogleJsonWebSignature.ValidationSettings
@@ -50,7 +51,7 @@ namespace Backend.Controllers
                     // todo: more validation?
                     valid = validPayload != null;
                 }
-                if (userDto.socialProvider == "FACEBOOK")
+                else if (userDto.socialProvider == "FACEBOOK")
                 {
                     valid = await ValidateFacebookJwt(Request.Headers["Authorization"]);
                 }
@@ -63,7 +64,45 @@ namespace Backend.Controllers
             if (!valid)
                 return null;
 
-            return GetOrCreateLogin(userDto);
+            return GetOrCreateUserLogin(userDto);
+        }
+
+        [HttpPost]
+        [Route("/api/account/newlocal")]
+        public UserDto NewLocal(NewLocalUserDto dto) {
+            using (var db = new BgDbContext())
+            {
+                var existing = db.Users.FirstOrDefault(u => u.Email.Equals(dto.email.ToLower()));
+                if (existing != null)
+                    return null;
+
+                var userDto = new UserDto
+                {
+                    email = dto.email,
+                    name = dto.name,
+                    passHash = dto.passHash,
+                    photoUrl = "/assets/images/locallogin.jpg"
+                };
+
+                userDto.socialProvider = "PASSWORD";
+                userDto.socialProviderId = Guid.NewGuid().ToString();
+                var ret = GetOrCreateUserLogin(userDto);
+                return ret;
+            }
+        }
+
+        [HttpPost]
+        [Route("/api/account/signinlocal")]
+        public UserDto SigninLocal(LocalLoginDto userDto) {
+
+            using (var db = new BgDbContext())
+            {
+                var user = db.Users.SingleOrDefault(u => u.Email.Equals(userDto.email.ToLower()) && u.PassHash == userDto.passHash);
+                if (user == null)
+                    return null;
+
+                return user.ToDto();
+            }
         }
 
         [HttpGet]
@@ -71,12 +110,12 @@ namespace Backend.Controllers
         public UserDto GetUser(Guid userId) {
             using (var db = new BgDbContext())
             {
-                var user = db.Users.Single((u) => u.Id == userId);
+                var user = db.Users.SingleOrDefault((u) => u.Id == userId);
                 return user.ToDto();
             }
         }
 
-        private UserDto GetOrCreateLogin(UserDto userDto)
+        private UserDto GetOrCreateUserLogin(UserDto userDto)
         {
             using (var db = new BgDbContext())
             {
@@ -95,7 +134,7 @@ namespace Backend.Controllers
                     dbUser = new User
                     {
                         Id = Guid.NewGuid(),
-                        Email = userDto.email,
+                        Email = userDto.email?.ToLower(),
                         Name = userDto.name,
                         PhotoUrl = userDto.photoUrl,
                         ShowPhoto = true,
@@ -109,7 +148,8 @@ namespace Backend.Controllers
                         Theme = "dark",
                         PreferredLanguage = "en",
                         Gold = 200,
-                        LastFreeGold = DateTime.Now,                        
+                        LastFreeGold = DateTime.Now,
+                        PassHash = userDto.passHash
                     };
                     db.Users.Add(dbUser);
 
@@ -118,18 +158,18 @@ namespace Backend.Controllers
                     dbUser.ReceivedMessages.Add(new Message
                     {
                         Text = "",
-                        Type = Dto.message.MessageType.SharePrompt,
+                        Type = MessageType.SharePrompt,
                         Sender = admin,
                         Sent = DateTime.Now
                     });
 
                     db.SaveChanges();
-
                     // The id will not be set until the save is successfull.
                     userDto.id = dbUser.Id.ToString();
-                    userDto.createdNew = true;
+                    var created = dbUser.ToDto();
+                    created.createdNew = true;
+                    return created;
                 }
-                return userDto;
             }
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Backend.Dto
+namespace Backend.Dto.account
 {
     public class UserDto
     {
@@ -23,6 +23,7 @@ namespace Backend.Dto
         public int gold { get; set; }
         public int lastFreeGold { get; set; }
         public int elo { get; set; }
+        public int passHash { get; set; }
 
 
     }

@@ -1,18 +1,26 @@
-<div *ngIf="!isLoggedIn" class="login-buttons">
-  <button class="black-button" (click)="facebookLoginClick()">
-    <div>
-      <img src="assets/images/facebook.png" />{{
-        'loginbuttons.signin' | translate
-      }}
-      Facebook
-    </div>
+<ng-container *ngIf="!isLoggedIn">
+  <button
+    class="flat-button"
+    (click)="show = !show"
+    style="text-align: center; margin-top: 10px; margin-bottom: 0"
+  >
+    Sign in
   </button>
-  <button class="black-button" (click)="googleLoginClick()">
-    <div>
-      <img src="assets/images/google.jpg" />{{
-        'loginbuttons.signin' | translate
-      }}
-      Google
-    </div>
-  </button>
-</div>
+  <div [ngClass]="{ show: show }" class="login-buttons">
+    <button class="black-button" (click)="facebookLoginClick()">
+      <div>
+        <img src="assets/images/facebook.png" />
+        Facebook
+      </div>
+    </button>
+    <button class="black-button" (click)="googleLoginClick()">
+      <div>
+        <img src="assets/images/google.jpg" />
+        Google
+      </div>
+    </button>
+    <button class="black-button" (click)="passwordLoginClick()">
+      <div>Password</div>
+    </button>
+  </div>
+</ng-container>

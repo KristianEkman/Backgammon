@@ -22,6 +22,14 @@ export class GlobalErrorService implements ErrorHandler {
       return;
     }
 
+    if (sError.indexOf('Not logged in') > -1) {
+      return;
+    }
+
+    if (sError.indexOf('ExpressionChangedAfterItHasBeenCheckedError') > -1) {
+      return;
+    }
+
     const date = new Date();
     const err = date + '\n' + sError + '\n\n';
     current += err;

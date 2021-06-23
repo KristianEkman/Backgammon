@@ -65,12 +65,17 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   login(provider: string): void {
+    if (provider === 'PASSWORD') {
+      this.router.navigate(['password']);
+      return;
+    }
     this.loginClicked = true;
     this.authService.signIn(provider);
   }
 
   logout(): void {
     this.accountService.signOut();
+
     this.authService.signOut(true);
   }
 

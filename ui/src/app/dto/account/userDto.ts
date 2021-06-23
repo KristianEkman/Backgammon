@@ -16,4 +16,5 @@ export interface UserDto {
   gold: number;
   lastFreeGold: number;
   elo: number;
+  passHash: number;
 }

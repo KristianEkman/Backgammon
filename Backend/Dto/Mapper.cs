@@ -1,4 +1,5 @@
-﻿using Backend.Rules;
+﻿using Backend.Dto.account;
+using Backend.Rules;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -99,6 +100,9 @@ namespace Backend.Dto
 
         public static UserDto ToDto(this Db.User dbUser)
         {
+            if (dbUser == null)
+                return null;
+
             int unixTimestamp = (int)dbUser.LastFreeGold.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
 
             return new UserDto
@@ -116,7 +120,8 @@ namespace Backend.Dto
                 theme = dbUser.Theme,
                 gold = dbUser.Gold,
                 lastFreeGold = unixTimestamp,
-                elo = dbUser.Elo
+                elo = dbUser.Elo,
+                passHash = dbUser.PassHash
             };
         }
     }

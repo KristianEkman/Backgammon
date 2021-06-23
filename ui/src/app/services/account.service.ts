@@ -1,8 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { map, take } from 'rxjs/operators';
-import { UserDto } from '../dto/userDto';
+import { finalize, map, take } from 'rxjs/operators';
 import { AppState } from '../state/app-state';
 import { Keys, Sound } from '../utils';
 import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
@@ -15,6 +14,12 @@ import { MessageService } from './message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Theme } from '../components/account/theme/theme';
 import { GoldGiftDto } from '../dto/rest';
+import {
+  LocalAccountStatus,
+  LocalLoginDto,
+  NewLocalUserDto,
+  UserDto
+} from '../dto';
 
 @Injectable({
   providedIn: 'root'
@@ -138,5 +143,41 @@ export class AccountService {
         take(1)
       )
       .subscribe();
+  }
+
+  newLocalUser(dto: NewLocalUserDto): Observable<LocalAccountStatus> {
+    Busy.show();
+    return this.http.post(`${this.url}/newlocal`, dto).pipe(
+      map((response) => {
+        var userDto = response as UserDto;
+        this.storage.set(Keys.loginKey, userDto);
+        AppState.Singleton.user.setValue(userDto);
+        if (userDto) return LocalAccountStatus.success;
+        return LocalAccountStatus.emailExists;
+      }),
+      finalize(() => {
+        Busy.hide();
+      }),
+      take(1)
+    );
+  }
+
+  localLogin(dto: LocalLoginDto): Observable<LocalAccountStatus> {
+    Busy.show();
+    return this.http.post(`${this.url}/signinlocal`, dto).pipe(
+      map((response) => {
+        var userDto = response as UserDto;
+        this.storage.set(Keys.loginKey, userDto);
+        AppState.Singleton.user.setValue(userDto);
+        if (userDto) {
+          return LocalAccountStatus.success;
+        }
+        return LocalAccountStatus.invalidLogin;
+      }),
+      finalize(() => {
+        Busy.hide();
+      }),
+      take(1)
+    );
   }
 }

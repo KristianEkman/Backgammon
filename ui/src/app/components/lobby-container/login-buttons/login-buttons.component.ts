@@ -19,6 +19,7 @@ import {
 export class LoginButtonsComponent {
   @Output() onLogin = new EventEmitter<string>();
   @Input() isLoggedIn: boolean | undefined = false;
+  show = false;
 
   facebookLoginClick(): void {
     this.onLogin.emit(FacebookLoginProvider.PROVIDER_ID);
@@ -26,6 +27,9 @@ export class LoginButtonsComponent {
 
   googleLoginClick(): void {
     this.onLogin.emit(GoogleLoginProvider.PROVIDER_ID);
-    // this.authService.signIn(GoogleLoginProvider.PROVIDER_ID);
+  }
+
+  passwordLoginClick(): void {
+    this.onLogin.emit('PASSWORD');
   }
 }
