@@ -13,7 +13,10 @@
             <input formControlName="name"
           /></label>
         </div>
-        <div class="nameWidth loginName">
+        <div
+          *ngIf="user?.socialProvider === 'PASSWORD'"
+          class="nameWidth loginName"
+        >
           <label
             >{{ 'accountedit.loginname' | translate }}<br />
             <input readonly="readonly" value="{{ user?.localLoginName }}"
@@ -22,7 +25,7 @@
       </div>
       <div class="columns">
         <div>
-          <div class="mt">
+          <div *ngIf="user?.socialProvider !== 'PASSWORD'" class="mt">
             <label class="container"
               >{{ 'accountedit.emailNotification' | translate }}<br />
               <input type="checkbox" formControlName="emailNotification" />
@@ -55,7 +58,7 @@
             </label>
           </div>
         </div>
-        <div class="image mt">
+        <div class="image mt pl">
           <img [src]="user.photoUrl" alt="" /><br />
           <label class="container"
             >{{ 'accountedit.showPhoto' | translate }}<br />
