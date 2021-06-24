@@ -30,7 +30,8 @@
     "sure": "Är du säker?",
     "yesdelete": "Ja tabort det",
     "theme": "Tema",
-    "showPhoto": "Visa"
+    "showPhoto": "Visa",
+    "loginname": "Inloggningsnamn"
   },
   "theme": {
     "dark": "Mörkt",
@@ -148,6 +149,6 @@
     "namerequired": "Namnet krävs",
     "required": "lösenord krävs",
     "format": "Lösenordet måste ha minst 8 tecken",
-    "takenname": "The login name is already taken"
+    "takenname": "Inloggningsnamnet är redan taget"
   }
 }

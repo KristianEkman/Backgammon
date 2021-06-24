@@ -30,7 +30,8 @@
     "sure": "هل أنت واثق؟",
     "yesdelete": "نعم حذفها",
     "theme": "سمة",
-    "showPhoto": "تبين"
+    "showPhoto": "تبين",
+    "loginname": "اسم الدخول"
   },
   "theme": {
     "dark": "داكن",
@@ -148,6 +149,6 @@
     "namerequired": "مطلوب اسم",
     "required": "كلمة المرور مطلوبة",
     "format": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
-    "takenname": "The login name is already taken"
+    "takenname": "تم أخذ اسم تسجيل الدخول بالفعل"
   }
 }

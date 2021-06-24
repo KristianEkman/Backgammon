@@ -30,7 +30,8 @@
     "sure": "Êtes-vous sûr?",
     "yesdelete": "Oui supprimez-le",
     "theme": "Thème",
-    "showPhoto": "spectacle"
+    "showPhoto": "spectacle",
+    "loginname": "Identifiant"
   },
   "theme": {
     "dark": "Sombre",
@@ -148,6 +149,6 @@
     "namerequired": "Le nom est requis",
     "required": "Mot de passe requis",
     "format": "Le mot de passe doit avoir au moins 8 caractères",
-    "takenname": "The login name is already taken"
+    "takenname": "Le nom de connexion est déjà pris"
   }
 }

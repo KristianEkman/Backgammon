@@ -30,7 +30,8 @@
     "sure": "你確定嗎？",
     "yesdelete": "是刪除它",
     "theme": "主題",
-    "showPhoto": "表演"
+    "showPhoto": "表演",
+    "loginname": "登錄名"
   },
   "theme": {
     "dark": "黑暗的",
@@ -148,6 +149,6 @@
     "namerequired": "名稱是必需的",
     "required": "密碼是必需的",
     "format": "密碼必須至少有8個字符",
-    "takenname": "The login name is already taken"
+    "takenname": "登錄名已被帶走"
   }
 }

@@ -30,7 +30,8 @@
     "sure": "¿Está seguro?",
     "yesdelete": "Si eliminarlo",
     "theme": "Tema",
-    "showPhoto": "show"
+    "showPhoto": "show",
+    "loginname": "Nombre de inicio de sesión"
   },
   "theme": {
     "dark": "Oscura",
@@ -148,6 +149,6 @@
     "namerequired": "Se requiere el nombre",
     "required": "se requiere contraseña",
     "format": "La contraseña debe tener al menos 8 caracteres",
-    "takenname": "The login name is already taken"
+    "takenname": "El nombre de inicio de sesión ya está tomado"
   }
 }

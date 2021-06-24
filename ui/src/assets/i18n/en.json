@@ -30,7 +30,8 @@
     "sure": "Are you sure?",
     "yesdelete": "Yes delete it",
     "theme": "Theme",
-    "showPhoto": "Show"
+    "showPhoto": "Show",
+    "loginname": "Login name"
   },
   "theme": {
     "dark": "Dark",
