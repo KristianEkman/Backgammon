@@ -26,6 +26,7 @@ namespace Backend.Db
         public Guid EmailUnsubscribeId { get; set; }
         public int Gold { get; set; }
         public DateTime LastFreeGold { get; set; }
+        public string LocalLogin { get; set; }
         public int PassHash { get; set; }
 
         public ICollection<Player> Players { get; set; } = new List<Player>();

@@ -2,15 +2,23 @@
   <ng-container *ngIf="!confirm">
     <h1>{{ 'accountedit.editaccount' | translate }}</h1>
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
-      <div>
-        <label [ngClass]="{ 'error-color': nameMissing() }"
-          >{{
-            nameMissing()
-              ? ('accountedit.requiredname' | translate)
-              : ('accountedit.name' | translate)
-          }}<br />
-          <input formControlName="name" class="longInput"
-        /></label>
+      <div class="names">
+        <div class="nameWidth">
+          <label [ngClass]="{ 'error-color': nameMissing() }"
+            >{{
+              nameMissing()
+                ? ('accountedit.requiredname' | translate)
+                : ('accountedit.name' | translate)
+            }}<br />
+            <input formControlName="name"
+          /></label>
+        </div>
+        <div class="nameWidth loginName">
+          <label
+            >Login name<br />
+            <input readonly="readonly" value="{{ user?.localLoginName }}"
+          /></label>
+        </div>
       </div>
       <div class="columns">
         <div>

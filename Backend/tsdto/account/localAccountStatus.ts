@@ -3,5 +3,5 @@
 export enum LocalAccountStatus {
     success,
     invalidLogin,
-    emailExists,
+    nameExists,
 }

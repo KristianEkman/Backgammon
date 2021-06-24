@@ -1,6 +1,6 @@
 ﻿/* Auto Generated */
 
 export interface LocalLoginDto {
-    email: string;
+    name: string;
     passHash: number;
 }

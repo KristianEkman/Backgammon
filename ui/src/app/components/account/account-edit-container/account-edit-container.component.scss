@@ -8,6 +8,23 @@
     font-size: 30px;
   }
 
+  .names {
+    display: flex;
+
+    input {
+      width: 200px;
+    }
+  }
+
+  .loginName {
+    padding-left: 8px;
+
+    input {
+      color: rgb(105, 105, 105);
+      font-style: italic;
+    }
+  }
+
   font-size: 20px;
 
   .spread-out {
@@ -30,10 +47,6 @@
 
   input {
     font-size: 20px;
-  }
-
-  .longInput {
-    width: 420px;
   }
 
   .email {

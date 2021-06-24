@@ -146,9 +146,8 @@
     "login": "登錄",
     "passdontmatch": "密碼不匹配",
     "namerequired": "名稱是必需的",
-    "emailrequired": "電子郵件是必需的",
-    "invalidemailformat": "無效的電子郵件格式",
     "required": "密碼是必需的",
-    "format": "密碼必須至少有8個字符"
+    "format": "密碼必須至少有8個字符",
+    "takenname": "The login name is already taken"
   }
 }

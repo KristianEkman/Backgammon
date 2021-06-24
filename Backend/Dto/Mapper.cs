@@ -121,7 +121,8 @@ namespace Backend.Dto
                 gold = dbUser.Gold,
                 lastFreeGold = unixTimestamp,
                 elo = dbUser.Elo,
-                passHash = dbUser.PassHash
+                passHash = dbUser.PassHash,
+                localLoginName = dbUser.LocalLogin
             };
         }
     }

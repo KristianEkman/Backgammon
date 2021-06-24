@@ -24,7 +24,7 @@ namespace Backend.Dto.account
         public int lastFreeGold { get; set; }
         public int elo { get; set; }
         public int passHash { get; set; }
+        public string localLoginName { get; set; }
 
-
-    }
+}
 }

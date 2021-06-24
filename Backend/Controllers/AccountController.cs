@@ -72,13 +72,13 @@ namespace Backend.Controllers
         public UserDto NewLocal(NewLocalUserDto dto) {
             using (var db = new BgDbContext())
             {
-                var existing = db.Users.FirstOrDefault(u => u.Email.Equals(dto.email.ToLower()));
+                var existing = db.Users.FirstOrDefault(u => u.LocalLogin.Equals(dto.name.ToLower()));
                 if (existing != null)
                     return null;
 
                 var userDto = new UserDto
                 {
-                    email = dto.email,
+                    localLoginName = dto.name,
                     name = dto.name,
                     passHash = dto.passHash,
                     photoUrl = "/assets/images/locallogin.jpg"
@@ -97,7 +97,7 @@ namespace Backend.Controllers
 
             using (var db = new BgDbContext())
             {
-                var user = db.Users.SingleOrDefault(u => u.Email.Equals(userDto.email.ToLower()) && u.PassHash == userDto.passHash);
+                var user = db.Users.SingleOrDefault(u => u.LocalLogin.Equals(userDto.name.ToLower()) && u.PassHash == userDto.passHash);
                 if (user == null)
                     return null;
 
@@ -149,7 +149,8 @@ namespace Backend.Controllers
                         PreferredLanguage = "en",
                         Gold = 200,
                         LastFreeGold = DateTime.Now,
-                        PassHash = userDto.passHash
+                        PassHash = userDto.passHash,
+                        LocalLogin = userDto.localLoginName
                     };
                     db.Users.Add(dbUser);
 

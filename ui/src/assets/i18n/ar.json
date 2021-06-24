@@ -146,9 +146,8 @@
     "login": "تسجيل الدخول",
     "passdontmatch": "كلمات المرور لا تتطابق",
     "namerequired": "مطلوب اسم",
-    "emailrequired": "البريد الالكتروني مطلوب",
-    "invalidemailformat": "تنسيق البريد الإلكتروني غير صالح",
     "required": "كلمة المرور مطلوبة",
-    "format": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل"
+    "format": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+    "takenname": "The login name is already taken"
   }
 }

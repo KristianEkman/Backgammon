@@ -146,9 +146,8 @@
     "login": "Logga in",
     "passdontmatch": "Lösenord matchar inte",
     "namerequired": "Namnet krävs",
-    "emailrequired": "E-post krävs",
-    "invalidemailformat": "Ogiltigt e-postformat",
     "required": "lösenord krävs",
-    "format": "Lösenordet måste ha minst 8 tecken"
+    "format": "Lösenordet måste ha minst 8 tecken",
+    "takenname": "The login name is already taken"
   }
 }

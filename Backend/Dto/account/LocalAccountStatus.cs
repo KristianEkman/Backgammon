@@ -9,6 +9,6 @@ namespace Backend.Dto.account
     {
         Success,
         InvalidLogin, //Username or password is wrong.
-        EmailExists        
+        NameExists        
     }
 }

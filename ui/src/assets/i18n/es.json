@@ -146,9 +146,8 @@
     "login": "Acceso",
     "passdontmatch": "Las contraseñas no coinciden",
     "namerequired": "Se requiere el nombre",
-    "emailrequired": "Correo electronico es requerido",
-    "invalidemailformat": "Formato de correo inválido",
     "required": "se requiere contraseña",
-    "format": "La contraseña debe tener al menos 8 caracteres"
+    "format": "La contraseña debe tener al menos 8 caracteres",
+    "takenname": "The login name is already taken"
   }
 }

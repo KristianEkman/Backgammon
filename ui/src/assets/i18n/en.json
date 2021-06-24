@@ -146,9 +146,8 @@
     "login": "Login",
     "passdontmatch": "Passwords don´t match",
     "namerequired": "Name is required",
-    "emailrequired": "Email is required",
-    "invalidemailformat": "Invalid email format",
     "required": "Password is required",
-    "format": "Password must have atleast 8 characters"
+    "format": "Password must have atleast 8 characters",
+    "takenname": "The login name is already taken"
   }
 }

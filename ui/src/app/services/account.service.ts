@@ -153,7 +153,7 @@ export class AccountService {
         this.storage.set(Keys.loginKey, userDto);
         AppState.Singleton.user.setValue(userDto);
         if (userDto) return LocalAccountStatus.success;
-        return LocalAccountStatus.emailExists;
+        return LocalAccountStatus.nameExists;
       }),
       finalize(() => {
         Busy.hide();

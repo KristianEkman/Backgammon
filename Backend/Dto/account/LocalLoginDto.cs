@@ -7,7 +7,7 @@ namespace Backend.Dto.account
 {
     public class LocalLoginDto
     {
-        public string email { get; set; }
+        public string name { get; set; }
         public int passHash { get; set; }
     }
 }

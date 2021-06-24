@@ -19,9 +19,8 @@ export class PasswordContainerComponent {
   create = false;
   formGroup: FormGroup;
   submitClicked = false;
-  emailExists = false;
+  nameExists = false;
   invalidLogin = false;
-  emailRegEx = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
   constructor(
     private service: AccountService,
@@ -31,14 +30,13 @@ export class PasswordContainerComponent {
     private translateService: TranslateService
   ) {
     this.formGroup = this.fb.group({
-      name: [''],
-      email: ['', [Validators.required, Validators.pattern(this.emailRegEx)]],
+      name: ['', [Validators.required]],
       password: ['', [Validators.required]],
       repeat_password: ['']
     });
 
-    this.formGroup.get('email')?.valueChanges.subscribe(() => {
-      this.emailExists = false;
+    this.formGroup.get('name')?.valueChanges.subscribe(() => {
+      this.nameExists = false;
       this.invalidLogin = false;
     });
 
@@ -49,7 +47,6 @@ export class PasswordContainerComponent {
     this.route.queryParams.pipe(take(1)).subscribe((q) => {
       this.create = q.create === 'true';
       if (this.create) {
-        this.formGroup.get('name')?.setValidators(Validators.required);
         this.formGroup
           .get('password')
           ?.setValidators([Validators.required, Validators.minLength(8)]);
@@ -71,20 +68,19 @@ export class PasswordContainerComponent {
     if (this.create) {
       const dto: NewLocalUserDto = {
         name: this.formGroup.get('name')?.value,
-        email: this.formGroup.get('email')?.value,
         passHash: this.hash(this.formGroup.get('password')?.value)
       };
       this.service.newLocalUser(dto).subscribe((status) => {
         if (status === LocalAccountStatus.success) {
           this.router.navigateByUrl('edit-user');
         }
-        if (status === LocalAccountStatus.emailExists) {
-          me.emailExists = true;
+        if (status === LocalAccountStatus.nameExists) {
+          me.nameExists = true;
         }
       });
     } else {
       const dto: LocalLoginDto = {
-        email: this.formGroup.get('email')?.value,
+        name: this.formGroup.get('name')?.value,
         passHash: this.hash(this.formGroup.get('password')?.value)
       };
       this.service.localLogin(dto).subscribe((result) => {
@@ -129,10 +125,6 @@ export class PasswordContainerComponent {
       },
       name: {
         required: this.translateService.instant('password.namerequired')
-      },
-      email: {
-        required: this.translateService.instant('password.emailrequired'),
-        pattern: this.translateService.instant('password.invalidemailformat')
       },
       password: {
         required: this.translateService.instant('password.required'),
