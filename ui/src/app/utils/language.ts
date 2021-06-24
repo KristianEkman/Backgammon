@@ -7,7 +7,8 @@ export class Language {
       new Language('es', 'Español'),
       new Language('ar', 'عربى'),
       new Language('fr', 'français'),
-      new Language('sv', 'Svenska')
+      new Language('sv', 'Svenska'),
+      new Language('el', 'Ελληνικά')
       // new Language('x', 'X')
     ];
   }

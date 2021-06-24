@@ -1,0 +1,154 @@
+{
+  "backgammon": "Τάβλι",
+  "invite": {
+    "copylink": "Αντιγράψτε αυτόν τον σύνδεσμο και στείλτε το στον φίλο σας",
+    "cancelinvite": "Ματαίωση",
+    "startgame": "Ξεκίνα το παιχνίδι"
+  },
+  "loginbuttons": {
+    "signin": "Συνδεθείτε με"
+  },
+  "logincontainer": {
+    "goldgame": "Χρυσό παιχνίδι",
+    "practice": "Πρακτική",
+    "friend": "Προσκάλεσε έναν φίλο",
+    "tip": "Υπόδειξη",
+    "whenyousignin": "Συνδεθείτε για να ανταγωνιστεί για χρυσό!",
+    "accept": "Δέχομαι πρόσκληση"
+  },
+  "accountedit": {
+    "editaccount": "Επεξεργασία λογαριασμού",
+    "name": "Ονομα",
+    "email": "ΗΛΕΚΤΡΟΝΙΚΗ ΔΙΕΥΘΥΝΣΗ",
+    "emailNotification": "Αποστολή e-mail",
+    "language": "Γλώσσα",
+    "requiredname": "Το όνομα είναι υποχρεωτικό",
+    "cancel": "Ματαίωση",
+    "save": "Σώσει",
+    "delete": "Διαγραφή λογαριασμού",
+    "allyourgames": "Όλα τα παιχνίδια σας και τα αποθηκευμένα δεδομένα θα διαγραφούν επίσης.Δεν μπορείτε να το ακυρώσετε.",
+    "sure": "Είσαι σίγουρος?",
+    "yesdelete": "Ναι διαγράψτε το",
+    "theme": "Θέμα",
+    "showPhoto": "προβολή"
+  },
+  "theme": {
+    "dark": "Σκοτάδι",
+    "light": "Φως",
+    "blue": "Μπλε",
+    "pink": "Ροζ"
+  },
+  "accountmenu": {
+    "edit": "Επεξεργασία λογαριασμού",
+    "logout": "Αποσύνδεση",
+    "about": "Σχετικά με"
+  },
+  "boardbuttons": {
+    "done": "Ολοκληρώθηκε",
+    "undo": "Ξεκάνω",
+    "roll": "Ρολό",
+    "exit": "Εξοδος",
+    "new": "Νέος",
+    "acceptDoubling": "Αποδέχομαι",
+    "resign": "Παραιτούμαι"
+  },
+  "gameboard": {
+    "black": "Μαύρος",
+    "white": "λευκό",
+    "you": "Εσείς",
+    "left": "αριστερά"
+  },
+  "menu": {
+    "rotate": "Γυρίζω",
+    "resign": "Παραιτούμαι"
+  },
+  "messageread": {
+    "delete": "Διαγράφω",
+    "next": "Επόμενο",
+    "from": "Από",
+    "nomore": "Δεν υπάρχουν άλλα μηνύματα",
+    "version2Info": "Γεια!<br>Έχω μόλις κυκλοφορήσει το τάβλι 2.0<br><br><strong>Αυτά είναι τα νέα χαρακτηριστικά.</strong><ul><li>Χρωματικά θέματα</li><li>Support for multiple languages.</li><li>Sounds</li><li>Smarter AI</li></ul>I hope you will like them.<br><br>Kind regards<br>/Kristian",
+    "version3Info": "Hello!<br>I´ve just released Backgammon 3.0<br><br><strong>These are the new features.</strong><ul><li>Gold games</li><li>Player images</li></ul>I hope you will like the new version.<br><br>Kind regards<br>/Kristian"
+  },
+  "shareprompt": {
+    "hello": "Γειά σου!",
+    "thissite": "Αυτός ο ιστότοπος εξακολουθεί να είναι πολύ νέος και χρειαζόμαστε περισσότερους παίκτες.",
+    "humantohuman": "Το ανθρώπινο παιχνίδι στο ανθρώπινο παιχνίδι είναι τελικά το πιο διασκεδαστικό.",
+    "please": "Παρακαλώ μοιραστείτε τα κοινωνικά σας μέσα ενημέρωσης."
+  },
+  "errorhandler": {
+    "sendreport": "Αποστολή αναφοράς",
+    "clearerrors": "Σαφή σφάλματα",
+    "error": "Λάθος"
+  },
+  "homebutton": {
+    "home": "Σπίτι"
+  },
+  "newmessages": {
+    "one": "{{count}} μήνυμα",
+    "many": "{{count}} μηνύματα"
+  },
+  "toplist": {
+    "place": "Θέση",
+    "name": "Ονομα",
+    "score": "Σκορ",
+    "you": "Εσείς",
+    "alltime": "Συνεχώς",
+    "thisweek": "Αυτή την εβδομάδα"
+  },
+  "statusmessage": {
+    "yourturn": "Τη σειρά σας για να μετακινηθείτε.  ({{color}})",
+    "waitingfor": "Αναμονή για {{color}} για να μετακινηθείτε.",
+    "youareblocked": "Έχετε μπλοκαριστεί.Κάντε κλικ στο κουμπί \"Ολοκληρώθηκε\"",
+    "noconnection": "Δεν υπάρχει σύνδεση διακομιστή",
+    "opponentconnectionlost": "Η σύνδεση του αντιπάλου έχασε",
+    "waitingoppcnn": "Περιμένοντας τον αντίπαλο να συνδεθεί",
+    "newscore": "Νέο σκορ {{score}} ({{increase}})",
+    "youwon": "Συγχαρητήρια!Κέρδισες. {{score}}",
+    "youlost": "Συγνώμη.Χάσατε το παιχνίδι. {{score}}",
+    "movenow": "Να μετακινηθείτε τώρα ή να χάσετε!",
+    "dblaccepted": "Ο αντίπαλος δέχτηκε.Τη σειρά σας για να μετακινηθείτε.",
+    "dblrequested": "Διπλασιάστε το στοίχημά σας ή παραιτηθείτε.",
+    "waitfordblresponse": "Περιμένοντας τον αντίπαλο να απαντήσει."
+  },
+  "black": "μαύρος",
+  "white": "λευκό",
+  "pleasewait": "Παρακαλώ περιμένετε",
+  "about": {
+    "aboutbackgammon": "Σχετικά με το τάβλι",
+    "thisisanopen": "Αυτό είναι ένα ανοιχτό, μόνο για διασκέδαση, ελεύθερο χόμπι-έργο.",
+    "andyouarewelcome": "Και είστε πολύ ευπρόσδεκτοι να παίξετε.",
+    "orifyouareadeveloper": "Ή αν είστε προγραμματιστής, ίσως να ενδιαφέρεστε για τους παρακάτω συνδέσμους με όλες τις λεπτομέρειες.",
+    "ongithub": "Στο Github, μπορείτε να ζητήσετε ή να ψηφίσετε για νέα χαρακτηριστικά ή ακόμα και να συμβάλλετε με τα αιτήματα έλξης."
+  },
+  "goldbutton": {
+    "getgold": "Παίρνω χρυσό"
+  },
+  "tolittlegold": {
+    "youdonthave": "Δεν έχετε αρκετό χρυσό.",
+    "youcangetmore": "Μπορείτε να πάρετε περισσότερο χρυσό κάθε 24 ώρες.",
+    "untilthen": "Μέχρι τότε μπορείτε πάντα να παίζετε παιχνίδια πρακτικής ενάντια στο AI."
+  },
+  "playaiquestion": {
+    "icantfind": "Δεν μπορώ να βρω κανέναν άλλον να παίζει αυτή τη στιγμή.",
+    "doyouwanttoplay": "Θέλετε να παίξετε ενάντια στο AI;",
+    "playai": "Παίζουν ai",
+    "keepwaiting": "Περίμενε"
+  },
+  "password": {
+    "name": "Ονομα",
+    "email": "ΗΛΕΚΤΡΟΝΙΚΗ ΔΙΕΥΘΥΝΣΗ",
+    "password": "Κωδικός πρόσβασης",
+    "repeat_password": "Επαναλάβετε τον κωδικό πρόσβασης",
+    "incorrect": "Το ηλεκτρονικό ταχυδρομείο ή ο κωδικός πρόσβασης είναι εσφαλμένος",
+    "newplayer": "Νέος παίκτης",
+    "create": "Δημιουργώ",
+    "login": "Σύνδεση",
+    "passdontmatch": "Οι κωδικοί πρόσβασης δεν ταιριάζουν",
+    "namerequired": "Το όνομα απαιτείται",
+    "emailrequired": "Απαιτείται μήνυμα ηλεκτρονικού ταχυδρομείου",
+    "invalidemailformat": "Μη έγκυρη μορφή ηλεκτρονικού ταχυδρομείου",
+    "required": "Απαιτείται κωδικός",
+    "format": "Ο κωδικός πρόσβασης πρέπει να έχει τουλάχιστον 8 χαρακτήρες"
+  }
+}
