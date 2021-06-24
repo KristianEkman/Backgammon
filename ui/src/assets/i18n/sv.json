@@ -134,5 +134,21 @@
     "doyouwanttoplay": "Vill du spela mot AI?",
     "playai": "Spela mot AIt",
     "keepwaiting": "Fortsätt vänta"
+  },
+  "password": {
+    "name": "Namn",
+    "email": "E-post",
+    "password": "Lösenord",
+    "repeat_password": "Repetera lösenord",
+    "incorrect": "E-post eller lösenord är felaktigt",
+    "newplayer": "Ny spelare",
+    "create": "Skapa",
+    "login": "Logga in",
+    "passdontmatch": "Lösenord matchar inte",
+    "namerequired": "Namnet krävs",
+    "emailrequired": "E-post krävs",
+    "invalidemailformat": "Ogiltigt e-postformat",
+    "required": "lösenord krävs",
+    "format": "Lösenordet måste ha minst 8 tecken"
   }
 }

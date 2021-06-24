@@ -134,5 +134,21 @@
     "doyouwanttoplay": "Do you want to play against the AI?",
     "playai": "Play AI",
     "keepwaiting": "Keep waiting"
+  },
+  "password": {
+    "name": "Name",
+    "email": "E-mail",
+    "password": "Password",
+    "repeat_password": "Repeat Password",
+    "incorrect": "E-mail or password is incorrect",
+    "newplayer": "New Player",
+    "create": "Create",
+    "login": "Login",
+    "passdontmatch": "Passwords don´t match",
+    "namerequired": "Name is required",
+    "emailrequired": "Email is required",
+    "invalidemailformat": "Invalid email format",
+    "required": "Password is required",
+    "format": "Password must have atleast 8 characters"
   }
 }

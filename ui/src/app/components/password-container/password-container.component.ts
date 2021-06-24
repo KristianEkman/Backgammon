@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
 import {
   LocalAccountStatus,
@@ -20,18 +21,20 @@ export class PasswordContainerComponent {
   submitClicked = false;
   emailExists = false;
   invalidLogin = false;
+  emailRegEx = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$/;
 
   constructor(
     private service: AccountService,
     private fb: FormBuilder,
-    route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute,
+    private router: Router,
+    private translateService: TranslateService
   ) {
     this.formGroup = this.fb.group({
       name: [''],
-      email: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.pattern(this.emailRegEx)]],
       password: ['', [Validators.required]],
-      password2: ['']
+      repeat_password: ['']
     });
 
     this.formGroup.get('email')?.valueChanges.subscribe(() => {
@@ -43,16 +46,14 @@ export class PasswordContainerComponent {
       this.invalidLogin = false;
     });
 
-    route.queryParams.pipe(take(1)).subscribe((q) => {
+    this.route.queryParams.pipe(take(1)).subscribe((q) => {
       this.create = q.create === 'true';
       if (this.create) {
         this.formGroup.get('name')?.setValidators(Validators.required);
         this.formGroup
           .get('password')
           ?.setValidators([Validators.required, Validators.minLength(8)]);
-        this.formGroup
-          .get('password2')
-          ?.setValidators([this.passwordMatch.bind(this)]);
+        this.formGroup.setValidators([this.passwordMatch.bind(this)]);
       }
     });
   }
@@ -60,7 +61,10 @@ export class PasswordContainerComponent {
   submit(): void {
     this.submitClicked = true;
     const me = this;
-    if (!this.formGroup.valid) return;
+    if (!this.formGroup.valid) {
+      console.log(this.formGroup);
+      return;
+    }
 
     if (!this.formGroup) return;
 
@@ -109,40 +113,54 @@ export class PasswordContainerComponent {
 
   get title(): string {
     if (this.create) {
-      return 'New Player';
+      return this.translateService.instant('password.newplayer');
     }
-    return 'Login';
+    return this.translateService.instant('password.login');
   }
 
   error(field: string): boolean {
     return !this.formGroup.get(field)?.valid && this.submitClicked;
   }
 
-  labelText(field: string): string {
-    const control = this.formGroup.get(field);
-    if (!this.error(field)) return this.firstToUpper(field);
-
-    const messages: any = {
+  get messages(): any {
+    return {
+      form: {
+        nopassmatch: this.translateService.instant('password.passdontmatch')
+      },
       name: {
-        required: 'Name is required'
+        required: this.translateService.instant('password.namerequired')
       },
       email: {
-        required: 'Email is required'
+        required: this.translateService.instant('password.emailrequired'),
+        pattern: this.translateService.instant('password.invalidemailformat')
       },
       password: {
-        required: 'Password is required',
-        minlength: 'Password must have atleast 8 characters'
-      },
-      password2: {
-        nopassmatch: 'Passwords don´t match'
+        required: this.translateService.instant('password.required'),
+        minlength: this.translateService.instant('password.format')
       }
     };
+  }
+
+  formErrors(): string {
+    const control = this.formGroup;
+
+    if (control?.errors && this.submitClicked) {
+      const firstError = Object.keys(control?.errors)[0];
+      return this.messages['form'][firstError];
+    }
+    return '';
+  }
+
+  labelText(field: string): string {
+    const control = this.formGroup.get(field);
+    const trans = this.translateService.instant('password.' + field);
+    if (!this.error(field)) return trans;
 
     if (control?.errors) {
       const firstError = Object.keys(control?.errors)[0];
-      return messages[field][firstError];
+      return this.messages[field][firstError];
     }
-    return field;
+    return trans;
   }
 
   firstToUpper(text: string) {
@@ -157,7 +175,7 @@ export class PasswordContainerComponent {
 
   passwordMatch(): any {
     const p1 = this.formGroup.get('password')?.value;
-    const p2 = this.formGroup.get('password2')?.value;
+    const p2 = this.formGroup.get('repeat_password')?.value;
     if (p1 !== p2) {
       return {
         nopassmatch: true

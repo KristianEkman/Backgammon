@@ -134,5 +134,21 @@
     "doyouwanttoplay": "Voulez-vous jouer contre l'IA?",
     "playai": "Jouer à",
     "keepwaiting": "Faire attendre"
+  },
+  "password": {
+    "name": "Nom",
+    "email": "eMail",
+    "password": "Mot de passe",
+    "repeat_password": "Répéter le mot de passe",
+    "incorrect": "E-mail ou mot de passe incorrect",
+    "newplayer": "Nouveau joueur",
+    "create": "Créer",
+    "login": "Connexion",
+    "passdontmatch": "Les mots de passe ne correspondent pas",
+    "namerequired": "Le nom est requis",
+    "emailrequired": "E-mail est requis",
+    "invalidemailformat": "Format d'email invalide",
+    "required": "Mot de passe requis",
+    "format": "Le mot de passe doit avoir au moins 8 caractères"
   }
 }
