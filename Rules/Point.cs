@@ -45,7 +45,7 @@ namespace Backend.Rules
             return this.GetNumber(player) == 25;
         }
 
-        public bool Bloat(Player.Color myColor)
+        public bool Blot(Player.Color myColor)
         {
             return Checkers.Count(c => c.Color == myColor)== 1;
         }

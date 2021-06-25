@@ -10,8 +10,8 @@ namespace Ai
     {
         public static void Main()
         {
-            //Trainer.OptimizeBloatsThreshold();
-            //Trainer.OptimizeBloatsFactor();
+            //Trainer.OptimizeBlotsThreshold();
+            //Trainer.OptimizeBlotsFactor();
             //Trainer.RunStatic();
             //Trainer.ComparePassedBlocks();
             //Trainer.OptimizeConnectedBlocksFactor();

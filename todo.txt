@@ -20,7 +20,7 @@ Visa dubbelslag för första.
 
 Tar bort ett meddelande, visar inte nästa.
 
-Finns det en bugg som gör att AI slår bloats med låg point?
+Finns det en bugg som gör att AI slår blots med låg point?
 
 Chat. Messages. Guest book.
 

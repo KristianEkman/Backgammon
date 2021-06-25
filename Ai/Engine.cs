@@ -113,9 +113,9 @@ namespace Ai
             double score = 0;
             var inBlock = false;
             var blockCount = 0; // consequtive blocks
-            var bt = Configuration.BloatsThreshold;
-            var bf = Configuration.BloatsFactor;
-            var bfp = Configuration.BloatsFactorPassed;
+            var bt = Configuration.BlotsThreshold;
+            var bf = Configuration.BlotsFactor;
+            var bfp = Configuration.BlotsFactorPassed;
             var cbf = Configuration.ConnectedBlocksFactor;
             var bps = Configuration.BlockedPointScore;
 
@@ -135,7 +135,7 @@ namespace Ai
 
                 var pointNo = point.GetNumber(myColor);
 
-                // If all opponents checkers has passed this point, bloats are not as bad.
+                // If all opponents checkers has passed this point, blots are not as bad.
                 allPassed = pointNo > opponentMax;
 
                 if (point.Block(myColor))
@@ -154,7 +154,7 @@ namespace Ai
                         blockCount = 0;
                     }
                     inBlock = false;
-                    if (point.Bloat(myColor) && point.GetNumber(myColor) > bt)
+                    if (point.Blot(myColor) && point.GetNumber(myColor) > bt)
                         score -= point.GetNumber(myColor) / ( allPassed ? bfp : bf);
                 }
             }

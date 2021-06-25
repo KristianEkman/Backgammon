@@ -158,7 +158,7 @@ namespace BackendTests
         }
 
         [TestMethod]
-        public void DontHitBloat1()
+        public void DontHitBlot1()
         {
             var game = Game.Create(false);
             game.ClearCheckers();
@@ -184,7 +184,7 @@ namespace BackendTests
         }
 
         [TestMethod]
-        public void DontHitBloat2()
+        public void DontHitBlot2()
         {
             var game = Game.Create(false);
             game.ClearCheckers();

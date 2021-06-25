@@ -131,7 +131,7 @@ namespace Ai
             }
         }
 
-        public static double OptimizeBloatsThreshold(int start = 1, int end = 10, Config config = null)
+        public static double OptimizeBlotsThreshold(int start = 1, int end = 10, Config config = null)
         {
             var best = 0d;
             var bestT = 0d;
@@ -140,10 +140,10 @@ namespace Ai
             for (double t = start; t < end; t += delta)
             {
                 var runner = new Trainer(config);
-                runner.White.Configuration.BloatsThreshold = (int)t;
+                runner.White.Configuration.BlotsThreshold = (int)t;
                 WriteConfigs(runner);                
                 Console.WriteLine($"=====================");
-                Console.WriteLine($"BloatsThreshold: {t}");
+                Console.WriteLine($"BlotsThreshold: {t}");
                 var res = RunMany(runner);
                 if (res > best && res > Improvement)
                 {
@@ -154,7 +154,7 @@ namespace Ai
             return bestT;
         }
 
-        public static double OptimizeBloatsFactorPassed(double start = 1, double end = 10, Config config = null)
+        public static double OptimizeBlotsFactorPassed(double start = 1, double end = 10, Config config = null)
         {
             var best = 0d;
             var bestT = 0d;
@@ -163,10 +163,10 @@ namespace Ai
             for (var t = start; t < end; t += delta)
             {
                 var runner = new Trainer(config);
-                runner.White.Configuration.BloatsFactorPassed = t;
+                runner.White.Configuration.BlotsFactorPassed = t;
                 WriteConfigs(runner);
                 Console.WriteLine($"==================");
-                Console.WriteLine($"BloatsFactorPassed: {t}");
+                Console.WriteLine($"BlotsFactorPassed: {t}");
                 var res = RunMany(runner);
                 if (res > best && res > Improvement)
                 {
@@ -177,7 +177,7 @@ namespace Ai
             return bestT;
         }
 
-        public static double OptimizeBloatsFactor(double start = 1, double end = 10, Config config = null)
+        public static double OptimizeBlotsFactor(double start = 1, double end = 10, Config config = null)
         {
             var best = 0d;
             var bestT = 0d;
@@ -186,10 +186,10 @@ namespace Ai
             for (var t = start; t < end; t += delta)
             {
                 var runner = new Trainer(config);
-                runner.White.Configuration.BloatsFactor = t;
+                runner.White.Configuration.BlotsFactor = t;
                 WriteConfigs(runner);
                 Console.WriteLine($"==================");
-                Console.WriteLine($"BloatsFactor: {t}");
+                Console.WriteLine($"BlotsFactor: {t}");
                 var res = RunMany(runner);
                 if (res > best && res > Improvement)
                 {
@@ -275,28 +275,28 @@ namespace Ai
             var csvName = $"{Environment.CurrentDirectory}\\MaximizeAll{DateTime.Now.ToString("yyMMddHHmmss")}.csv";
             Console.WriteLine(csvName);
 
-            File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;BloatsFactor;BloatsFactorPassed;BloatsThreshold;RunOrBlockFactor\n");
+            File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;BlotsFactor;BlotsFactorPassed;BlotsThreshold;RunOrBlockFactor\n");
 
             const double lr = 0.1; // learning rate
             while (true)
             {
-                var sBt = Math.Max(config.BloatsThreshold - 2, 0);
-                var eBt = config.BloatsThreshold + 2;                
-                var bt = OptimizeBloatsThreshold(sBt, eBt, config);                
+                var sBt = Math.Max(config.BlotsThreshold - 2, 0);
+                var eBt = config.BlotsThreshold + 2;                
+                var bt = OptimizeBlotsThreshold(sBt, eBt, config);                
                 if (bt > 0)
-                    config.BloatsThreshold = (int)bt;// config.BloatsThreshold + (bt - config.BloatsThreshold) / 2;
+                    config.BlotsThreshold = (int)bt;// config.BlotsThreshold + (bt - config.BlotsThreshold) / 2;
                 
-                var sBf = Math.Max(config.BloatsFactor - 0.5, 0.1);
-                var eBf = config.BloatsFactor + 0.5;
-                var bf = OptimizeBloatsFactor(sBf, eBf, config);
+                var sBf = Math.Max(config.BlotsFactor - 0.5, 0.1);
+                var eBf = config.BlotsFactor + 0.5;
+                var bf = OptimizeBlotsFactor(sBf, eBf, config);
                 if (bf > 0)
-                    config.BloatsFactor = config.BloatsFactor + (bf - config.BloatsFactor) * lr;
+                    config.BlotsFactor = config.BlotsFactor + (bf - config.BlotsFactor) * lr;
 
-                var sBfp = Math.Max(config.BloatsFactorPassed - 0.5, 0.1);
-                var eBfp = config.BloatsFactorPassed + 0.5;
-                var bfp = OptimizeBloatsFactorPassed(sBfp, eBfp, config);
+                var sBfp = Math.Max(config.BlotsFactorPassed - 0.5, 0.1);
+                var eBfp = config.BlotsFactorPassed + 0.5;
+                var bfp = OptimizeBlotsFactorPassed(sBfp, eBfp, config);
                 if (bfp > 0)
-                    config.BloatsFactorPassed = config.BloatsFactorPassed + (bfp - config.BloatsFactorPassed) * lr;
+                    config.BlotsFactorPassed = config.BlotsFactorPassed + (bfp - config.BlotsFactorPassed) * lr;
 
 
                 var sCb = Math.Max(config.ConnectedBlocksFactor - 0.5, 0);
@@ -319,7 +319,7 @@ namespace Ai
 
                 Console.WriteLine("*********************");
                 Console.WriteLine(DateTime.Now.ToString() + " " + config.ToString());
-                File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.BloatsFactor};{config.BloatsFactorPassed};{config.BloatsThreshold};{config.RunOrBlockFactor}\n");
+                File.AppendAllText(csvName, $"{config.BlockedPointScore};{config.ConnectedBlocksFactor};{config.BlotsFactor};{config.BlotsFactorPassed};{config.BlotsThreshold};{config.RunOrBlockFactor}\n");
                 Console.WriteLine("*********************");
             }
         }
