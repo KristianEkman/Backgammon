@@ -1,67 +1,55 @@
-Skicka e-post vid nytt meddelande.
-    - Avbeställa aviseringar
-    - Subject: Message from backgammon.
-    - Body: You have a new message from Kristian at Backgammon.
-    
-    Go to the message.
-    Unsubscribe from further notifications.
-    Adminfunktion för att skicka meddelande.
+candeactivate
 
-Hi! There have been some updates to Backgammon.
-* Smarter AI
-* Select your language.
-* Select a brighter UI.
-* Email notifications
+Progressbar, tick tack ljud
 
-
-Språk, ryska, grekiska.
+Språk
+    ryska
 
 Visa dubbelslag för första.
 
 Tar bort ett meddelande, visar inte nästa.
 
-Finns det en bugg som gör att AI slår blots med låg point?
-
 Chat. Messages. Guest book.
-
-Release 1.1 - mål att öka logins
-===========
-Ljust tema.
-Player photos
 
 Leave Feedback
 
-Fula tärningar på FF mobile    
-
 canvas banner
-
-candeactivate
-
-Animation på firefox suger.
 
 Tärningsanimation.
 
 Backa upp Managers till DB, så man kan göra en swap vid release.
+
 Visa statistik på startsidan.
-Visa när motståndaren kastar.
+
 Flytta flera drag på ett klick.
+
 Ge extra tid för reconnect.
-Progressbar
+
 Editing of photo.
+
 Reputition: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
 
 Visa dubblar vid första drag.
+
 Chat
-Olika teman, ljus, marble, wood.
+
+Olika teman, marble, wood.
+
+Animated background gradiend.
+
 Två olika hastigheter. 10s, resp 35s. Inte som gäst. Infinite?
+
 Ui
   Auto send when no options, vis no moves.
   Auto move, when only one move.
 
 Rematch same opponent.
+
 Sepegeleffekt i board.
+
 Coolare grafik när man vinner.
+
 Automatiska e2e-tester, selenium.
 
 serverside http only userid cookie
@@ -69,8 +57,6 @@ serverside http only userid cookie
 
 Offline validering av jwt's
 
-Dubbling.
 Först till 10.
 
-Money
 https://ionicframework.com/
