@@ -2,6 +2,8 @@ candeactivate
 
 Progressbar, tick tack ljud
 
+Training, no timer.
+
 Språk
     ryska
 
