@@ -400,4 +400,9 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     Sound.playBlues();
     this.playAiQuestion = false;
   }
+
+  @HostListener('window:beforeunload', ['$event'])
+  unloadHandler(event: Event) {
+    return !this.started;
+  }
 }
