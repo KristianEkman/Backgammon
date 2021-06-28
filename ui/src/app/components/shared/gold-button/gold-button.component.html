@@ -1,8 +1,7 @@
 <ng-container *ngIf="user">
   <button class="flat-button" (click)="getGoldClicked()">
-    {{ user?.gold }}
     <i class="fas fa-coins"></i>
-    &nbsp;&nbsp;
+    {{ user?.gold }}
     {{ getButtonText() | async }}
   </button>
 </ng-container>

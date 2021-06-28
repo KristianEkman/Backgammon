@@ -3,10 +3,10 @@
     <div class="flip-card-front app-colors">
       <div class="caption">
         <span>{{ 'toplist.thisweek' | translate }}</span>
-        <button class="black-button" (click)="flipped = true">
+        <app-button (click)="flipped = true">
           {{ 'toplist.alltime' | translate }}
           <i class="fas fa-chevron-right"></i>
-        </button>
+        </app-button>
       </div>
       <table>
         <thead>
@@ -31,10 +31,10 @@
     <div class="flip-card-back app-colors">
       <div class="caption">
         <span>{{ 'toplist.alltime' | translate }}</span>
-        <button class="black-button" (click)="flipped = false">
+        <app-button (click)="flipped = false">
           <i class="fas fa-chevron-left"></i>
           {{ 'toplist.thisweek' | translate }}
-        </button>
+        </app-button>
       </div>
       <table>
         <thead>

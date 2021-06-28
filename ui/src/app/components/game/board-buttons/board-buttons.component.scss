@@ -1,17 +1,21 @@
-button {
-  margin: 4px;
+.container {
+  display: flex;
 
-  @media screen and (max-height: 445px) {
-    font-size: 16px !important;
-    padding: 6px 12px 6px 12px !important;
+  button {
+    margin: 4px;
 
-  }
+    @media screen and (max-height: 445px) {
+      font-size: 16px !important;
+      padding: 6px 12px 6px 12px !important;
 
-  i {
-    margin-left: 3px;
-  }
+    }
 
-  &.smaller {
-    font-size: 17px;
+    i {
+      margin-left: 3px;
+    }
+
+    &.smaller {
+      font-size: 17px;
+    }
   }
 }

@@ -24,11 +24,13 @@ td {
   text-align: left;
   padding-bottom: 8px;
 
-
-  button {
-    font-size: 16px;
-    right: 0;
-    padding: 6px 12px;
+  ::ng-deep {
+    button {
+      font-size: 16px;
+      right: 0;
+      padding: 6px 12px;
+      height: auto;
+    }
   }
 }
 

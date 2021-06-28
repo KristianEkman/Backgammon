@@ -17,7 +17,7 @@ $shadow-inset;
 $button-shadow-hover: $button-shadow-base,
 $shadow-inset-hover;
 
-$button-shadow-focus: $button-shadow-base;
+$button-shadow-focus: inset 0 0 5px 5px rgba(0, 255, 0, 0.2);
 
 $button-shadow-active: $button-shadow-base,
 $shadow-inset-active;
@@ -42,8 +42,8 @@ button,
   cursor: pointer;
   padding-left: 15px;
   padding-right: 15px;
-  height: 45px;
-  border-radius: 21px;
+  height: 44px;
+  border-radius: 22px;
   transition: all .2s ease;
   font-size: 20px;
 
@@ -62,19 +62,20 @@ button,
   }
 
   &:hover:not([disabled]) {
-    box-shadow: $button-shadow-hover;
+    box-shadow: none;
 
     &>* {
-      transform: scale(1.1);
+      transform: scale(1.05);
     }
   }
 
   &:focus:not(:active) {
     outline: none;
+    box-shadow: $button-shadow-focus;
   }
 
   &:active:not([disabled]) {
-    box-shadow: $button-shadow-active;
+    box-shadow: $button-shadow-default;
 
     &>* {
       transform: scale(.95);
@@ -98,11 +99,6 @@ button.dark {
   span {
     color: #aaa;
     text-shadow: -1px -1px #555;
-  }
-
-  &:hover:not([disabled]) {
-    background-image: linear-gradient(to bottom, #272727 0%, #222 50%, #171717 100%);
-    box-shadow: -5px -5px 5px #131313, 5px 5px 5px #1b1b1b;
   }
 
   &:active:not([disabled]) {
