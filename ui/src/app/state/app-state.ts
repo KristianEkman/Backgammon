@@ -39,6 +39,7 @@ export class AppState {
     this.rolled = new StateObject<boolean>();
     this.opponentDone = new StateObject<boolean>();
     this.theme = new StateObject<string>();
+    this.theme.setValue('dark');
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
