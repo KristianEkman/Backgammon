@@ -88,6 +88,7 @@ export class AccountService {
     return this.http.post(`${this.url}/saveuser`, user).pipe(
       map(() => {
         AppState.Singleton.user.setValue(user);
+        AppState.Singleton.theme.setValue(user.theme);
         this.storage.set(Keys.loginKey, user);
       })
     );

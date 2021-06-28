@@ -1,3 +1,5 @@
+import { AppState } from 'src/app/state/app-state';
+
 export class Theme {
   public static Themes = ['dark', 'light', 'blue', 'pink'];
 
@@ -7,5 +9,6 @@ export class Theme {
       document.body.classList.remove(v);
     });
     document.body.classList.add(theme);
+    AppState.Singleton.theme.setValue(theme);
   }
 }

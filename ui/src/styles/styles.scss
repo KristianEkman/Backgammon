@@ -44,4 +44,5 @@ body {
 
 .gold-text {
   @include glod-text();
+  text-shadow: none;
 }

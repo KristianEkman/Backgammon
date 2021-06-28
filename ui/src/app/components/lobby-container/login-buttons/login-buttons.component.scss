@@ -11,14 +11,9 @@
   transform: scaleY(1) scaleX(1);
 }
 
-button {
-  margin: 8px 8px 0 0;
-  padding-top: 2;
-  padding-bottom: 2;
-
+app-button {
   div {
     display: flex;
-    color: #bbb;
     font-weight: 500;
     align-items: center;
     justify-content: flex-start;

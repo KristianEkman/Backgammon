@@ -6,10 +6,10 @@
   </button>
 </div>
 <div class="buttons">
-  <button class="black-button" (click)="cancelClick()">
+  <app-button (click)="cancelClick()">
     {{ 'invite.cancelinvite' | translate }}
-  </button>
-  <button class="default-button" (click)="startClick()">
+  </app-button>
+  <app-button [default]="true" (click)="startClick()">
     {{ 'invite.startgame' | translate }}
-  </button>
+  </app-button>
 </div>

@@ -6,7 +6,7 @@
 >
 </app-invite>
 <div *ngIf="inviteId && (user$ | async)">
-  <button class="default-button" (click)="startInvitedGame(inviteId)">
+  <app-button [default]="true" (click)="startInvitedGame(inviteId)">
     {{ 'logincontainer.accept' | translate }}
-  </button>
+  </app-button>
 </div>

@@ -1,0 +1,132 @@
+$highlight-bottom: 4px 4px 3px 1px #fff1;
+$shadow-bottom: 0 6px 8px #fff1;
+$shadow-top: 0 -4px 4px #5551;
+$highlight-top: -6px -6px 4px #5551;
+$shadow-inset: inset 0 0 10px 0 #9991;
+$shadow-inset-hover: inset 0 0 10px 3px #ccc7;
+$shadow-inset-active: inset 0 0 5px 3px #7777;
+
+$button-shadow-base: $highlight-bottom,
+$shadow-bottom,
+$shadow-top,
+$highlight-top;
+
+$button-shadow-default: $button-shadow-base,
+$shadow-inset;
+
+$button-shadow-hover: $button-shadow-base,
+$shadow-inset-hover;
+
+$button-shadow-focus: $button-shadow-base;
+
+$button-shadow-active: $button-shadow-base,
+$shadow-inset-active;
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+button,
+[role="button"] {
+  margin-top: 12px;
+  margin-right: 12px;
+  background-color: transparent;
+  -webkit-appearance: none;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  cursor: pointer;
+  padding-left: 15px;
+  padding-right: 15px;
+  height: 45px;
+  border-radius: 21px;
+  transition: all .2s ease;
+  font-size: 20px;
+
+  background-image: linear-gradient(to top, #ddd2 0%, #fff2 50%, #Fff6 100%);
+  border: 1px solid #0005;
+  box-shadow: $button-shadow-default;
+  //   color: #0009;
+  text-shadow: 1px 1px #ccc;
+
+  &::-moz-focus-inner {
+    border: 0;
+  }
+
+  &>* {
+    transition: transform .2s ease;
+  }
+
+  &:hover:not([disabled]) {
+    box-shadow: $button-shadow-hover;
+
+    &>* {
+      transform: scale(1.1);
+    }
+  }
+
+  &:focus:not(:active) {
+    outline: none;
+  }
+
+  &:active:not([disabled]) {
+    box-shadow: $button-shadow-active;
+
+    &>* {
+      transform: scale(.95);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &.icon {
+    width: 50px;
+  }
+}
+
+button.dark {
+  background-image: linear-gradient(to bottom, #151515 0%, #131313 50%, #111 100%);
+  box-shadow: -5px -5px 5px #111111, 5px 5px 5px #1b1b1b;
+
+  span {
+    color: #aaa;
+    text-shadow: -1px -1px #555;
+  }
+
+  &:hover:not([disabled]) {
+    background-image: linear-gradient(to bottom, #272727 0%, #222 50%, #171717 100%);
+    box-shadow: -5px -5px 5px #131313, 5px 5px 5px #1b1b1b;
+  }
+
+  &:active:not([disabled]) {
+    box-shadow: -5px -5px 5px #131313, 5px 5px 5px #1b1b1b;
+    background-color: #2225;
+    background-image: none;
+
+    &>* {
+      transform: scale(.95);
+    }
+  }
+}
+
+button.default {
+  span {
+    color: green;
+    font-weight: 600;
+  }
+}
+
+button.default.dark {
+  span {
+    text-shadow: none;
+    color: rgb(29, 168, 29);
+
+  }
+}

@@ -62,6 +62,7 @@ import { GoldButtonComponent } from './components/shared/gold-button/gold-button
 import { ToLittleGoldComponent } from './components/to-little-gold/to-little-gold.component';
 import { PlayAiQuestionComponent } from './components/game/play-ai-question/play-ai-question.component';
 import { PasswordContainerComponent } from './components/password-container/password-container.component';
+import { ButtonComponent } from './components/shared/button/button.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -104,7 +105,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     GoldButtonComponent,
     ToLittleGoldComponent,
     PlayAiQuestionComponent,
-    PasswordContainerComponent
+    PasswordContainerComponent,
+    ButtonComponent
   ],
   imports: [
     BrowserModule,

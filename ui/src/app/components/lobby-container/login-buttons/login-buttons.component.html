@@ -7,20 +7,20 @@
     Sign in
   </button>
   <div [ngClass]="{ show: show }" class="login-buttons">
-    <button class="black-button" (click)="facebookLoginClick()">
+    <app-button (click)="facebookLoginClick()">
       <div>
         <img src="assets/images/facebook.png" />
         Facebook
       </div>
-    </button>
-    <button class="black-button" (click)="googleLoginClick()">
+    </app-button>
+    <app-button (click)="googleLoginClick()">
       <div>
         <img src="assets/images/google.jpg" />
         Google
       </div>
-    </button>
-    <button class="black-button" (click)="passwordLoginClick()">
+    </app-button>
+    <app-button (click)="passwordLoginClick()">
       <div>Password</div>
-    </button>
+    </app-button>
   </div>
 </ng-container>

@@ -50,4 +50,8 @@ export class StateObject<T> {
 
     return obj;
   }
+
+  next() {
+    this._subject.next(this._value);
+  }
 }

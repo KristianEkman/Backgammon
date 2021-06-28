@@ -69,12 +69,12 @@
       </div>
 
       <div class="spread-out mt">
-        <button type="button" (click)="cancel()" class="black-button">
+        <app-button type="button" (click)="cancel()">
           {{ 'accountedit.cancel' | translate }}
-        </button>
-        <button type="submit" class="default-button">
+        </app-button>
+        <app-button type="submit" [default]="true">
           {{ 'accountedit.save' | translate }}
-        </button>
+        </app-button>
       </div>
       <div class="delete mt">
         <button type="button" (click)="deleteUser()" class="flat-button">
@@ -90,13 +90,13 @@
     <p>{{ 'accountedit.allyourgames' | translate }}</p>
     <p>{{ 'accountedit.sure' | translate }}</p>
     <div class="spread-out">
-      <button class="black-button" type="button" (click)="cancel()">
+      <app-button type="button" (click)="cancel()">
         {{ 'accountedit.cancel' | translate }}
-      </button>
-      <button class="black-button" type="button" (click)="doDeletion()">
+      </app-button>
+      <app-button (click)="doDeletion()">
         {{ 'accountedit.yesdelete' | translate }}
         <i class="fas fa-exclamation-triangle yellow"></i>
-      </button>
+      </app-button>
     </div>
   </ng-container>
 </div>

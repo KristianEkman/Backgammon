@@ -23,7 +23,6 @@ export class AccountEditContainerComponent {
     private changeDetector: ChangeDetectorRef
   ) {
     this.user = AppState.Singleton.user.getValue();
-
     this.formGroup = this.formBuidler.group({
       name: [this.user.name, [Validators.required, Validators.maxLength(100)]],
       emailNotification: [this.user.emailNotification],
@@ -72,6 +71,8 @@ export class AccountEditContainerComponent {
   }
 
   cancel(): void {
+    const theme = AppState.Singleton.user.getValue().theme;
+    Theme.change(theme);
     this.router.navigateByUrl('/lobby');
   }
 

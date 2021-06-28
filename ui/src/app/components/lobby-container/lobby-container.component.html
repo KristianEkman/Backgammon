@@ -16,17 +16,14 @@
       </h1>
     </div>
     <div class="lobby">
-      <!-- <button *ngIf="!(user$ | async)" class="guest-play-button flat-button" (click)="playClick()">
-        Play as guest&nbsp;&nbsp;<i class="fas fa-info-circle" title="Guests can only play other guests"></i>
-      </button> -->
       <div class="ai-button-container">
-        <button class="black-button" (click)="playClick()">
+        <app-button (click)="playClick()">
           <i class="fas fa-coins gold-text"></i>
           {{ 'logincontainer.goldgame' | translate }}
-        </button>
-        <button class="black-button" (click)="practiceClick()">
+        </app-button>
+        <app-button (click)="practiceClick()">
           {{ 'logincontainer.practice' | translate }}
-        </button>
+        </app-button>
         <div *ngIf="showLoginTip && !isLoggedIn()" class="tip-message">
           <strong
             >{{ 'logincontainer.tip' | translate }}
@@ -35,14 +32,13 @@
           <em>{{ 'logincontainer.whenyousignin' | translate }}</em>
         </div>
       </div>
-      <button
+      <app-button
         style="margin-top: 8px"
         *ngIf="isLoggedIn()"
-        class="black-button"
         (click)="inviteFriendClick()"
       >
         {{ 'logincontainer.friend' | translate }}
-      </button>
+      </app-button>
     </div>
     <app-login-buttons
       (onLogin)="login($event)"

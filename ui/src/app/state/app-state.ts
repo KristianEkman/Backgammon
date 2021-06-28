@@ -38,6 +38,7 @@ export class AppState {
     this.messages.setValue([]);
     this.rolled = new StateObject<boolean>();
     this.opponentDone = new StateObject<boolean>();
+    this.theme = new StateObject<string>();
   }
   private static _singleton: AppState;
   public static get Singleton(): AppState {
@@ -63,6 +64,7 @@ export class AppState {
   messages: StateObject<MessageDto[]>;
   rolled: StateObject<boolean>;
   opponentDone: StateObject<boolean>;
+  theme: StateObject<string>;
 
   myTurn(): boolean {
     const game = this.game.getValue();
