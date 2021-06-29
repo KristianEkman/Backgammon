@@ -18,7 +18,7 @@
     <div class="lobby">
       <div class="ai-button-container">
         <app-button (click)="playClick()">
-          <i class="fas fa-coins gold-text"></i>
+          <i class="fas fa-coins"></i>
           {{ 'logincontainer.goldgame' | translate }}
         </app-button>
         <app-button (click)="practiceClick()">
@@ -32,13 +32,12 @@
           <em>{{ 'logincontainer.whenyousignin' | translate }}</em>
         </div>
       </div>
-      <app-button
-        style="margin-top: 8px"
-        *ngIf="isLoggedIn()"
-        (click)="inviteFriendClick()"
-      >
-        {{ 'logincontainer.friend' | translate }}
-      </app-button>
+      <div *ngIf="isLoggedIn()">
+        <br />
+        <app-button (click)="inviteFriendClick()">
+          {{ 'logincontainer.friend' | translate }}
+        </app-button>
+      </div>
     </div>
     <app-login-buttons
       (onLogin)="login($event)"

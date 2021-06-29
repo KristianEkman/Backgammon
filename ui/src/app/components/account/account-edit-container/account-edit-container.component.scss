@@ -37,8 +37,8 @@
   }
 
   .delete {
-    text-align: right;
-    margin-top: 30px;
+    display: flex;
+    justify-content: center;
 
     button {
       font-size: 16px;
@@ -51,6 +51,7 @@
 
   input {
     font-size: 20px;
+    background-color: var(--input-bg-color);
   }
 
   .email {
@@ -96,7 +97,7 @@
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  border: 2px solid white;
+  border: 2px solid var(--input-bg-color);
 }
 
 .container input:focus~.checkmark {

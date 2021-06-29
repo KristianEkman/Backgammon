@@ -30,8 +30,6 @@ $shadow-inset-active;
 
 button,
 [role="button"] {
-  margin-top: 12px;
-  margin-right: 12px;
   background-color: transparent;
   -webkit-appearance: none;
   user-select: none;
@@ -97,8 +95,8 @@ button.dark {
   box-shadow: -5px -5px 5px #111111, 5px 5px 5px #1b1b1b;
 
   span {
-    color: #aaa;
-    text-shadow: -1px -1px #555;
+    text-shadow: -1px -1px #333;
+    color: #ccc
   }
 
   &:active:not([disabled]) {
@@ -122,7 +120,7 @@ button.default {
 button.default.dark {
   span {
     text-shadow: none;
-    color: rgb(29, 168, 29);
+    color: rgb(86, 175, 86);
 
   }
 }

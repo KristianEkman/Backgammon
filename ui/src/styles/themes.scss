@@ -1,12 +1,17 @@
 // ******************* Dark Theme ********************
 .dark {
   --body-color: rgb(37, 37, 37);
-  --text-color: #aaa;
-  --app-bg-color: #171717;
-  --title-color: rgb(200, 200, 200);
+  --text-color: #888;
+  --app-bg-color: #141414;
+  --title-color: #999;
   --anchor-color: rgb(158, 158, 255);
   --error-color: rgb(253, 82, 82);
   --message-bg-color: #333;
+  --input-bg-color: #bbb;
+
+  select {
+    background-color: var(--input-bg-color);
+  }
 }
 
 // ******************* Light Theme ********************
@@ -18,6 +23,7 @@
   --anchor-color: rgb(71, 71, 112);
   --error-color: #962b2b;
   --message-bg-color: #eee;
+  --input-bg-color: white;
 }
 
 // ******************* Blue Theme ********************
@@ -29,6 +35,7 @@
   --anchor-color: rgb(71, 71, 112);
   --error-color: #962b2b;
   --message-bg-color: #eee;
+  --input-bg-color: white;
 }
 
 // ******************* Pink Theme ********************
@@ -40,6 +47,7 @@
   --anchor-color: rgb(112, 71, 71);
   --error-color: #962b2b;
   --message-bg-color: #eee;
+  --input-bg-color: white;
 }
 
 body {

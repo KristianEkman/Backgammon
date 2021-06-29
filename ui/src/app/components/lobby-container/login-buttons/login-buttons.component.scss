@@ -12,6 +12,9 @@
 }
 
 app-button {
+  margin-right: 15px;
+  margin-top: 15px;
+
   div {
     display: flex;
     font-weight: 500;
@@ -20,6 +23,7 @@ app-button {
   }
 
   img {
+    opacity: .6;
     width: 24px;
     height: 24px;
     margin-right: 8px;
