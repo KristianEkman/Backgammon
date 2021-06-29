@@ -1,19 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MessageDto, MessageType } from 'src/app/dto';
 import { MessageTypeText } from './messageTypeTexts';
 
 @Component({
   selector: 'app-message-read',
   templateUrl: './message-read.component.html',
-  styleUrls: ['./message-read.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./message-read.component.scss']
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MessageReadComponent implements OnInit {
   @Input() messages: MessageDto[] | null = null;
@@ -21,16 +14,26 @@ export class MessageReadComponent implements OnInit {
   MessageType = MessageType;
   currentIndex = 0;
   hide = false;
+  deleteAnim = false;
+
+  constructor() {}
 
   ngOnInit(): void {}
 
   deleteClick(): void {
     if (this.messages) {
-      this.animateHide();
+      this.animateDelete();
       this.delete.emit(this.messages[this.currentIndex].id);
       this.currentIndex = 0;
       // little bit ugly to jump first here, but will do for now.
     }
+  }
+
+  animateDelete(): void {
+    this.deleteAnim = true;
+    setTimeout(() => {
+      this.deleteAnim = false;
+    }, 600);
   }
 
   animateHide(): void {

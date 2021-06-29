@@ -59,12 +59,12 @@
 /* Position the content inside the overlay */
 .overlay-content {
   position: relative;
-  /* 25% from the top */
   width: 100%;
-  /* 100% width */
-  text-align: center;
-  /* Centered text/links */
   margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   button {
     color: #bbb;

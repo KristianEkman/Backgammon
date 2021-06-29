@@ -11,7 +11,7 @@
     </div>
     <div
       class="message-container message-background"
-      [ngClass]="{ hide: hide }"
+      [ngClass]="{ hide: hide, deleteAnim: deleteAnim }"
     >
       <p>
         {{ message.date }}<br />{{ 'messageread.from' | translate }}:
