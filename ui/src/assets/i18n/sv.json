@@ -37,7 +37,8 @@
     "dark": "Mörkt",
     "light": "Ljust",
     "blue": "Blå",
-    "pink": "Rosa"
+    "pink": "Rosa",
+    "green": "Grön"
   },
   "accountmenu": {
     "edit": "Redigera konto",

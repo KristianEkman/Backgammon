@@ -67,3 +67,17 @@ export class PinkTheme implements IThemes {
   highLight = '#28DD2E';
   checkerBorder = '#877';
 }
+
+export class GreenTheme implements IThemes {
+  name = 'green';
+  boardBackground = '#809680';
+  homeBackground = '#454';
+  border = '#343';
+  whiteTriangle = '#676';
+  blackTriangle = '#343';
+  whiteChecker = '#aaa';
+  blackChecker = '#000';
+  textColor = '#232';
+  highLight = '#28DD2E';
+  checkerBorder = '#787';
+}

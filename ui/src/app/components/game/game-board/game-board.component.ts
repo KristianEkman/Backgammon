@@ -15,7 +15,14 @@ import { AppState } from 'src/app/state/app-state';
 import { Sound } from 'src/app/utils';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
 import { Checker } from './checker';
-import { BlueTheme, DarkTheme, IThemes, LightTheme, PinkTheme } from './themes';
+import {
+  BlueTheme,
+  DarkTheme,
+  GreenTheme,
+  IThemes,
+  LightTheme,
+  PinkTheme
+} from './themes';
 
 @Component({
   selector: 'app-game-board',
@@ -117,6 +124,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (this.themeName === 'light') this._theme = new LightTheme();
     if (this.themeName === 'blue') this._theme = new BlueTheme();
     if (this.themeName === 'pink') this._theme = new PinkTheme();
+    if (this.themeName === 'green') this._theme = new GreenTheme();
 
     return this._theme as IThemes;
   }

@@ -37,7 +37,8 @@
     "dark": "Oscura",
     "light": "Luz",
     "blue": "Azul",
-    "pink": "Rosa"
+    "pink": "Rosa",
+    "green": "Verde"
   },
   "accountmenu": {
     "edit": "Editar cuenta",

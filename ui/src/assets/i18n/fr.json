@@ -37,7 +37,8 @@
     "dark": "Sombre",
     "light": "Lumière",
     "blue": "Bleue",
-    "pink": "Rose"
+    "pink": "Rose",
+    "green": "Verte"
   },
   "accountmenu": {
     "edit": "Modifier le compte",

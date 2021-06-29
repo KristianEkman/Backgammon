@@ -37,7 +37,8 @@
     "dark": "Dark",
     "light": "Light",
     "blue": "Blue",
-    "pink": "Pink"
+    "pink": "Pink",
+    "green": "Green"
   },
   "accountmenu": {
     "edit": "Edit account",
