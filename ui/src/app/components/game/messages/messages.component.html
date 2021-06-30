@@ -2,5 +2,4 @@
   class="message"
   [@showHide]="{ value: state, params: { shown: shown, initial: initial } }"
   >{{ message?.text }}<i [ngClass]="getIcon()"></i>
-  <span *ngIf="timeLeft && timeLeft > 0">{{ roundTimeLeft() }}</span>
 </span>

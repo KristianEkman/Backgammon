@@ -40,6 +40,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() dicesVisible: boolean | null = false;
   @Input() flipped = false;
   @Input() themeName: string | null = 'dark';
+  @Input() timeLeft: number | null = 0;
 
   @Output() addMove = new EventEmitter<MoveDto>();
   @Output() moveAnimFinished = new EventEmitter<void>();
@@ -201,9 +202,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     //blacks home
     this.blackHome.set(
       this.width - this.sideBoardWidth - this.borderWidth / 2,
-      this.height - this.height * 0.44 - this.borderWidth / 2,
+      this.height - this.height * 0.4 - this.borderWidth / 2,
       this.getCheckerWidth() * 2 + this.borderWidth + 2,
-      this.height * 0.44,
+      this.height * 0.4,
       25
     );
 
@@ -212,7 +213,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.width - this.sideBoardWidth - this.borderWidth / 2,
       this.borderWidth / 2,
       this.getCheckerWidth() * 2 + this.borderWidth + 2,
-      this.height * 0.44,
+      this.height * 0.4,
       0
     );
 
@@ -240,6 +241,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       x += rectBase;
     }
   }
+
   getRectBase(): number {
     return (
       (this.width -
@@ -269,11 +271,51 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       this.animatedMove.draw(cx, this.getCheckerWidth());
     }
 
+    this.drawClock(cx);
     // *** NOT PROD CODE
     // this.drawIcon(cx);
     // this.drawDebugRects(cx);
     // *** NOT PROD CODE
     return 0;
+  }
+
+  drawClock(cx: CanvasRenderingContext2D) {
+    // clock
+    if (!this.timeLeft || this.timeLeft < 0) return;
+
+    cx.beginPath();
+    const x = this.whiteHome.x + this.whiteHome.width / 2 + this.borderWidth;
+    const y = this.height / 2;
+    const a = ((this.timeLeft ?? 0) / 40) * 2;
+    const s = this.height * 0.06;
+    cx.fillStyle = 'green';
+    cx.arc(x, y, s, -(a + 0.5) * Math.PI, -0.5 * Math.PI);
+    cx.lineTo(x, y);
+    cx.shadowBlur = 0;
+    cx.shadowOffsetX = 0;
+    cx.shadowOffsetY = 0;
+    cx.fillStyle = this.theme.boardBackground;
+    if (this.timeLeft < 20) {
+      const h = Math.round((this.timeLeft / 40) * 128);
+      cx.fillStyle = `hsl(${h}, 20%, 50%)`;
+    }
+    cx.fill();
+
+    cx.fillStyle = this.theme.textColor;
+    if (this.timeLeft < 20) {
+      const h = Math.round((this.timeLeft / 40) * 128);
+      cx.fillStyle = `hsl(${h}, 100%, 50%)`;
+    }
+    cx.font = `bold ${Math.ceil(s)}px Arial`;
+    cx.textAlign = 'center';
+
+    const tx = x;
+    const ty = y + s / 2 - s / 6;
+    const text = Math.ceil(this.timeLeft).toString();
+
+    cx.fillText(text, tx, ty);
+    cx.strokeStyle = this.theme.textColor;
+    // cx.strokeText(text, tx, ty);
   }
 
   drawIcon(cx: CanvasRenderingContext2D): void {

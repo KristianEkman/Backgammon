@@ -243,8 +243,11 @@ export class SocketsService implements OnDestroy {
     this.timerStarted = true;
     this.timerId = setInterval(() => {
       let time = AppState.Singleton.moveTimer.getValue();
-      time--;
+      time -= 0.25;
       AppState.Singleton.moveTimer.setValue(time);
+      if (time > 0 && time < 10) {
+        Sound.playTick();
+      }
       if (time <= 0) {
         const currentMes = AppState.Singleton.statusMessage.getValue();
         if (
@@ -254,7 +257,7 @@ export class SocketsService implements OnDestroy {
           this.statusMessageService.setMoveNow();
         }
       }
-    }, 1000);
+    }, 250);
   }
 
   doOpponentMove(move: MoveDto): void {

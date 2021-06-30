@@ -55,7 +55,6 @@ export class MessagesComponent implements OnChanges, OnInit {
   // changing the coordinates will affect all animations coordinates.
   @Input() initial = 0;
   @Input() shown = 0;
-  @Input() timeLeft: number | null = 0;
   state = 'initial';
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['message']) {
@@ -87,12 +86,5 @@ export class MessagesComponent implements OnChanges, OnInit {
     }
 
     return '';
-  }
-
-  roundTimeLeft(): number {
-    if (!this.timeLeft) {
-      return 0;
-    }
-    return Math.round(this.timeLeft);
   }
 }

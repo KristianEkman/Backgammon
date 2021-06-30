@@ -4,7 +4,6 @@
       [initial]="width"
       [shown]="messageCenter"
       [message]="message$ | async"
-      [timeLeft]="timeLeft$ | async"
     ></app-messages>
   </div>
   <app-menu
@@ -42,6 +41,7 @@
     [dicesVisible]="dicesVisible"
     [flipped]="flipped"
     [themeName]="themeName"
+    [timeLeft]="timeLeft$ | async"
     (addMove)="doMove($event)"
     (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>
