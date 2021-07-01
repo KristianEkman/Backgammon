@@ -57,7 +57,7 @@ export class Sound {
     this.tick = new Audio();
     this.tick.src = '../assets/sound/ticktock.mp3';
     this.tick.load();
-    this.tick.volume = 0.1;
+    this.tick.volume = 0.25;
   }
 
   private static _singleton: Sound;
