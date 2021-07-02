@@ -15,6 +15,7 @@ export class AboutContainerComponent implements OnInit {
   diceColor: 'black' | 'white' = 'black';
 
   version = versionInfo.version;
+  versionInfo = false;
 
   onClick(): void {
     let d = this.diceValue;

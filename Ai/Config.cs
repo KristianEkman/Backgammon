@@ -79,13 +79,13 @@ namespace Ai
         {
             return new Config
             {
-                BlotsFactor = 1.25,
-                BlotsFactorPassed = 1.075,
-                BlotsThreshold = 1,
-                BlockedPointScore = 2.058432,
-                ConnectedBlocksFactor = 0.191012719,
+                BlotsFactor = 1.225,
+                BlotsFactorPassed = 1.925,
+                BlotsThreshold = 3,
+                BlockedPointScore = 1.608432,
+                ConnectedBlocksFactor = 0.739531007,
                 ProbablityScore = false,
-                RunOrBlockFactor = 0.174344897
+                RunOrBlockFactor = 0.262721103
             };
         }
 

@@ -41,6 +41,17 @@
     </div>
   </div>
   <div class="version">
-    <p>Version: {{ version }}</p>
+    <p>
+      Version: {{ version }}&nbsp;<i
+        class="fas fa-info-circle"
+        (mouseenter)="versionInfo = true"
+        (mouseleave)="versionInfo = false"
+      ></i>
+    </p>
+    <div *ngIf="versionInfo" class="versionInfo">
+      <ul>
+        <li>AI trained much longer</li>
+      </ul>
+    </div>
   </div>
 </div>

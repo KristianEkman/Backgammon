@@ -1,15 +1,9 @@
-candeactivate
-
-Progressbar, tick tack ljud
-
-Training, no timer.
 
 Språk
     ryska
 
-Visa dubbelslag för första.
 
-Tar bort ett meddelande, visar inte nästa.
+Visa dubbelslag för första.
 
 Chat. Messages. Guest book.
 
@@ -32,13 +26,11 @@ Editing of photo.
 Reputition: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
 
-Visa dubblar vid första drag.
-
 Chat
 
 Olika teman, marble, wood.
 
-Animated background gradiend.
+Animated background gradient.
 
 Två olika hastigheter. 10s, resp 35s. Inte som gäst. Infinite?
 

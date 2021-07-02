@@ -34,4 +34,17 @@ p {
 
 .version {
   text-align: right;
+
+  i {
+    color: rgb(31, 149, 196);
+  }
+}
+
+.versionInfo {
+  position: absolute;
+  color: rgb(44, 44, 44);
+  background-color: white;
+  padding-right: 30px;
+  right: 0;
+  border-radius: 4px;
 }
