@@ -1,6 +1,6 @@
-candeactivate
+Tutorial
 
-Progressbar, tick tack ljud
+candeactivate
 
 Training, no timer.
 
