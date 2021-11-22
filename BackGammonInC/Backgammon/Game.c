@@ -104,9 +104,6 @@ void ReadGameString(char* s) {
 			SubString(token, n, 2, 3);
 			Position[i] = atoi(n) | White;
 		}
-		else {
-			Position[i] = atoi(token);
-		}
 
 		token = strtok_s(NULL, " ", &context);
 	}

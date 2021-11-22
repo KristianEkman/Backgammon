@@ -104,7 +104,6 @@ void TestReadGameString() {
 	
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 	ReadGameString(gameString);
-
 	AssertAreEqualInts(Position[0], 0, "Invalid checker count");
 	AssertAreEqualInts(Position[1], 18, "Invalid checker count");
 	AssertAreEqualInts(Position[2], 0, "Invalid checker count");
@@ -132,7 +131,45 @@ void TestReadGameString() {
 	AssertAreEqualInts(Position[24], 2, "Invalid checker count");
 	AssertAreEqualInts(Position[25], 0, "Invalid checker count");
 	AssertAreEqualInts(BlackHome, 0, "Invalid black home count");
-	AssertAreEqualInts(WhiteHome, 0, "Invalid black home count");
+	AssertAreEqualInts(WhiteHome, 0, "Invalid white home count");
+}
+
+void TestGameStringRountTrip() {
+
+	char* gameString = "b2 b1 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 w2 3 4";
+	ReadGameString(gameString);
+	AssertAreEqualInts(Position[0], 18, "Invalid checker count");
+	AssertAreEqualInts(Position[1], 17, "Invalid checker count");
+	AssertAreEqualInts(Position[2], 3, "Invalid checker count");
+	AssertAreEqualInts(Position[3], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[4], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[5], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[6], 2, "Invalid checker count");
+	AssertAreEqualInts(Position[7], 1, "Invalid checker count");
+	AssertAreEqualInts(Position[8], 3, "Invalid checker count");
+	AssertAreEqualInts(Position[9], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[10], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[11], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[12], 21, "Invalid checker count");
+	AssertAreEqualInts(Position[13], 5, "Invalid checker count");
+	AssertAreEqualInts(Position[14], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[15], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[16], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[17], 19, "Invalid checker count");
+	AssertAreEqualInts(Position[18], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[19], 21, "Invalid checker count");
+	AssertAreEqualInts(Position[20], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[21], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[22], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[23], 0, "Invalid checker count");
+	AssertAreEqualInts(Position[24], 2, "Invalid checker count");
+	AssertAreEqualInts(Position[25], 2, "Invalid checker count");
+	AssertAreEqualInts(WhiteHome, 3, "Invalid black home count");
+	AssertAreEqualInts(BlackHome, 4, "Invalid white home count");
+
+	char written[100];
+	WriteGameString(written);
+	AssertAreEqual(gameString, written, "Read and written string not same");
 }
 
 
@@ -141,6 +178,7 @@ void RunAll() {
 	TestRollDice();
 	TestWriteGameString();
 	TestReadGameString();
+	TestGameStringRountTrip();
 
 	if (_failedAsserts == 0)
 		PrintGreen("Success! Tests are good!\n");
