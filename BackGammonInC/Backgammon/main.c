@@ -13,9 +13,9 @@ int main() {
 
 	char buf[BUF_SIZE];
 	fgets(buf, 5000, stdin);
-	while (!Streq(buf, "quit\n"))
+	while (!Streq(buf, "quit\n") && !Streq(buf, "q\n"))
 	{
-		if (Streq(buf, "test\n")) {
+		if (Streq(buf, "test\n") || Streq(buf, "t\n")) {
 			RunAll();
 		}
 		else {
