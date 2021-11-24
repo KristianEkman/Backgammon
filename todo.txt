@@ -1,3 +1,15 @@
+Tutorial
+    - "Teach me Backgammon"
+    - "First time?"
+        * Teach me?
+        * Just play.
+
+    1. Move your checkers this way.
+    2. Opponnent moves this way.
+    3. Two or more checkers on one point blocks opponent.
+    4. 
+    5. When all checkers reach home you win.
+    
 
 Språk
     ryska
