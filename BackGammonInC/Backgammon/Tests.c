@@ -83,7 +83,6 @@ void TestRollDice() {
 	for (size_t i = 0; i < 10; i++)
 	{
 		RollDice();
-		printf("%d %d ", Dice[0], Dice[1]);
 		Assert(Dice[0] >= 1 && Dice[0] <= 6, "Invalid Dice value");
 		Assert(Dice[1] >= 1 && Dice[1] <= 6, "Invalid Dice value");
 	}
@@ -239,6 +238,15 @@ void TestIsBlocked() {
 	AssertNot(IsBlockedFor(2, Black), "Pos 1 should not be blocked for black");
 }
 
+void PrintMoves() {
+	for (size_t i = 0; i < MoveSetsCount; i++)
+	{
+		for (size_t j = 0; j < SetLengths[i]; j++)
+			printf("%d-%d, ", PossibleMoveSets[i][j].from, PossibleMoveSets[i][j].to);
+		printf("\n");
+	}
+}
+
 void TestCreateMovesBlackStart() {
 	StartPosition();
 	CurrentPlayer = Black;
@@ -249,6 +257,8 @@ void TestCreateMovesBlackStart() {
 	WriteGameString(gs);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
 	AssertAreEqualInts(20, MoveSetsCount, "There should be 20 sets of moves.");
+	//PrintMoves();
+
 	// TODO: Assert moves
 }
 
@@ -262,12 +272,76 @@ void TestCreateMovesWhiteStart() {
 	WriteGameString(gs);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
 	AssertAreEqualInts(20, MoveSetsCount, "There should be 20 sets of moves.");
-	// TODO: Assert moves
+	// TODO: Assert moves. Jämför hur många som genereras i gamla AI:t
 }
 
-// TODO: Test checker on bar
+void TestBlackCheckerOnBar() {
+	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 2;
+	Dice[1] = 6;
+	CurrentPlayer = Black;
+	CreateMoves();
+	//PrintMoves();
+	AssertAreEqualInts(4, MoveSetsCount, "There should be 4 sets of moves.");
+}
 
-// TODO: Test bearing off
+void TestWhiteCheckerOnBar() {
+	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b1 0 b5 0 0 0 0 w1 w1 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 2;
+	Dice[1] = 6;
+	CurrentPlayer = White;
+	CreateMoves();
+	//PrintMoves();
+	AssertAreEqualInts(4, MoveSetsCount, "There should be 4 sets of moves.");
+}
+
+void TestBearingOffBlack() {
+	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 2;
+	Dice[1] = 4;
+	CurrentPlayer = Black;
+	CreateMoves();
+	//PrintMoves();
+	AssertAreEqualInts(12, MoveSetsCount, "There should be 12 sets of moves.");
+}
+
+void TestBearingOffWhite() {
+	char* gameString = "0 w2 w2 w2 w4 0 w5 0 0 0 0 0 0 0 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 2;
+	Dice[1] = 4;
+	CurrentPlayer = White;
+	CreateMoves();
+	//PrintMoves();
+	AssertAreEqualInts(8, MoveSetsCount, "There should be 12 sets of moves.");
+}
+
+void TestDoubleDiceBlack() {
+	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 4;
+	Dice[1] = 4;
+	CurrentPlayer = Black;
+	CreateMoves();
+	//PrintMoves();
+	AssertAreEqualInts(365, MoveSetsCount, "There should be 365 sets of moves.");
+}
+
+void TestDoubleDiceWhite() {
+	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 4;
+	Dice[1] = 4;
+	CurrentPlayer = White;
+	CreateMoves();
+	//PrintMoves();
+	AssertAreEqualInts(365, MoveSetsCount, "There should be 365 sets of moves.");
+}
+
+// TODO: Test double dice
 
 void RunAll() {
 	TestStartPos();
@@ -282,6 +356,12 @@ void RunAll() {
 	TestCreateMovesBlackStart();
 	TestCreateMovesWhiteStart();
 	TestOtherColor();
+	TestBlackCheckerOnBar();
+	TestWhiteCheckerOnBar();
+	TestBearingOffBlack();
+	TestBearingOffWhite();
+	TestDoubleDiceBlack();
+	TestDoubleDiceWhite();
 
 	if (_failedAsserts == 0)
 		PrintGreen("Success! Tests are good!\n");

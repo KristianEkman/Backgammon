@@ -100,7 +100,7 @@ bool IsBlackBearingOff(ushort* lastCheckerPos) {
 		if ((Position[i] & Black) && CheckerCount(i) > 0)
 		{
 			*lastCheckerPos = i;
-			return false;
+			return i >= 19;
 		}
 	}
 	return true;
@@ -112,7 +112,7 @@ bool IsWhiteBearingOff(ushort* lastCheckerPos) {
 		if ((Position[i] & White) && CheckerCount(i) > 0)
 		{
 			*lastCheckerPos = i;
-			return false;
+			return i <= 6;
 		}
 	}
 	return true;
@@ -126,7 +126,7 @@ void CreateBlackMoveSets(int diceIdx, int diceCount) {
 	if (bearingOff)
 		start = 19;
 
-	ushort toIndex = CheckerCount(0) > 0 ? 0 : 25;
+	ushort toIndex = CheckerCount(0) > 0 ? 1 : 25;
 
 	for (ushort i = start; i < toIndex; i++)
 	{
@@ -160,7 +160,7 @@ void CreateBlackMoveSets(int diceIdx, int diceCount) {
 		if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new sequence.
 			SetLengths[seqIdx + 1] = SetLengths[seqIdx] - 1;
-			memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], 4 * sizeof(Move));			
+			memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], 4 * sizeof(Move));
 			move = &PossibleMoveSets[seqIdx + 1][diceIdx];
 			MoveSetsCount++;
 			seqIdx++;
@@ -174,7 +174,7 @@ void CreateBlackMoveSets(int diceIdx, int diceCount) {
 
 		//TODO: Maybe omit identical sequences, hashing?
 		if (diceIdx < diceCount - 1) {
-			int hit = DoMove(move);			
+			int hit = DoMove(move);
 			CreateBlackMoveSets(diceIdx + 1, diceCount);
 			UndoMove(move, hit);
 		}
@@ -223,7 +223,7 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount) {
 		if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new sequence.
 			SetLengths[seqIdx + 1] = SetLengths[seqIdx] - 1;
-			memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], 4 * sizeof(Move));			
+			memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], 4 * sizeof(Move));
 			move = &PossibleMoveSets[seqIdx + 1][diceIdx];
 			MoveSetsCount++;
 			seqIdx++;
@@ -237,14 +237,20 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount) {
 
 		//TODO: Maybe omit identical sequences, hashing?
 		if (diceIdx < diceCount - 1) {
-			int hit = DoMove(move);			
+			int hit = DoMove(move);
 			CreateWhiteMoveSets(diceIdx + 1, diceCount);
 			UndoMove(move, hit);
 		}
 	}
 }
 
-void CreateMoves() {	
+void ReverseDice() {
+	short temp = Dice[0];
+	Dice[0] = Dice[1];
+	Dice[1] = temp;
+}
+
+void CreateMoves() {
 	for (int i = 0; i < 500; i++)
 	{
 		SetLengths[i] = 0;
@@ -259,12 +265,28 @@ void CreateMoves() {
 	}
 
 	MoveSetsCount = 0;
-	int diceCount = Dice[0] == Dice[1] ? 4 : 2;
-	if (CurrentPlayer & Black)
-		CreateBlackMoveSets(0, diceCount);
-	else {
-		CreateWhiteMoveSets(0, diceCount);
+	// Largest Dice first
+	if (Dice[1] > Dice[0]) {
+		ReverseDice();
 	}
+
+	int diceCount = Dice[0] == Dice[1] ? 4 : 2;
+
+	for (size_t i = 0; i < 2; i++)
+	{
+		if (CurrentPlayer & Black)
+			CreateBlackMoveSets(0, diceCount);
+		else
+			CreateWhiteMoveSets(0, diceCount);
+
+		if (MoveSetsCount == 0 && diceCount == 2) {
+			ReverseDice();
+		}
+		else {
+			break;
+		}
+	}
+	//TODO: If no moves are found and dicecount == 2 reverse dice order and try again.
 
 	// TODO: Set length to 0 for sets that are shorter than max set length found.
 }
