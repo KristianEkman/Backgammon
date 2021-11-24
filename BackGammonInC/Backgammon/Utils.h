@@ -3,7 +3,7 @@
 #define false 0
 #define true 1
 #define CheckerCount(x) (Position[(x)] & 15)
-#define OtherColor(x) ((x) ^ 24)
+#define OtherColor(x) (~(x) & 48)
 
 typedef char bool;
 typedef unsigned long long U64;

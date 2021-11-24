@@ -87,12 +87,11 @@ void UndoMove(Move* move, bool hit) {
 }
 
 bool IsBlockedFor(ushort pos, ushort color) {
-	if (CheckerCount(pos) < 2)
+	if (pos > 25)
 		return false;
 
-	// Atleast two checkers
-	OtherColor(color);
-	return Position[pos] & OtherColor(color);
+
+	return Position[pos] & OtherColor(color) && CheckerCount(pos) >= 2;
 }
 
 bool IsBlackBearingOff(ushort* lastCheckerPos) {
@@ -119,23 +118,22 @@ bool IsWhiteBearingOff(ushort* lastCheckerPos) {
 	return true;
 }
 
-void CreateBlackMoveSequence(int seqIdx, int diceIdx, int diceCount) {
+void CreateBlackMoveSets(int diceIdx, int diceCount) {
 	//TODO White moves backwards.
-	bool createdSet = false;
 	ushort start = 0;
 	ushort lastCheckerPos;
 	bool bearingOff = IsBlackBearingOff(&lastCheckerPos);
 	if (bearingOff)
 		start = 19;
 
-	for (ushort i = 19; i < 25; i++)
+	ushort toIndex = CheckerCount(0) > 0 ? 0 : 25;
+
+	for (ushort i = start; i < toIndex; i++)
 	{
-		if (!(Position[i] & CurrentPlayer))
+		if (!(Position[i] & Black))
 			continue;
 		int diceVal = diceIdx > 1 ? Dice[0] : Dice[diceIdx];
 		int toPos = i + diceVal;
-
-		//TODO Check is bearing off
 
 		// När man bär av, får man använda tärningar med för hög summa
 		// Men bara på den checker längst från home.
@@ -154,36 +152,121 @@ void CreateBlackMoveSequence(int seqIdx, int diceIdx, int diceCount) {
 				continue;
 		}
 
+		// Atleast one move set is created.
+		if (MoveSetsCount == 0)
+			MoveSetsCount = 1;
+		ushort seqIdx = MoveSetsCount - 1;
 		Move* move = &PossibleMoveSets[seqIdx][diceIdx];
+		if (move->color != 0) {
+			// A move is already generated for this dice in this sequence. Branch off a new sequence.
+			SetLengths[seqIdx + 1] = SetLengths[seqIdx] - 1;
+			memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], 4 * sizeof(Move));			
+			move = &PossibleMoveSets[seqIdx + 1][diceIdx];
+			MoveSetsCount++;
+			seqIdx++;
+		}
+
 		move->from = i;
 		move->to = toPos;
 		move->color = Black;
 
 		SetLengths[seqIdx]++;
-		createdSet = true;
 
 		//TODO: Maybe omit identical sequences, hashing?
-		if (diceIdx < diceCount) {
-			int hit = DoMove(move);
-			CreateBlackMoveSequence(seqIdx + 1, diceIdx + 1, diceCount);
+		if (diceIdx < diceCount - 1) {
+			int hit = DoMove(move);			
+			CreateBlackMoveSets(diceIdx + 1, diceCount);
 			UndoMove(move, hit);
 		}
 	}
-
-	if (createdSet)
-		MoveSetsCount++;
 }
 
-void CreateMoves() {
-	//TODO: reset move sets
-	for (int i = 0; i < 500; i++)
-		SetLengths[i] = 0;
-	MoveSetsCount = 0;
+void CreateWhiteMoveSets(int diceIdx, int diceCount) {
+	//TODO White moves backwards.
+	int start = 25;
+	ushort lastCheckerPos;
+	bool bearingOff = IsWhiteBearingOff(&lastCheckerPos);
+	if (bearingOff)
+		start = 6;
 
+	int toIndex = CheckerCount(25) > 0 ? 25 : 0;
+
+	for (int i = start; i >= toIndex; i--)
+	{
+		if (!(Position[i] & White))
+			continue;
+		int diceVal = diceIdx > 1 ? Dice[0] : Dice[diceIdx];
+		int toPos = i - diceVal;
+
+		// När man bär av, får man använda tärningar med för hög summa
+		// Men bara på den checker längst från home.
+		if (IsBlockedFor(toPos, White))
+			continue;
+
+		if (bearingOff) {
+			if (toPos < 0 && i != lastCheckerPos)
+				continue;
+
+			if (toPos < 0 && i == lastCheckerPos)
+				toPos = 0;
+		}
+		else { //Not bearing off
+			if (toPos < 1)
+				continue;
+		}
+
+		// Atleast one move set is created.
+		if (MoveSetsCount == 0)
+			MoveSetsCount = 1;
+		ushort seqIdx = MoveSetsCount - 1;
+		Move* move = &PossibleMoveSets[seqIdx][diceIdx];
+		if (move->color != 0) {
+			// A move is already generated for this dice in this sequence. Branch off a new sequence.
+			SetLengths[seqIdx + 1] = SetLengths[seqIdx] - 1;
+			memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], 4 * sizeof(Move));			
+			move = &PossibleMoveSets[seqIdx + 1][diceIdx];
+			MoveSetsCount++;
+			seqIdx++;
+		}
+
+		move->from = i;
+		move->to = toPos;
+		move->color = White;
+
+		SetLengths[seqIdx]++;
+
+		//TODO: Maybe omit identical sequences, hashing?
+		if (diceIdx < diceCount - 1) {
+			int hit = DoMove(move);			
+			CreateWhiteMoveSets(diceIdx + 1, diceCount);
+			UndoMove(move, hit);
+		}
+	}
+}
+
+void CreateMoves() {	
+	for (int i = 0; i < 500; i++)
+	{
+		SetLengths[i] = 0;
+		for (int j = 0; j < 4; j++)
+		{
+			Move move;
+			move.from = 0;
+			move.to = 0;
+			move.color = 0;
+			PossibleMoveSets[i][j] = move;
+		}
+	}
+
+	MoveSetsCount = 0;
 	int diceCount = Dice[0] == Dice[1] ? 4 : 2;
 	if (CurrentPlayer & Black)
-		CreateBlackMoveSequence(0, 0, diceCount);
-	else {}
+		CreateBlackMoveSets(0, diceCount);
+	else {
+		CreateWhiteMoveSets(0, diceCount);
+	}
+
+	// TODO: Set length to 0 for sets that are shorter than max set length found.
 }
 
 
@@ -221,11 +304,11 @@ void ReadGameString(char* s) {
 
 	// todo: meaningfull error handling
 
-	int len = strlen(s);
+	size_t len = strlen(s);
 	char copy[100];
 	memcpy(copy, s, len + 1);
 
-	char* context;
+	char* context = NULL;
 	char* token = strtok_s(copy, " ", &context);
 
 	for (size_t i = 0; i < 26; i++)

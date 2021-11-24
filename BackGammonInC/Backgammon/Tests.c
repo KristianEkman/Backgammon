@@ -172,6 +172,12 @@ void TestGameStringRountTrip() {
 	AssertAreEqual(gameString, written, "Read and written string not same");
 }
 
+void TestOtherColor() {
+	AssertAreEqualInts(Black, OtherColor(White), "Other color should be Black");
+	AssertAreEqualInts(White, OtherColor(Black), "Other color should be White");
+}
+
+
 void TestDoUndo() {
 	StartPosition();
 	Move move;
@@ -205,6 +211,25 @@ void TestDoUndoHomeBlack() {
 	AssertAreEqualInts(0, BlackHome, "Should be no black checker on Black Home");
 }
 
+void TestDoUndoHomeWhite() {
+	ReadGameString("0 w1 0 0 w2 0 0 0 0 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0");
+
+	AssertAreEqualInts(2 | White, Position[4], "Should be 2 white checkers on 4");
+	AssertAreEqualInts(0, WhiteHome, "Should be no white checker on White Home");
+
+	Move move;
+	move.from = 4;
+	move.to = 0;
+	move.color = White;
+	bool hit = DoMove(&move);
+
+	AssertAreEqualInts(1 | White, Position[4], "Should be 1 white checkers on 4");
+	AssertAreEqualInts(1, WhiteHome, "Should be one white checker on White Home");
+	UndoMove(&move, hit);
+	AssertAreEqualInts(2 | White, Position[4], "Should be 2 white checkers on 4");
+	AssertAreEqualInts(0, WhiteHome, "Should be no white checker on White Home");
+}
+
 void TestIsBlocked() {
 	StartPosition();
 	Assert(IsBlockedFor(1, White), "Pos 1 should be blocked for white");
@@ -214,12 +239,35 @@ void TestIsBlocked() {
 	AssertNot(IsBlockedFor(2, Black), "Pos 1 should not be blocked for black");
 }
 
-void TestCreateMoves() {
+void TestCreateMovesBlackStart() {
 	StartPosition();
+	CurrentPlayer = Black;
 	Dice[0] = 3;
 	Dice[1] = 4;
 	CreateMoves();
+	char gs[100];
+	WriteGameString(gs);
+	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
+	AssertAreEqualInts(20, MoveSetsCount, "There should be 20 sets of moves.");
+	// TODO: Assert moves
 }
+
+void TestCreateMovesWhiteStart() {
+	StartPosition();
+	CurrentPlayer = White;
+	Dice[0] = 3;
+	Dice[1] = 4;
+	CreateMoves();
+	char gs[100];
+	WriteGameString(gs);
+	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
+	AssertAreEqualInts(20, MoveSetsCount, "There should be 20 sets of moves.");
+	// TODO: Assert moves
+}
+
+// TODO: Test checker on bar
+
+// TODO: Test bearing off
 
 void RunAll() {
 	TestStartPos();
@@ -230,7 +278,10 @@ void RunAll() {
 	TestDoUndo();
 	TestIsBlocked();
 	TestDoUndoHomeBlack();
-	//TestDoUndoHomeWhite();
+	TestDoUndoHomeWhite();
+	TestCreateMovesBlackStart();
+	TestCreateMovesWhiteStart();
+	TestOtherColor();
 
 	if (_failedAsserts == 0)
 		PrintGreen("Success! Tests are good!\n");
