@@ -59,7 +59,7 @@ bool DoMove(Move* move) {
 	}
 
 	G.Position[from]--;
-	if (CheckerCount(from) == 0)
+	if (CheckerCount(G.Position[from]) == 0)
 		G.Position[from] = 0;
 
 	return hit;
@@ -78,7 +78,7 @@ void UndoMove(Move* move, bool hit) {
 	}
 	else {
 		G.Position[to]--;
-		if (CheckerCount(to) == 0)
+		if (CheckerCount(G.Position[to]) == 0)
 			G.Position[to] = 0;
 
 		if (hit)
@@ -91,13 +91,13 @@ bool IsBlockedFor(ushort pos, ushort color) {
 		return false;
 
 
-	return G.Position[pos] & OtherColor(color) && CheckerCount(pos) >= 2;
+	return G.Position[pos] & OtherColor(color) && CheckerCount(G.Position[pos]) >= 2;
 }
 
 bool IsBlackBearingOff(ushort* lastCheckerPos) {
 	for (ushort i = 0; i <= 24; i++)
 	{
-		if ((G.Position[i] & Black) && CheckerCount(i) > 0)
+		if ((G.Position[i] & Black) && CheckerCount(G.Position[i]) > 0)
 		{
 			*lastCheckerPos = i;
 			return i >= 19;
@@ -109,7 +109,7 @@ bool IsBlackBearingOff(ushort* lastCheckerPos) {
 bool IsWhiteBearingOff(ushort* lastCheckerPos) {
 	for (ushort i = 25; i >= 1; i--)
 	{
-		if ((G.Position[i] & White) && CheckerCount(i) > 0)
+		if ((G.Position[i] & White) && CheckerCount(G.Position[i]) > 0)
 		{
 			*lastCheckerPos = i;
 			return i <= 6;
@@ -125,7 +125,7 @@ void CreateBlackMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 	if (bearingOff)
 		start = 19;
 
-	ushort toIndex = CheckerCount(0) > 0 ? 1 : 25;
+	ushort toIndex = CheckerCount(G.Position[0]) > 0 ? 1 : 25;
 
 	for (ushort i = start; i < toIndex; i++)
 	{
@@ -190,7 +190,7 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 	if (bearingOff)
 		start = 6;
 
-	int toIndex = CheckerCount(25) > 0 ? 25 : 0;
+	int toIndex = CheckerCount(G.Position[25]) > 0 ? 25 : 0;
 
 	for (int i = start; i >= toIndex; i--)
 	{
@@ -336,7 +336,7 @@ void WriteGameString(char* s) {
 				s[idx++] = 'w';
 			}
 		}
-		s[idx++] = '0' + CheckerCount(i);
+		s[idx++] = '0' + CheckerCount(G.Position[i]);
 		s[idx++] = ' ';
 	}
 	s[idx++] = '0' + G.WhiteHome;

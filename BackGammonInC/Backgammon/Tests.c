@@ -1,8 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <Windows.h>
 #include "Utils.h"
 #include "Game.h"
+#include "Tests.h"
 
 #pragma region TestsHelpers
 
@@ -73,34 +76,31 @@ void AssertAreEqualLongs(U64 expected, U64 actual, char* msg) {
 
 #pragma endregion
 
-void TestStartPos() {
+TEST(TestStartPos, 
 	StartPosition();
 	Assert(G.Dice[0] == 0, "Dice 0 is not reset");
-	Assert(G.Dice[1] == 0, "Dice 1 is not reset");
-}
+	Assert(G.Dice[1] == 0, "Dice 1 is not reset");	
+	)
 
-void TestRollDice() {
+TEST( TestRollDice,
 	for (size_t i = 0; i < 10; i++)
 	{
 		RollDice();
 		Assert(G.Dice[0] >= 1 && G.Dice[0] <= 6, "Invalid Dice value");
 		Assert(G.Dice[1] >= 1 && G.Dice[1] <= 6, "Invalid Dice value");
 	}
-	printf("\n");
+	)
 
-}
-
-void TestWriteGameString() {
+TEST( TestWriteGameString,
 	StartPosition();
 	char s[100];
 	WriteGameString(s);
 	
 	char* expected = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 	AssertAreEqual(expected, s, "Unexpected GameString");
-}
+	)
 
-void TestReadGameString() {
-	
+TEST(TestReadGameString,	
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 	ReadGameString(gameString);
 	AssertAreEqualInts(G.Position[0], 0, "Invalid checker count");
@@ -131,9 +131,9 @@ void TestReadGameString() {
 	AssertAreEqualInts(G.Position[25], 0, "Invalid checker count");
 	AssertAreEqualInts(G.BlackHome, 0, "Invalid black home count");
 	AssertAreEqualInts(G.WhiteHome, 0, "Invalid white home count");
-}
+	)
 
-void TestGameStringRountTrip() {
+TEST(TestGameStringRountTrip,
 
 	char* gameString = "b2 b1 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 w2 3 4";
 	ReadGameString(gameString);
@@ -169,15 +169,15 @@ void TestGameStringRountTrip() {
 	char written[100];
 	WriteGameString(written);
 	AssertAreEqual(gameString, written, "Read and written string not same");
-}
+	)
 
-void TestOtherColor() {
+TEST(TestOtherColor,
 	AssertAreEqualInts(Black, OtherColor(White), "Other color should be Black");
 	AssertAreEqualInts(White, OtherColor(Black), "Other color should be White");
-}
+	)
 
 
-void TestDoUndo() {
+TEST(TestDoUndo,
 	StartPosition();
 	Move move;
 	move.from = 1;
@@ -189,9 +189,9 @@ void TestDoUndo() {
 	UndoMove(&move, hit);
 	AssertAreEqualInts(2 | Black, G.Position[1], "Should be 2 black checkers on 1");
 	AssertAreEqualInts(0, G.Position[2], "Should be no checker on 2");
-}
+	)
 
-void TestDoUndoHomeBlack() {
+TEST(TestDoUndoHomeBlack,
 	ReadGameString("0 0 0 0 0 0 w2 w1 w3 0 0 0 0 w5 0 0 0 0 0 b5 0 0 0 0 w2 w2 0 0");
 	
 	AssertAreEqualInts(5 | Black, G.Position[19], "Should be 5 black checkers on 19");
@@ -208,9 +208,9 @@ void TestDoUndoHomeBlack() {
 	UndoMove(&move, hit);
 	AssertAreEqualInts(5 | Black, G.Position[19], "Should be 5 black checkers on 19");
 	AssertAreEqualInts(0, G.BlackHome, "Should be no black checker on Black Home");
-}
+	)
 
-void TestDoUndoHomeWhite() {
+TEST(TestDoUndoHomeWhite,
 	ReadGameString("0 w1 0 0 w2 0 0 0 0 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0");
 
 	AssertAreEqualInts(2 | White, G.Position[4], "Should be 2 white checkers on 4");
@@ -227,16 +227,17 @@ void TestDoUndoHomeWhite() {
 	UndoMove(&move, hit);
 	AssertAreEqualInts(2 | White, G.Position[4], "Should be 2 white checkers on 4");
 	AssertAreEqualInts(0, G.WhiteHome, "Should be no white checker on White Home");
-}
+	)
 
-void TestIsBlocked() {
+TEST(TestIsBlocked,
 	StartPosition();
+
 	Assert(IsBlockedFor(1, White), "Pos 1 should be blocked for white");
 	AssertNot(IsBlockedFor(1, Black), "Pos 1 should not be blocked for black");
 
 	AssertNot(IsBlockedFor(2, White), "Pos 1 should not be blocked for white");
 	AssertNot(IsBlockedFor(2, Black), "Pos 1 should not be blocked for black");
-}
+)
 
 void PrintMoves() {
 	for (size_t i = 0; i < G.MoveSetsCount; i++)
@@ -247,7 +248,7 @@ void PrintMoves() {
 	}
 }
 
-void TestSimpleBlack() {
+TEST(TestSimpleBlack,
 	char* gameString = "0 b2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 1;
@@ -256,9 +257,9 @@ void TestSimpleBlack() {
 	CreateMoves();
 	//PrintMoves();
 	AssertAreEqualInts(2, G.MoveSetsCount, "There should be 2 sets of moves.");
-}
+	)
 
-void TestCreateMovesBlackStart() {
+TEST(TestCreateMovesBlackStart,
 	StartPosition();
 	G.CurrentPlayer = Black;
 	G.Dice[0] = 3;
@@ -269,11 +270,10 @@ void TestCreateMovesBlackStart() {
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
 	AssertAreEqualInts(17, G.MoveSetsCount, "There should be 20 sets of moves.");
 	//PrintMoves();
-
 	// TODO: Assert moves
-}
+	)
 
-void TestCreateMovesWhiteStart() {
+TEST(TestCreateMovesWhiteStart,
 	StartPosition();
 	G.CurrentPlayer = White;
 	G.Dice[0] = 3;
@@ -283,9 +283,9 @@ void TestCreateMovesWhiteStart() {
 	WriteGameString(gs);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
 	AssertAreEqualInts(17, G.MoveSetsCount, "There should be 20 sets of moves.");
-}
+	)
 
-void TestBlackCheckerOnBar() {
+TEST(TestBlackCheckerOnBar,
 	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 2;
@@ -294,9 +294,9 @@ void TestBlackCheckerOnBar() {
 	CreateMoves();
 	//PrintMoves();
 	AssertAreEqualInts(4, G.MoveSetsCount, "There should be 4 sets of moves.");
-}
+	)
 
-void TestWhiteCheckerOnBar() {
+TEST(TestWhiteCheckerOnBar,
 	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b1 0 b5 0 0 0 0 w1 w1 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 2;
@@ -305,9 +305,9 @@ void TestWhiteCheckerOnBar() {
 	CreateMoves();
 	//PrintMoves();
 	AssertAreEqualInts(4, G.MoveSetsCount, "There should be 4 sets of moves.");
-}
+	)
 
-void TestBearingOffBlack() {
+TEST(TestBearingOffBlack,
 	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 2;
@@ -316,9 +316,9 @@ void TestBearingOffBlack() {
 	CreateMoves();
 	//PrintMoves();
 	AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 sets of moves.");
-}
+	)
 
-void TestBearingOffWhite() {
+TEST(TestBearingOffWhite,
 	char* gameString = "0 w2 w2 0 w2 w2 w5 0 0 0 0 0 0 0 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 2;
@@ -327,9 +327,9 @@ void TestBearingOffWhite() {
 	CreateMoves();
 	//PrintMoves();
 	AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 sets of moves.");
-}
+	)
 
-void TestDoubleDiceBlack() {
+TEST(TestDoubleDiceBlack,
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 4;
@@ -338,9 +338,9 @@ void TestDoubleDiceBlack() {
 	CreateMoves();
 	//PrintMoves();
 	AssertAreEqualInts(284, G.MoveSetsCount, "There should be 248 sets of moves.");
-}
+	)
 
-void TestDoubleDiceWhite() {
+TEST(TestDoubleDiceWhite,
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 4;
@@ -349,9 +349,9 @@ void TestDoubleDiceWhite() {
 	CreateMoves();
 	//PrintMoves();
 	AssertAreEqualInts(284, G.MoveSetsCount, "There should be 248 sets of moves.");
-}
+	)
 
-void PlayBothDiceIfPossible() {
+TEST(PlayBothDiceIfPossible,
 	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0";
 	ReadGameString(gameString);
 	G.CurrentPlayer = White;
@@ -360,10 +360,10 @@ void PlayBothDiceIfPossible() {
 	CreateMoves();
 	AssertAreEqualInts(1, G.MoveSetsCount, "There should be 1 set of moves.");
 	//PrintMoves();
-}
+	)
 
-void TestRemoveShorterSets()
-{
+TEST(TestRemoveShorterSets,
+
 	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
 	ReadGameString(gameString);
 	G.Dice[0] = 2;
@@ -379,7 +379,7 @@ void TestRemoveShorterSets()
 	AssertAreEqualInts(8, G.MoveSetsCount, "There should be 8 moves left");
 	/*ConsoleWriteLine("==================");
 	PrintMoves();*/
-}
+	)
 
 void RunAll() {
 	TestStartPos();
@@ -405,7 +405,7 @@ void RunAll() {
 	TestRemoveShorterSets();
 
 	if (_failedAsserts == 0)
-		PrintGreen("Success! Tests are good!\n");
+		PrintGreen("\nSuccess! Tests are good!\n");
 	else
-		PrintRed("There are failed tests.\n");
+		PrintRed("\nThere are failed tests.\n");
 }

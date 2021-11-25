@@ -2,7 +2,7 @@
 
 #define false 0
 #define true 1
-#define CheckerCount(x) (G.Position[(x)] & 15)
+#define CheckerCount(x) ((x) & 15)
 #define OtherColor(x) (~(x) & 48)
 
 typedef char bool;
