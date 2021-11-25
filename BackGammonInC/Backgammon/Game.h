@@ -14,6 +14,8 @@ typedef struct {
 	ushort color;
 } Move;
 
+
+
 ushort CurrentPlayer;
 short Dice[2];
 

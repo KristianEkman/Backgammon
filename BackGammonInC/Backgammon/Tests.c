@@ -319,15 +319,14 @@ void TestBearingOffBlack() {
 }
 
 void TestBearingOffWhite() {
-	char* gameString = "0 w2 w2 w2 w4 0 w5 0 0 0 0 0 0 0 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
+	char* gameString = "0 w2 w2 0 w2 w2 w5 0 0 0 0 0 0 0 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
 	ReadGameString(gameString);
 	Dice[0] = 2;
 	Dice[1] = 4;
 	CurrentPlayer = White;
 	CreateMoves();
 	//PrintMoves();
-	// TODO: Should be same count as above.
-	AssertAreEqualInts(7, MoveSetsCount, "There should be 7 sets of moves.");
+	AssertAreEqualInts(10, MoveSetsCount, "There should be 10 sets of moves.");
 }
 
 void TestDoubleDiceBlack() {
@@ -382,8 +381,6 @@ void TestRemoveShorterSets()
 	PrintMoves();*/
 }
 
-
-//TODO: special positioner, där första draget blockerar nästa.
 void RunAll() {
 	TestStartPos();
 	TestRollDice();
