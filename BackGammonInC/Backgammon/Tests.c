@@ -243,8 +243,19 @@ void PrintMoves() {
 	{
 		for (size_t j = 0; j < SetLengths[i]; j++)
 			printf("%d-%d, ", PossibleMoveSets[i][j].from, PossibleMoveSets[i][j].to);
-		printf("\n");
+		printf("(%d)\n", SetLengths[i]);
 	}
+}
+
+void TestSimpleBlack() {
+	char* gameString = "0 b2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 1;
+	Dice[1] = 2;
+	CurrentPlayer = Black;
+	CreateMoves();
+	//PrintMoves();
+	AssertAreEqualInts(2, MoveSetsCount, "There should be 2 sets of moves.");
 }
 
 void TestCreateMovesBlackStart() {
@@ -256,7 +267,7 @@ void TestCreateMovesBlackStart() {
 	char gs[100];
 	WriteGameString(gs);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
-	AssertAreEqualInts(20, MoveSetsCount, "There should be 20 sets of moves.");
+	AssertAreEqualInts(17, MoveSetsCount, "There should be 20 sets of moves.");
 	//PrintMoves();
 
 	// TODO: Assert moves
@@ -271,8 +282,7 @@ void TestCreateMovesWhiteStart() {
 	char gs[100];
 	WriteGameString(gs);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
-	AssertAreEqualInts(20, MoveSetsCount, "There should be 20 sets of moves.");
-	// TODO: Assert moves. Jämför hur många som genereras i gamla AI:t
+	AssertAreEqualInts(17, MoveSetsCount, "There should be 20 sets of moves.");	
 }
 
 void TestBlackCheckerOnBar() {
@@ -305,7 +315,7 @@ void TestBearingOffBlack() {
 	CurrentPlayer = Black;
 	CreateMoves();
 	//PrintMoves();
-	AssertAreEqualInts(12, MoveSetsCount, "There should be 12 sets of moves.");
+	AssertAreEqualInts(10, MoveSetsCount, "There should be 10 sets of moves.");
 }
 
 void TestBearingOffWhite() {
@@ -316,7 +326,8 @@ void TestBearingOffWhite() {
 	CurrentPlayer = White;
 	CreateMoves();
 	//PrintMoves();
-	AssertAreEqualInts(8, MoveSetsCount, "There should be 12 sets of moves.");
+	// TODO: Should be same count as above.
+	AssertAreEqualInts(7, MoveSetsCount, "There should be 7 sets of moves.");
 }
 
 void TestDoubleDiceBlack() {
@@ -327,7 +338,7 @@ void TestDoubleDiceBlack() {
 	CurrentPlayer = Black;
 	CreateMoves();
 	//PrintMoves();
-	AssertAreEqualInts(365, MoveSetsCount, "There should be 365 sets of moves.");
+	AssertAreEqualInts(284, MoveSetsCount, "There should be 248 sets of moves.");
 }
 
 void TestDoubleDiceWhite() {
@@ -338,11 +349,41 @@ void TestDoubleDiceWhite() {
 	CurrentPlayer = White;
 	CreateMoves();
 	//PrintMoves();
-	AssertAreEqualInts(365, MoveSetsCount, "There should be 365 sets of moves.");
+	AssertAreEqualInts(284, MoveSetsCount, "There should be 248 sets of moves.");
 }
 
-// TODO: Test double dice
+void PlayBothDiceIfPossible() {
+	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0";
+	ReadGameString(gameString);
+	CurrentPlayer = White;
+	Dice[0] = 4;
+	Dice[1] = 6;
+	CreateMoves();
+	AssertAreEqualInts(1, MoveSetsCount, "There should be 1 set of moves.");
+	//PrintMoves();
+}
 
+void TestRemoveShorterSets()
+{
+	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
+	ReadGameString(gameString);
+	Dice[0] = 2;
+	Dice[1] = 4;
+	CurrentPlayer = Black;
+	CreateMoves();
+	AssertAreEqualInts(10, MoveSetsCount, "There should be 10 moves");
+
+	//PrintMoves();
+	SetLengths[2] = 1;
+	SetLengths[5] = 1;
+	RemoveShorterSets(2);
+	AssertAreEqualInts(8, MoveSetsCount, "There should be 8 moves left");
+	/*ConsoleWriteLine("==================");
+	PrintMoves();*/
+}
+
+
+//TODO: special positioner, där första draget blockerar nästa.
 void RunAll() {
 	TestStartPos();
 	TestRollDice();
@@ -351,6 +392,7 @@ void RunAll() {
 	TestGameStringRountTrip();
 	TestDoUndo();
 	TestIsBlocked();
+	TestSimpleBlack();
 	TestDoUndoHomeBlack();
 	TestDoUndoHomeWhite();
 	TestCreateMovesBlackStart();
@@ -362,6 +404,8 @@ void RunAll() {
 	TestBearingOffWhite();
 	TestDoubleDiceBlack();
 	TestDoubleDiceWhite();
+	PlayBothDiceIfPossible();
+	TestRemoveShorterSets();
 
 	if (_failedAsserts == 0)
 		PrintGreen("Success! Tests are good!\n");

@@ -5,6 +5,7 @@
 #define Black 16
 #define ushort unsigned short
 #define BUF_SIZE 5000
+#define MAX_SETS_LENGTH 500
 
 
 typedef struct {
@@ -23,13 +24,14 @@ short WhiteHome;
 short BlackHome;
 
 ushort MoveSetsCount;
-Move PossibleMoveSets[500][4];
-ushort SetLengths[500];
+Move PossibleMoveSets[MAX_SETS_LENGTH][4];
+ushort SetLengths[MAX_SETS_LENGTH];
 
 void StartPosition();
 void RollDice();
 void WriteGameString(char* s);
 void ReadGameString(char* s);
+void RemoveShorterSets(int maxSetLength);
 void CreateMoves();
 
 bool DoMove(Move* move);
