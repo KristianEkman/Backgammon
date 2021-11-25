@@ -14,20 +14,27 @@ typedef struct {
 	ushort color;
 } Move;
 
+typedef struct {
+	ushort CurrentPlayer;
+	short Dice[2];
+	// 11 1111, count & 15, color & 15
+	// 0 Black Bar, 1 - 24 common, 25 White Bar
+	short Position[26];
+	//Nmbr of checkers in white home
+	short WhiteHome;
+	//Nmbr of checkers in black home
+	short BlackHome;
+	
+	//List of generated possible sets of moves.
+	Move PossibleMoveSets[MAX_SETS_LENGTH][4];
+	//Length of the list
+	ushort MoveSetsCount;
+	//Length of each set.
+	ushort SetLengths[MAX_SETS_LENGTH];
+} Game;
 
-
-ushort CurrentPlayer;
-short Dice[2];
-
-// 11 1111, count & 15, color & 15
-// 0 Black Bar, 1 - 24 common, 25 White Bar
-short Position[26]; 
-short WhiteHome;
-short BlackHome;
-
-ushort MoveSetsCount;
-Move PossibleMoveSets[MAX_SETS_LENGTH][4];
-ushort SetLengths[MAX_SETS_LENGTH];
+// The global game variable
+Game G;
 
 void StartPosition();
 void RollDice();

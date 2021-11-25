@@ -9,13 +9,13 @@
 
 void Reset() {
 	for (int i = 0; i < 26; i++)
-		Position[i] = 0;
-	WhiteHome = 0;
-	BlackHome = 0;
-	CurrentPlayer = Black;
+		G.Position[i] = 0;
+	G.WhiteHome = 0;
+	G.BlackHome = 0;
+	G.CurrentPlayer = Black;
 
-	Dice[0] = 0;
-	Dice[1] = 0;
+	G.Dice[0] = 0;
+	G.Dice[1] = 0;
 }
 
 void StartPosition() {
@@ -23,19 +23,19 @@ void StartPosition() {
 
 	Reset();
 
-	Position[1] = 2 | Black;
-	Position[6] = 5 | White;
-	Position[8] = 3 | White;
-	Position[12] = 5 | Black;
-	Position[13] = 5 | White;
-	Position[17] = 3 | Black;
-	Position[19] = 5 | Black;
-	Position[24] = 2 | White;
+	G.Position[1] = 2 | Black;
+	G.Position[6] = 5 | White;
+	G.Position[8] = 3 | White;
+	G.Position[12] = 5 | Black;
+	G.Position[13] = 5 | White;
+	G.Position[17] = 3 | Black;
+	G.Position[19] = 5 | Black;
+	G.Position[24] = 2 | White;
 }
 
 void RollDice() {
-	Dice[0] = rand() % 6 + 1;
-	Dice[1] = rand() % 6 + 1;
+	G.Dice[0] = rand() % 6 + 1;
+	G.Dice[1] = rand() % 6 + 1;
 }
 
 bool ToHome(Move move) {
@@ -46,21 +46,21 @@ bool DoMove(Move* move) {
 	ushort to = move->to;
 	ushort from = move->from;
 	bool toHome = ToHome(*move);
-	bool hit = Position[to] > 0 && !toHome;
+	bool hit = G.Position[to] > 0 && !toHome;
 	if (hit)
-		Position[to] = 0;
+		G.Position[to] = 0;
 
 	if (toHome) {
-		move->color == Black ? BlackHome++ : WhiteHome++;
+		move->color == Black ? G.BlackHome++ : G.WhiteHome++;
 	}
 	else {
-		Position[to]++;
-		Position[to] |= move->color;
+		G.Position[to]++;
+		G.Position[to] |= move->color;
 	}
 
-	Position[from]--;
+	G.Position[from]--;
 	if (CheckerCount(from) == 0)
-		Position[from] = 0;
+		G.Position[from] = 0;
 
 	return hit;
 }
@@ -70,19 +70,19 @@ void UndoMove(Move* move, bool hit) {
 	ushort from = move->from;
 	bool fromHome = ToHome(*move);
 
-	Position[from]++;
-	Position[from] |= move->color;
+	G.Position[from]++;
+	G.Position[from] |= move->color;
 
 	if (fromHome) {
-		move->color == Black ? BlackHome-- : WhiteHome--;
+		move->color == Black ? G.BlackHome-- : G.WhiteHome--;
 	}
 	else {
-		Position[to]--;
+		G.Position[to]--;
 		if (CheckerCount(to) == 0)
-			Position[to] = 0;
+			G.Position[to] = 0;
 
 		if (hit)
-			Position[to] = 1 | OtherColor(move->color);
+			G.Position[to] = 1 | OtherColor(move->color);
 	}
 }
 
@@ -91,13 +91,13 @@ bool IsBlockedFor(ushort pos, ushort color) {
 		return false;
 
 
-	return Position[pos] & OtherColor(color) && CheckerCount(pos) >= 2;
+	return G.Position[pos] & OtherColor(color) && CheckerCount(pos) >= 2;
 }
 
 bool IsBlackBearingOff(ushort* lastCheckerPos) {
 	for (ushort i = 0; i <= 24; i++)
 	{
-		if ((Position[i] & Black) && CheckerCount(i) > 0)
+		if ((G.Position[i] & Black) && CheckerCount(i) > 0)
 		{
 			*lastCheckerPos = i;
 			return i >= 19;
@@ -109,7 +109,7 @@ bool IsBlackBearingOff(ushort* lastCheckerPos) {
 bool IsWhiteBearingOff(ushort* lastCheckerPos) {
 	for (ushort i = 25; i >= 1; i--)
 	{
-		if ((Position[i] & White) && CheckerCount(i) > 0)
+		if ((G.Position[i] & White) && CheckerCount(i) > 0)
 		{
 			*lastCheckerPos = i;
 			return i <= 6;
@@ -129,9 +129,9 @@ void CreateBlackMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 
 	for (ushort i = start; i < toIndex; i++)
 	{
-		if (!(Position[i] & Black))
+		if (!(G.Position[i] & Black))
 			continue;
-		int diceVal = diceIdx > 1 ? Dice[0] : Dice[diceIdx];
+		int diceVal = diceIdx > 1 ? G.Dice[0] : G.Dice[diceIdx];
 		int toPos = i + diceVal;
 
 		// När man bär av, får man använda tärningar med för hög summa,
@@ -152,18 +152,18 @@ void CreateBlackMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 		}
 
 		// Atleast one move set is created.
-		if (MoveSetsCount == 0)
-			MoveSetsCount = 1;
-		ushort seqIdx = MoveSetsCount - 1;
-		Move* move = &PossibleMoveSets[seqIdx][diceIdx];
+		if (G.MoveSetsCount == 0)
+			G.MoveSetsCount = 1;
+		ushort seqIdx = G.MoveSetsCount - 1;
+		Move* move = &G.PossibleMoveSets[seqIdx][diceIdx];
 		if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new sequence.
 			int copyCount = diceIdx;// SetLengths[seqIdx] - 1;
-			SetLengths[seqIdx + 1] = copyCount;
+			G.SetLengths[seqIdx + 1] = copyCount;
 			if (copyCount > 0)
-				memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], copyCount * sizeof(Move));
-			move = &PossibleMoveSets[seqIdx + 1][diceIdx];
-			MoveSetsCount++;
+				memcpy(&G.PossibleMoveSets[seqIdx + 1][0], &G.PossibleMoveSets[seqIdx][0], copyCount * sizeof(Move));
+			move = &G.PossibleMoveSets[seqIdx + 1][diceIdx];
+			G.MoveSetsCount++;
 			seqIdx++;
 		}
 
@@ -171,8 +171,8 @@ void CreateBlackMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 		move->to = toPos;
 		move->color = Black;
 
-		SetLengths[seqIdx]++;
-		*maxSetLength = max(*maxSetLength, SetLengths[seqIdx]);
+		G.SetLengths[seqIdx]++;
+		*maxSetLength = max(*maxSetLength, G.SetLengths[seqIdx]);
 
 		//TODO: Maybe omit identical sequences, hashing?
 		if (diceIdx < diceCount - 1) {
@@ -194,9 +194,9 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 
 	for (int i = start; i >= toIndex; i--)
 	{
-		if (!(Position[i] & White))
+		if (!(G.Position[i] & White))
 			continue;
-		int diceVal = diceIdx > 1 ? Dice[0] : Dice[diceIdx];
+		int diceVal = diceIdx > 1 ? G.Dice[0] : G.Dice[diceIdx];
 		int toPos = i - diceVal;
 
 		// När man bär av, får man använda tärningar med för hög summa
@@ -217,18 +217,18 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 		}
 
 		// Atleast one move set is created.
-		if (MoveSetsCount == 0)
-			MoveSetsCount = 1;
-		ushort seqIdx = MoveSetsCount - 1;
-		Move* move = &PossibleMoveSets[seqIdx][diceIdx];
+		if (G.MoveSetsCount == 0)
+			G.MoveSetsCount = 1;
+		ushort seqIdx = G.MoveSetsCount - 1;
+		Move* move = &G.PossibleMoveSets[seqIdx][diceIdx];
 		if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new sequence.
 			int copyCount = diceIdx;
-			SetLengths[seqIdx + 1] = copyCount;
+			G.SetLengths[seqIdx + 1] = copyCount;
 			if (copyCount > 0)
-				memcpy(&PossibleMoveSets[seqIdx + 1][0], &PossibleMoveSets[seqIdx][0], copyCount * sizeof(Move));
-			move = &PossibleMoveSets[seqIdx + 1][diceIdx];
-			MoveSetsCount++;
+				memcpy(&G.PossibleMoveSets[seqIdx + 1][0], &G.PossibleMoveSets[seqIdx][0], copyCount * sizeof(Move));
+			move = &G.PossibleMoveSets[seqIdx + 1][diceIdx];
+			G.MoveSetsCount++;
 			seqIdx++;
 		}
 
@@ -236,8 +236,8 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 		move->to = toPos;
 		move->color = White;
 
-		SetLengths[seqIdx]++;
-		*maxSetLength = max(*maxSetLength, SetLengths[seqIdx]);
+		G.SetLengths[seqIdx]++;
+		*maxSetLength = max(*maxSetLength, G.SetLengths[seqIdx]);
 
 
 		//TODO: Maybe omit identical sequences, hashing?
@@ -250,64 +250,64 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 }
 
 void ReverseDice() {
-	short temp = Dice[0];
-	Dice[0] = Dice[1];
-	Dice[1] = temp;
+	short temp = G.Dice[0];
+	G.Dice[0] = G.Dice[1];
+	G.Dice[1] = temp;
 }
 
 void RemoveShorterSets(int maxSetLength) {
 	bool modified = false;
-	int realCount = MoveSetsCount;
+	int realCount = G.MoveSetsCount;
 	do
 	{
 		modified = false;
 		for (int i = 0; i < realCount; i++)
 		{
-			if (SetLengths[i] < maxSetLength)
+			if (G.SetLengths[i] < maxSetLength)
 			{
-				memcpy(&PossibleMoveSets[i], &PossibleMoveSets[i + 1], (MAX_SETS_LENGTH - i) * 4 * sizeof(Move));
-				memcpy(&SetLengths[i], &SetLengths[i + 1], (MAX_SETS_LENGTH - i) * sizeof(ushort));
+				memcpy(&G.PossibleMoveSets[i], &G.PossibleMoveSets[i + 1], (MAX_SETS_LENGTH - i) * 4 * sizeof(Move));
+				memcpy(&G.SetLengths[i], &G.SetLengths[i + 1], (MAX_SETS_LENGTH - i) * sizeof(ushort));
 				modified = true;
 				realCount--;
 				break;
 			}
 		}
 	} while (modified);
-	MoveSetsCount = realCount;
+	G.MoveSetsCount = realCount;
 }
 
 void CreateMoves() {
 	for (int i = 0; i < MAX_SETS_LENGTH; i++)
 	{
-		SetLengths[i] = 0;
+		G.SetLengths[i] = 0;
 		for (int j = 0; j < 4; j++)
 		{
 			Move move;
 			move.from = 0;
 			move.to = 0;
 			move.color = 0;
-			PossibleMoveSets[i][j] = move;
+			G.PossibleMoveSets[i][j] = move;
 		}
 	}
 
-	MoveSetsCount = 0;
-	// Largest Dice first
-	if (Dice[1] > Dice[0]) {
+	G.MoveSetsCount = 0;
+	// Largest G.Dice first
+	if (G.Dice[1] > G.Dice[0]) {
 		ReverseDice();
 	}
 
-	int diceCount = Dice[0] == Dice[1] ? 4 : 2;
+	int diceCount = G.Dice[0] == G.Dice[1] ? 4 : 2;
 	int maxSetLength = 0;
 	for (size_t i = 0; i < 2; i++)
 	{
 		maxSetLength = 0;
-		if (CurrentPlayer & Black)
+		if (G.CurrentPlayer & Black)
 			CreateBlackMoveSets(0, diceCount, &maxSetLength);
 		else
 			CreateWhiteMoveSets(0, diceCount, &maxSetLength);
 
 		//If no moves are found and dicecount == 2 reverse dice order and try again.
-		if (MoveSetsCount == 0 && diceCount == 2) {
+		if (G.MoveSetsCount == 0 && diceCount == 2) {
 			ReverseDice();
 		}
 		else {
@@ -327,8 +327,8 @@ void WriteGameString(char* s) {
 	int idx = 0;
 	for (size_t i = 0; i < 26; i++)
 	{
-		if (Position[i] > 0) {
-			ushort black = Position[i] & Black;
+		if (G.Position[i] > 0) {
+			ushort black = G.Position[i] & Black;
 			if (black) {
 				s[idx++] = 'b';
 			}
@@ -339,9 +339,9 @@ void WriteGameString(char* s) {
 		s[idx++] = '0' + CheckerCount(i);
 		s[idx++] = ' ';
 	}
-	s[idx++] = '0' + WhiteHome;
+	s[idx++] = '0' + G.WhiteHome;
 	s[idx++] = ' ';
-	s[idx++] = '0' + BlackHome;
+	s[idx++] = '0' + G.BlackHome;
 	s[idx] = '\0';
 }
 
@@ -366,18 +366,18 @@ void ReadGameString(char* s) {
 
 		if (StartsWith(token, "b")) {
 			SubString(token, n, 2, 3);
-			Position[i] = atoi(n) | Black;
+			G.Position[i] = atoi(n) | Black;
 		}
 		else if (StartsWith(token, "w")) {
 			SubString(token, n, 2, 3);
-			Position[i] = atoi(n) | White;
+			G.Position[i] = atoi(n) | White;
 		}
 
 		token = strtok_s(NULL, " ", &context);
 	}
-	WhiteHome = atoi(token);
+	G.WhiteHome = atoi(token);
 	token = strtok_s(NULL, " ", &context);
-	BlackHome = atoi(token);
+	G.BlackHome = atoi(token);
 }
 
 
