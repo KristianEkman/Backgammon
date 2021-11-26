@@ -2,6 +2,9 @@
 
 #define false 0
 #define true 1
+#define max(x, y) (((x) > (y)) ? (x) : (y))
+#define min(x, y) (((x) < (y)) ? (x) : (y))
+
 #define CheckerCount(x) ((x) & 15)
 #define OtherColor(x) (~(x) & 48)
 
@@ -11,6 +14,7 @@ typedef unsigned long long U64;
 U64 Llrand();
 
 int RandomInt(int lower, int upper);
+double RandomDouble(double lower, double upper);
 
 bool Streq(char s1[], char s2[]);
 

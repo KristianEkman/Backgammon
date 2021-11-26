@@ -53,6 +53,18 @@ int RandomInt(int lower, int upper)
 	return (rand() % (upper - lower + 1)) + lower;
 }
 
+double RandomDouble(double max, double min)
+{
+	if (!seeded)
+	{
+		srand(time(0));
+		seeded = true;
+	}
+	double range = (max - min);
+	double div = RAND_MAX / range;
+	return min + (rand() / div);
+}
+
 bool Streq(char s1[], char s2[])
 {
 	return strcmp(s1, s2) == 0;
@@ -71,7 +83,7 @@ bool Contains(char a[], char b[]) {
 int IndexOf(char* a, char* b) {
 	char* p = strstr(a, b);
 	if (p == NULL) return -1;
-	return p - a;
+	return (int)(p - a);
 }
 
 

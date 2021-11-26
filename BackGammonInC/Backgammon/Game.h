@@ -15,7 +15,7 @@ typedef struct {
 } Move;
 
 typedef struct {
-	ushort CurrentPlayer;
+	char CurrentPlayer;
 	short Dice[2];
 	// 11 1111, count & 15, color & 15
 	// 0 Black Bar, 1 - 24 common, 25 White Bar
@@ -24,6 +24,9 @@ typedef struct {
 	short WhiteHome;
 	//Nmbr of checkers in black home
 	short BlackHome;
+
+	ushort BlackLeft;
+	ushort WhiteLeft;
 	
 	//List of generated possible sets of moves.
 	Move PossibleMoveSets[MAX_SETS_LENGTH][4];
@@ -41,10 +44,10 @@ void RollDice();
 void WriteGameString(char* s);
 void ReadGameString(char* s);
 void RemoveShorterSets(int maxSetLength);
-void CreateMoves();
+void CreateMoves(Game* g);
 
-bool DoMove(Move* move);
-void UndoMove(Move* move, bool hit);
+bool DoMove(Move move);
+void UndoMove(Move move, bool hit);
 bool IsBlockedFor(ushort pos, ushort color);
 
 

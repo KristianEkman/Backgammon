@@ -42,39 +42,52 @@ bool ToHome(Move move) {
 	return move.color == Black && move.to == 25 || move.color == White && move.to == 0;
 }
 
-bool DoMove(Move* move) {
-	ushort to = move->to;
-	ushort from = move->from;
-	bool toHome = ToHome(*move);
+bool DoMove(Move move) {
+	ushort to = move.to;
+	ushort from = move.from;
+	bool toHome = ToHome(move);
 	bool hit = G.Position[to] > 0 && !toHome;
 	if (hit)
 		G.Position[to] = 0;
 
 	if (toHome) {
-		move->color == Black ? G.BlackHome++ : G.WhiteHome++;
+		move.color == Black ? G.BlackHome++ : G.WhiteHome++;
 	}
 	else {
 		G.Position[to]++;
-		G.Position[to] |= move->color;
+		G.Position[to] |= move.color;
 	}
 
 	G.Position[from]--;
 	if (CheckerCount(G.Position[from]) == 0)
 		G.Position[from] = 0;
 
+	if (move.color == Black)
+	{
+		G.BlackLeft -= (move.to - move.from);
+		if (hit)
+			G.WhiteLeft += (25 - move.to);
+	}
+	if (move.color == White)
+	{
+		G.WhiteLeft -= (move.from - move.to);
+		if (hit)
+			G.BlackLeft += move.to; // += 25 - (25 - move.to);
+	}
+
 	return hit;
 }
 
-void UndoMove(Move* move, bool hit) {
-	ushort to = move->to;
-	ushort from = move->from;
-	bool fromHome = ToHome(*move);
+void UndoMove(Move move, bool hit) {
+	ushort to = move.to;
+	ushort from = move.from;
+	bool fromHome = ToHome(move);
 
 	G.Position[from]++;
-	G.Position[from] |= move->color;
+	G.Position[from] |= move.color;
 
 	if (fromHome) {
-		move->color == Black ? G.BlackHome-- : G.WhiteHome--;
+		move.color == Black ? G.BlackHome-- : G.WhiteHome--;
 	}
 	else {
 		G.Position[to]--;
@@ -82,7 +95,20 @@ void UndoMove(Move* move, bool hit) {
 			G.Position[to] = 0;
 
 		if (hit)
-			G.Position[to] = 1 | OtherColor(move->color);
+			G.Position[to] = 1 | OtherColor(move.color);
+	}
+
+	if (move.color == Black)
+	{
+		G.BlackLeft += (move.to - move.from);
+		if (hit)
+			G.WhiteLeft -= (25 - move.to);
+	}
+	if (move.color == White)
+	{
+		G.WhiteLeft += (move.from - move.to);
+		if (hit)
+			G.BlackLeft -= move.to; // -= 25 - (25 - move.to);
 	}
 }
 
@@ -176,9 +202,9 @@ void CreateBlackMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 
 		//TODO: Maybe omit identical sequences, hashing?
 		if (diceIdx < diceCount - 1) {
-			int hit = DoMove(move);
+			int hit = DoMove(*move);
 			CreateBlackMoveSets(diceIdx + 1, diceCount, maxSetLength);
-			UndoMove(move, hit);
+			UndoMove(*move, hit);
 		}
 	}
 }
@@ -239,12 +265,11 @@ void CreateWhiteMoveSets(int diceIdx, int diceCount, int* maxSetLength) {
 		G.SetLengths[seqIdx]++;
 		*maxSetLength = max(*maxSetLength, G.SetLengths[seqIdx]);
 
-
 		//TODO: Maybe omit identical sequences, hashing?
 		if (diceIdx < diceCount - 1) {
-			int hit = DoMove(move);
+			int hit = DoMove(*move);
 			CreateWhiteMoveSets(diceIdx + 1, diceCount, maxSetLength);
-			UndoMove(move, hit);
+			UndoMove(*move, hit);
 		}
 	}
 }
@@ -276,38 +301,38 @@ void RemoveShorterSets(int maxSetLength) {
 	G.MoveSetsCount = realCount;
 }
 
-void CreateMoves() {
+void CreateMoves(Game* g) {
 	for (int i = 0; i < MAX_SETS_LENGTH; i++)
 	{
-		G.SetLengths[i] = 0;
+		g->SetLengths[i] = 0;
 		for (int j = 0; j < 4; j++)
 		{
 			Move move;
 			move.from = 0;
 			move.to = 0;
 			move.color = 0;
-			G.PossibleMoveSets[i][j] = move;
+			g->PossibleMoveSets[i][j] = move;
 		}
 	}
 
-	G.MoveSetsCount = 0;
-	// Largest G.Dice first
-	if (G.Dice[1] > G.Dice[0]) {
+	g->MoveSetsCount = 0;
+	// Largest Dice first
+	if (g->Dice[1] > g->Dice[0]) {
 		ReverseDice();
 	}
 
-	int diceCount = G.Dice[0] == G.Dice[1] ? 4 : 2;
+	int diceCount = g->Dice[0] == g->Dice[1] ? 4 : 2;
 	int maxSetLength = 0;
 	for (size_t i = 0; i < 2; i++)
 	{
 		maxSetLength = 0;
-		if (G.CurrentPlayer & Black)
+		if (g->CurrentPlayer & Black)
 			CreateBlackMoveSets(0, diceCount, &maxSetLength);
 		else
 			CreateWhiteMoveSets(0, diceCount, &maxSetLength);
 
 		//If no moves are found and dicecount == 2 reverse dice order and try again.
-		if (G.MoveSetsCount == 0 && diceCount == 2) {
+		if (g->MoveSetsCount == 0 && diceCount == 2) {
 			ReverseDice();
 		}
 		else {
@@ -345,6 +370,21 @@ void WriteGameString(char* s) {
 	s[idx] = '\0';
 }
 
+
+void SetPointsLeft(Game* g) {
+	ushort blackLeft = 0;
+	ushort whiteLeft = 0;
+	for (int i = 0; i < 25; i++)
+	{
+		if (g->Position[i] & Black)
+			blackLeft += (25 - i) * CheckerCount(g->Position[i]);
+		if (g->Position[i] & White)
+			whiteLeft += i * CheckerCount(g->Position[i]);
+	}
+	g->BlackLeft = blackLeft;
+	g->WhiteLeft = whiteLeft;
+}
+
 void ReadGameString(char* s) {
 	Reset();
 	// 28 tokens
@@ -378,6 +418,7 @@ void ReadGameString(char* s) {
 	G.WhiteHome = atoi(token);
 	token = strtok_s(NULL, " ", &context);
 	G.BlackHome = atoi(token);
+	SetPointsLeft(&G);
 }
 
 
