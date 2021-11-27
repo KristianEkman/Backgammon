@@ -44,17 +44,18 @@ typedef struct {
 // The global game variable
 Game G;
 
-void StartPosition();
-void RollDice();
-void WriteGameString(char* s);
-void ReadGameString(char* s);
-void RemoveShorterSets(int maxSetLength);
+void StartPosition(Game* g);
+void RollDice(Game* g);
+void WriteGameString(char* s, Game* g);
+void ReadGameString(char* s, Game* g);
+void RemoveShorterSets(int maxSetLength, Game* g);
 void CreateMoves(Game* g);
 
-bool DoMove(Move move);
-void UndoMove(Move move, bool hit);
-bool IsBlockedFor(ushort pos, ushort color);
+bool DoMove(Move move, Game *g);
+void UndoMove(Move move, bool hit, Game *g);
+bool IsBlockedFor(ushort pos, ushort color, Game* g);
 void PrintGame(Game* game);
+void SetPointsLeft(Game* g);
 
 
 

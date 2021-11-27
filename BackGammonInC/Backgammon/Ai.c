@@ -1,5 +1,6 @@
 
 #include <math.h>
+#include <stdio.h>
 #include "Ai.h"
 #include "Game.h"
 #include "Utils.h"
@@ -19,7 +20,7 @@ void InitAi(bool constant) {
 		else {
 			BlotFactors[i] = RandomDouble(0, 1);
 			ConnectedBlocksFactor[i] = RandomDouble(0, 1);
-		}		
+		}
 	}
 }
 
@@ -82,7 +83,7 @@ int FindBestMoveSet(Game* g) {
 	{
 		for (int m = 0; m < g->SetLengths[i]; m++)
 		{
-			DoMove(g->PossibleMoveSets[i][m]);
+			DoMove(g->PossibleMoveSets[i][m], g);
 			double score = EvaluateCheckers(g, g->CurrentPlayer);
 			if (g->CurrentPlayer == White)
 				score += (g->BlackLeft - g->WhiteLeft);
@@ -99,3 +100,33 @@ int FindBestMoveSet(Game* g) {
 	return bestIdx;
 }
 
+int PlayGame(Game* g) {
+	StartPosition(g);
+	InitAi(true);
+
+	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
+	{
+		char buf[BUF_SIZE];
+		SetCursorPosition(0, 0);
+		PrintGame(g);
+		fgets(buf, 5000, stdin);
+
+		g->CurrentPlayer = Black;
+		RollDice(g);
+		SetCursorPosition(0, 0);
+		PrintGame(g);
+		fgets(buf, 5000, stdin);
+
+		int bestSetIdx = FindBestMoveSet(g);
+		for (int i = 0; i < g->SetLengths[bestSetIdx]; i++)
+		{
+			DoMove(g->PossibleMoveSets[bestSetIdx][i], g);
+			SetCursorPosition(0, 0);
+			PrintGame(g);
+			fgets(buf, 5000, stdin);
+		}
+		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+		fgets(buf, 5000, stdin);
+	}
+	return 0;
+}

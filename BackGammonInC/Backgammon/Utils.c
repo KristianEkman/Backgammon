@@ -146,3 +146,8 @@ void SubString(char s[], char sub[], int start, int length) {
 	sub[i] = '\0';
 }
 
+void SetCursorPosition(int x, int y)
+{
+	printf("\033[%d;%dH", y + 1, x + 1);
+}
+

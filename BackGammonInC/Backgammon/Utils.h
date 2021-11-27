@@ -30,6 +30,8 @@ void ConsoleWriteLine(char* text);
 
 void SubString(char s[], char sub[], int start, int length);
 
+void SetCursorPosition(int x, int y);
+
 
 typedef enum {
 	black,

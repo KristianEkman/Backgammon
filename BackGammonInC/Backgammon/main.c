@@ -5,14 +5,15 @@
 #include "Game.h"
 #include "utils.h"
 #include "Tests.h"
+#include "Ai.h"
 
 
 int main() {
 	printf("Welcome to backgammon\n: ");
-	for (int c = 170; c < 255; c++)
-		printf("%d %c\n\n", c, c);
+	/*for (int c = 170; c < 255; c++)
+		printf("%d %c\n\n", c, c);*/
 
-	StartPosition();
+	StartPosition(&G);
 
 	char buf[BUF_SIZE];
 	fgets(buf, 5000, stdin);
@@ -20,6 +21,9 @@ int main() {
 	{
 		if (Streq(buf, "test\n") || Streq(buf, "t\n")) {
 			RunAll();
+		}
+		if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
+			PlayGame(&G);
 		}
 		else {
 			ConsoleWriteLine("Unknown command");
