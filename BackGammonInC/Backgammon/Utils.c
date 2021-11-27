@@ -120,6 +120,14 @@ void PrintGreen(char* msg) {
 	ColorPrint(msg, green, black);
 }
 
+void PrintYellow(char* msg) {
+	ColorPrint(msg, yellow, black);
+}
+
+void PrintBlue(char* msg) {
+	ColorPrint(msg, blue, black);
+}
+
 void PrintInverted(char* msg) {
 	ColorPrint(msg, black, gray);
 }

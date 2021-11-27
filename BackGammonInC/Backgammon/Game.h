@@ -1,8 +1,8 @@
 #pragma once
 #include "Utils.h"
-
-#define White 32
-#define Black 16
+//
+//#define White 32
+//#define Black 16
 #define ushort unsigned short
 #define BUF_SIZE 5000
 #define MAX_SETS_LENGTH 500
@@ -14,8 +14,13 @@ typedef struct {
 	ushort color;
 } Move;
 
+typedef enum {
+	Black = 16,
+	White = 32
+} PlayerSide;
+
 typedef struct {
-	char CurrentPlayer;
+	PlayerSide CurrentPlayer;
 	short Dice[2];
 	// 11 1111, count & 15, color & 15
 	// 0 Black Bar, 1 - 24 common, 25 White Bar
@@ -49,5 +54,7 @@ void CreateMoves(Game* g);
 bool DoMove(Move move);
 void UndoMove(Move move, bool hit);
 bool IsBlockedFor(ushort pos, ushort color);
+void PrintGame(Game* game);
+
 
 

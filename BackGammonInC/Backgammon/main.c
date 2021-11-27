@@ -9,6 +9,9 @@
 
 int main() {
 	printf("Welcome to backgammon\n: ");
+	for (int c = 170; c < 255; c++)
+		printf("%d %c\n\n", c, c);
+
 	StartPosition();
 
 	char buf[BUF_SIZE];

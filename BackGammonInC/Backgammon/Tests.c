@@ -386,7 +386,7 @@ PrintMoves();*/
 TEST(TestEvaluation,
 	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0";
 ReadGameString(gameString);
-InitAi();
+InitAi(true);
 double score = EvaluateCheckers(&G, Black);
 
 )
@@ -424,7 +424,7 @@ TEST(TestPointsLeft,
 	//TODO: Hits
 )
 
-void TestPointsLeftHit() {
+TEST( TestPointsLeftHit,
 	char* gs = "0 b2 0 0 0 0 w1 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b1 0 0 0 0 w2 0 0 0";
 	ReadGameString(gs);
 	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
@@ -453,7 +453,21 @@ void TestPointsLeftHit() {
 
 	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
 	AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
-}
+	)
+
+TEST(TestGetScore, 
+	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
+	ReadGameString(gs);
+	InitAi(true);
+	double score = GetScore(&G);
+	printf("Score: %d\n", score);
+	)
+
+TEST(TestPrintGame,
+	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
+	ReadGameString(gs);
+	PrintGame(&G);
+	)
 
 void RunAll() {
 	TestStartPos();
@@ -480,6 +494,8 @@ void RunAll() {
 	TestEvaluation();
 	TestPointsLeft();
 	TestPointsLeftHit();
+	TestGetScore();
+	TestPrintGame();
 	// TODO: Test Blocked -> zero moves.
 
 	if (_failedAsserts == 0)

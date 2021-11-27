@@ -53,6 +53,9 @@ typedef enum {
 void PrintRed(char* msg);
 
 void PrintGreen(char* msg);
+void PrintBlue(char* msg);
+void PrintYellow(char* msg);
+
 void PrintInverted(char* msg);
 
 void ColorPrint(char* text, ConsoleColor textColor, ConsoleColor background);
