@@ -81,21 +81,29 @@ int FindBestMoveSet(Game* g) {
 	CreateMoves(g);
 	for (int i = 0; i < g->MoveSetsCount; i++)
 	{
+		Move moves[4];
+		bool hits[4];
 		for (int m = 0; m < g->SetLengths[i]; m++)
 		{
-			DoMove(g->PossibleMoveSets[i][m], g);
-			double score = EvaluateCheckers(g, g->CurrentPlayer);
-			if (g->CurrentPlayer == White)
-				score += (g->BlackLeft - g->WhiteLeft);
-			else
-				score += (g->WhiteLeft - g->BlackLeft);
-
-			if (score > bestScore)
-			{
-				bestScore = score;
-				bestIdx = i;
-			}
+			moves[m] = g->PossibleMoveSets[i][m];
+			hits[m] = DoMove(moves[m], g);			
 		}
+
+		double score = EvaluateCheckers(g, g->CurrentPlayer);
+		if (g->CurrentPlayer == White)
+			score += (g->BlackLeft - g->WhiteLeft);
+		else
+			score += (g->WhiteLeft - g->BlackLeft);
+
+		if (score > bestScore)
+		{
+			bestScore = score;
+			bestIdx = i;
+		}
+
+		//Undoing in reverse
+		for (int u = g->SetLengths[i] - 1; u >= 0; u--)
+			UndoMove(moves[u], hits[u], g);
 	}
 	return bestIdx;
 }
