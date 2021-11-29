@@ -111,6 +111,7 @@ int FindBestMoveSet(Game* g) {
 int PlayGame(Game* g) {
 	StartPosition(g);
 	InitAi(true);
+	g->CurrentPlayer = Black;
 
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
 	{
@@ -119,7 +120,6 @@ int PlayGame(Game* g) {
 		PrintGame(g);
 		fgets(buf, 5000, stdin);
 
-		g->CurrentPlayer = Black;
 		RollDice(g);
 		SetCursorPosition(0, 0);
 		PrintGame(g);

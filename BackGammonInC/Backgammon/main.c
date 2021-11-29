@@ -37,6 +37,6 @@ int main() {
 		fgets(buf, 5000, stdin);
 	}
 
-	//SetConsoleCP(cp);
+	SetConsoleCP(cp);
 	ConsoleWriteLine("Bye");
 }

@@ -5,7 +5,7 @@
 //#define Black 16
 #define ushort unsigned short
 #define BUF_SIZE 5000
-#define MAX_SETS_LENGTH 500
+#define MAX_SETS_LENGTH 2000
 
 
 typedef struct {

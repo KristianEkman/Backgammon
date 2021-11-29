@@ -285,6 +285,10 @@ char gs[100];
 WriteGameString(gs, &G);
 AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
 AssertAreEqualInts(17, G.MoveSetsCount, "There should be 20 sets of moves.");
+for (int i = 0; i < G.MoveSetsCount; i++)
+{
+	Assert(G.SetLengths[i] <= 4, "Invalid set length");
+}
 )
 
 TEST(TestBlackCheckerOnBar,
@@ -317,7 +321,7 @@ G.Dice[1] = 4;
 G.CurrentPlayer = Black;
 CreateMoves(&G);
 //PrintMoves();
-AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 sets of moves.");
+AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
 )
 
 TEST(TestBearingOffWhite,
@@ -328,29 +332,31 @@ G.Dice[1] = 4;
 G.CurrentPlayer = White;
 CreateMoves(&G);
 //PrintMoves();
-AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 sets of moves.");
+AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
 )
 
-TEST(TestDoubleDiceBlack,
+void TestDoubleDiceBlack() {
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
-ReadGameString(gameString, &G);
-G.Dice[0] = 4;
-G.Dice[1] = 4;
-G.CurrentPlayer = Black;
-CreateMoves(&G);
-//PrintMoves();
-AssertAreEqualInts(284, G.MoveSetsCount, "There should be 248 sets of moves.");
-)
+	ReadGameString(gameString, &G);
+	G.Dice[0] = 2;
+	G.Dice[1] = 2;
+	G.CurrentPlayer = Black;
+	CreateMoves(&G);
+	//PrintMoves();
+	AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
+	for (int i = 0; i < G.MoveSetsCount; i++)
+		Assert(G.SetLengths[i] <= 4, "To many moves in set");
+}
 
 TEST(TestDoubleDiceWhite,
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 ReadGameString(gameString, &G);
-G.Dice[0] = 4;
-G.Dice[1] = 4;
+G.Dice[0] = 2;
+G.Dice[1] = 2;
 G.CurrentPlayer = White;
 CreateMoves(&G);
 //PrintMoves();
-AssertAreEqualInts(284, G.MoveSetsCount, "There should be 248 sets of moves.");
+AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
 )
 
 TEST(PlayBothDiceIfPossible,
@@ -372,13 +378,13 @@ G.Dice[0] = 2;
 G.Dice[1] = 4;
 G.CurrentPlayer = Black;
 CreateMoves(&G);
-AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 moves");
+AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 moves");
 
 //PrintMoves();
 G.SetLengths[2] = 1;
 G.SetLengths[5] = 1;
 RemoveShorterSets(2, &G);
-AssertAreEqualInts(8, G.MoveSetsCount, "There should be 8 moves left");
+AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 moves left");
 /*ConsoleWriteLine("==================");
 PrintMoves();*/
 )
@@ -424,7 +430,7 @@ TEST(TestPointsLeft,
 	//TODO: Hits
 )
 
-TEST( TestPointsLeftHit,
+void TestPointsLeftHit() {
 	char* gs = "0 b2 0 0 0 0 w1 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b1 0 0 0 0 w2 0 0 0";
 	ReadGameString(gs, &G);
 	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
@@ -453,7 +459,7 @@ TEST( TestPointsLeftHit,
 
 	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
 	AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
-	)
+}
 
 TEST(TestGetScore, 
 	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
