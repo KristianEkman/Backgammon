@@ -1,5 +1,9 @@
-More asserts.
-	Find bugs
+Fixa slumptalen.
+
+Lotta vem som vinner
+
+Gamestring:
+	Handle two digit numbers.
 
 Trainer, genetic search.
 	- Save & Load Genes

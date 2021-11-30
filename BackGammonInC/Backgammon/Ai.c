@@ -1,6 +1,9 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <Windows.h>
+
 #include "Ai.h"
 #include "Game.h"
 #include "Utils.h"
@@ -106,30 +109,34 @@ int FindBestMoveSet(Game* g) {
 	return bestIdx;
 }
 
-int PlayGame(Game* g) {
+void PlayGame(Game* g) {
 	StartPosition(g);
-	InitAi(true);
-	RollDice(g);
-	g->CurrentPlayer = Black;
 
+	RollDice(g);
+	while (g->Dice[0] == g->Dice[1])
+		RollDice(g);
+
+	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
 	{
-		char buf[BUF_SIZE];
-
-		SetCursorPosition(0, 0);
+		//char buf[BUF_SIZE];
+		/*SetCursorPosition(0, 0);
 		PrintGame(g);
-		fgets(buf, 5000, stdin);
+		Sleep(100);*/
+		//fgets(buf, 5000, stdin);
 
 		int bestSetIdx = FindBestMoveSet(g);
 		for (int i = 0; i < g->SetLengths[bestSetIdx]; i++)
 		{
 			DoMove(g->PossibleMoveSets[bestSetIdx][i], g);
-			SetCursorPosition(0, 0);
+			ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
+
+			/*SetCursorPosition(0, 0);
 			PrintGame(g);
-			fgets(buf, 5000, stdin);
+			Sleep(100);*/
+			//fgets(buf, 5000, stdin);
 		}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);		
 		RollDice(g);
 	}
-	return 0;
 }

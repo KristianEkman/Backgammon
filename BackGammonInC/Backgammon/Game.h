@@ -46,6 +46,7 @@ Game G;
 
 void StartPosition(Game* g);
 void RollDice(Game* g);
+int CountAllCheckers(PlayerSide side, Game* game);
 void WriteGameString(char* s, Game* g);
 void ReadGameString(char* s, Game* g);
 void RemoveShorterSets(int maxSetLength, Game* g);

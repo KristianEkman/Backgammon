@@ -8,6 +8,7 @@
 #define CheckerCount(x) ((x) & 15)
 #define OtherColor(x) (~(x) & 48)
 
+
 typedef enum { false, true } bool;
 typedef unsigned long long U64;
 
@@ -32,6 +33,15 @@ void SubString(char s[], char sub[], int start, int length);
 
 void SetCursorPosition(int x, int y);
 
+void FailAssert();
+
+#ifdef _DEBUG
+	#define ASSERT_DBG(condition) if (!(condition)) FailAssert();
+#else
+	#define ASSERT_DBG(condition) // does nothing
+#endif // _DEBUG
+
+#define VERIFY(condition) if (!(condition)) {printf("\n Condition (%s) failed verification in function %s\n", ""#condition"", __func__); exit(0);}
 
 typedef enum {
 	black,

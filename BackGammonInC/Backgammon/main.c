@@ -17,9 +17,9 @@ int main() {
 		printf("%d %c\n\n", c, c);*/
 	unsigned int cp = GetConsoleCP();
 	SetConsoleCP(437);
-	
+	InitAi(true);	
 	StartPosition(&G);
-
+	PrintGame(&G);
 	char buf[BUF_SIZE];
 	fgets(buf, 5000, stdin);
 	while (!Streq(buf, "quit\n") && !Streq(buf, "q\n"))
@@ -27,8 +27,18 @@ int main() {
 		if (Streq(buf, "test\n") || Streq(buf, "t\n")) {
 			RunAll();
 		}
-		if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
-			PlayGame(&G);
+		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
+			int whiteWins = 0;
+			int blackWins = 0;
+			for (int i = 0; i < 500; i++)
+			{
+				PlayGame(&G);
+				if (G.BlackLeft == 0)
+					blackWins++;
+				else if (G.WhiteLeft == 0)
+					whiteWins++;
+				printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
+			}
 		}
 		else {
 			ConsoleWriteLine("Unknown command");

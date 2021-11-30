@@ -82,6 +82,8 @@ TEST(TestStartPos,
 	StartPosition(&G);
 Assert(G.Dice[0] == 0, "Dice 0 is not reset");
 Assert(G.Dice[1] == 0, "Dice 1 is not reset");
+AssertAreEqualInts(15, CountAllCheckers(Black, &G), "15 Black checkers expected");
+AssertAreEqualInts(15, CountAllCheckers(White, &G), "15 White checkers expected");
 )
 
 TEST(TestRollDice,
@@ -103,7 +105,7 @@ AssertAreEqual(expected, s, "Unexpected GameString");
 )
 
 TEST(TestReadGameString,
-	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
+char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";	
 ReadGameString(gameString, &G);
 AssertAreEqualInts(G.Position[0], 0, "Invalid checker count");
 AssertAreEqualInts(G.Position[1], 2 | Black, "Invalid checker count");
@@ -518,7 +520,19 @@ void TestManyCombos() {
 		Assert(G.SetLengths[i] <= 4, "To many moves in set");
 }
 
+void TestNastyBug() {
+	char* gs = "0 b2 w2 0 b1 0 w4 0 w2 w2 0 0 b3 w4 0 0 0 b2 0 b4 0 0 0 b3 w1 w0 0 0";
+	ReadGameString(gs, &G);
+	Move m;
+	m.from = 25;
+	m.to = 20;
+	m.color = White;
+
+	DoMove(m, &G);
+}
+
 void RunAll() {
+	TestNastyBug();
 	TestStartPos();
 	TestRollDice();
 	TestWriteGameString();
