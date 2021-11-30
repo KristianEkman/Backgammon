@@ -68,10 +68,12 @@ double EvaluateCheckers(Game* g, char color) {
 
 double GetScore(Game* g) {
 	if (g->CurrentPlayer == Black) {
-		return EvaluateCheckers(g, Black) - EvaluateCheckers(g, White) - g->BlackLeft + g->WhiteLeft;
+		double bHome = 10000 * g->BlackHome;
+		return bHome + EvaluateCheckers(g, Black) - EvaluateCheckers(g, White) - g->BlackLeft + g->WhiteLeft;
 	}
 	else {
-		return EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
+		double wHome = 10000 * g->WhiteHome;
+		return wHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
 	}
 }
 
@@ -89,11 +91,7 @@ int FindBestMoveSet(Game* g) {
 			hits[m] = DoMove(moves[m], g);			
 		}
 
-		double score = EvaluateCheckers(g, g->CurrentPlayer);
-		if (g->CurrentPlayer == White)
-			score += (g->BlackLeft - g->WhiteLeft);
-		else
-			score += (g->WhiteLeft - g->BlackLeft);
+		double score = GetScore(g);
 
 		if (score > bestScore)
 		{
@@ -111,16 +109,13 @@ int FindBestMoveSet(Game* g) {
 int PlayGame(Game* g) {
 	StartPosition(g);
 	InitAi(true);
+	RollDice(g);
 	g->CurrentPlayer = Black;
 
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
 	{
 		char buf[BUF_SIZE];
-		SetCursorPosition(0, 0);
-		PrintGame(g);
-		fgets(buf, 5000, stdin);
 
-		RollDice(g);
 		SetCursorPosition(0, 0);
 		PrintGame(g);
 		fgets(buf, 5000, stdin);
@@ -133,8 +128,8 @@ int PlayGame(Game* g) {
 			PrintGame(g);
 			fgets(buf, 5000, stdin);
 		}
-		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
-		fgets(buf, 5000, stdin);
+		g->CurrentPlayer = OtherColor(g->CurrentPlayer);		
+		RollDice(g);
 	}
 	return 0;
 }

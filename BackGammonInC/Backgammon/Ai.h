@@ -5,3 +5,4 @@ double EvaluateCheckers(Game* g, char color);
 void InitAi(bool constant);
 double GetScore(Game* g);
 int PlayGame(Game* g);
+int FindBestMoveSet(Game* g);

@@ -5,19 +5,19 @@
 //#define Black 16
 #define ushort unsigned short
 #define BUF_SIZE 5000
-#define MAX_SETS_LENGTH 2000
-
-
-typedef struct {
-	ushort from;
-	ushort to;
-	ushort color;
-} Move;
+#define MAX_SETS_LENGTH 5000
 
 typedef enum {
 	Black = 16,
 	White = 32
 } PlayerSide;
+
+typedef struct {
+	ushort from;
+	ushort to;
+	PlayerSide color;
+} Move;
+
 
 typedef struct {
 	PlayerSide CurrentPlayer;

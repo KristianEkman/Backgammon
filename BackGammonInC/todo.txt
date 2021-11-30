@@ -1,5 +1,14 @@
-AI
+More asserts.
+	Find bugs
 
-Evaluation
+Trainer, genetic search.
+	- Save & Load Genes
 
-Search best movevery nic
+Look ahead.
+	- Generate all possible dice.
+	- Take average score.
+
+Check if there are duplicates when generating from quad dice
+	- If many, do hashing
+
+

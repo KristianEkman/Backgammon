@@ -335,18 +335,18 @@ CreateMoves(&G);
 AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
 )
 
-void TestDoubleDiceBlack() {
+TEST(TestDoubleDiceBlack,
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
-	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 2;
-	G.CurrentPlayer = Black;
-	CreateMoves(&G);
-	//PrintMoves();
-	AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
-	for (int i = 0; i < G.MoveSetsCount; i++)
-		Assert(G.SetLengths[i] <= 4, "To many moves in set");
-}
+ReadGameString(gameString, &G);
+G.Dice[0] = 2;
+G.Dice[1] = 2;
+G.CurrentPlayer = Black;
+CreateMoves(&G);
+//PrintMoves();
+AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
+for (int i = 0; i < G.MoveSetsCount; i++)
+	Assert(G.SetLengths[i] <= 4, "To many moves in set");
+)
 
 TEST(TestDoubleDiceWhite,
 	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
@@ -399,85 +399,124 @@ double score = EvaluateCheckers(&G, Black);
 
 TEST(TestPointsLeft,
 	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
-	ReadGameString(gs, &G);
-	AssertAreEqualInts(167, (int)G.BlackLeft, "Expected 167 Points left for Black");
-	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
+ReadGameString(gs, &G);
+AssertAreEqualInts(167, (int)G.BlackLeft, "Expected 167 Points left for Black");
+AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
 
-	Move bm;
-	bm.from = 1;
-	bm.to = 5;
-	bm.color = Black;
-	bool hit = DoMove(bm, &G);
-	AssertAreEqualInts(163, (int)G.BlackLeft, "Expected 163 Points left for Black");
-	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
+Move bm;
+bm.from = 1;
+bm.to = 5;
+bm.color = Black;
+bool hit = DoMove(bm, &G);
+AssertAreEqualInts(163, (int)G.BlackLeft, "Expected 163 Points left for Black");
+AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
 
-	UndoMove(bm, hit, &G);
-	AssertAreEqualInts(167, (int)G.BlackLeft, "Expected 167 Points left for Black");
-	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
+UndoMove(bm, hit, &G);
+AssertAreEqualInts(167, (int)G.BlackLeft, "Expected 167 Points left for Black");
+AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
 
-	Move wm;
-	wm.from = 24;
-	wm.to = 20;
-	wm.color = White;
-	hit = DoMove(wm, &G);
-	AssertAreEqualInts(167, (int)G.BlackLeft, "Expcted 167 Points left for Black");
-	AssertAreEqualInts(163, (int)G.WhiteLeft, "Expcted 163 Points left for White");
+Move wm;
+wm.from = 24;
+wm.to = 20;
+wm.color = White;
+hit = DoMove(wm, &G);
+AssertAreEqualInts(167, (int)G.BlackLeft, "Expcted 167 Points left for Black");
+AssertAreEqualInts(163, (int)G.WhiteLeft, "Expcted 163 Points left for White");
 
-	UndoMove(wm, hit, &G);
-	AssertAreEqualInts(167, (int)G.BlackLeft, "Expcted 167 Points left for Black");
-	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expcted 167 Points left for White");
+UndoMove(wm, hit, &G);
+AssertAreEqualInts(167, (int)G.BlackLeft, "Expcted 167 Points left for Black");
+AssertAreEqualInts(167, (int)G.WhiteLeft, "Expcted 167 Points left for White");
 
-	//TODO: Hits
+//TODO: Hits
 )
 
-void TestPointsLeftHit() {
+TEST(TestPointsLeftHit,
 	char* gs = "0 b2 0 0 0 0 w1 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b1 0 0 0 0 w2 0 0 0";
-	ReadGameString(gs, &G);
-	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
-	AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
-	Move bm;
-	bm.from = 1;
-	bm.to = 6;
-	bm.color = Black;
-	bool hit = DoMove(bm, &G);
-	AssertAreEqualInts(138, (int)G.BlackLeft, "Expcted 138 Points left for Black");
-	AssertAreEqualInts(143 - 6 + 25, (int)G.WhiteLeft, "Expcted 164 Points left for White");
-	UndoMove(bm, hit, &G);
+ReadGameString(gs, &G);
+AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
+AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
+Move bm;
+bm.from = 1;
+bm.to = 6;
+bm.color = Black;
+bool hit = DoMove(bm, &G);
+AssertAreEqualInts(138, (int)G.BlackLeft, "Expcted 138 Points left for Black");
+AssertAreEqualInts(143 - 6 + 25, (int)G.WhiteLeft, "Expcted 164 Points left for White");
+UndoMove(bm, hit, &G);
 
-	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
-	AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
-	//TODO, wm
+AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
+AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
+//TODO, wm
 
-	Move wm;
-	wm.from = 24;
-	wm.to = 19;
-	wm.color = White;
-	hit = DoMove(wm, &G);
-	AssertAreEqualInts(143 - 6 + 25, (int)G.BlackLeft, "Expcted 164 Points left for Black");
-	AssertAreEqualInts(138, (int)G.WhiteLeft, "Expcted 138 Points left for White");
-	UndoMove(wm, hit, &G);
+Move wm;
+wm.from = 24;
+wm.to = 19;
+wm.color = White;
+hit = DoMove(wm, &G);
+AssertAreEqualInts(143 - 6 + 25, (int)G.BlackLeft, "Expcted 164 Points left for Black");
+AssertAreEqualInts(138, (int)G.WhiteLeft, "Expcted 138 Points left for White");
+UndoMove(wm, hit, &G);
 
-	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
-	AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
-}
+AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
+AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
+)
 
-TEST(TestGetScore, 
+TEST(TestGetScore,
 	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
-	ReadGameString(gs, &G);
-	InitAi(true);
-	double score = GetScore(&G);
-	printf("Score: %d\n", score);
-	)
+ReadGameString(gs, &G);
+InitAi(true);
+double score = GetScore(&G);
+printf("Score: %f\n", score);
+)
 
 TEST(TestPrintGame,
 	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
-	ReadGameString(gs, &G);
-	PrintGame(&G);
-	)
+ReadGameString(gs, &G);
+PrintGame(&G);
+)
 
 TEST(TestPlayGame,
 	PlayGame(&G);
 )
+
+void TestBestBearingOffBlack() {
+	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0";
+	ReadGameString(gs, &G);
+	G.CurrentPlayer = Black;
+	InitAi(true);
+	G.Dice[0] = 3;
+	G.Dice[1] = 2;
+	int i = FindBestMoveSet(&G);
+	Move *m = G.PossibleMoveSets[i];
+	for (int j = 0; j < G.SetLengths[i]; j++)
+		AssertAreEqualInts(25, m[j].to, "Move should be to 25, Black Home");
+}
+
+void TestBestBearingOffWhite() {
+	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0";
+	ReadGameString(gs, &G);
+	G.CurrentPlayer = White;
+	InitAi(true);
+	G.Dice[0] = 3;
+	G.Dice[1] = 2;
+	int i = FindBestMoveSet(&G);
+	Move* m = G.PossibleMoveSets[i];
+	for (int j = 0; j < G.SetLengths[i]; j++)
+		AssertAreEqualInts(0, m[j].to, "Move should be to 0, White Home");
+}
+
+void TestManyCombos() {
+	char* gs = "0 0 w3 w2 w3 0 w2 0 b2 0 0 0 0 0 0 0 w1 w2 b2 b2 0 w2 b2 b5 b2 0 0 0";
+	ReadGameString(gs, &G);
+	G.Dice[0] = 1;
+	G.Dice[1] = 1;
+	G.CurrentPlayer = Black;
+	CreateMoves(&G);
+	
+	AssertAreEqualInts(710, G.MoveSetsCount, "There should be 710 sets of moves.");
+	for (int i = 0; i < G.MoveSetsCount; i++)
+		Assert(G.SetLengths[i] <= 4, "To many moves in set");
+}
 
 void RunAll() {
 	TestStartPos();
@@ -506,6 +545,10 @@ void RunAll() {
 	TestPointsLeftHit();
 	TestGetScore();
 	TestPrintGame();
+	TestBestBearingOffBlack();
+	TestBestBearingOffWhite();
+	TestManyCombos();
+
 	// TODO: Test Blocked -> zero moves.
 
 	if (_failedAsserts == 0)
