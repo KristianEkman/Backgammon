@@ -27,7 +27,7 @@ int ParseChar(char c) {
 
 U64  rnd_seed = 1070372;
 
-U64 _llrand() {
+U64 LlrandShift() {
 
 	rnd_seed ^= rnd_seed >> 12, rnd_seed ^= rnd_seed << 25, rnd_seed ^= rnd_seed >> 27;
 	return rnd_seed * 2685821657736338717LL;

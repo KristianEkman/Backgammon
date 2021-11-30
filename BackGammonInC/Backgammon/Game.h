@@ -5,7 +5,7 @@
 //#define Black 16
 #define ushort unsigned short
 #define BUF_SIZE 5000
-#define MAX_SETS_LENGTH 5000
+#define MAX_SETS_LENGTH 10000
 
 typedef enum {
 	Black = 16,

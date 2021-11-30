@@ -14,6 +14,8 @@ typedef unsigned long long U64;
 
 U64 Llrand();
 
+U64 LlrandShift();
+
 int RandomInt(int lower, int upper);
 double RandomDouble(double lower, double upper);
 
