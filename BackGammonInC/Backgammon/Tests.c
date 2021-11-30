@@ -175,6 +175,43 @@ WriteGameString(written, &G);
 AssertAreEqual(gameString, written, "Read and written string not same");
 )
 
+
+void TestTwoDigitGameString() {
+	char* gameString = "b2 b10 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 0 0 b3 0 0 0 0 w2 w2 3 4";
+	ReadGameString(gameString, &G);
+	AssertAreEqualInts(G.Position[0], 2 | Black, "Invalid checker count");
+	AssertAreEqualInts(G.Position[1], 10 | Black, "Invalid checker count");
+	AssertAreEqualInts(G.Position[2], 3 | White, "Invalid checker count");
+	AssertAreEqualInts(G.Position[3], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[4], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[5], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[6], 2 | White, "Invalid checker count");
+	AssertAreEqualInts(G.Position[7], 1 | White, "Invalid checker count");
+	AssertAreEqualInts(G.Position[8], 3 | White, "Invalid checker count");
+	AssertAreEqualInts(G.Position[9], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[10], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[11], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[12], 5 | Black, "Invalid checker count");
+	AssertAreEqualInts(G.Position[13], 5 | White, "Invalid checker count");
+	AssertAreEqualInts(G.Position[14], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[15], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[16], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[17], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[18], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[19], 3 | Black, "Invalid checker count");
+	AssertAreEqualInts(G.Position[20], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[21], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[22], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[23], 0, "Invalid checker count");
+	AssertAreEqualInts(G.Position[24], 2 | White, "Invalid checker count");
+	AssertAreEqualInts(G.Position[25], 2 | White, "Invalid checker count");
+	AssertAreEqualInts(G.WhiteHome, 3, "Invalid black home count");
+	AssertAreEqualInts(G.BlackHome, 4, "Invalid white home count");
+	char written[100];
+	WriteGameString(written, &G);
+	AssertAreEqual(gameString, written, "Strings differ");
+}
+
 TEST(TestOtherColor,
 	AssertAreEqualInts(Black, OtherColor(White), "Other color should be Black");
 AssertAreEqualInts(White, OtherColor(Black), "Other color should be White");
@@ -537,6 +574,7 @@ void RunAll() {
 	TestRollDice();
 	TestWriteGameString();
 	TestReadGameString();
+	TestTwoDigitGameString();
 	TestGameStringRountTrip();
 	TestDoUndo();
 	TestIsBlocked();
@@ -558,7 +596,7 @@ void RunAll() {
 	TestPointsLeft();
 	TestPointsLeftHit();
 	TestGetScore();
-	TestPrintGame();
+	//TestPrintGame();
 	TestBestBearingOffBlack();
 	TestBestBearingOffWhite();
 	TestManyCombos();

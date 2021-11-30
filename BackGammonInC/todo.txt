@@ -1,9 +1,6 @@
-Fixa slumptalen.
 
-Lotta vem som vinner
-
-Gamestring:
-	Handle two digit numbers.
+Check if there are duplicates when generating from quad dice
+	- If many, do hashing
 
 Trainer, genetic search.
 	- Save & Load Genes
@@ -11,8 +8,3 @@ Trainer, genetic search.
 Look ahead.
 	- Generate all possible dice.
 	- Take average score.
-
-Check if there are duplicates when generating from quad dice
-	- If many, do hashing
-
-
