@@ -8,3 +8,5 @@ Trainer, genetic search.
 Look ahead.
 	- Generate all possible dice.
 	- Take average score.
+
+reset moves by writing zeros to memory

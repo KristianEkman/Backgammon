@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "Tests.h"
 #include "Ai.h"
+#include "main.h"
 
 
 int main() {
@@ -28,17 +29,7 @@ int main() {
 			RunAll();
 		}
 		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
-			int whiteWins = 0;
-			int blackWins = 0;
-			for (int i = 0; i < 500; i++)
-			{
-				PlayGame(&G);
-				if (G.BlackLeft == 0)
-					blackWins++;
-				else if (G.WhiteLeft == 0)
-					whiteWins++;
-				printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
-			}
+			AutoPlay();
 		}
 		else {
 			ConsoleWriteLine("Unknown command");
@@ -50,3 +41,4 @@ int main() {
 	SetConsoleCP(cp);
 	ConsoleWriteLine("Bye");
 }
+

@@ -148,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="Ai.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>

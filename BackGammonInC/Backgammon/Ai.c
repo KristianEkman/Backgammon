@@ -3,28 +3,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <Windows.h>
+#include <time.h>
 
 #include "Ai.h"
 #include "Game.h"
 #include "Utils.h"
-//Negative score for leaving a blot on the board.
-double BlotFactors[25];
-
-//It is good to connect blocks since in the future the opponent might be blocked by them.
-double ConnectedBlocksFactor[25];
 
 void InitAi(bool constant) {
-	for (int i = 0; i < 25; i++)
+	for (int a = 0; a < 2; a++)
 	{
-		if (constant) {
-			BlotFactors[i] = 1;
-			ConnectedBlocksFactor[i] = 1;
-		}
-		else {
-			BlotFactors[i] = RandomDouble(0, 1);
-			ConnectedBlocksFactor[i] = RandomDouble(0, 1);
+		for (int i = 0; i < 25; i++)
+		{
+			if (constant) {
+				BlotFactors[a][i] = 1;
+				ConnectedBlocksFactor[a][i] = 1;
+			}
+			else {
+				BlotFactors[a][i] = RandomDouble(0, 1);
+				ConnectedBlocksFactor[a][i] = RandomDouble(0, 1);
+			}
 		}
 	}
+
 }
 
 bool PlayersPassedEachOther(Game* g) {
@@ -45,6 +45,8 @@ double EvaluateCheckers(Game* g, char color) {
 	double score = 0;
 	int blockCount = 0;
 	bool playersPassed = PlayersPassedEachOther(g);
+
+	char ai = color >> 4;
 	// TODO: Try calculate both colors in same loop. Better performance?
 	for (int i = 1; i < 25; i++)
 	{
@@ -56,14 +58,14 @@ double EvaluateCheckers(Game* g, char color) {
 		}
 		else {
 			if (blockCount && !playersPassed) {
-				score += pow((double)blockCount, ConnectedBlocksFactor[p]);
+				score += pow((double)blockCount, ConnectedBlocksFactor[ai][p]);
 			}
 			blockCount = 0;
 		}
 
 		if (checkCount == 1 && (v & color))
 		{
-			score -= (double)CheckerCount(v) * BlotFactors[p];
+			score -= (double)CheckerCount(v) * BlotFactors[ai][p];
 		}
 	}
 	return score;
@@ -91,7 +93,7 @@ int FindBestMoveSet(Game* g) {
 		for (int m = 0; m < g->SetLengths[i]; m++)
 		{
 			moves[m] = g->PossibleMoveSets[i].Moves[m];
-			hits[m] = DoMove(moves[m], g);			
+			hits[m] = DoMove(moves[m], g);
 		}
 
 		double score = GetScore(g);
@@ -136,7 +138,25 @@ void PlayGame(Game* g) {
 			Sleep(100);*/
 			//fgets(buf, 5000, stdin);
 		}
-		g->CurrentPlayer = OtherColor(g->CurrentPlayer);		
+		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 		RollDice(g);
 	}
+}
+
+
+void AutoPlay()
+{
+	int whiteWins = 0;
+	int blackWins = 0;
+	clock_t start = clock();
+	for (int i = 0; i < 500; i++)
+	{
+		PlayGame(&G);
+		if (G.BlackLeft == 0)
+			blackWins++;
+		else if (G.WhiteLeft == 0)
+			whiteWins++;
+		printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
+	}
+	printf("%fms", (float)(clock() - start) * 1000 / CLOCKS_PER_SEC);
 }
