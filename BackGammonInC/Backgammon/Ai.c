@@ -90,7 +90,7 @@ int FindBestMoveSet(Game* g) {
 		bool hits[4];
 		for (int m = 0; m < g->SetLengths[i]; m++)
 		{
-			moves[m] = g->PossibleMoveSets[i][m];
+			moves[m] = g->PossibleMoveSets[i].Moves[m];
 			hits[m] = DoMove(moves[m], g);			
 		}
 
@@ -128,7 +128,7 @@ void PlayGame(Game* g) {
 		int bestSetIdx = FindBestMoveSet(g);
 		for (int i = 0; i < g->SetLengths[bestSetIdx]; i++)
 		{
-			DoMove(g->PossibleMoveSets[bestSetIdx][i], g);
+			DoMove(g->PossibleMoveSets[bestSetIdx].Moves[i], g);
 			ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
 
 			/*SetCursorPosition(0, 0);

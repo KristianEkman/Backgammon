@@ -284,7 +284,7 @@ void PrintMoves() {
 	for (size_t i = 0; i < G.MoveSetsCount; i++)
 	{
 		for (size_t j = 0; j < G.SetLengths[i]; j++)
-			printf("%d-%d, ", G.PossibleMoveSets[i][j].from, G.PossibleMoveSets[i][j].to);
+			printf("%d-%d, ", G.PossibleMoveSets[i].Moves[j].from, G.PossibleMoveSets[i].Moves[j].to);
 		printf("(%d)\n", G.SetLengths[i]);
 	}
 }
@@ -526,7 +526,7 @@ void TestBestBearingOffBlack() {
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
 	int i = FindBestMoveSet(&G);
-	Move *m = G.PossibleMoveSets[i];
+	Move *m = G.PossibleMoveSets[i].Moves;
 	for (int j = 0; j < G.SetLengths[i]; j++)
 		AssertAreEqualInts(25, m[j].to, "Move should be to 25, Black Home");
 }
@@ -539,7 +539,7 @@ void TestBestBearingOffWhite() {
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
 	int i = FindBestMoveSet(&G);
-	Move* m = G.PossibleMoveSets[i];
+	Move* m = G.PossibleMoveSets[i].Moves;
 	for (int j = 0; j < G.SetLengths[i]; j++)
 		AssertAreEqualInts(0, m[j].to, "Move should be to 0, White Home");
 }

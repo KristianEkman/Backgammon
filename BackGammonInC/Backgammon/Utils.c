@@ -42,6 +42,7 @@ U64 Llrand() {
 
 	return r & 0xFFFFFFFFFFFFFFFFULL;
 }
+
 bool seeded;
 int RandomInt(int lower, int upper)
 {

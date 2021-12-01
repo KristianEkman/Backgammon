@@ -4,6 +4,7 @@
 //#define White 32
 //#define Black 16
 #define ushort unsigned short
+#define uint unsigned int
 #define BUF_SIZE 5000
 #define MAX_SETS_LENGTH 10000
 
@@ -17,6 +18,12 @@ typedef struct {
 	ushort to;
 	PlayerSide color;
 } Move;
+
+typedef struct {
+	char Length;
+	Move Moves[4];
+	U64 Hash;
+} MoveSet;
 
 
 typedef struct {
@@ -34,7 +41,7 @@ typedef struct {
 	ushort WhiteLeft;
 	
 	//List of generated possible sets of moves.
-	Move PossibleMoveSets[MAX_SETS_LENGTH][4];
+	MoveSet PossibleMoveSets[MAX_SETS_LENGTH];
 	//Length of the list
 	ushort MoveSetsCount;
 	//Length of each set.
