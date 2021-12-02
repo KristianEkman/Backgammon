@@ -1,6 +1,8 @@
 Varför vinner black 52%?
 
-Inte jobba med Game* utan matriser.
+Inte jobba med Game* utan matriser, prestanda
+
+Multithread
 
 
 Check if there are duplicates when generating from quad dice
@@ -9,6 +11,7 @@ Check if there are duplicates when generating from quad dice
 
 Trainer, genetic search.
 	- Save & Load Genes
+	- ai0 black, sen ai1 black. Byt plats.
 
 Look ahead.
 	- Generate all possible dice.
