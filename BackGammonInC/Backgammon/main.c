@@ -16,12 +16,12 @@ int main() {
 	printf("Welcome to backgammon\n: ");
 	/*for (int c = 170; c < 255; c++)
 		printf("%d %c\n\n", c, c);*/
-	unsigned int cp = GetConsoleCP();
-	SetConsoleCP(437);
+	//unsigned int cp = GetConsoleCP();
+	system("chcp 437");
 	InitAi(true);
 	InitHashes();
-	StartPosition(&G);
-	PrintGame(&G);
+	StartPosition(0);
+	PrintGame(0);
 	char buf[BUF_SIZE];
 	fgets(buf, 5000, stdin);
 	while (!Streq(buf, "quit\n") && !Streq(buf, "q\n"))
@@ -39,7 +39,7 @@ int main() {
 		fgets(buf, 5000, stdin);
 	}
 
-	SetConsoleCP(cp);
+	//SetConsoleCP(cp);
 	ConsoleWriteLine("Bye");
 }
 

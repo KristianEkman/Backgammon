@@ -48,23 +48,23 @@ typedef struct {
 } Game;
 
 // The global game variable
-Game G;
+Game Games[1];
 
-void StartPosition(Game* g);
-void RollDice(Game* g);
-int CountAllCheckers(PlayerSide side, Game* game);
-void WriteGameString(char* s, Game* g);
-void ReadGameString(char* s, Game* g);
-void RemoveShorterSets(int maxSetLength, Game* g);
-void CreateMoves(Game* g);
-void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
-void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
+void StartPosition(int g);
+void RollDice(int g);
+int CountAllCheckers(PlayerSide side, int g);
+void WriteGameString(char* s, int g);
+void ReadGameString(char* s, int g);
+void RemoveShorterSets(int maxSetLength, int g);
+void CreateMoves(int g);
+void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, int g);
+void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, int g);
 
-bool DoMove(Move move, Game *g);
-void UndoMove(Move move, bool hit, Game *g);
-bool IsBlockedFor(ushort pos, ushort color, Game* g);
-void PrintGame(Game* game);
-void SetPointsLeft(Game* g);
+bool DoMove(Move move, int g);
+void UndoMove(Move move, bool hit, int g);
+bool IsBlockedFor(ushort pos, ushort color, int g);
+void PrintGame(int game);
+void SetPointsLeft(int g);
 
 
 

@@ -1,6 +1,7 @@
 Varför vinner black 52%?
 
 Inte jobba med Game* utan matriser, prestanda
+	Prestanda, ca 5000ms 3000games
 
 Multithread
 

@@ -27,21 +27,21 @@ void InitAi(bool constant) {
 
 }
 
-bool PlayersPassedEachOther(Game* g) {
+bool PlayersPassedEachOther(int g) {
 	int minBlack = 25;
 	int maxWhite = 0;
 	for (int i = 0; i < 26; i++)
 	{
-		if (g->Position[i] & Black)
+		if (Games[g].Position[i] & Black)
 			minBlack = min(minBlack, i);
 
-		if (g->Position[i] & White)
+		if (Games[g].Position[i] & White)
 			maxWhite = max(maxWhite, i);
 	}
 	return minBlack > maxWhite;
 }
 
-double EvaluateCheckers(Game* g, char color) {
+double EvaluateCheckers(int g, char color) {
 	double score = 0;
 	int blockCount = 0;
 	bool playersPassed = PlayersPassedEachOther(g);
@@ -51,7 +51,7 @@ double EvaluateCheckers(Game* g, char color) {
 	for (int i = 1; i < 25; i++)
 	{
 		int p = color == White ? 25 - i : i;
-		short v = g->Position[p];
+		short v = Games[g].Position[p];
 		int checkCount = CheckerCount(v);
 		if (checkCount > 1 && (v & color)) {
 			blockCount++;
@@ -71,24 +71,24 @@ double EvaluateCheckers(Game* g, char color) {
 	return score;
 }
 
-double GetScore(Game* g) {
-	if (g->CurrentPlayer == Black) {
-		double bHome = 10000 * g->BlackHome;
-		return bHome + EvaluateCheckers(g, Black) - EvaluateCheckers(g, White) - g->BlackLeft + g->WhiteLeft;
+double GetScore(int g) {
+	if (Games[g].CurrentPlayer == Black) {
+		double bHome = 10000 * Games[g].BlackHome;
+		return bHome + EvaluateCheckers(g, Black) - EvaluateCheckers(g, White) - Games[g].BlackLeft + Games[g].WhiteLeft;
 	}
 	else {
-		double wHome = 10000 * g->WhiteHome;
-		return wHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
+		double wHome = 10000 * Games[g].WhiteHome;
+		return wHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - Games[g].WhiteLeft + Games[g].BlackLeft;
 	}
 }
 
-int FindBestMoveSet(Game* g) {
+int FindBestMoveSet(int g) {
 	int bestIdx = 0;
 	double bestScore = -10000;
 	CreateMoves(g);
-	for (int i = 0; i < g->MoveSetsCount; i++)
+	for (int i = 0; i < Games[g].MoveSetsCount; i++)
 	{
-		MoveSet set = g->PossibleMoveSets[i];
+		MoveSet set = Games[g].PossibleMoveSets[i];
 		/*if (set.Duplicate)
 			continue;*/
 
@@ -115,15 +115,15 @@ int FindBestMoveSet(Game* g) {
 	return bestIdx;
 }
 
-void PlayGame(Game* g) {
+void PlayGame(int g) {
 	StartPosition(g);
 
 	RollDice(g);
-	while (g->Dice[0] == g->Dice[1])
+	while (Games[g].Dice[0] == Games[g].Dice[1])
 		RollDice(g);
 
-	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
-	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
+	Games[g].CurrentPlayer = Games[g].Dice[0] > Games[g].Dice[1] ? Black : White;
+	while (Games[g].BlackLeft > 0 && Games[g].WhiteLeft > 0)
 	{
 		//char buf[BUF_SIZE];
 		/*SetCursorPosition(0, 0);
@@ -132,7 +132,7 @@ void PlayGame(Game* g) {
 		//fgets(buf, 5000, stdin);
 
 		int bestSetIdx = FindBestMoveSet(g);
-		MoveSet bestSet = g->PossibleMoveSets[bestSetIdx];
+		MoveSet bestSet = Games[g].PossibleMoveSets[bestSetIdx];
 		for (int i = 0; i < bestSet.Length; i++)
 		{
 			DoMove(bestSet.Moves[i], g);
@@ -143,7 +143,7 @@ void PlayGame(Game* g) {
 			Sleep(100);*/
 			//fgets(buf, 5000, stdin);
 		}
-		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+		Games[g].CurrentPlayer = OtherColor(Games[g].CurrentPlayer);
 		RollDice(g);
 	}
 }
@@ -157,10 +157,10 @@ void AutoPlay()
 	int batch = 3000;
 	for (int i = 0; i < batch; i++)
 	{
-		PlayGame(&G);
-		if (G.BlackLeft == 0)
+		PlayGame(0);
+		if (Games[0].BlackLeft == 0)
 			blackWins++;
-		else if (G.WhiteLeft == 0)
+		else if (Games[0].WhiteLeft == 0)
 			whiteWins++;
 		if (i % 50 == 0)
 			printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
