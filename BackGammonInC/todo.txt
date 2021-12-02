@@ -1,6 +1,11 @@
+Varför vinner black 52%?
+
+Inte jobba med Game* utan matriser.
+
 
 Check if there are duplicates when generating from quad dice
 	- If many, do hashing
+	- Many duplicates
 
 Trainer, genetic search.
 	- Save & Load Genes
@@ -8,5 +13,3 @@ Trainer, genetic search.
 Look ahead.
 	- Generate all possible dice.
 	- Take average score.
-
-reset moves by writing zeros to memory
