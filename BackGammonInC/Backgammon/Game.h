@@ -6,7 +6,7 @@
 #define ushort unsigned short
 #define uint unsigned int
 #define BUF_SIZE 5000
-#define MAX_SETS_LENGTH 10000
+#define MAX_SETS_LENGTH 6000
 
 typedef enum {
 	Black = 16,
@@ -22,9 +22,10 @@ typedef struct {
 typedef struct {
 	char Length;
 	Move Moves[4];
-	U64 Hash;
+	// Unique hash for for the set, independent of order of moves.
+	/*U64 Hash;
+	bool Duplicate;*/
 } MoveSet;
-
 
 typedef struct {
 	PlayerSide CurrentPlayer;
@@ -44,8 +45,6 @@ typedef struct {
 	MoveSet PossibleMoveSets[MAX_SETS_LENGTH];
 	//Length of the list
 	ushort MoveSetsCount;
-	//Length of each set.
-	ushort SetLengths[MAX_SETS_LENGTH];
 } Game;
 
 // The global game variable
@@ -58,6 +57,8 @@ void WriteGameString(char* s, Game* g);
 void ReadGameString(char* s, Game* g);
 void RemoveShorterSets(int maxSetLength, Game* g);
 void CreateMoves(Game* g);
+void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
+void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
 
 bool DoMove(Move move, Game *g);
 void UndoMove(Move move, bool hit, Game *g);

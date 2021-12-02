@@ -144,10 +144,12 @@
     <ClCompile Include="main.c" />
     <ClCompile Include="Tests.c" />
     <ClCompile Include="Utils.c" />
+    <ClCompile Include="Hash.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ai.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Hash.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="Utils.h" />

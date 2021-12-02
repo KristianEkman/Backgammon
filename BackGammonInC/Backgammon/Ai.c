@@ -88,11 +88,15 @@ int FindBestMoveSet(Game* g) {
 	CreateMoves(g);
 	for (int i = 0; i < g->MoveSetsCount; i++)
 	{
+		MoveSet set = g->PossibleMoveSets[i];
+		/*if (set.Duplicate)
+			continue;*/
+
 		Move moves[4];
 		bool hits[4];
-		for (int m = 0; m < g->SetLengths[i]; m++)
+		for (int m = 0; m < set.Length; m++)
 		{
-			moves[m] = g->PossibleMoveSets[i].Moves[m];
+			moves[m] = set.Moves[m];
 			hits[m] = DoMove(moves[m], g);
 		}
 
@@ -105,7 +109,7 @@ int FindBestMoveSet(Game* g) {
 		}
 
 		//Undoing in reverse
-		for (int u = g->SetLengths[i] - 1; u >= 0; u--)
+		for (int u = set.Length - 1; u >= 0; u--)
 			UndoMove(moves[u], hits[u], g);
 	}
 	return bestIdx;
@@ -128,9 +132,10 @@ void PlayGame(Game* g) {
 		//fgets(buf, 5000, stdin);
 
 		int bestSetIdx = FindBestMoveSet(g);
-		for (int i = 0; i < g->SetLengths[bestSetIdx]; i++)
+		MoveSet bestSet = g->PossibleMoveSets[bestSetIdx];
+		for (int i = 0; i < bestSet.Length; i++)
 		{
-			DoMove(g->PossibleMoveSets[bestSetIdx].Moves[i], g);
+			DoMove(bestSet.Moves[i], g);
 			ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
 
 			/*SetCursorPosition(0, 0);
@@ -149,14 +154,17 @@ void AutoPlay()
 	int whiteWins = 0;
 	int blackWins = 0;
 	clock_t start = clock();
-	for (int i = 0; i < 500; i++)
+	int batch = 3000;
+	for (int i = 0; i < batch; i++)
 	{
 		PlayGame(&G);
 		if (G.BlackLeft == 0)
 			blackWins++;
 		else if (G.WhiteLeft == 0)
 			whiteWins++;
-		printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
+		if (i % 50 == 0)
+			printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
 	}
+	printf("Of: %d   White: %d (%f)   Black: %d (%f)\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch);
 	printf("%fms", (float)(clock() - start) * 1000 / CLOCKS_PER_SEC);
 }

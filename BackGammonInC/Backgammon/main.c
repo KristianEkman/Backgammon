@@ -9,7 +9,7 @@
 #include "Tests.h"
 #include "Ai.h"
 #include "main.h"
-
+#include "Hash.h"
 
 int main() {
 	system("cls");
@@ -18,7 +18,8 @@ int main() {
 		printf("%d %c\n\n", c, c);*/
 	unsigned int cp = GetConsoleCP();
 	SetConsoleCP(437);
-	InitAi(true);	
+	InitAi(true);
+	InitHashes();
 	StartPosition(&G);
 	PrintGame(&G);
 	char buf[BUF_SIZE];

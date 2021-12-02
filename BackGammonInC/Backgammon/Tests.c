@@ -283,9 +283,10 @@ AssertNot(IsBlockedFor(2, Black, &G), "Pos 1 should not be blocked for black");
 void PrintMoves() {
 	for (size_t i = 0; i < G.MoveSetsCount; i++)
 	{
-		for (size_t j = 0; j < G.SetLengths[i]; j++)
-			printf("%d-%d, ", G.PossibleMoveSets[i].Moves[j].from, G.PossibleMoveSets[i].Moves[j].to);
-		printf("(%d)\n", G.SetLengths[i]);
+		MoveSet set = G.PossibleMoveSets[i];
+		for (size_t j = 0; j < set.Length; j++)
+			printf("%d-%d, ", set.Moves[j].from, set.Moves[j].to);
+		printf("(%d)\n", set.Length);
 	}
 }
 
@@ -326,7 +327,7 @@ AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0"
 AssertAreEqualInts(17, G.MoveSetsCount, "There should be 20 sets of moves.");
 for (int i = 0; i < G.MoveSetsCount; i++)
 {
-	Assert(G.SetLengths[i] <= 4, "Invalid set length");
+	Assert(G.PossibleMoveSets[i].Length <= 4, "Invalid set length");
 }
 )
 
@@ -384,7 +385,7 @@ CreateMoves(&G);
 //PrintMoves();
 AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
 for (int i = 0; i < G.MoveSetsCount; i++)
-	Assert(G.SetLengths[i] <= 4, "To many moves in set");
+	Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
 )
 
 TEST(TestDoubleDiceWhite,
@@ -420,8 +421,8 @@ CreateMoves(&G);
 AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 moves");
 
 //PrintMoves();
-G.SetLengths[2] = 1;
-G.SetLengths[5] = 1;
+G.PossibleMoveSets[2].Length = 1;
+G.PossibleMoveSets[5].Length = 1;
 RemoveShorterSets(2, &G);
 AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 moves left");
 /*ConsoleWriteLine("==================");
@@ -527,7 +528,7 @@ void TestBestBearingOffBlack() {
 	G.Dice[1] = 2;
 	int i = FindBestMoveSet(&G);
 	Move *m = G.PossibleMoveSets[i].Moves;
-	for (int j = 0; j < G.SetLengths[i]; j++)
+	for (int j = 0; j < G.PossibleMoveSets[i].Length; j++)
 		AssertAreEqualInts(25, m[j].to, "Move should be to 25, Black Home");
 }
 
@@ -540,7 +541,7 @@ void TestBestBearingOffWhite() {
 	G.Dice[1] = 2;
 	int i = FindBestMoveSet(&G);
 	Move* m = G.PossibleMoveSets[i].Moves;
-	for (int j = 0; j < G.SetLengths[i]; j++)
+	for (int j = 0; j < G.PossibleMoveSets[i].Length; j++)
 		AssertAreEqualInts(0, m[j].to, "Move should be to 0, White Home");
 }
 
@@ -554,11 +555,11 @@ void TestManyCombos() {
 	
 	AssertAreEqualInts(710, G.MoveSetsCount, "There should be 710 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)
-		Assert(G.SetLengths[i] <= 4, "To many moves in set");
+		Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
 }
 
 void TestNastyBug() {
-	char* gs = "0 b2 w2 0 b1 0 w4 0 w2 w2 0 0 b3 w4 0 0 0 b2 0 b4 0 0 0 b3 w1 w0 0 0";
+	char* gs = "0 b2 w2 0 b1 0 w4 0 w2 w2 0 0 b3 w4 0 0 0 b2 0 b4 0 0 0 b3 w1 w1 0 0";
 	ReadGameString(gs, &G);
 	Move m;
 	m.from = 25;
@@ -569,7 +570,7 @@ void TestNastyBug() {
 }
 
 void RunAll() {
-	TestNastyBug();
+	//TestNastyBug();
 	TestStartPos();
 	TestRollDice();
 	TestWriteGameString();
