@@ -25,6 +25,16 @@ void InitAi(bool constant) {
 		}
 	}
 
+	int i = 0;
+	for (int a = 1; a < 7; a++)
+	{
+		for (int b = a; b < 7; b++)
+		{
+			AllDices[i][0] = a;
+			AllDices[i++][1] = b;
+		}
+	}
+
 }
 
 bool PlayersPassedEachOther(Game* g) {
@@ -41,7 +51,7 @@ bool PlayersPassedEachOther(Game* g) {
 	return minBlack > maxWhite;
 }
 
-double EvaluateCheckers(Game* g, char color) {
+double EvaluateCheckers(Game* g, PlayerSide color) {
 	double score = 0;
 	int blockCount = 0;
 	bool playersPassed = PlayersPassedEachOther(g);
@@ -82,7 +92,22 @@ double GetScore(Game* g) {
 	}
 }
 
-int FindBestMoveSet(Game* g) {
+double GetProbablilityScore(Game* g, PlayerSide color) {
+	double totalScore = 0;
+	g->CurrentPlayer = color;
+	for (int i = 0; i < 21; i++)
+	{
+		g->Dice[0] = AllDices[i][0];
+		g->Dice[1] = AllDices[i][1];
+		double score = 0;
+		//FindBestMoveSet(g, &score);
+		double m = g->Dice[0] == g->Dice[1] ? 2 : 1;
+		totalScore += score * m;
+	}
+	return totalScore / 21;
+}
+
+int FindBestMoveSet(Game* g, double* bestScoreOut) {
 	int bestIdx = 0;
 	double bestScore = -10000;
 	CreateMoves(g);
@@ -112,6 +137,7 @@ int FindBestMoveSet(Game* g) {
 		for (int u = set.Length - 1; u >= 0; u--)
 			UndoMove(moves[u], hits[u], g);
 	}
+	*bestScoreOut = bestScore;
 	return bestIdx;
 }
 
@@ -130,8 +156,8 @@ void PlayGame(Game* g) {
 		PrintGame(g);
 		Sleep(100);*/
 		//fgets(buf, 5000, stdin);
-
-		int bestSetIdx = FindBestMoveSet(g);
+		double bestScore;
+		int bestSetIdx = FindBestMoveSet(g, &bestScore);
 		MoveSet bestSet = g->PossibleMoveSets[bestSetIdx];
 		for (int i = 0; i < bestSet.Length; i++)
 		{
