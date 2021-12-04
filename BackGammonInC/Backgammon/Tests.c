@@ -526,9 +526,10 @@ void TestBestBearingOffBlack() {
 	InitAi(true);
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
-	int i = FindBestMoveSet(&G);
-	Move *m = G.PossibleMoveSets[i].Moves;
-	for (int j = 0; j < G.PossibleMoveSets[i].Length; j++)
+	double score = 0;
+	MoveSet set = FindBestMoveSet(&G, &score, 0);
+	Move *m = set.Moves;
+	for (int j = 0; j < set.Length; j++)
 		AssertAreEqualInts(25, m[j].to, "Move should be to 25, Black Home");
 }
 
@@ -539,9 +540,10 @@ void TestBestBearingOffWhite() {
 	InitAi(true);
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
-	int i = FindBestMoveSet(&G);
-	Move* m = G.PossibleMoveSets[i].Moves;
-	for (int j = 0; j < G.PossibleMoveSets[i].Length; j++)
+	double score = 0;
+	MoveSet set = FindBestMoveSet(&G, &score, 0);
+	Move* m = set.Moves;
+	for (int j = 0; j < set.Length; j++)
 		AssertAreEqualInts(0, m[j].to, "Move should be to 0, White Home");
 }
 

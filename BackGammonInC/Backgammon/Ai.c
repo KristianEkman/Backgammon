@@ -82,38 +82,41 @@ double EvaluateCheckers(Game* g, PlayerSide color) {
 }
 
 double GetScore(Game* g) {
-	if (g->CurrentPlayer == Black) {
-		double bHome = 10000 * g->BlackHome;
-		return bHome + EvaluateCheckers(g, Black) - EvaluateCheckers(g, White) - g->BlackLeft + g->WhiteLeft;
-	}
-	else {
-		double wHome = 10000 * g->WhiteHome;
-		return wHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
-	}
+	double bHome = (double)10000 * (double)g->BlackHome;
+	double wHome = (double)10000 * (double)g->WhiteHome;
+	// positive for white, neg for black.
+	return wHome - bHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
+
 }
 
-double GetProbablilityScore(Game* g, PlayerSide color) {
+double GetProbablilityScore(Game* g, int depth) {
 	double totalScore = 0;
-	g->CurrentPlayer = color;
-	for (int i = 0; i < 21; i++)
+	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+	for (int i = 0; i < DiceCombos; i++)
 	{
 		g->Dice[0] = AllDices[i][0];
 		g->Dice[1] = AllDices[i][1];
+
 		double score = 0;
-		//FindBestMoveSet(g, &score);
+
+		FindBestMoveSet(g, &score, depth);
 		double m = g->Dice[0] == g->Dice[1] ? 2 : 1;
 		totalScore += score * m;
 	}
+	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 	return totalScore / 21;
 }
 
-int FindBestMoveSet(Game* g, double* bestScoreOut) {
+MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, int depth) {
 	int bestIdx = 0;
-	double bestScore = -10000;
+	double bestScore = g->CurrentPlayer == White ? -100000 : 100000;
 	CreateMoves(g);
-	for (int i = 0; i < g->MoveSetsCount; i++)
+	int setsCount = g->MoveSetsCount;
+	MoveSet* localSets = malloc(sizeof(MoveSet) * g->MoveSetsCount);
+	memcpy(localSets, &g->PossibleMoveSets, sizeof(MoveSet) * setsCount);
+	for (int i = 0; i < setsCount; i++)
 	{
-		MoveSet set = g->PossibleMoveSets[i];
+		MoveSet set = localSets[i];
 		/*if (set.Duplicate)
 			continue;*/
 
@@ -125,20 +128,37 @@ int FindBestMoveSet(Game* g, double* bestScoreOut) {
 			hits[m] = DoMove(moves[m], g);
 		}
 
-		double score = GetScore(g);
+		double score;
+		if (depth == 0)
+			score = GetScore(g);
+		else
+			// The best score the opponent can get. Minimize it.
+			score = GetProbablilityScore(g, depth - 1);
 
-		if (score > bestScore)
-		{
-			bestScore = score;
-			bestIdx = i;
+		if (g->CurrentPlayer == White) {
+			// White is maximizing
+			if (score > bestScore)
+			{
+				bestScore = score;
+				bestIdx = i;
+			}
+		}
+		else {
+			// Black is minimizing
+			if (score < bestScore) {
+				bestScore = score;
+				bestIdx = i;
+			}
 		}
 
 		//Undoing in reverse
 		for (int u = set.Length - 1; u >= 0; u--)
 			UndoMove(moves[u], hits[u], g);
 	}
+	MoveSet bestSet = localSets[bestIdx];
+	free(localSets);
 	*bestScoreOut = bestScore;
-	return bestIdx;
+	return bestSet;
 }
 
 void PlayGame(Game* g) {
@@ -151,22 +171,21 @@ void PlayGame(Game* g) {
 	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
 	{
-		//char buf[BUF_SIZE];
-		/*SetCursorPosition(0, 0);
-		PrintGame(g);
-		Sleep(100);*/
+		char buf[BUF_SIZE];
+		//SetCursorPosition(0, 0);
+		//PrintGame(g);
+		//Sleep(100);
 		//fgets(buf, 5000, stdin);
 		double bestScore;
-		int bestSetIdx = FindBestMoveSet(g, &bestScore);
-		MoveSet bestSet = g->PossibleMoveSets[bestSetIdx];
+		MoveSet bestSet = FindBestMoveSet(g, &bestScore, 1);
 		for (int i = 0; i < bestSet.Length; i++)
 		{
 			DoMove(bestSet.Moves[i], g);
 			ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
 
-			/*SetCursorPosition(0, 0);
-			PrintGame(g);
-			Sleep(100);*/
+			//SetCursorPosition(0, 0);
+			//PrintGame(g);
+			//Sleep(100);
 			//fgets(buf, 5000, stdin);
 		}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
@@ -188,7 +207,7 @@ void AutoPlay()
 			blackWins++;
 		else if (G.WhiteLeft == 0)
 			whiteWins++;
-		if (i % 50 == 0)
+		//if (i % 50 == 0)
 			printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
 	}
 	printf("Of: %d   White: %d (%f)   Black: %d (%f)\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch);
