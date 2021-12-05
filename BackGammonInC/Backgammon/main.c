@@ -11,18 +11,22 @@
 #include "main.h"
 #include "Hash.h"
 
+void PrintHelp() {
+	ConsoleWriteLine("\nOptions\n-------\nt/test\np/play\nh/help\nq/quit");
+}
+
 int main() {
 	system("cls");
 	printf("Welcome to backgammon\n: ");
 	/*for (int c = 170; c < 255; c++)
 		printf("%d %c\n\n", c, c);*/
-	CheckerCountAssert = true; // Dont change this here. Do it in the tests and switch back after test is done.
-	unsigned int cp = GetConsoleCP();
-	SetConsoleCP(437);
+	CheckerCountAssert = true; // Dont change this here. Do it in the tests and switch back after test is done.	
+	system("chcp 437");
 	InitAi(true);
 	InitHashes();
 	StartPosition(&G);
 	PrintGame(&G);
+	printf("\n: ");
 	char buf[BUF_SIZE];
 	fgets(buf, 5000, stdin);
 	while (!Streq(buf, "quit\n") && !Streq(buf, "q\n"))
@@ -33,14 +37,16 @@ int main() {
 		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
 			AutoPlay();
 		}
+		else if (Streq(buf, "help\n") || Streq(buf, "h\n")) {
+			PrintHelp();
+		}
 		else {
 			ConsoleWriteLine("Unknown command");
+			PrintHelp();
 		}
 		printf(": ");
 		fgets(buf, 5000, stdin);
 	}
-
-	SetConsoleCP(cp);
 	ConsoleWriteLine("Bye");
 }
 

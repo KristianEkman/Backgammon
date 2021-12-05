@@ -1,6 +1,5 @@
- Testfall med bästa draget.
-	- För vit
-	- För svart
+
+Dice ändras på game vid lägre djup.
 
 Measure and log performance.
 
@@ -18,6 +17,8 @@ Trainer, genetic search.
 	- ai0 black, sen ai1 black. Byt plats.
 
 Varför vinner black 52%?
+	- EvaluateCheckersBlack
+	- EvaluateCheckersWhite, loopa baklänges
 
 Multithread
 
