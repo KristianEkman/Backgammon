@@ -1,5 +1,4 @@
 
-Dice ändras på game vid lägre djup.
 
 Measure and log performance.
 

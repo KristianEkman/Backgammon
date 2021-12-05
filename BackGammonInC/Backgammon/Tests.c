@@ -184,7 +184,6 @@ void TestGameStringRountTrip() {
 	AssertAreEqual(gameString, written, "Read and written string not same");
 }
 
-
 void TestTwoDigitGameString() {
 	char* gameString = "b2 b10 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 0 0 b3 0 0 0 0 w2 w2 3 4";
 	ReadGameString(gameString, &G);
@@ -225,7 +224,6 @@ void TestOtherColor() {
 	AssertAreEqualInts(Black, OtherColor(White), "Other color should be Black");
 	AssertAreEqualInts(White, OtherColor(Black), "Other color should be White");
 }
-
 
 void TestDoUndo() {
 	StartPosition(&G);

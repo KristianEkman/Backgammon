@@ -92,17 +92,19 @@ double GetScore(Game* g) {
 double GetProbablilityScore(Game* g, int depth) {
 	double totalScore = 0;
 	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+	short diceBuf[2] = { g->Dice[0], g->Dice[1] };
 	for (int i = 0; i < DiceCombos; i++)
 	{
 		g->Dice[0] = AllDices[i][0];
 		g->Dice[1] = AllDices[i][1];
 
 		double score = 0;
-
 		FindBestMoveSet(g, &score, depth);
 		double m = g->Dice[0] == g->Dice[1] ? 2 : 1;
 		totalScore += score * m;
 	}
+	// Since we are faking the dice down the stack, it is safer to but them back here.
+	g->Dice[0] = diceBuf[0]; g->Dice[1] = diceBuf[1];
 	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 	return totalScore / 21;
 }
