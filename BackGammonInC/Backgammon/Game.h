@@ -23,8 +23,8 @@ typedef struct {
 	char Length;
 	Move Moves[4];
 	// Unique hash for for the set, independent of order of moves.
-	/*U64 Hash;
-	bool Duplicate;*/
+	U64 Hash;
+	bool Duplicate;
 } MoveSet;
 
 typedef struct {
@@ -49,6 +49,9 @@ typedef struct {
 
 // The global game variable
 Game G;
+
+// Switch off Check Count == 15 for some tests
+bool CheckerCountAssert;
 
 void StartPosition(Game* g);
 void RollDice(Game* g);

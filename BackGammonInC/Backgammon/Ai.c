@@ -117,8 +117,8 @@ MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, int depth) {
 	for (int i = 0; i < setsCount; i++)
 	{
 		MoveSet set = localSets[i];
-		/*if (set.Duplicate)
-			continue;*/
+		if (set.Duplicate)
+			continue;
 
 		Move moves[4];
 		bool hits[4];
@@ -176,6 +176,7 @@ void PlayGame(Game* g) {
 		//PrintGame(g);
 		//Sleep(100);
 		//fgets(buf, 5000, stdin);
+
 		double bestScore;
 		MoveSet bestSet = FindBestMoveSet(g, &bestScore, 1);
 		for (int i = 0; i < bestSet.Length; i++)

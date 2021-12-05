@@ -1,18 +1,37 @@
-Varför vinner black 52%?
+ Testfall med bästa draget.
+	- För vit
+	- För svart
 
-Inte jobba med Game* utan matriser, prestanda
+Measure and log performance.
 
-Multithread
+Config för
+	- Print Game
+	- Hashing Sets
+	- Search Depth
+	- Quads
+	- No of threads
 
-
-Check if there are duplicates when generating from quad dice
-	- If many, do hashing
-	- Many duplicates
+Alpha beta pruning
 
 Trainer, genetic search.
 	- Save & Load Genes
 	- ai0 black, sen ai1 black. Byt plats.
 
+Varför vinner black 52%?
+
+Multithread
+
+Inte jobba med Game* utan matriser, prestanda
+	- Blev 4% sämre prestanda
+
+Check if there are duplicates when generating from quad dice
+	- If many, do hashing
+	- Many duplicates
+	- Sparat men bortkommeterar. Game state blir korrupt.
+	  Och det blev inte så mycket bättre prestanda.
+
+
 Look ahead.
 	- Generate all possible dice.
-	- Take average score.
+	- Probabillity score. Take average score, för motståndaren.
+	- funkar

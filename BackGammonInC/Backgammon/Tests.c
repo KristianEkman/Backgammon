@@ -233,6 +233,7 @@ AssertAreEqualInts(0, G.Position[2], "Should be no checker on 2");
 )
 
 TEST(TestDoUndoHomeBlack,
+	CheckerCountAssert = false;
 	ReadGameString("0 0 0 0 0 0 w2 w1 w3 0 0 0 0 w5 0 0 0 0 0 b5 0 0 0 0 w2 w2 0 0", &G);
 
 AssertAreEqualInts(5 | Black, G.Position[19], "Should be 5 black checkers on 19");
@@ -268,6 +269,8 @@ AssertAreEqualInts(1, G.WhiteHome, "Should be one white checker on White Home");
 UndoMove(move, hit, &G);
 AssertAreEqualInts(2 | White, G.Position[4], "Should be 2 white checkers on 4");
 AssertAreEqualInts(0, G.WhiteHome, "Should be no white checker on White Home");
+CheckerCountAssert = true;
+
 )
 
 TEST(TestIsBlocked,
@@ -292,11 +295,13 @@ void PrintMoves() {
 
 TEST(TestSimpleBlack,
 	char* gameString = "0 b2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0";
+CheckerCountAssert = false;
 ReadGameString(gameString, &G);
 G.Dice[0] = 1;
 G.Dice[1] = 2;
 G.CurrentPlayer = Black;
 CreateMoves(&G);
+CheckerCountAssert = true;
 //PrintMoves();
 AssertAreEqualInts(2, G.MoveSetsCount, "There should be 2 sets of moves.");
 )
@@ -332,45 +337,55 @@ for (int i = 0; i < G.MoveSetsCount; i++)
 )
 
 TEST(TestBlackCheckerOnBar,
+	CheckerCountAssert = false;
 	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 ReadGameString(gameString, &G);
 G.Dice[0] = 2;
 G.Dice[1] = 6;
 G.CurrentPlayer = Black;
 CreateMoves(&G);
+CheckerCountAssert = true;
 //PrintMoves();
 AssertAreEqualInts(4, G.MoveSetsCount, "There should be 4 sets of moves.");
 )
 
 TEST(TestWhiteCheckerOnBar,
+	CheckerCountAssert = false;
 	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b1 0 b5 0 0 0 0 w1 w1 0 0";
 ReadGameString(gameString, &G);
 G.Dice[0] = 2;
 G.Dice[1] = 6;
 G.CurrentPlayer = White;
 CreateMoves(&G);
+CheckerCountAssert = true;
+
 //PrintMoves();
 AssertAreEqualInts(4, G.MoveSetsCount, "There should be 4 sets of moves.");
 )
 
 TEST(TestBearingOffBlack,
 	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
+CheckerCountAssert = false;
 ReadGameString(gameString, &G);
 G.Dice[0] = 2;
 G.Dice[1] = 4;
 G.CurrentPlayer = Black;
 CreateMoves(&G);
+CheckerCountAssert = true;
+
 //PrintMoves();
 AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
 )
 
 TEST(TestBearingOffWhite,
 	char* gameString = "0 w2 w2 0 w2 w2 w5 0 0 0 0 0 0 0 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
+CheckerCountAssert = false;
 ReadGameString(gameString, &G);
 G.Dice[0] = 2;
 G.Dice[1] = 4;
 G.CurrentPlayer = White;
 CreateMoves(&G);
+CheckerCountAssert = true;
 //PrintMoves();
 AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
 )
@@ -413,6 +428,7 @@ AssertAreEqualInts(1, G.MoveSetsCount, "There should be 1 set of moves.");
 TEST(TestRemoveShorterSets,
 
 	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0";
+CheckerCountAssert = false;
 ReadGameString(gameString, &G);
 G.Dice[0] = 2;
 G.Dice[1] = 4;
@@ -424,6 +440,7 @@ AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 moves");
 G.PossibleMoveSets[2].Length = 1;
 G.PossibleMoveSets[5].Length = 1;
 RemoveShorterSets(2, &G);
+CheckerCountAssert = true;
 AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 moves left");
 /*ConsoleWriteLine("==================");
 PrintMoves();*/
@@ -472,6 +489,7 @@ AssertAreEqualInts(167, (int)G.WhiteLeft, "Expcted 167 Points left for White");
 
 TEST(TestPointsLeftHit,
 	char* gs = "0 b2 0 0 0 0 w1 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b1 0 0 0 0 w2 0 0 0";
+CheckerCountAssert = false;
 ReadGameString(gs, &G);
 AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
 AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
@@ -483,7 +501,6 @@ bool hit = DoMove(bm, &G);
 AssertAreEqualInts(138, (int)G.BlackLeft, "Expcted 138 Points left for Black");
 AssertAreEqualInts(143 - 6 + 25, (int)G.WhiteLeft, "Expcted 164 Points left for White");
 UndoMove(bm, hit, &G);
-
 AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
 AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
 //TODO, wm
@@ -496,6 +513,7 @@ hit = DoMove(wm, &G);
 AssertAreEqualInts(143 - 6 + 25, (int)G.BlackLeft, "Expcted 164 Points left for Black");
 AssertAreEqualInts(138, (int)G.WhiteLeft, "Expcted 138 Points left for White");
 UndoMove(wm, hit, &G);
+CheckerCountAssert = true;
 
 AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
 AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
@@ -567,12 +585,13 @@ void TestNastyBug() {
 	m.from = 25;
 	m.to = 20;
 	m.color = White;
-
+	CheckerCountAssert = false;
 	DoMove(m, &G);
+	CheckerCountAssert = true;
 }
 
 void RunAll() {
-	//TestNastyBug();
+	TestNastyBug();
 	TestStartPos();
 	TestRollDice();
 	TestWriteGameString();
