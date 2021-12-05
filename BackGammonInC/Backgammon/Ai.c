@@ -85,8 +85,8 @@ double GetScore(Game* g) {
 	double bHome = (double)10000 * (double)g->BlackHome;
 	double wHome = (double)10000 * (double)g->WhiteHome;
 	// positive for white, neg for black.
+	g->EvalCounts++;
 	return wHome - bHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
-
 }
 
 double GetProbablilityScore(Game* g, int depth) {
@@ -174,22 +174,23 @@ void PlayGame(Game* g) {
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
 	{
 		char buf[BUF_SIZE];
-		//SetCursorPosition(0, 0);
-		//PrintGame(g);
-		//Sleep(100);
-		//fgets(buf, 5000, stdin);
+		SetCursorPosition(0, 0);
+		PrintGame(g);
+		Sleep(100);
+		fgets(buf, 5000, stdin);
 
 		double bestScore;
+		g->EvalCounts = 0;
 		MoveSet bestSet = FindBestMoveSet(g, &bestScore, 1);
 		for (int i = 0; i < bestSet.Length; i++)
 		{
 			DoMove(bestSet.Moves[i], g);
 			ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
+			SetCursorPosition(0, 0);
+			PrintGame(g);
 
-			//SetCursorPosition(0, 0);
-			//PrintGame(g);
-			//Sleep(100);
-			//fgets(buf, 5000, stdin);
+			Sleep(100);
+			fgets(buf, 5000, stdin);
 		}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 		RollDice(g);

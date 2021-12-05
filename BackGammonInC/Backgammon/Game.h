@@ -45,6 +45,8 @@ typedef struct {
 	MoveSet PossibleMoveSets[MAX_SETS_LENGTH];
 	//Length of the list
 	ushort MoveSetsCount;
+	//Number of Evaluations in a search
+	uint EvalCounts;
 } Game;
 
 // The global game variable

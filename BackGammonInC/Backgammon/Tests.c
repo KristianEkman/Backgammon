@@ -81,10 +81,10 @@ void AssertAreEqualLongs(U64 expected, U64 actual, char* msg) {
 
 void Run(void (*test)(), char* name)
 {
-	printf("\nRunning %s took ", name);
+	printf("\n%s ", name);
 	clock_t start = clock();
 	test();
-	printf("%fms", (float)(clock() - start) * 1000 / CLOCKS_PER_SEC);
+	printf("%.2fms", (float)(clock() - start) * 1000 / CLOCKS_PER_SEC);
 }
 
 void TestStartPos() {
@@ -527,7 +527,7 @@ void TestGetScore() {
 	ReadGameString(gs, &G);
 	InitAi(true);
 	double score = GetScore(&G);
-	printf("Score: %f\n", score);
+	printf("Score: %f ", score);
 }
 
 void TestPrintGame() {
@@ -619,13 +619,17 @@ void TestBestMoveWhite1() {
 	Assert(ms.Moves[1].from == 8 && ms.Moves[1].to == 7, "Move should be 8 - 7");
 }
 
-void TestHitBlot() {
-
+void Performance() {
+	char* gs = "0 b2 w2 w3 0 0 w6 0 0 0 w1 w1 b2 0 0 0 b1 b1 b2 b4 0 0 b3 0 w2 0 0 0";
+	G.Dice[0] = 2;
+	G.Dice[1] = 2;
+	double score = 0;
+	G.EvalCounts = 0;
+	time_t start = clock();
+	MoveSet ms = FindBestMoveSet(&G, &score, 1);
+	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
+	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);	
 }
-
-// 0 w3 w4 w6 0 0 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 w1 b3 b4 b4 w1 0 0 0
-// Dice 5, 3
-// 18 - 23, 18 - 21
 
 void RunAll() {
 	Run(TestNastyBug, "TestNastyBug");
@@ -661,6 +665,7 @@ void RunAll() {
 	Run(TestManyCombos, "TestManyCombos");
 	Run(TestBestMoveBlack1, "TestBestMoveBlack1");
 	Run(TestBestMoveWhite1, "TestBestMoveWhite1");
+	Run(Performance, "Performance");
 	// TODO: Test Blocked -> zero moves.
 
 	if (_failedAsserts == 0)

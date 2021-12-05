@@ -1,6 +1,7 @@
 
-
 Measure and log performance.
+	- Nodes per second
+	- Games per second
 
 Config för
 	- Print Game
@@ -27,9 +28,7 @@ Inte jobba med Game* utan matriser, prestanda
 Check if there are duplicates when generating from quad dice
 	- If many, do hashing
 	- Many duplicates
-	- Sparat men bortkommeterar. Game state blir korrupt.
-	  Och det blev inte så mycket bättre prestanda.
-
+	- Done
 
 Look ahead.
 	- Generate all possible dice.
