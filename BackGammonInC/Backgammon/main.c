@@ -24,6 +24,7 @@ int main() {
 	system("chcp 437");
 	InitAi(true);
 	InitHashes();
+	InitGameConfig();
 	StartPosition(&G);
 	PrintGame(&G);
 	printf("\n: ");

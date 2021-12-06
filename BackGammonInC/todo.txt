@@ -1,14 +1,18 @@
 
-Measure and log performance.
-	- Nodes per second
-	- Games per second
-
 Config för
-	- Print Game
-	- Hashing Sets
-	- Search Depth
-	- Quads
-	- No of threads
+	Game
+		- Print Game
+		- Quads
+		- No of threads
+
+	AI
+		- Hashing Sets
+		- Search Depth	
+		- Prune
+
+Varför vinner black 52%?
+	- EvaluateCheckersBlack
+	- EvaluateCheckersWhite, loopa baklänges
 
 Alpha beta pruning
 
@@ -16,19 +20,22 @@ Trainer, genetic search.
 	- Save & Load Genes
 	- ai0 black, sen ai1 black. Byt plats.
 
-Varför vinner black 52%?
-	- EvaluateCheckersBlack
-	- EvaluateCheckersWhite, loopa baklänges
+Jämför resultat mellan olika AIn
+	Depth
+	Pruning
+	Hashing
 
 Multithread
 
 Inte jobba med Game* utan matriser, prestanda
 	- Blev 4% sämre prestanda
 
+DONE
+====
 Check if there are duplicates when generating from quad dice
+	- Done
 	- If many, do hashing
 	- Many duplicates
-	- Done
 
 Look ahead.
 	- Generate all possible dice.

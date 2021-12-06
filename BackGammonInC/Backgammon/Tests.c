@@ -537,7 +537,7 @@ void TestPrintGame() {
 }
 
 void TestPlayGame() {
-	PlayGame(&G);
+	PlayGame(&G, false);
 }
 
 void TestBestBearingOffBlack() {
@@ -626,7 +626,7 @@ void Performance() {
 	double score = 0;
 	G.EvalCounts = 0;
 	time_t start = clock();
-	MoveSet ms = FindBestMoveSet(&G, &score, 1);
+	FindBestMoveSet(&G, &score, 1);
 	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
 	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);	
 }

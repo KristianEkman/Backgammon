@@ -35,6 +35,11 @@ void InitAi(bool constant) {
 		}
 	}
 
+	AIs[0].Flags = EnableAlphaBetaPruning | EnableHashing;
+	AIs[0].SearchDepth = 1;
+
+	AIs[1].Flags = EnableAlphaBetaPruning | EnableHashing;
+	AIs[1].SearchDepth = 1;
 }
 
 bool PlayersPassedEachOther(Game* g) {
@@ -56,7 +61,7 @@ double EvaluateCheckers(Game* g, PlayerSide color) {
 	int blockCount = 0;
 	bool playersPassed = PlayersPassedEachOther(g);
 
-	char ai = color >> 4;
+	char ai = color >> 5;
 	// TODO: Try calculate both colors in same loop. Better performance?
 	for (int i = 1; i < 25; i++)
 	{
@@ -89,7 +94,7 @@ double GetScore(Game* g) {
 	return wHome - bHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
 }
 
-double GetProbablilityScore(Game* g, int depth) {
+double GetProbablilityScore(Game* g, ubyte depth) {
 	double totalScore = 0;
 	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 	short diceBuf[2] = { g->Dice[0], g->Dice[1] };
@@ -109,7 +114,7 @@ double GetProbablilityScore(Game* g, int depth) {
 	return totalScore / 21;
 }
 
-MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, int depth) {
+MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth) {
 	int bestIdx = 0;
 	double bestScore = g->CurrentPlayer == White ? -100000 : 100000;
 	CreateMoves(g);
@@ -163,7 +168,14 @@ MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, int depth) {
 	return bestSet;
 }
 
-void PlayGame(Game* g) {
+void Pause(Game* g) {
+	char buf[BUF_SIZE];
+	SetCursorPosition(0, 0);
+	PrintGame(g);
+	fgets(buf, 5000, stdin);
+}
+
+void PlayGame(Game* g, bool pausePlay) {
 	StartPosition(g);
 
 	RollDice(g);
@@ -173,24 +185,18 @@ void PlayGame(Game* g) {
 	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
 	{
-		char buf[BUF_SIZE];
-		SetCursorPosition(0, 0);
-		PrintGame(g);
-		Sleep(100);
-		fgets(buf, 5000, stdin);
-
+		if (pausePlay)
+			Pause(g);
 		double bestScore;
 		g->EvalCounts = 0;
-		MoveSet bestSet = FindBestMoveSet(g, &bestScore, 1);
+		ubyte depth = (ubyte)AI(g->CurrentPlayer).SearchDepth;
+		MoveSet bestSet = FindBestMoveSet(g, &bestScore, depth );
 		for (int i = 0; i < bestSet.Length; i++)
 		{
 			DoMove(bestSet.Moves[i], g);
 			ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
-			SetCursorPosition(0, 0);
-			PrintGame(g);
-
-			Sleep(100);
-			fgets(buf, 5000, stdin);
+			if (pausePlay)
+				Pause(g);
 		}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 		RollDice(g);
@@ -204,9 +210,10 @@ void AutoPlay()
 	int blackWins = 0;
 	clock_t start = clock();
 	int batch = 3000;
+	bool pausePlay = G_Config.Flags & EnablePlayPause;
 	for (int i = 0; i < batch; i++)
 	{
-		PlayGame(&G);
+		PlayGame(&G, pausePlay);
 		if (G.BlackLeft == 0)
 			blackWins++;
 		else if (G.WhiteLeft == 0)
