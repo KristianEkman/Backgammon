@@ -35,9 +35,11 @@ void InitAi(bool constant) {
 		}
 	}
 
+	//Black
 	AIs[0].Flags = EnableAlphaBetaPruning | EnableHashing;
 	AIs[0].SearchDepth = 1;
 
+	//White
 	AIs[1].Flags = EnableAlphaBetaPruning | EnableHashing;
 	AIs[1].SearchDepth = 1;
 }
@@ -105,7 +107,7 @@ double GetProbablilityScore(Game* g, ubyte depth) {
 
 		double score = 0;
 		FindBestMoveSet(g, &score, depth);
-		double m = g->Dice[0] == g->Dice[1] ? 2 : 1;
+		double m = g->Dice[0] == g->Dice[1] ? 1 : 2;
 		totalScore += score * m;
 	}
 	// Since we are faking the dice down the stack, it is safer to but them back here.
@@ -117,7 +119,16 @@ double GetProbablilityScore(Game* g, ubyte depth) {
 MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth) {
 	int bestIdx = 0;
 	double bestScore = g->CurrentPlayer == White ? -100000 : 100000;
-	CreateMoves(g);
+	bool hashing = (AI(g->CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(g, hashing);
+
+	if (g->MoveSetsCount == 0)
+	{
+		MoveSet set;
+		set.Length = 0;
+		return set;
+	}
+
 	int setsCount = g->MoveSetsCount;
 	MoveSet* localSets = malloc(sizeof(MoveSet) * g->MoveSetsCount);
 	memcpy(localSets, &g->PossibleMoveSets, sizeof(MoveSet) * setsCount);
@@ -129,6 +140,7 @@ MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth) {
 
 		Move moves[4];
 		bool hits[4];
+		U64 prevHash = g->Hash;
 		for (int m = 0; m < set.Length; m++)
 		{
 			moves[m] = set.Moves[m];
@@ -160,7 +172,7 @@ MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth) {
 
 		//Undoing in reverse
 		for (int u = set.Length - 1; u >= 0; u--)
-			UndoMove(moves[u], hits[u], g);
+			UndoMove(moves[u], hits[u], g, prevHash);
 	}
 	MoveSet bestSet = localSets[bestIdx];
 	free(localSets);
@@ -176,6 +188,7 @@ void Pause(Game* g) {
 }
 
 void PlayGame(Game* g, bool pausePlay) {
+	
 	StartPosition(g);
 
 	RollDice(g);
@@ -202,7 +215,6 @@ void PlayGame(Game* g, bool pausePlay) {
 		RollDice(g);
 	}
 }
-
 
 void AutoPlay()
 {

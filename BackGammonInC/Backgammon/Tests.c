@@ -234,7 +234,7 @@ void TestDoUndo() {
 	bool hit = DoMove(move, &G);
 	AssertAreEqualInts(1 | Black, G.Position[1], "Should be one black checker on 1");
 	AssertAreEqualInts(1 | Black, G.Position[2], "Should be one black checker on 2");
-	UndoMove(move, hit, &G);
+	UndoMove(move, hit, &G, 0);
 	AssertAreEqualInts(2 | Black, G.Position[1], "Should be 2 black checkers on 1");
 	AssertAreEqualInts(0, G.Position[2], "Should be no checker on 2");
 }
@@ -254,7 +254,7 @@ void TestDoUndoHomeBlack() {
 
 	AssertAreEqualInts(4 | Black, G.Position[19], "Should be 4 black checkers on 19");
 	AssertAreEqualInts(1, G.BlackHome, "Should be one black checker on Black Home");
-	UndoMove(move, hit, &G);
+	UndoMove(move, hit, &G, 0);
 	AssertAreEqualInts(5 | Black, G.Position[19], "Should be 5 black checkers on 19");
 	AssertAreEqualInts(0, G.BlackHome, "Should be no black checker on Black Home");
 }
@@ -273,7 +273,7 @@ void TestDoUndoHomeWhite() {
 
 	AssertAreEqualInts(1 | White, G.Position[4], "Should be 1 white checkers on 4");
 	AssertAreEqualInts(1, G.WhiteHome, "Should be one white checker on White Home");
-	UndoMove(move, hit, &G);
+	UndoMove(move, hit, &G, 0);
 	AssertAreEqualInts(2 | White, G.Position[4], "Should be 2 white checkers on 4");
 	AssertAreEqualInts(0, G.WhiteHome, "Should be no white checker on White Home");
 	CheckerCountAssert = true;
@@ -306,7 +306,8 @@ void TestSimpleBlack() {
 	G.Dice[0] = 1;
 	G.Dice[1] = 2;
 	G.CurrentPlayer = Black;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	CheckerCountAssert = true;
 	//PrintMoves();
 	AssertAreEqualInts(2, G.MoveSetsCount, "There should be 2 sets of moves.");
@@ -317,7 +318,8 @@ void TestCreateMovesBlackStart() {
 	G.CurrentPlayer = Black;
 	G.Dice[0] = 3;
 	G.Dice[1] = 4;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	char gs[100];
 	WriteGameString(gs, &G);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
@@ -331,7 +333,8 @@ void TestCreateMovesWhiteStart() {
 	G.CurrentPlayer = White;
 	G.Dice[0] = 3;
 	G.Dice[1] = 4;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	char gs[100];
 	WriteGameString(gs, &G);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
@@ -349,7 +352,8 @@ void TestBlackCheckerOnBar() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 6;
 	G.CurrentPlayer = Black;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	CheckerCountAssert = true;
 	//PrintMoves();
 	AssertAreEqualInts(4, G.MoveSetsCount, "There should be 4 sets of moves.");
@@ -362,7 +366,8 @@ void TestWhiteCheckerOnBar() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 6;
 	G.CurrentPlayer = White;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	CheckerCountAssert = true;
 
 	//PrintMoves();
@@ -376,7 +381,8 @@ void TestBearingOffBlack() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 4;
 	G.CurrentPlayer = Black;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	CheckerCountAssert = true;
 
 	//PrintMoves();
@@ -390,7 +396,8 @@ void TestBearingOffWhite() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 4;
 	G.CurrentPlayer = White;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	CheckerCountAssert = true;
 	//PrintMoves();
 	AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
@@ -402,7 +409,8 @@ void TestDoubleDiceBlack() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 2;
 	G.CurrentPlayer = Black;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	//PrintMoves();
 	AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)
@@ -415,7 +423,8 @@ void TestDoubleDiceWhite() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 2;
 	G.CurrentPlayer = White;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	//PrintMoves();
 	AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
 }
@@ -426,7 +435,8 @@ void PlayBothDiceIfPossible() {
 	G.CurrentPlayer = White;
 	G.Dice[0] = 4;
 	G.Dice[1] = 6;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	AssertAreEqualInts(1, G.MoveSetsCount, "There should be 1 set of moves.");
 	//PrintMoves();
 }
@@ -439,7 +449,8 @@ void TestRemoveShorterSets() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 4;
 	G.CurrentPlayer = Black;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 	AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 moves");
 
 	//PrintMoves();
@@ -473,7 +484,7 @@ void TestPointsLeft() {
 	AssertAreEqualInts(163, (int)G.BlackLeft, "Expected 163 Points left for Black");
 	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
 
-	UndoMove(bm, hit, &G);
+	UndoMove(bm, hit, &G, 0);
 	AssertAreEqualInts(167, (int)G.BlackLeft, "Expected 167 Points left for Black");
 	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
 
@@ -485,7 +496,7 @@ void TestPointsLeft() {
 	AssertAreEqualInts(167, (int)G.BlackLeft, "Expcted 167 Points left for Black");
 	AssertAreEqualInts(163, (int)G.WhiteLeft, "Expcted 163 Points left for White");
 
-	UndoMove(wm, hit, &G);
+	UndoMove(wm, hit, &G, 0);
 	AssertAreEqualInts(167, (int)G.BlackLeft, "Expcted 167 Points left for Black");
 	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expcted 167 Points left for White");
 }
@@ -503,7 +514,7 @@ void TestPointsLeftHit() {
 	bool hit = DoMove(bm, &G);
 	AssertAreEqualInts(138, (int)G.BlackLeft, "Expcted 138 Points left for Black");
 	AssertAreEqualInts(143 - 6 + 25, (int)G.WhiteLeft, "Expcted 164 Points left for White");
-	UndoMove(bm, hit, &G);
+	UndoMove(bm, hit, &G, 0);
 	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
 	AssertAreEqualInts(143, (int)G.WhiteLeft, "Expcted 143 Points left for White");
 	//TODO, wm
@@ -515,7 +526,7 @@ void TestPointsLeftHit() {
 	hit = DoMove(wm, &G);
 	AssertAreEqualInts(143 - 6 + 25, (int)G.BlackLeft, "Expcted 164 Points left for Black");
 	AssertAreEqualInts(138, (int)G.WhiteLeft, "Expcted 138 Points left for White");
-	UndoMove(wm, hit, &G);
+	UndoMove(wm, hit, &G, 0);
 	CheckerCountAssert = true;
 
 	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
@@ -574,7 +585,8 @@ void TestManyCombos() {
 	G.Dice[0] = 1;
 	G.Dice[1] = 1;
 	G.CurrentPlayer = Black;
-	CreateMoves(&G);
+	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(&G, hashing);
 
 	AssertAreEqualInts(710, G.MoveSetsCount, "There should be 710 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)
@@ -631,6 +643,25 @@ void Performance() {
 	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);	
 }
 
+void TestHashing() {
+	StartPosition(&G);
+	Move m1;
+	m1.color = Black;
+	m1.from = 1;
+	m1.to = 4;
+	U64 hash1 = G.Hash;
+	DoMove(m1, &G);
+	
+	Assert(hash1 != G.Hash, "Hash should have changed after a move");
+
+	Move m2;
+	m2.color = Black;
+	m2.from = 4;
+	m2.to = 1;
+	DoMove(m2, &G);
+	Assert(hash1 == G.Hash, "Hash should have changed back");
+}
+
 void RunAll() {
 	Run(TestNastyBug, "TestNastyBug");
 	Run(TestStartPos, "TestStartPos");
@@ -666,6 +697,7 @@ void RunAll() {
 	Run(TestBestMoveBlack1, "TestBestMoveBlack1");
 	Run(TestBestMoveWhite1, "TestBestMoveWhite1");
 	Run(Performance, "Performance");
+	Run(TestHashing, "TestHashing");
 	// TODO: Test Blocked -> zero moves.
 
 	if (_failedAsserts == 0)

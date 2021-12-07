@@ -6,7 +6,7 @@
 #define ushort unsigned short
 #define uint unsigned int
 #define BUF_SIZE 5000
-#define MAX_SETS_LENGTH 6000
+#define MAX_SETS_LENGTH 10000
 
 typedef enum {
 	Black = 16,
@@ -59,6 +59,8 @@ typedef struct {
 	ushort MoveSetsCount;
 	//Number of Evaluations in a search
 	uint EvalCounts;
+	//Unique hash for the game state
+	U64 Hash;
 } Game;
 
 // The global game variable
@@ -75,16 +77,13 @@ int CountAllCheckers(PlayerSide side, Game* game);
 void WriteGameString(char* s, Game* g);
 void ReadGameString(char* s, Game* g);
 void RemoveShorterSets(int maxSetLength, Game* g);
-void CreateMoves(Game* g);
-void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
-void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
+void CreateMoves(Game* g, bool doHashing);
+void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing);
+void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing);
 
 bool DoMove(Move move, Game *g);
-void UndoMove(Move move, bool hit, Game *g);
+void UndoMove(Move move, bool hit, Game *g, U64 prevHash);
 bool IsBlockedFor(ushort pos, ushort color, Game* g);
 void PrintGame(Game* game);
 void SetPointsLeft(Game* g);
 void InitGameConfig();
-
-
-

@@ -6,13 +6,20 @@ Config för
 		- No of threads
 
 	AI
-		- Hashing Sets
-		- Search Depth	
-		- Prune
+		- Hashing Sets, villkor
+			
+			W Enabled: Of: 3000   White: 1467 (0.489000)   Black: 1533 (0.511000)
+			B Enabled: Of: 3000   White: 1594 (0.531333)   Black: 1406 (0.468667)
+				       Of: 3000   White: 1562 (0.520667)   Black: 1438 (0.479333)
 
-Varför vinner black 52%?
-	- EvaluateCheckersBlack
-	- EvaluateCheckersWhite, loopa baklänges
+		- Search Depth	
+		- Prune, sortering? Kan det ske på bara djup 1?
+
+Bara hasha för quads.
+	Beräkna games/sec och %
+	
+
+Flytta CheckerCountAssert till GameConfig
 
 Alpha beta pruning
 
@@ -41,3 +48,6 @@ Look ahead.
 	- Generate all possible dice.
 	- Probabillity score. Take average score, för motståndaren.
 	- funkar
+
+Varför vinner black 52%?
+	- Bugg: >> 4 skulle vara >> 5
