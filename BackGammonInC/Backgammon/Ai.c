@@ -190,19 +190,20 @@ void Pause(Game* g) {
 void PlayGame(Game* g, bool pausePlay) {
 	
 	StartPosition(g);
-
 	RollDice(g);
+	//First roll of a game can not be equal.
 	while (g->Dice[0] == g->Dice[1])
 		RollDice(g);
 
+	//Highest dice diceds who starts.
 	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
 	{
 		if (pausePlay)
 			Pause(g);
-		double bestScore;
 		g->EvalCounts = 0;
 		ubyte depth = (ubyte)AI(g->CurrentPlayer).SearchDepth;
+		double bestScore;
 		MoveSet bestSet = FindBestMoveSet(g, &bestScore, depth );
 		for (int i = 0; i < bestSet.Length; i++)
 		{
@@ -231,8 +232,9 @@ void AutoPlay()
 		else if (G.WhiteLeft == 0)
 			whiteWins++;
 		//if (i % 50 == 0)
-			printf("Of: %d   White: %d   Black: %d\n", i, whiteWins, blackWins);
+		printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", i, whiteWins, whiteWins / (double)i, blackWins, blackWins / (double)i, i / ((float)(clock() - start) / CLOCKS_PER_SEC));
 	}
-	printf("Of: %d   White: %d (%f)   Black: %d (%f)\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch);
+	printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch, batch / ((float)(clock() - start) / CLOCKS_PER_SEC));
+
 	printf("%fms", (float)(clock() - start) * 1000 / CLOCKS_PER_SEC);
 }

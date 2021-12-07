@@ -15,10 +15,6 @@ Config för
 		- Search Depth	
 		- Prune, sortering? Kan det ske på bara djup 1?
 
-Bara hasha för quads.
-	Beräkna games/sec och %
-	
-
 Flytta CheckerCountAssert till GameConfig
 
 Alpha beta pruning
@@ -51,3 +47,8 @@ Look ahead.
 
 Varför vinner black 52%?
 	- Bugg: >> 4 skulle vara >> 5
+
+	
+Bara hasha för quads.
+	Beräkna games/sec och %
+	- ingen skillnad prestandamässigt
