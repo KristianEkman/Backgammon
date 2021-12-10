@@ -164,7 +164,7 @@ double RecursiveScore(Game* g, int depth, double best_black, double best_white) 
 						for (int u = set.Length - 1; u >= 0; u--)
 							UndoMove(moves[u], hits[u], g, prevHash);
 						free(localSets);
-						return best_black;44
+						return best_black;
 					}
 					best_white = score;
 				}
