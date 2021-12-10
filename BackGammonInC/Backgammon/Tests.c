@@ -559,7 +559,8 @@ void TestBestBearingOffBlack() {
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
 	double score = 0;
-	MoveSet set = FindBestMoveSet(&G, &score, 0);
+	MoveSet set;
+	FindBestMoveSet(&G, &set, 1);
 	Move* m = set.Moves;
 	for (int j = 0; j < set.Length; j++)
 		AssertAreEqualInts(25, m[j].to, "Move should be to 25, Black Home");
@@ -572,8 +573,9 @@ void TestBestBearingOffWhite() {
 	InitAi(true);
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
-	double score = 0;
-	MoveSet set = FindBestMoveSet(&G, &score, 0);
+	double score = 0;	
+	MoveSet set;
+	FindBestMoveSet(&G, &set, 1);
 	Move* m = set.Moves;
 	for (int j = 0; j < set.Length; j++)
 		AssertAreEqualInts(0, m[j].to, "Move should be to 0, White Home");
@@ -611,11 +613,12 @@ void TestBestMoveBlack1() {
 	double score = 0;
 	G.Dice[0] = 1;
 	G.Dice[1] = 6;
-	MoveSet ms = FindBestMoveSet(&G, &score, 1);
+	MoveSet ms;
+	FindBestMoveSet(&G, &ms, 1);
 	AssertAreEqualInts(2, ms.Length, "There should be 2 moves");
 	// 12-18, 17-18
 	Assert(ms.Moves[0].from == 12 && ms.Moves[0].to == 18, "Move should be 12 - 18");
-	Assert(ms.Moves[1].from == 17 && ms.Moves[1].to == 18, "Move should be 12 - 18");
+	Assert(ms.Moves[1].from == 17 && ms.Moves[1].to == 18, "Move should be 17 - 18");
 }
 
 void TestBestMoveWhite1() {
@@ -624,7 +627,8 @@ void TestBestMoveWhite1() {
 	double score = 0;
 	G.Dice[0] = 1;
 	G.Dice[1] = 6;
-	MoveSet ms = FindBestMoveSet(&G, &score, 1);
+	MoveSet ms;
+	FindBestMoveSet(&G, &ms, 1);
 	AssertAreEqualInts(2, ms.Length, "There should be 2 moves");
 
 	Assert(ms.Moves[0].from == 13 && ms.Moves[0].to == 7, "Move should be 13 - 7");
@@ -638,7 +642,7 @@ void Performance() {
 	double score = 0;
 	G.EvalCounts = 0;
 	time_t start = clock();
-	FindBestMoveSet(&G, &score, 1);
+	FindBestMoveSet(&G, &score, 2);
 	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
 	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);	
 }

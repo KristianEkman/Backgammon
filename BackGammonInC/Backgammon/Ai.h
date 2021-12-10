@@ -27,5 +27,6 @@ double EvaluateCheckers(Game* g, PlayerSide color);
 void InitAi(bool constant);
 double GetScore(Game* g);
 void PlayGame(Game* g, bool pausePlay);
-MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth);
+int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth);
 void AutoPlay();
+double RecursiveScore(Game* g, int depth, double best_black, double best_white);

@@ -1,40 +1,41 @@
-
-Config för
-	Game
-		- Print Game
-		- Quads
-		- No of threads
-
-	AI
-		- Hashing Sets, villkor
-			
-			W Enabled: Of: 3000   White: 1467 (0.489000)   Black: 1533 (0.511000)
-			B Enabled: Of: 3000   White: 1594 (0.531333)   Black: 1406 (0.468667)
-				       Of: 3000   White: 1562 (0.520667)   Black: 1438 (0.479333)
-
-		- Search Depth	
-		- Prune, sortering? Kan det ske på bara djup 1?
-
-Flytta CheckerCountAssert till GameConfig
-
 Alpha beta pruning
+------------------
+	- Sortera movesets på 
+		hits
+		quads i par.
+		tp_moves som sparas i hash-tabell
 
-Trainer, genetic search.
+	- Depth 2
+
+Trainer, genetic search
+-----------------------
 	- Save & Load Genes
 	- ai0 black, sen ai1 black. Byt plats.
 
-Jämför resultat mellan olika AIn
-	Depth
+Regressionstest
+---------------
+	Depth 1 vinner över depth 0
+		Black
+		White
+	
+	Hashing snabbare, men fortfarande jämn match
+		Black
+		White
+
 	Pruning
-	Hashing
 
-Multithread
+Multithreading i trainer
+------------------------
+	Paralella games.
+	Träna utan quads?
 
-Inte jobba med Game* utan matriser, prestanda
-	- Blev 4% sämre prestanda
+Flytta CheckerCountAssert till GameConfig
+
+Can move generation för quads göras smartare?
+
 
 DONE
-====
+====================================================================
 Check if there are duplicates when generating from quad dice
 	- Done
 	- If many, do hashing
@@ -47,8 +48,23 @@ Look ahead.
 
 Varför vinner black 52%?
 	- Bugg: >> 4 skulle vara >> 5
+	- För många drag generades
 
 	
 Bara hasha för quads.
 	Beräkna games/sec och %
 	- ingen skillnad prestandamässigt
+	
+Config för
+	Game
+		- Print Game
+		- Quads
+		- No of threads
+
+	AI
+		- Hashing Sets, villkor
+		- Search Depth	
+		- Prune, sortering? Kan det ske på bara djup 1?
+
+Inte jobba med Game* utan matriser, prestanda
+	- Blev 4% sämre prestanda

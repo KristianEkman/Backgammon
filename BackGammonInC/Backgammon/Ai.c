@@ -96,7 +96,8 @@ double GetScore(Game* g) {
 	return wHome - bHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
 }
 
-double GetProbablilityScore(Game* g, ubyte depth) {
+//Gets the averege best score for the other player
+double GetProbablilityScore(Game* g, int depth, double best_black, double best_white) {
 	double totalScore = 0;
 	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 	short diceBuf[2] = { g->Dice[0], g->Dice[1] };
@@ -105,28 +106,26 @@ double GetProbablilityScore(Game* g, ubyte depth) {
 		g->Dice[0] = AllDices[i][0];
 		g->Dice[1] = AllDices[i][1];
 
-		double score = 0;
-		FindBestMoveSet(g, &score, depth);
+		double score = RecursiveScore(g, depth, best_black, best_white);
 		double m = g->Dice[0] == g->Dice[1] ? 1 : 2;
 		totalScore += score * m;
 	}
 	// Since we are faking the dice down the stack, it is safer to but them back here.
 	g->Dice[0] = diceBuf[0]; g->Dice[1] = diceBuf[1];
 	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
-	return totalScore / 21;
+	return totalScore / DiceCombos;
 }
 
-MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth) {
+double RecursiveScore(Game* g, int depth, double best_black, double best_white) {
 	int bestIdx = 0;
-	double bestScore = g->CurrentPlayer == White ? -100000 : 100000;
+	double bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
 	bool hashing = (AI(g->CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(g, hashing);
 
 	if (g->MoveSetsCount == 0)
 	{
-		MoveSet set;
-		set.Length = 0;
-		return set;
+		// This is not good for the current player.		
+		return GetScore(g);
 	}
 
 	int setsCount = g->MoveSetsCount;
@@ -148,13 +147,93 @@ MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth) {
 		}
 
 		double score;
-		if (depth == 0)
+		if (depth <= 0)
 			score = GetScore(g);
 		else
 			// The best score the opponent can get. Minimize it.
-			score = GetProbablilityScore(g, depth - 1);
+			score = GetProbablilityScore(g, depth - 1, best_black, best_white);
 
 		if (g->CurrentPlayer == White) {
+			// White is maximizing
+			if (score > bestScore)
+			{
+				bestScore = score;
+				bestIdx = i;
+				if (score > best_white) {
+					if (score >= best_black) {
+						for (int u = set.Length - 1; u >= 0; u--)
+							UndoMove(moves[u], hits[u], g, prevHash);
+						free(localSets);
+						return best_black;44
+					}
+					best_white = score;
+				}
+			}
+		}
+		else {
+			// Black is minimizing
+			if (score < bestScore) {
+				bestScore = score;
+				bestIdx = i;
+				if (score < best_black) {
+					if (score <= best_white) {
+						for (int u = set.Length - 1; u >= 0; u--)
+							UndoMove(moves[u], hits[u], g, prevHash);
+						free(localSets);
+						return best_white;
+					}
+					best_black = score;
+				}
+			}
+		}
+
+		//Undoing in reverse
+		for (int u = set.Length - 1; u >= 0; u--)
+			UndoMove(moves[u], hits[u], g, prevHash);
+	}
+
+	free(localSets);
+	return bestScore;
+}
+
+int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth) {
+	int bestIdx = 0;
+	double bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
+	bool hashing = (AI(g->CurrentPlayer).Flags & EnableHashing);
+	CreateMoves(g, hashing);
+
+	if (g->MoveSetsCount == 0)
+	{
+		// This is not good for the current player.		
+		return -1;
+	}
+
+	int setsCount = g->MoveSetsCount;
+	MoveSet* localSets = malloc(sizeof(MoveSet) * g->MoveSetsCount);
+	PlayerSide color = g->CurrentPlayer;
+	memcpy(localSets, &g->PossibleMoveSets, sizeof(MoveSet) * setsCount);
+	for (int i = 0; i < setsCount; i++)
+	{
+		MoveSet set = localSets[i];
+		if (set.Duplicate)
+			continue;
+
+		Move moves[4];
+		bool hits[4];
+		U64 prevHash = g->Hash;
+		for (int m = 0; m < set.Length; m++)
+		{
+			moves[m] = set.Moves[m];
+			hits[m] = DoMove(moves[m], g);
+		}
+
+		double score;
+		if (depth == 0)
+			score = GetScore(g);
+		else
+			score = GetProbablilityScore(g, depth - 1, INFINITY, -INFINITY);
+
+		if (color == White) {
 			// White is maximizing
 			if (score > bestScore)
 			{
@@ -174,10 +253,18 @@ MoveSet FindBestMoveSet(Game* g, double* bestScoreOut, ubyte depth) {
 		for (int u = set.Length - 1; u >= 0; u--)
 			UndoMove(moves[u], hits[u], g, prevHash);
 	}
-	MoveSet bestSet = localSets[bestIdx];
+
+	bestSet->Length = localSets[bestIdx].Length;
+	bestSet->Duplicate = localSets[bestIdx].Duplicate;
+	bestSet->Hash = localSets[bestIdx].Hash;
+	for (int i = 0; i < 4; i++)
+	{
+		bestSet->Moves[i].from = localSets[bestIdx].Moves[i].from;
+		bestSet->Moves[i].to = localSets[bestIdx].Moves[i].to;
+		bestSet->Moves[i].color = localSets[bestIdx].Moves[i].color;
+	}
 	free(localSets);
-	*bestScoreOut = bestScore;
-	return bestSet;
+	return bestIdx;
 }
 
 void Pause(Game* g) {
@@ -188,7 +275,7 @@ void Pause(Game* g) {
 }
 
 void PlayGame(Game* g, bool pausePlay) {
-	
+
 	StartPosition(g);
 	RollDice(g);
 	//First roll of a game can not be equal.
@@ -203,15 +290,16 @@ void PlayGame(Game* g, bool pausePlay) {
 			Pause(g);
 		g->EvalCounts = 0;
 		ubyte depth = (ubyte)AI(g->CurrentPlayer).SearchDepth;
-		double bestScore;
-		MoveSet bestSet = FindBestMoveSet(g, &bestScore, depth );
-		for (int i = 0; i < bestSet.Length; i++)
-		{
-			DoMove(bestSet.Moves[i], g);
-			ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
-			if (pausePlay)
-				Pause(g);
-		}
+
+		MoveSet bestSet;
+		if (FindBestMoveSet(g, &bestSet, depth) >= 0)
+			for (int i = 0; i < bestSet.Length; i++)
+			{
+				DoMove(bestSet.Moves[i], g);
+				ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
+				if (pausePlay)
+					Pause(g);
+			}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 		RollDice(g);
 	}
@@ -231,8 +319,8 @@ void AutoPlay()
 			blackWins++;
 		else if (G.WhiteLeft == 0)
 			whiteWins++;
-		//if (i % 50 == 0)
-		printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", i, whiteWins, whiteWins / (double)i, blackWins, blackWins / (double)i, i / ((float)(clock() - start) / CLOCKS_PER_SEC));
+		if (i % 50 == 0)
+			printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", i, whiteWins, whiteWins / (double)i, blackWins, blackWins / (double)i, i / ((float)(clock() - start) / CLOCKS_PER_SEC));
 	}
 	printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch, batch / ((float)(clock() - start) / CLOCKS_PER_SEC));
 

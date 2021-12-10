@@ -7,7 +7,7 @@
 
 #define CheckerCount(x) ((x) & 15)
 #define OtherColor(x) (~(x) & 48)
-
+#define INFINITY 10000000
 
 typedef enum { false, true } bool;
 typedef unsigned long long U64;
