@@ -384,9 +384,9 @@ void TestBearingOffBlack() {
 	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(&G, hashing);
 	CheckerCountAssert = true;
-
+	//PrintGame(&G);
 	//PrintMoves();
-	AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
+	AssertAreEqualInts(11, G.MoveSetsCount, "There should be 11 sets of moves.");
 }
 
 void TestBearingOffWhite() {
@@ -400,7 +400,7 @@ void TestBearingOffWhite() {
 	CreateMoves(&G, hashing);
 	CheckerCountAssert = true;
 	//PrintMoves();
-	AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 sets of moves.");
+	AssertAreEqualInts(11, G.MoveSetsCount, "There should be 11 sets of moves.");
 }
 
 void TestDoubleDiceBlack() {
@@ -412,7 +412,7 @@ void TestDoubleDiceBlack() {
 	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(&G, hashing);
 	//PrintMoves();
-	AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
+	AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)
 		Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
 }
@@ -426,7 +426,7 @@ void TestDoubleDiceWhite() {
 	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(&G, hashing);
 	//PrintMoves();
-	AssertAreEqualInts(538, G.MoveSetsCount, "There should be 538 sets of moves.");
+	AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
 }
 
 void PlayBothDiceIfPossible() {
@@ -451,14 +451,14 @@ void TestRemoveShorterSets() {
 	G.CurrentPlayer = Black;
 	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(&G, hashing);
-	AssertAreEqualInts(12, G.MoveSetsCount, "There should be 12 moves");
+	AssertAreEqualInts(11, G.MoveSetsCount, "There should be 11 moves");
 
 	//PrintMoves();
 	G.PossibleMoveSets[2].Length = 1;
 	G.PossibleMoveSets[5].Length = 1;
 	RemoveShorterSets(2, &G);
 	CheckerCountAssert = true;
-	AssertAreEqualInts(10, G.MoveSetsCount, "There should be 10 moves left");
+	AssertAreEqualInts(9, G.MoveSetsCount, "There should be 9 moves left");
 	/*ConsoleWriteLine("==================");
 	PrintMoves();*/
 }
@@ -590,7 +590,7 @@ void TestManyCombos() {
 	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(&G, hashing);
 
-	AssertAreEqualInts(710, G.MoveSetsCount, "There should be 710 sets of moves.");
+	AssertAreEqualInts(72, G.MoveSetsCount, "There should be 72 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)
 		Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
 }
@@ -639,10 +639,10 @@ void Performance() {
 	char* gs = "0 b2 w2 w3 0 0 w6 0 0 0 w1 w1 b2 0 0 0 b1 b1 b2 b4 0 0 b3 0 w2 0 0 0";
 	G.Dice[0] = 2;
 	G.Dice[1] = 2;
-	double score = 0;
+	MoveSet set;
 	G.EvalCounts = 0;
 	time_t start = clock();
-	FindBestMoveSet(&G, &score, 2);
+	FindBestMoveSet(&G, &set, 2);
 	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
 	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);	
 }
@@ -667,6 +667,7 @@ void TestHashing() {
 }
 
 void RunAll() {
+	
 	Run(TestNastyBug, "TestNastyBug");
 	Run(TestStartPos, "TestStartPos");
 	Run(TestRollDice, "TestRollDice");

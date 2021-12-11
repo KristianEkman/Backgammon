@@ -1,11 +1,31 @@
+Kolla vilket drag so utesluts
+Man borde kunna hoppa över kort sets på en gång.
+Olika buffrar för doubles och vanliga tärningar.
+moveSet->LongestSet, ta bort func RemoveShorterSets och hoppa över specialfallen i REcursiveSearch
+
 Alpha beta pruning
 ------------------
+	Performance depth 2 Eval count: 6236575 - (374.4k evs/sec) 16660.00ms
+	Performance Eval count: 5836794 - (479.3k evs/sec) 12177.00ms
+
+	- Fler testfall4/10
+
+	- Light Score på move set.
+		- points left
+		- minus för blots på to-moves
+	
 	- Sortera movesets på 
 		hits
 		quads i par.
 		tp_moves som sparas i hash-tabell
+				
+	- Iterative deepening
 
-	- Depth 2
+	- Store PV-moves in Hash-table
+
+
+det kanske inte är så viktigt att generera alla tärningar?
+	dubblar
 
 Trainer, genetic search
 -----------------------

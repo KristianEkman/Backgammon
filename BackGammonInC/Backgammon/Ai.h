@@ -23,10 +23,19 @@ double ConnectedBlocksFactor[2][26];
 #define DiceCombos 21
 int AllDices[DiceCombos][2];
 
-double EvaluateCheckers(Game* g, PlayerSide color);
+int EvaluateCheckers(Game* g, PlayerSide color);
 void InitAi(bool constant);
-double GetScore(Game* g);
+int GetScore(Game* g);
 void PlayGame(Game* g, bool pausePlay);
 int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth);
 void AutoPlay();
-double RecursiveScore(Game* g, int depth, double best_black, double best_white);
+int RecursiveScore(Game* g, int depth, int best_black, int best_white);
+
+void RemoveShorterSets(int maxSetLength, Game* g);
+void CreateMoves(Game* g, bool doHashing);
+void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing);
+void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing);
+
+bool DoMove(Move move, Game* g);
+void UndoMove(Move move, bool hit, Game* g, U64 prevHash);
+bool IsBlockedFor(ushort pos, ushort color, Game* g);

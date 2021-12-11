@@ -8,6 +8,7 @@
 #include "Ai.h"
 #include "Game.h"
 #include "Utils.h"
+#include "Hash.h"
 
 void InitAi(bool constant) {
 	for (int a = 0; a < 2; a++)
@@ -58,8 +59,479 @@ bool PlayersPassedEachOther(Game* g) {
 	return minBlack > maxWhite;
 }
 
-double EvaluateCheckers(Game* g, PlayerSide color) {
-	double score = 0;
+void RollDice(Game* g) {
+	g->Dice[1] = LlrandShift() % 6 + 1;
+	g->Dice[0] = LlrandShift() % 6 + 1;
+}
+
+bool ToHome(Move move) {
+	return move.color == Black && move.to == 25 || move.color == White && move.to == 0;
+}
+
+// Must be called before the move of checkers is performed.
+void AddHash(Game* g, Move move, bool hit) {
+	g->Hash ^= PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1];     // Counting checkers AFTER count updated gives the correct number for the moved checker.
+	g->Hash ^= PositionHash[move.color >> 5][move.from][CheckerCount(g->Position[move.from])]; // Counting checkers BEFORE count updated gives the correct number for the moved checker.
+
+	if (hit) {
+		if (move.color == Black)
+		{
+			g->Hash ^= PositionHash[1][move.to][1]; // Last white checker removed from to-position
+			g->Hash ^= PositionHash[1][25][CheckerCount(g->Position[25]) + 1]; // White checker added to its bar
+		}
+		else {
+			g->Hash ^= PositionHash[0][move.to][1]; // Last black checker removed from to-position
+			g->Hash ^= PositionHash[0][0][CheckerCount(g->Position[0]) + 1]; // Black checker added to its bar.
+		}
+	}
+}
+
+bool DoMove(Move move, Game* g) {
+	ASSERT_DBG(move.from >= 0 && move.from <= 25 && move.to >= 0 && move.to <= 25 && (move.color == Black || move.color == White));
+	/*char tmp[100];
+	WriteGameString(tmp, g);*/
+
+	ushort to = move.to;
+	ushort from = move.from;
+	bool toHome = ToHome(move);
+	PlayerSide other = OtherColor(move.color);
+	int toCount = CheckerCount(g->Position[to]);
+	bool hit = toCount == 1 && (g->Position[to] & other) && !toHome;
+	AddHash(g, move, hit);
+
+	if (hit)
+		g->Position[to] = 0;
+
+	if (toHome) {
+		move.color == Black ? g->BlackHome++ : g->WhiteHome++;
+		ASSERT_DBG(g->BlackHome <= 15 && g->WhiteHome <= 15);
+	}
+	else {
+		g->Position[to]++;
+		g->Position[to] |= move.color;
+		ASSERT_DBG(CheckerCount(g->Position[to]) <= 15);
+	}
+
+	g->Position[from]--;
+	int fromCount = CheckerCount(g->Position[from]);
+	if (fromCount == 0)
+		g->Position[from] = 0; // re-setting color aswell.
+
+	if (move.color == Black)
+	{
+		g->BlackLeft -= (move.to - move.from);
+		ASSERT_DBG(g->BlackLeft >= 0);
+		if (hit)
+		{
+			g->WhiteLeft += (25 - move.to);
+			ASSERT_DBG(g->WhiteLeft > 0);
+			g->Position[25] ++;
+			g->Position[25] |= White;
+
+			ASSERT_DBG(CheckerCount(g->Position[25]) <= 15 && CheckerCount(g->Position[25]) >= 0);
+		}
+	}
+	else if (move.color == White) {
+		g->WhiteLeft -= (move.from - move.to);
+		ASSERT_DBG(g->WhiteLeft >= 0);
+		if (hit)
+		{
+			g->BlackLeft += move.to; // += 25 - (25 - move.to);
+			ASSERT_DBG(g->BlackLeft >= 0);
+
+			g->Position[0] ++;
+			g->Position[0] |= Black;
+
+			ASSERT_DBG(CheckerCount(g->Position[0]) <= 15 && CheckerCount(g->Position[0]) >= 0);
+		}
+	}
+
+	ASSERT_DBG(!CheckerCountAssert || (CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15));
+	return hit;
+}
+
+void UndoMove(Move move, bool hit, Game* g, U64 prevHash) {
+	ASSERT_DBG(move.from >= 0 && move.from <= 25 && move.to >= 0 && move.to <= 25 && (move.color == Black || move.color == White));
+	g->Hash = prevHash;
+	//use for bug tracking
+	/*char* tmp[100];
+	WriteGameString(tmp, g);*/
+
+	ushort to = move.to;
+	ushort from = move.from;
+	bool fromHome = ToHome(move);
+
+	g->Position[from]++;
+	g->Position[from] |= move.color;
+
+	if (fromHome) {
+		move.color == Black ? g->BlackHome-- : g->WhiteHome--;
+		ASSERT_DBG(g->BlackHome >= 0 && g->WhiteHome >= 0);
+	}
+	else {
+		g->Position[to]--;
+		if (CheckerCount(g->Position[to]) == 0)
+			g->Position[to] = 0;
+		ASSERT_DBG(g->Position[to] >= 0);
+
+		if (hit)
+		{
+			g->Position[to] = 1 | OtherColor(move.color);
+		}
+	}
+
+	if (move.color == Black)
+	{
+		g->BlackLeft += (move.to - move.from);
+		ASSERT_DBG(g->BlackLeft >= 0);
+
+		if (hit)
+		{
+			g->WhiteLeft -= (25 - move.to);
+			ASSERT_DBG(g->WhiteLeft >= 0);
+			g->Position[25]--;
+			if (CheckerCount(g->Position[25]) == 0)
+				g->Position[25] = 0;
+			ASSERT_DBG(CheckerCount(g->Position[25]) >= 0);
+		}
+	}
+	if (move.color == White)
+	{
+		g->WhiteLeft += (move.from - move.to);
+		ASSERT_DBG(g->WhiteLeft >= 0);
+
+		if (hit)
+		{
+			g->BlackLeft -= move.to; // -= 25 - (25 - move.to);
+			ASSERT_DBG(g->BlackLeft >= 0);
+			g->Position[0]--;
+			if (CheckerCount(g->Position[0]) == 0)
+				g->Position[0] = 0;
+			ASSERT_DBG(CheckerCount(g->Position[0]) >= 0);
+		}
+	}
+	ASSERT_DBG(!CheckerCountAssert || (CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15));
+}
+
+bool IsBlockedFor(ushort pos, ushort color, Game* g) {
+	if (pos >= 25 || pos <= 0)
+		return false;
+
+	return (g->Position[pos] & OtherColor(color)) && (CheckerCount(g->Position[pos]) >= 2);
+}
+
+bool IsBlackBearingOff(ushort* lastCheckerPos, Game* g) {
+	for (ushort i = 0; i <= 24; i++)
+	{
+		if ((g->Position[i] & Black) && CheckerCount(g->Position[i]) > 0)
+		{
+			*lastCheckerPos = i;
+			return i >= 19;
+		}
+	}
+	return true;
+}
+
+bool IsWhiteBearingOff(ushort* lastCheckerPos, Game* g) {
+	for (ushort i = 25; i >= 1; i--)
+	{
+		if ((g->Position[i] & White) && CheckerCount(g->Position[i]) > 0)
+		{
+			*lastCheckerPos = i;
+			return i <= 6;
+		}
+	}
+	return true;
+}
+
+bool HashSetExists(U64 hash, Game* g) {
+	// todo, try performance to loop in reverse.
+	// but dont compare last added hash
+	for (int i = 0; i < g->MoveSetsCount - 1; i++)
+	{
+		if (g->PossibleMoveSets[i].Hash == hash)
+			return true;
+	}
+	return false;
+}
+
+void SetLightScore(Game* g, MoveSet* moveSet) {
+	int score = g->BlackLeft - g->WhiteLeft;
+	char ai = g->CurrentPlayer >> 5;
+
+	for (int i = 0; i < moveSet->Length; i++)
+	{
+		int to = moveSet->Moves[i].to;
+		if (CheckerCount(g->Position[to]) == 1)
+			score -= BlotFactors[ai][to];
+	}
+	moveSet->score = score;
+}
+
+void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing) {
+	int start = fromPos;
+	int nextStart = fromPos;
+	bool checkerFound = false;
+	ushort lastCheckerPos;
+	bool bearingOff = IsBlackBearingOff(&lastCheckerPos, g);
+	if (bearingOff)
+		start = max(start, 19);
+
+	int toIndex = CheckerCount(g->Position[0]) > 0 ? 0 : 25;
+	for (int i = start; i <= toIndex; i++)
+	{
+		if (!checkerFound)
+			nextStart = i;
+
+		if (!(g->Position[i] & Black))
+			continue;
+
+		checkerFound = true;
+		int diceVal = diceIdx > 1 ? g->Dice[0] : g->Dice[diceIdx];
+		int toPos = i + diceVal;
+
+		// När man bär av, får man använda tärningar med för högt värde,
+		// men bara på den checker längst från home.
+		if (IsBlockedFor(toPos, Black, g))
+			continue;
+
+		if (bearingOff) {
+			if (toPos > 25 && i != lastCheckerPos)
+				continue;
+
+			if (toPos > 25 && i == lastCheckerPos)
+				toPos = 25;
+		}
+		else { //Not bearing off
+			if (toPos > 24)
+				continue;
+		}
+
+		// Atleast one move set is created.
+		if (g->MoveSetsCount == 0)
+			g->MoveSetsCount = 1;
+		ushort setIdx = g->MoveSetsCount - 1;
+		MoveSet* moveSet = &g->PossibleMoveSets[setIdx];
+		Move* move = &moveSet->Moves[diceIdx];
+
+		if (moveSet->Duplicate)
+		{
+			//Duplicates are reset. Not moving to next set here.
+			moveSet->Length = diceIdx;
+			moveSet->Duplicate = false;
+		}
+		else if (move->color != 0) {
+			// A move is already generated for this dice in this sequence. Branch off a new set of moves.
+			// But first set a light score for ordering			
+			SetLightScore(g, moveSet);
+			int copyCount = diceIdx;
+			moveSet = &g->PossibleMoveSets[setIdx + 1];
+			moveSet->Length = copyCount;
+
+			if (copyCount > 0)
+				memcpy(&moveSet->Moves[0], &g->PossibleMoveSets[setIdx].Moves[0], copyCount * sizeof(Move));
+
+			move = &moveSet->Moves[diceIdx];
+			g->MoveSetsCount++;
+			setIdx++;
+			ASSERT_DBG(g->MoveSetsCount < MAX_SETS_LENGTH);
+		}
+
+		move->from = i;
+		move->to = toPos;
+		move->color = Black;
+
+		moveSet->Length++;
+		*maxSetLength = max(*maxSetLength, moveSet->Length);
+
+		if (diceIdx < diceCount - 1) {
+			Move m = *move;
+			U64 prevHash = g->Hash;
+			int hit = DoMove(m, g);
+			CreateBlackMoveSets(nextStart, diceIdx + 1, diceCount, maxSetLength, g, doHashing);
+			UndoMove(m, hit, g, prevHash);
+		}
+		else if (doHashing) {
+			// Last dice here
+			U64 prevHash = g->Hash;
+			bool hit = CheckerCount(g->Position[move->to]) == 1 && (g->Position[move->to] & OtherColor(move->color));
+			AddHash(g, *move, hit); // It should be faster to just calculate the hash rather than 
+			moveSet->Hash = g->Hash;
+			g->Hash = prevHash;
+			if (HashSetExists(moveSet->Hash, g))
+			{
+				moveSet->Duplicate = true;
+			}
+		}
+	}
+}
+
+void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing) {
+	int start = fromPos;
+	int nextStart = fromPos;
+	bool checkerFound = false;
+	ushort lastCheckerPos;
+	bool bearingOff = IsWhiteBearingOff(&lastCheckerPos, g);
+	if (bearingOff)
+		start = min(start, 6);
+
+	int toIndex = CheckerCount(g->Position[25]) > 0 ? 25 : 0;
+
+	for (int i = start; i >= toIndex; i--)
+	{
+		if (!checkerFound)
+			nextStart = i;
+
+		if (!(g->Position[i] & White))
+			continue;
+
+		checkerFound = true;
+		int diceVal = diceIdx > 1 ? g->Dice[0] : g->Dice[diceIdx];
+		int toPos = i - diceVal;
+
+		// När man bär av, får man använda tärningar med för hög summa
+		// Men bara på den checker längst från home.
+		if (IsBlockedFor(toPos, White, g))
+			continue;
+
+		if (bearingOff) {
+			if (toPos < 0 && i != lastCheckerPos)
+				continue;
+
+			if (toPos < 0 && i == lastCheckerPos)
+				toPos = 0;
+		}
+		else { //Not bearing off
+			if (toPos < 1)
+				continue;
+		}
+
+		// Atleast one move set is created.
+		if (g->MoveSetsCount == 0)
+			g->MoveSetsCount = 1;
+		ushort setIdx = g->MoveSetsCount - 1;
+		MoveSet* moveSet = &g->PossibleMoveSets[setIdx];
+		Move* move = &moveSet->Moves[diceIdx];
+
+		if (moveSet->Duplicate)
+		{
+			moveSet->Length = diceIdx;
+			moveSet->Duplicate = false;
+		}
+		else if (move->color != 0) {
+			// A move is already generated for this dice in this sequence. Branch off a new sequence.
+			SetLightScore(g, moveSet);
+			int copyCount = diceIdx;
+			moveSet = &g->PossibleMoveSets[setIdx + 1];
+			moveSet->Length = copyCount;
+
+			if (copyCount > 0)
+				memcpy(&moveSet->Moves[0], &g->PossibleMoveSets[setIdx].Moves[0], copyCount * sizeof(Move));
+			move = &moveSet->Moves[diceIdx];
+			g->MoveSetsCount++;
+			setIdx++;
+			ASSERT_DBG(g->MoveSetsCount < MAX_SETS_LENGTH);
+
+		}
+
+		move->from = i;
+		move->to = toPos;
+		move->color = White;
+
+		moveSet->Length++;
+		*maxSetLength = max(*maxSetLength, moveSet->Length);
+
+		if (diceIdx < diceCount - 1) {
+			Move m = *move;
+			U64 prevHash = g->Hash;
+			int hit = DoMove(m, g);
+			CreateWhiteMoveSets(nextStart, diceIdx + 1, diceCount, maxSetLength, g, doHashing);
+			UndoMove(m, hit, g, prevHash);
+		}
+		else if (doHashing) {
+			// Last dice here.
+			U64 prevHash = g->Hash;
+			bool hit = CheckerCount(g->Position[move->to]) == 1 && (g->Position[move->to] & OtherColor(move->color));
+			AddHash(g, *move, hit); // It should be faster to just calculate the hash rather than to the move
+			moveSet->Hash = g->Hash;
+			g->Hash = prevHash;
+			if (HashSetExists(moveSet->Hash, g))
+			{
+				moveSet->Duplicate = true;
+			}
+		}
+	}
+
+}
+
+void ReverseDice(Game* g) {
+	short temp = g->Dice[0];
+	g->Dice[0] = g->Dice[1];
+	g->Dice[1] = temp;
+}
+
+//Removes move sets that are shorter.
+//They are not valid because a move that prohibits next move is not legal if there are other moves that can be made that are not prohibiting them.
+void RemoveShorterSets(int maxSetLength, Game* g) {
+	bool modified = false;
+	int realCount = g->MoveSetsCount;
+	do
+	{
+		modified = false;
+		for (int i = 0; i < realCount; i++)
+		{
+			MoveSet* set = &g->PossibleMoveSets[i];
+			if (set->Length < maxSetLength)
+			{
+				memcpy(&g->PossibleMoveSets[i], &g->PossibleMoveSets[i + 1], (MAX_SETS_LENGTH - i) * 4 * sizeof(Move));
+				modified = true;
+				realCount--;
+				break;
+			}
+		}
+	} while (modified);
+	g->MoveSetsCount = realCount;
+}
+
+void CreateMoves(Game* g, bool doHashing) {
+
+	// 50% Better performance than for loop
+	memset(&g->PossibleMoveSets, 0, sizeof(g->PossibleMoveSets));
+
+	g->MoveSetsCount = 0;
+	// Largest Dice first
+	if (g->Dice[1] > g->Dice[0]) {
+		ReverseDice(g);
+	}
+
+	int diceCount = g->Dice[0] == g->Dice[1]
+		&& (G_Config.Flags & EnableQuads)
+		? 4 : 2;
+
+	int maxSetLength = 0;
+	for (size_t i = 0; i < 2; i++)
+	{
+		// TODO: Maybe reset sets here.
+		maxSetLength = 0;
+		if (g->CurrentPlayer & Black)
+			CreateBlackMoveSets(0, 0, diceCount, &maxSetLength, g, doHashing);
+		else
+			CreateWhiteMoveSets(25, 0, diceCount, &maxSetLength, g, doHashing);
+
+		//If no moves are found and dicecount == 2 reverse dice order and try again.
+		if (g->MoveSetsCount == 0 && diceCount == 2) {
+			ReverseDice(g);
+		}
+		else {
+			break;
+		}
+	}
+
+	RemoveShorterSets(maxSetLength, g);
+}
+
+int EvaluateCheckers(Game* g, PlayerSide color) {
+	int score = 0;
 	int blockCount = 0;
 	bool playersPassed = PlayersPassedEachOther(g);
 
@@ -80,25 +552,25 @@ double EvaluateCheckers(Game* g, PlayerSide color) {
 			blockCount = 0;
 		}
 
-		if (checkCount == 1 && (v & color))
+		if (checkCount == 1 && (v & color) && !playersPassed)
 		{
-			score -= (double)CheckerCount(v) * BlotFactors[ai][p];
+			score -= BlotFactors[ai][p];
 		}
 	}
 	return score;
 }
 
-double GetScore(Game* g) {
-	double bHome = (double)10000 * (double)g->BlackHome;
-	double wHome = (double)10000 * (double)g->WhiteHome;
+int GetScore(Game* g) {
+	int bHome = 10000 * g->BlackHome;
+	int wHome = 10000 * g->WhiteHome;
 	// positive for white, neg for black.
 	g->EvalCounts++;
 	return wHome - bHome + EvaluateCheckers(g, White) - EvaluateCheckers(g, Black) - g->WhiteLeft + g->BlackLeft;
 }
 
 //Gets the averege best score for the other player
-double GetProbablilityScore(Game* g, int depth, double best_black, double best_white) {
-	double totalScore = 0;
+int GetProbablilityScore(Game* g, int depth, int best_black, int best_white) {
+	int totalScore = 0;
 	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 	short diceBuf[2] = { g->Dice[0], g->Dice[1] };
 	for (int i = 0; i < DiceCombos; i++)
@@ -106,8 +578,8 @@ double GetProbablilityScore(Game* g, int depth, double best_black, double best_w
 		g->Dice[0] = AllDices[i][0];
 		g->Dice[1] = AllDices[i][1];
 
-		double score = RecursiveScore(g, depth, best_black, best_white);
-		double m = g->Dice[0] == g->Dice[1] ? 1 : 2;
+		int score = RecursiveScore(g, depth, best_black, best_white);
+		int m = g->Dice[0] == g->Dice[1] ? 1 : 2;
 		totalScore += score * m;
 	}
 	// Since we are faking the dice down the stack, it is safer to but them back here.
@@ -116,9 +588,28 @@ double GetProbablilityScore(Game* g, int depth, double best_black, double best_w
 	return totalScore / DiceCombos;
 }
 
-double RecursiveScore(Game* g, int depth, double best_black, double best_white) {
+// Moves the next best moveset first, and skips sets that are evaluated
+void PickNextMoveSet(int moveNum, MoveSet* moveSets, int moveCount) {
+	PlayerSide color = moveSets->Moves[0].color;
+	int bestScore = color == White ? -INFINITY : INFINITY;
+	int bestNum = moveNum;
+
+	for (int index = moveNum; index < moveCount; ++index) {
+		int score = moveSets[index].score;
+		if ((color == White && score > bestScore) || (color == Black && score < bestScore)) {
+			bestScore = score;
+			bestNum = index;
+		}
+	}
+
+	MoveSet temp = moveSets[moveNum];
+	moveSets[moveNum] = moveSets[bestNum];
+	moveSets[bestNum] = temp;
+}
+
+int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 	int bestIdx = 0;
-	double bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
+	int bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
 	bool hashing = (AI(g->CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(g, hashing);
 
@@ -133,6 +624,8 @@ double RecursiveScore(Game* g, int depth, double best_black, double best_white) 
 	memcpy(localSets, &g->PossibleMoveSets, sizeof(MoveSet) * setsCount);
 	for (int i = 0; i < setsCount; i++)
 	{
+		//only minor performance improvement, maybe enable if greater depths.
+		//PickNextMoveSet(i, localSets, setsCount);
 		MoveSet set = localSets[i];
 		if (set.Duplicate)
 			continue;
@@ -146,7 +639,7 @@ double RecursiveScore(Game* g, int depth, double best_black, double best_white) 
 			hits[m] = DoMove(moves[m], g);
 		}
 
-		double score;
+		int score;
 		if (depth <= 0)
 			score = GetScore(g);
 		else
@@ -198,7 +691,7 @@ double RecursiveScore(Game* g, int depth, double best_black, double best_white) 
 
 int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth) {
 	int bestIdx = 0;
-	double bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
+	int bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
 	bool hashing = (AI(g->CurrentPlayer).Flags & EnableHashing);
 	CreateMoves(g, hashing);
 
@@ -227,7 +720,7 @@ int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth) {
 			hits[m] = DoMove(moves[m], g);
 		}
 
-		double score;
+		int score;
 		if (depth == 0)
 			score = GetScore(g);
 		else
@@ -319,7 +812,7 @@ void AutoPlay()
 			blackWins++;
 		else if (G.WhiteLeft == 0)
 			whiteWins++;
-		if (i % 50 == 0)
+		if (i % 10 == 0)
 			printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", i, whiteWins, whiteWins / (double)i, blackWins, blackWins / (double)i, i / ((float)(clock() - start) / CLOCKS_PER_SEC));
 	}
 	printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch, batch / ((float)(clock() - start) / CLOCKS_PER_SEC));
