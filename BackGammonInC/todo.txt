@@ -1,12 +1,10 @@
-Kolla vilket drag so utesluts
+
 Man borde kunna hoppa över kort sets på en gång.
-Olika buffrar för doubles och vanliga tärningar.
-moveSet->LongestSet, ta bort func RemoveShorterSets och hoppa över specialfallen i REcursiveSearch
 
 Alpha beta pruning
 ------------------
-	Performance depth 2 Eval count: 6236575 - (374.4k evs/sec) 16660.00ms
-	Performance Eval count: 5836794 - (479.3k evs/sec) 12177.00ms
+	
+	Performance Eval count: 5836796 - (666.2k evs/sec) 8761.00ms
 
 	- Fler testfall4/10
 

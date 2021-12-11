@@ -322,6 +322,7 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 		}
 		else if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new set of moves.
+			
 			// But first set a light score for ordering			
 			SetLightScore(g, moveSet);
 			int copyCount = diceIdx;
@@ -483,7 +484,7 @@ void RemoveShorterSets(int maxSetLength, Game* g) {
 			MoveSet* set = &g->PossibleMoveSets[i];
 			if (set->Length < maxSetLength)
 			{
-				memcpy(&g->PossibleMoveSets[i], &g->PossibleMoveSets[i + 1], (MAX_SETS_LENGTH - i) * 4 * sizeof(Move));
+				memcpy(&g->PossibleMoveSets[i], &g->PossibleMoveSets[i + 1], (realCount - i) * sizeof(MoveSet));
 				modified = true;
 				realCount--;
 				break;
