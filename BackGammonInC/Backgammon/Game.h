@@ -26,13 +26,13 @@ typedef struct {
 } GameConfig;
 
 typedef struct {
-	ushort from;
-	ushort to;
+	ubyte from;
+	ubyte to;
 	PlayerSide color;
 } Move;
 
 typedef struct {
-	char Length;
+	ubyte Length;
 	Move Moves[4];
 	// Unique hash for for the set, independent of order of moves.
 	U64 Hash;

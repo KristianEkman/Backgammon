@@ -48,7 +48,7 @@ int RandomInt(int lower, int upper)
 {
 	if (!seeded)
 	{
-		srand(time(0));
+		srand((unsigned int)time(0));
 		seeded = true;
 	}
 	return (rand() % (upper - lower + 1)) + lower;
@@ -58,7 +58,7 @@ double RandomDouble(double max, double min)
 {
 	if (!seeded)
 	{
-		srand(time(0));
+		srand((unsigned int)time(0));
 		seeded = true;
 	}
 	double range = (max - min);

@@ -6,7 +6,7 @@ Alpha beta pruning
 	
 	Performance Eval count: 5836796 - (666.2k evs/sec) 8761.00ms
 
-	- Fler testfall4/10
+	- Fler testfall
 
 	- Light Score på move set.
 		- points left
@@ -22,7 +22,7 @@ Alpha beta pruning
 	- Store PV-moves in Hash-table
 
 
-det kanske inte är så viktigt att generera alla tärningar?
+Det kanske inte är så viktigt att generera alla tärningar?
 	dubblar
 
 Trainer, genetic search

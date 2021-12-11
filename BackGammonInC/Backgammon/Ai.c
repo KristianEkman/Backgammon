@@ -263,7 +263,7 @@ void SetLightScore(Game* g, MoveSet* moveSet) {
 	{
 		int to = moveSet->Moves[i].to;
 		if (CheckerCount(g->Position[to]) == 1)
-			score -= BlotFactors[ai][to];
+			score -= (int)BlotFactors[ai][to];
 	}
 	moveSet->score = score;
 }
@@ -432,7 +432,6 @@ void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 			g->MoveSetsCount++;
 			setIdx++;
 			ASSERT_DBG(g->MoveSetsCount < MAX_SETS_LENGTH);
-
 		}
 
 		move->from = i;
@@ -548,14 +547,14 @@ int EvaluateCheckers(Game* g, PlayerSide color) {
 		}
 		else {
 			if (blockCount && !playersPassed) {
-				score += pow((double)blockCount, ConnectedBlocksFactor[ai][p]);
+				score += (int)pow((double)blockCount, ConnectedBlocksFactor[ai][p]);
 			}
 			blockCount = 0;
 		}
 
 		if (checkCount == 1 && (v & color) && !playersPassed)
 		{
-			score -= BlotFactors[ai][p];
+			score -= (int)BlotFactors[ai][p];
 		}
 	}
 	return score;
