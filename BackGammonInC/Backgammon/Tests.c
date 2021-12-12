@@ -306,8 +306,7 @@ void TestSimpleBlack() {
 	G.Dice[0] = 1;
 	G.Dice[1] = 2;
 	G.CurrentPlayer = Black;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	CheckerCountAssert = true;
 	//PrintMoves();
 	AssertAreEqualInts(2, G.MoveSetsCount, "There should be 2 sets of moves.");
@@ -318,8 +317,7 @@ void TestCreateMovesBlackStart() {
 	G.CurrentPlayer = Black;
 	G.Dice[0] = 3;
 	G.Dice[1] = 4;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	char gs[100];
 	WriteGameString(gs, &G);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
@@ -333,8 +331,7 @@ void TestCreateMovesWhiteStart() {
 	G.CurrentPlayer = White;
 	G.Dice[0] = 3;
 	G.Dice[1] = 4;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	char gs[100];
 	WriteGameString(gs, &G);
 	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", gs, "Game string should be start string.");
@@ -352,8 +349,7 @@ void TestBlackCheckerOnBar() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 6;
 	G.CurrentPlayer = Black;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	CheckerCountAssert = true;
 	//PrintMoves();
 	AssertAreEqualInts(4, G.MoveSetsCount, "There should be 4 sets of moves.");
@@ -366,8 +362,7 @@ void TestWhiteCheckerOnBar() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 6;
 	G.CurrentPlayer = White;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	CheckerCountAssert = true;
 
 	//PrintMoves();
@@ -381,8 +376,7 @@ void TestBearingOffBlack() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 4;
 	G.CurrentPlayer = Black;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	CheckerCountAssert = true;
 	//PrintGame(&G);
 	//PrintMoves();
@@ -396,8 +390,7 @@ void TestBearingOffWhite() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 4;
 	G.CurrentPlayer = White;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	CheckerCountAssert = true;
 	//PrintMoves();
 	AssertAreEqualInts(11, G.MoveSetsCount, "There should be 11 sets of moves.");
@@ -409,8 +402,7 @@ void TestDoubleDiceBlack() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 2;
 	G.CurrentPlayer = Black;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	//PrintMoves();
 	AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)
@@ -423,8 +415,7 @@ void TestDoubleDiceWhite() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 2;
 	G.CurrentPlayer = White;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	//PrintMoves();
 	AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
 }
@@ -435,8 +426,7 @@ void PlayBothDiceIfPossible() {
 	G.CurrentPlayer = White;
 	G.Dice[0] = 4;
 	G.Dice[1] = 6;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	AssertAreEqualInts(1, G.MoveSetsCount, "There should be 1 set of moves.");
 	//PrintMoves();
 }
@@ -449,8 +439,7 @@ void TestRemoveShorterSets() {
 	G.Dice[0] = 2;
 	G.Dice[1] = 4;
 	G.CurrentPlayer = Black;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 	AssertAreEqualInts(11, G.MoveSetsCount, "There should be 11 moves");
 
 	//PrintMoves();
@@ -587,8 +576,7 @@ void TestManyCombos() {
 	G.Dice[0] = 1;
 	G.Dice[1] = 1;
 	G.CurrentPlayer = Black;
-	bool hashing = (AI(G.CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(&G, hashing);
+	CreateMoves(&G);
 
 	AssertAreEqualInts(72, G.MoveSetsCount, "There should be 72 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)

@@ -2,8 +2,7 @@
 #include "Game.h"
 
 typedef enum  {
-	EnableHashing = 1,
-	EnableAlphaBetaPruning = 2
+	EnableAlphaBetaPruning = 1
 } AiFlags;
 
 typedef struct  {
@@ -32,9 +31,9 @@ void AutoPlay();
 int RecursiveScore(Game* g, int depth, int best_black, int best_white);
 
 void RemoveShorterSets(int maxSetLength, Game* g);
-void CreateMoves(Game* g, bool doHashing);
-void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing);
-void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing);
+void CreateMoves(Game* g);
+void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
+void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g);
 
 bool DoMove(Move move, Game* g);
 void UndoMove(Move move, bool hit, Game* g, U64 prevHash);

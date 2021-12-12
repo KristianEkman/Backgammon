@@ -37,11 +37,11 @@ void InitAi(bool constant) {
 	}
 
 	//Black
-	AIs[0].Flags = EnableAlphaBetaPruning | EnableHashing;
+	AIs[0].Flags = EnableAlphaBetaPruning;
 	AIs[0].SearchDepth = 1;
 
 	//White
-	AIs[1].Flags = EnableAlphaBetaPruning | EnableHashing;
+	AIs[1].Flags = EnableAlphaBetaPruning;
 	AIs[1].SearchDepth = 1;
 }
 
@@ -291,7 +291,7 @@ void SetLightScore(Game* g, MoveSet* moveSet) {
 	moveSet->score = score;
 }
 
-void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing) {
+void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g) {
 	int start = fromPos;
 	int nextStart = fromPos;
 	bool checkerFound = false;
@@ -375,10 +375,10 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 			U64 prevHash = g->Hash;
 			int hit = DoMove(m, g);
 			// Recursivle go on to next dice. Been looking for simpler ways.
-			CreateBlackMoveSets(nextStart, diceIdx + 1, diceCount, maxSetLength, g, doHashing);
+			CreateBlackMoveSets(nextStart, diceIdx + 1, diceCount, maxSetLength, g);
 			UndoMove(m, hit, g, prevHash);
 		}
-		else if (doHashing) {
+		else {
 			// Last dice here
 			U64 prevHash = g->Hash;
 			bool hit = CheckerCount(g->Position[move->to]) == 1 && (g->Position[move->to] & OtherColor(move->color));
@@ -394,7 +394,7 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 	}
 }
 
-void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g, bool doHashing) {
+void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLength, Game* g) {
 	int start = fromPos;
 	int nextStart = fromPos;
 	bool checkerFound = false;
@@ -471,10 +471,10 @@ void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 			Move m = *move;
 			U64 prevHash = g->Hash;
 			int hit = DoMove(m, g);
-			CreateWhiteMoveSets(nextStart, diceIdx + 1, diceCount, maxSetLength, g, doHashing);
+			CreateWhiteMoveSets(nextStart, diceIdx + 1, diceCount, maxSetLength, g);
 			UndoMove(m, hit, g, prevHash);
 		}
-		else if (doHashing) {
+		else {
 			// Last dice here.
 			U64 prevHash = g->Hash;
 			bool hit = CheckerCount(g->Position[move->to]) == 1 && (g->Position[move->to] & OtherColor(move->color));
@@ -519,7 +519,7 @@ void RemoveShorterSets(int maxSetLength, Game* g) {
 	g->MoveSetsCount = realCount;
 }
 
-void CreateMoves(Game* g, bool doHashing) {
+void CreateMoves(Game* g) {
 
 	// 50% Better performance than for loop
 	memset(&g->PossibleMoveSets, 0, sizeof(g->PossibleMoveSets));
@@ -540,9 +540,9 @@ void CreateMoves(Game* g, bool doHashing) {
 		// TODO: Maybe reset sets here.
 		maxSetLength = 0;
 		if (g->CurrentPlayer & Black)
-			CreateBlackMoveSets(0, 0, diceCount, &maxSetLength, g, doHashing);
+			CreateBlackMoveSets(0, 0, diceCount, &maxSetLength, g);
 		else
-			CreateWhiteMoveSets(25, 0, diceCount, &maxSetLength, g, doHashing);
+			CreateWhiteMoveSets(25, 0, diceCount, &maxSetLength, g);
 
 		//If no moves are found and dicecount == 2 reverse dice order and try again.
 		if (g->MoveSetsCount == 0 && diceCount == 2) {
@@ -636,8 +636,8 @@ void PickNextMoveSet(int moveNum, MoveSet* moveSets, int moveCount) {
 int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 	int bestIdx = 0;
 	int bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
-	bool hashing = (AI(g->CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(g, hashing);
+	
+	CreateMoves(g);
 
 	if (g->MoveSetsCount == 0)
 	{
@@ -718,8 +718,7 @@ int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth) {
 	int bestIdx = 0;
 	int bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
-	bool hashing = (AI(g->CurrentPlayer).Flags & EnableHashing);
-	CreateMoves(g, hashing);
+	CreateMoves(g);
 
 	if (g->MoveSetsCount == 0)
 	{

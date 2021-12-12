@@ -1,4 +1,3 @@
-Ta bort config för hashing, det lönar sig.
 
 Alpha beta pruning
 ------------------
