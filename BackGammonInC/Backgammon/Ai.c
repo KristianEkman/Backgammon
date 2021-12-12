@@ -70,19 +70,42 @@ bool ToHome(Move move) {
 
 // Must be called before the move of checkers is performed.
 void AddHash(Game* g, Move move, bool hit) {
-	g->Hash ^= PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1];     // Counting checkers AFTER count updated gives the correct number for the moved checker.
-	g->Hash ^= PositionHash[move.color >> 5][move.from][CheckerCount(g->Position[move.from])]; // Counting checkers BEFORE count updated gives the correct number for the moved checker.
+
+	g->Hash ^=     PositionHash[move.color >> 5][move.from][CheckerCount(g->Position[move.from])]; // Counting checkers BEFORE count updated gives the correct number for the moved checker.
+	//printf("%llu\n", PositionHash[move.color >> 5][move.from][CheckerCount(g->Position[move.from])]);
 
 	if (hit) {
+		// First checker of the move color is added to the to-position
+		g->Hash ^= PositionHash[move.color >> 5][move.to][1];     
+		//printf("%llu\n", PositionHash[move.color >> 5][move.to][1]);
+
 		if (move.color == Black)
 		{
-			g->Hash ^= PositionHash[1][move.to][1]; // Last white checker removed from to-position
-			g->Hash ^= PositionHash[1][25][CheckerCount(g->Position[25]) + 1]; // White checker added to its bar
+			// Last white checker removed from to-position
+			g->Hash ^=     PositionHash[1][move.to][1];
+			//printf("%llu\n", PositionHash[1][move.to][1]);
+
+			// White checker added to its bar
+			g->Hash ^=     PositionHash[1][25][CheckerCount(g->Position[25]) + 1]; 
+			//printf("%llu\n", PositionHash[1][25][CheckerCount(g->Position[25]) + 1]);
+
 		}
 		else {
-			g->Hash ^= PositionHash[0][move.to][1]; // Last black checker removed from to-position
-			g->Hash ^= PositionHash[0][0][CheckerCount(g->Position[0]) + 1]; // Black checker added to its bar.
+			// Last black checker removed from to-position
+			g->Hash ^=     PositionHash[0][move.to][1]; 
+			//printf("%llu\n", PositionHash[0][move.to][1]);
+
+			// Black checker added to its bar.
+			g->Hash ^=     PositionHash[0][0][CheckerCount(g->Position[0]) + 1]; 
+			//printf("%llu\n", PositionHash[0][0][CheckerCount(g->Position[0]) + 1]);
+
 		}
+	}
+	else {
+		// Counting checkers AFTER count updated gives the correct number for the moved checker.
+		g->Hash ^=     PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1];
+		//printf("%llu\n", PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1]);
+
 	}
 }
 
@@ -334,21 +357,24 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 
 			move = &moveSet->Moves[diceIdx];
 			g->MoveSetsCount++;
-			setIdx++;
 			ASSERT_DBG(g->MoveSetsCount < MAX_SETS_LENGTH);
 		}
 
+		// Creating move
 		move->from = i;
 		move->to = toPos;
 		move->color = Black;
-
 		moveSet->Length++;
+		
+		//This is returned to caller. So short sets can be removed later.
+		//Special backgammon rule.
 		*maxSetLength = max(*maxSetLength, moveSet->Length);
 
 		if (diceIdx < diceCount - 1) {
 			Move m = *move;
 			U64 prevHash = g->Hash;
 			int hit = DoMove(m, g);
+			// Recursivle go on to next dice. Been looking for simpler ways.
 			CreateBlackMoveSets(nextStart, diceIdx + 1, diceCount, maxSetLength, g, doHashing);
 			UndoMove(m, hit, g, prevHash);
 		}
@@ -356,7 +382,8 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 			// Last dice here
 			U64 prevHash = g->Hash;
 			bool hit = CheckerCount(g->Position[move->to]) == 1 && (g->Position[move->to] & OtherColor(move->color));
-			AddHash(g, *move, hit); // It should be faster to just calculate the hash rather than 
+			// It should be faster to just calculate the hash rather than 
+			AddHash(g, *move, hit); 
 			moveSet->Hash = g->Hash;
 			g->Hash = prevHash;
 			if (HashSetExists(moveSet->Hash, g))
@@ -430,7 +457,6 @@ void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 				memcpy(&moveSet->Moves[0], &g->PossibleMoveSets[setIdx].Moves[0], copyCount * sizeof(Move));
 			move = &moveSet->Moves[diceIdx];
 			g->MoveSetsCount++;
-			setIdx++;
 			ASSERT_DBG(g->MoveSetsCount < MAX_SETS_LENGTH);
 		}
 

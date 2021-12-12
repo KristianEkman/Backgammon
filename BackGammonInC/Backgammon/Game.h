@@ -6,7 +6,7 @@
 #define ushort unsigned short
 #define uint unsigned int
 #define BUF_SIZE 5000
-#define MAX_SETS_LENGTH 1000 // This value is found by running many games and check that it never goes over.
+#define MAX_SETS_LENGTH 1500 // This value is found by running many games and check that it never goes over.
 
 typedef enum {
 	Black = 16,

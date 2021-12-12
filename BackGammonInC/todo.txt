@@ -1,12 +1,13 @@
-
-Man borde kunna hoppa över kort sets på en gång.
+Ta bort config för hashing, det lönar sig.
 
 Alpha beta pruning
 ------------------
 	
-	Performance Eval count: 5836796 - (666.2k evs/sec) 8761.00ms
+	Performance Eval count: 1125346 - (388.2k evs/sec) 2899.00ms
 
 	- Fler testfall
+
+	- Iterative deepening
 
 	- Light Score på move set.
 		- points left
@@ -17,13 +18,15 @@ Alpha beta pruning
 		quads i par.
 		tp_moves som sparas i hash-tabell
 				
-	- Iterative deepening
+	
 
-	- Store PV-moves in Hash-table
+	- Lagra PV-moves i Hash-table
 
 
 Det kanske inte är så viktigt att generera alla tärningar?
 	dubblar
+
+Man borde kunna hoppa över korta sets på en gång.
 
 Trainer, genetic search
 -----------------------

@@ -573,7 +573,7 @@ void TestBestBearingOffWhite() {
 	InitAi(true);
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
-	double score = 0;	
+	double score = 0;
 	MoveSet set;
 	FindBestMoveSet(&G, &set, 1);
 	Move* m = set.Moves;
@@ -644,7 +644,7 @@ void Performance() {
 	time_t start = clock();
 	FindBestMoveSet(&G, &set, 2);
 	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
-	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);	
+	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);
 }
 
 void TestHashing() {
@@ -655,7 +655,7 @@ void TestHashing() {
 	m1.to = 4;
 	U64 hash1 = G.Hash;
 	DoMove(m1, &G);
-	
+
 	Assert(hash1 != G.Hash, "Hash should have changed after a move");
 
 	Move m2;
@@ -666,8 +666,30 @@ void TestHashing() {
 	Assert(hash1 == G.Hash, "Hash should have changed back");
 }
 
-void RunAll() {
-	
+void TestHashingHit() {
+	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 w1 w1 0 0 0", &G);
+	Move move;
+	move.from = 19;
+	move.to = 23;
+	move.color = Black;
+	//ConsoleWriteLine("DoMove");
+	DoMove(move, &G);
+	U64 hash1 = G.Hash;
+	char gs[100];
+	WriteGameString(gs, &G);
+	//ConsoleWriteLine("Read game string");
+	ReadGameString(gs, &G);
+	//printf("%s\n", gs);
+	Assert(hash1 == G.Hash, "Hash after hit move differ");
+}
+
+void RunSelectedTests() {
+	Run(TestHashing, "TestHashing");
+	Run(TestHashingHit, "TestHashingHit");
+}
+
+void RunAllTests() {
+
 	Run(TestNastyBug, "TestNastyBug");
 	Run(TestStartPos, "TestStartPos");
 	Run(TestRollDice, "TestRollDice");
@@ -701,8 +723,10 @@ void RunAll() {
 	Run(TestManyCombos, "TestManyCombos");
 	Run(TestBestMoveBlack1, "TestBestMoveBlack1");
 	Run(TestBestMoveWhite1, "TestBestMoveWhite1");
-	Run(Performance, "Performance");
 	Run(TestHashing, "TestHashing");
+	Run(TestHashingHit, "TestHashingHit");
+	Run(Performance, "Performance");
+
 	// TODO: Test Blocked -> zero moves.
 
 	if (_failedAsserts == 0)

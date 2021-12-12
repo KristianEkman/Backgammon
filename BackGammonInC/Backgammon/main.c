@@ -33,7 +33,10 @@ int main() {
 	while (!Streq(buf, "quit\n") && !Streq(buf, "q\n"))
 	{
 		if (Streq(buf, "test\n") || Streq(buf, "t\n")) {
-			RunAll();
+			RunAllTests();
+		}
+		else if (Streq(buf, "s\n")) {
+			RunSelectedTests();
 		}
 		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
 			AutoPlay();
