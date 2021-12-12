@@ -526,6 +526,7 @@ void CreateMoves(Game* g) {
 
 	g->MoveSetsCount = 0;
 	// Largest Dice first
+	ASSERT_DBG(g->Dice[0] >= 1 && g->Dice[0] <= 6 && g->Dice[1] >= 1 && g->Dice[1] <= 6);
 	if (g->Dice[1] > g->Dice[0]) {
 		ReverseDice(g);
 	}
@@ -837,8 +838,9 @@ void AutoPlay()
 			blackWins++;
 		else if (G.WhiteLeft == 0)
 			whiteWins++;
-		if (i % 10 == 0)
-			printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", i, whiteWins, whiteWins / (double)i, blackWins, blackWins / (double)i, i / ((float)(clock() - start) / CLOCKS_PER_SEC));
+		double games = i + (double)1;
+		if ((int)games % 10 == 0)
+			printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", (int)games, whiteWins, whiteWins / games, blackWins, blackWins / games, games / ((float)(clock() - start) / CLOCKS_PER_SEC));
 	}
 	printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch, batch / ((float)(clock() - start) / CLOCKS_PER_SEC));
 
