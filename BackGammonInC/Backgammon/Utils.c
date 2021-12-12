@@ -156,5 +156,3 @@ void FailAssert() {
 	printf("\nASSERT failed\n");
 	exit(1);
 }
-
-

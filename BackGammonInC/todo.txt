@@ -1,10 +1,7 @@
+Performance Eval count: 1867638 - (252.3k evs/sec) 7401.00ms
 
 Alpha beta pruning
 ------------------
-	
-	Performance Eval count: 1125346 - (388.2k evs/sec) 2899.00ms
-
-	- Fler testfall
 
 	- Iterative deepening
 
@@ -16,8 +13,6 @@ Alpha beta pruning
 		hits
 		quads i par.
 		tp_moves som sparas i hash-tabell
-				
-	
 
 	- Lagra PV-moves i Hash-table
 

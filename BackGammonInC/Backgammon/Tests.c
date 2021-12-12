@@ -625,6 +625,7 @@ void TestBestMoveWhite1() {
 
 void Performance() {
 	char* gs = "0 b2 w2 w3 0 0 w6 0 0 0 w1 w1 b2 0 0 0 b1 b1 b2 b4 0 0 b3 0 w2 0 0 0";
+	ReadGameString(gs, &G);
 	G.Dice[0] = 2;
 	G.Dice[1] = 2;
 	MoveSet set;
@@ -671,13 +672,51 @@ void TestHashingHit() {
 	Assert(hash1 == G.Hash, "Hash after hit move differ");
 }
 
+
+void TestHashingWhiteTwoMoves() {
+	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0", &G);
+	Move move;
+	move.from = 24;
+	move.to = 23;
+	move.color = White;
+	//ConsoleWriteLine("DoMove");
+	DoMove(move, &G);
+	DoMove(move, &G);
+	U64 hash1 = G.Hash;
+	char gs[100];
+	WriteGameString(gs, &G);
+	//ConsoleWriteLine("Read game string");
+	ReadGameString(gs, &G);
+	//printf("%s\n", gs);
+	Assert(hash1 == G.Hash, "Hash after hit move differ");
+}
+
+void TestNoMoves() {
+	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b2 b2 b2 b2 b2 b2 w1 0 0", &G);
+	CheckerCountAssert = false;
+	G.CurrentPlayer = White;
+	G.Dice[0] = 3;
+	G.Dice[1] = 1;
+	MoveSet ms;
+	int r = FindBestMoveSet(&G, &ms, 1);
+	AssertAreEqualInts(-1, r, "Expected no moves");
+	AssertAreEqualInts(0, G.MoveSetsCount, "Expected no moves");
+ 	CheckerCountAssert = true;
+}
+
 void RunSelectedTests() {
+	_failedAsserts = 0;
 	Run(TestHashing, "TestHashing");
 	Run(TestHashingHit, "TestHashingHit");
+	Run(TestHashingHit, "TestHashingHit");
+	if (_failedAsserts == 0)
+		PrintGreen("\nSuccess! Tests are good!\n");
+	else
+		PrintRed("\nThere are failed tests.\n");
 }
 
 void RunAllTests() {
-
+	_failedAsserts = 0;
 	Run(TestNastyBug, "TestNastyBug");
 	Run(TestStartPos, "TestStartPos");
 	Run(TestRollDice, "TestRollDice");
@@ -713,6 +752,9 @@ void RunAllTests() {
 	Run(TestBestMoveWhite1, "TestBestMoveWhite1");
 	Run(TestHashing, "TestHashing");
 	Run(TestHashingHit, "TestHashingHit");
+	Run(TestHashingWhiteTwoMoves, "TestHashingWhiteTwoMoves");
+	Run(TestNoMoves, "TestNoMoves");
+
 	Run(Performance, "Performance");
 
 	// TODO: Test Blocked -> zero moves.
