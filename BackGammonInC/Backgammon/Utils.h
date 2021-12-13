@@ -12,6 +12,8 @@
 typedef enum { false, true } bool;
 typedef unsigned long long U64;
 typedef unsigned char ubyte;
+typedef unsigned short ushort;
+typedef unsigned int uint;
 
 U64 Llrand();
 

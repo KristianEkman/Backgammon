@@ -60,12 +60,30 @@ bool PlayersPassedEachOther(Game* g) {
 }
 
 void RollDice(Game* g) {
-	g->Dice[1] = LlrandShift() % 6 + 1;
-	g->Dice[0] = LlrandShift() % 6 + 1;
+	U64 d0 = LlrandShift() % 6 + 1;
+	U64 d1 = LlrandShift() % 6 + 1;
+	//Important to have the dice sorted for two reasons
+	// 1. E.g 3 - 4 is the same as 4-3
+	// 2. There are some rules of the game
+	if (d0 > d1)
+	{
+		g->Dice[0] = d0;
+		g->Dice[1] = d1;
+	}
+	else {
+		g->Dice[0] = d1;
+		g->Dice[1] = d0;
+	}
+	g->DiceHash = DiceHash[0][d0] ^ DiceHash[1][d1];
 }
 
 bool ToHome(Move move) {
 	return move.color == Black && move.to == 25 || move.color == White && move.to == 0;
+}
+
+void SwitchSides(Game * g) {
+	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+	g->Hash ^= SidesHash;
 }
 
 // Must be called before the move of checkers is performed.
@@ -527,6 +545,8 @@ void CreateMoves(Game* g) {
 	g->MoveSetsCount = 0;
 	// Largest Dice first
 	ASSERT_DBG(g->Dice[0] >= 1 && g->Dice[0] <= 6 && g->Dice[1] >= 1 && g->Dice[1] <= 6);
+
+	// todo: remove this, since they should already be ordered. There might be some testcases that needs it.
 	if (g->Dice[1] > g->Dice[0]) {
 		ReverseDice(g);
 	}
@@ -536,7 +556,7 @@ void CreateMoves(Game* g) {
 		? 4 : 2;
 
 	int maxSetLength = 0;
-	for (size_t i = 0; i < 2; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		// TODO: Maybe reset sets here.
 		maxSetLength = 0;
@@ -598,7 +618,7 @@ int GetScore(Game* g) {
 //Gets the averege best score for the other player
 int GetProbablilityScore(Game* g, int depth, int best_black, int best_white) {
 	int totalScore = 0;
-	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+	SwitchSides(g);
 	short diceBuf[2] = { g->Dice[0], g->Dice[1] };
 	for (int i = 0; i < DiceCombos; i++)
 	{
@@ -611,7 +631,7 @@ int GetProbablilityScore(Game* g, int depth, int best_black, int best_white) {
 	}
 	// Since we are faking the dice down the stack, it is safer to but them back here.
 	g->Dice[0] = diceBuf[0]; g->Dice[1] = diceBuf[1];
-	g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+	SwitchSides(g);
 	return totalScore / DiceCombos;
 }
 
@@ -634,6 +654,7 @@ void PickNextMoveSet(int moveNum, MoveSet* moveSets, int moveCount) {
 	moveSets[bestNum] = temp;
 }
 
+//minimax search for best score. Also alpha beta pruned.
 int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 	int bestIdx = 0;
 	int bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
@@ -649,6 +670,18 @@ int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 	int setsCount = g->MoveSetsCount;
 	MoveSet* localSets = malloc(sizeof(MoveSet) * g->MoveSetsCount);
 	memcpy(localSets, &g->PossibleMoveSets, sizeof(MoveSet) * setsCount);
+
+	int probedIdx = -1;	
+	bool probed = false;
+	if (ProbeHashTable(g->Hash ^ g->DiceHash, &probedIdx, depth) && probedIdx > 0)
+	{
+		ASSERT_DBG(probedIdx < g->MoveSetsCount - 1);
+		MoveSet temp = localSets[probedIdx];
+		localSets[probedIdx] = localSets[0];
+		localSets[0] = temp;
+		probed = true;
+	}
+
 	for (int i = 0; i < setsCount; i++)
 	{
 		//only minor performance improvement, maybe enable if greater depths.
@@ -670,8 +703,12 @@ int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 		if (depth <= 0)
 			score = GetScore(g);
 		else
-			// The best score the opponent can get. Minimize it.
+			// The best average score the opponent can get rolling all dice.
 			score = GetProbablilityScore(g, depth - 1, best_black, best_white);
+
+		//Undoing in reverse
+		for (int u = set.Length - 1; u >= 0; u--)
+			UndoMove(moves[u], hits[u], g, prevHash);
 
 		if (g->CurrentPlayer == White) {
 			// White is maximizing
@@ -680,9 +717,10 @@ int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 				bestScore = score;
 				bestIdx = i;
 				if (score > best_white) {
-					if (score >= best_black) {
-						for (int u = set.Length - 1; u >= 0; u--)
-							UndoMove(moves[u], hits[u], g, prevHash);
+					if (score >= best_black) {		
+						// TODO: eftersom vi kan ha flyttat ett drag, så är det inte säkert att bestIdx stämmer
+						int idx = probed ? probedIdx : bestIdx;
+						AddHashEntry(g->Hash ^ g->DiceHash, idx, depth, PV_Set);
 						free(localSets);
 						return best_black;
 					}
@@ -696,20 +734,16 @@ int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 				bestScore = score;
 				bestIdx = i;
 				if (score < best_black) {
-					if (score <= best_white) {
-						for (int u = set.Length - 1; u >= 0; u--)
-							UndoMove(moves[u], hits[u], g, prevHash);
+					if (score <= best_white) {		
+						int idx = probed ? probedIdx : bestIdx;
+						AddHashEntry(g->Hash ^ g->DiceHash, idx, depth, PV_Set);
 						free(localSets);
 						return best_white;
 					}
 					best_black = score;
 				}
 			}
-		}
-
-		//Undoing in reverse
-		for (int u = set.Length - 1; u >= 0; u--)
-			UndoMove(moves[u], hits[u], g, prevHash);
+		}		
 	}
 
 	free(localSets);
@@ -819,7 +853,7 @@ void PlayGame(Game* g, bool pausePlay) {
 				if (pausePlay)
 					Pause(g);
 			}
-		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+		SwitchSides(g);
 		RollDice(g);
 	}
 }

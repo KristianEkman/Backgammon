@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="Ai.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameTypes.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Tests.h" />

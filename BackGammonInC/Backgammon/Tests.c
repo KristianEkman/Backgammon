@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "Tests.h"
 #include "Ai.h"
+#include "Hash.h"
 
 #pragma region TestsHelpers
 
@@ -81,10 +82,15 @@ void AssertAreEqualLongs(U64 expected, U64 actual, char* msg) {
 
 void Run(void (*test)(), char* name)
 {
+	int f1 = _failedAsserts;
+	char smile[] = { 32 , 2, 0 };
+
 	printf("\n%s ", name);
 	clock_t start = clock();
 	test();
 	printf("%.2fms", (float)(clock() - start) * 1000 / CLOCKS_PER_SEC);
+	if (_failedAsserts == f1)
+		PrintGreen(smile);
 }
 
 void TestStartPos() {
@@ -631,7 +637,7 @@ void Performance() {
 	MoveSet set;
 	G.EvalCounts = 0;
 	time_t start = clock();
-	FindBestMoveSet(&G, &set, 2);
+	FindBestMoveSet(&G, &set, 3);
 	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
 	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);
 }
@@ -704,6 +710,17 @@ void TestNoMoves() {
  	CheckerCountAssert = true;
 }
 
+void TestHashEntries() {
+	StartPosition(&G);
+	ushort setIdx = 99;
+	AddHashEntry(G.Hash, setIdx, 3, 2);
+
+	ushort iOut;
+	bool r = ProbeHashTable(G.Hash, &iOut, 3);
+	Assert(r == true, "Unexpected probe result");
+	AssertAreEqualInts(setIdx, iOut, "Hash entry roundtrip failed");
+}
+
 void RunSelectedTests() {
 	_failedAsserts = 0;
 	Run(TestHashing, "TestHashing");
@@ -754,6 +771,7 @@ void RunAllTests() {
 	Run(TestHashingHit, "TestHashingHit");
 	Run(TestHashingWhiteTwoMoves, "TestHashingWhiteTwoMoves");
 	Run(TestNoMoves, "TestNoMoves");
+	Run(TestHashEntries, "TestHashEntries");
 
 	Run(Performance, "Performance");
 

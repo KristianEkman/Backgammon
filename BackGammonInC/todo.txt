@@ -1,5 +1,13 @@
 Performance Eval count: 1867638 - (252.3k evs/sec) 7401.00ms
 
+Current Player hash
+	Playing Side i Game String
+	CurrentDice i Game String
+
+Dice hashes.
+
+Finns det ett fel i chess matrix i att den prioriterar PlainMoves när den bara borde flytta upp PV_Moves?
+
 Alpha beta pruning
 ------------------
 
@@ -15,6 +23,11 @@ Alpha beta pruning
 		tp_moves som sparas i hash-tabell
 
 	- Lagra PV-moves i Hash-table
+
+
+Order and forward prune
+-----------------------
+	Men testa mot AI utan.
 
 
 Det kanske inte är så viktigt att generera alla tärningar?
