@@ -820,6 +820,15 @@ int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth) {
 	return bestIdx;
 }
 
+int IterativeSearch(Game* g, MoveSet* bestSet) {
+	
+	//TODO: Reset hash?
+	for (int i = 0; i < 3; i++)
+	{
+		FindBestMoveSet(g, bestSet, i);		
+	}
+}
+
 void Pause(Game* g) {
 	char buf[BUF_SIZE];
 	SetCursorPosition(0, 0);

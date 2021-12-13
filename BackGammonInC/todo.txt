@@ -96,3 +96,7 @@ Config för
 
 Inte jobba med Game* utan matriser, prestanda
 	- Blev 4% sämre prestanda
+
+Iterative Search
+----------------
+Ger ingen ytterligare pruning

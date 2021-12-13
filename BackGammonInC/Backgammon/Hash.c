@@ -62,8 +62,8 @@ bool ProbeHashTable(U64 gameHash, ushort* setIdx, ubyte depth) {
 	value = value >> 2;
 	ubyte dep = value & 0x7;
 
-	if (dep < depth)
-		return false;
+	/*if (dep < depth)
+		return false;*/
 	value = value >> 3;
 	*setIdx = value;
 	return true;

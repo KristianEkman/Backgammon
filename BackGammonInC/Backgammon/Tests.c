@@ -637,7 +637,8 @@ void Performance() {
 	MoveSet set;
 	G.EvalCounts = 0;
 	time_t start = clock();
-	FindBestMoveSet(&G, &set, 3);
+	G.EvalCounts = 0;
+	FindBestMoveSet(&G, &set, 2);
 	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
 	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);
 }
@@ -721,6 +722,19 @@ void TestHashEntries() {
 	AssertAreEqualInts(setIdx, iOut, "Hash entry roundtrip failed");
 }
 
+void TestIterativeSearch() {
+	char* gs = "0 b2 w2 w3 0 0 w6 0 0 0 w1 w1 b2 0 0 0 b1 b1 b2 b4 0 0 b3 0 w2 0 0 0";
+	ReadGameString(gs, &G);
+	G.Dice[0] = 2;
+	G.Dice[1] = 2;
+	MoveSet set;
+	time_t start = clock();
+	G.EvalCounts = 0;
+	IterativeSearch(&G, &set);	
+	float ellapsed = (float)(clock() - start) / CLOCKS_PER_SEC;
+	printf("Eval count: %d - (%.1fk evs/sec) ", G.EvalCounts, G.EvalCounts / ellapsed / 1000);
+}
+
 void RunSelectedTests() {
 	_failedAsserts = 0;
 	Run(TestHashing, "TestHashing");
@@ -772,6 +786,7 @@ void RunAllTests() {
 	Run(TestHashingWhiteTwoMoves, "TestHashingWhiteTwoMoves");
 	Run(TestNoMoves, "TestNoMoves");
 	Run(TestHashEntries, "TestHashEntries");
+	Run(TestIterativeSearch, "TestIterativeSearch");
 
 	Run(Performance, "Performance");
 

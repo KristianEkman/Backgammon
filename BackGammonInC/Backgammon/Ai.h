@@ -38,3 +38,4 @@ void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 bool DoMove(Move move, Game* g);
 void UndoMove(Move move, bool hit, Game* g, U64 prevHash);
 bool IsBlockedFor(ushort pos, ushort color, Game* g);
+int IterativeSearch(Game* g, MoveSet* bestSet);
