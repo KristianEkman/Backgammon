@@ -1,5 +1,11 @@
 Performance Eval count: 1867638 - (252.3k evs/sec) 7401.00ms
 
+Multithreaded auto play.
+-----------------------
+
+
+Finns det ett fel i chess matrix i att den prioriterar PlainMoves när den bara borde flytta upp PV_Moves?
+
 Alpha beta pruning
 ------------------
 
