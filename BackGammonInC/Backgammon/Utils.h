@@ -15,8 +15,6 @@ typedef unsigned char ubyte;
 
 U64 Llrand();
 
-U64 LlrandShift();
-
 int RandomInt(int lower, int upper);
 double RandomDouble(double lower, double upper);
 

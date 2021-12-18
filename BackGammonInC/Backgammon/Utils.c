@@ -27,22 +27,11 @@ int ParseChar(char c) {
 
 U64  rnd_seed = 1070372;
 
-U64 LlrandShift() {
+U64 Llrand() {
 
 	rnd_seed ^= rnd_seed >> 12, rnd_seed ^= rnd_seed << 25, rnd_seed ^= rnd_seed >> 27;
 	return rnd_seed * 2685821657736338717LL;
 }
-
-U64 Llrand() {
-	U64 r = 0;
-
-	for (int i = 0; i < 5; ++i) {
-		r = (r << 15) | (rand() & 0x7FFF);
-	}
-
-	return r & 0xFFFFFFFFFFFFFFFFULL;
-}
-
 bool seeded;
 int RandomInt(int lower, int upper)
 {

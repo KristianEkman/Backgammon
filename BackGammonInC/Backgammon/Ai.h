@@ -8,22 +8,23 @@ typedef enum  {
 typedef struct  {
 	AiFlags Flags;
 	ubyte SearchDepth;
+	//Negative score for leaving a blot on the board.
+	double BlotFactors[26];
+	//It is good to connect blocks since in the future the opponent might be blocked by them.
+	double ConnectedBlocksFactor[26];
+
 } AiConfig;
 
 AiConfig AIs[2];
 
 #define AI(color) AIs[(color)>>5]
 
-//Negative score for leaving a blot on the board.
-double BlotFactors[2][26];
-//It is good to connect blocks since in the future the opponent might be blocked by them.
-double ConnectedBlocksFactor[2][26];
-
 #define DiceCombos 21
+// [ComboIndex][DiceValue]
 int AllDices[DiceCombos][2];
 
 int EvaluateCheckers(Game* g, PlayerSide color);
-void InitAi(bool constant);
+void InitAi(AiConfig * config,bool constant);
 int GetScore(Game* g);
 void PlayGame(Game* g, bool pausePlay);
 int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth);

@@ -10,22 +10,20 @@
 #include "Utils.h"
 #include "Hash.h"
 
-void InitAi(bool constant) {
-	for (int a = 0; a < 2; a++)
+void InitAi(AiConfig* ai, bool constant) {
+	for (int i = 0; i < 25; i++)
 	{
-		for (int i = 0; i < 25; i++)
-		{
-			if (constant) {
-				BlotFactors[a][i] = 1;
-				ConnectedBlocksFactor[a][i] = 1;
-			}
-			else {
-				BlotFactors[a][i] = RandomDouble(0, 1);
-				ConnectedBlocksFactor[a][i] = RandomDouble(0, 1);
-			}
+		if (constant) {
+			ai->BlotFactors[i] = 1;
+			ai->ConnectedBlocksFactor[i] = 1;
+		}
+		else {
+			ai->BlotFactors[i] = RandomDouble(0, 1);
+			ai->ConnectedBlocksFactor[i] = RandomDouble(0, 1);
 		}
 	}
 
+	//TODO: extract to own method
 	int i = 0;
 	for (int a = 1; a < 7; a++)
 	{
@@ -37,12 +35,8 @@ void InitAi(bool constant) {
 	}
 
 	//Black
-	AIs[0].Flags = EnableAlphaBetaPruning;
-	AIs[0].SearchDepth = 1;
-
-	//White
-	AIs[1].Flags = EnableAlphaBetaPruning;
-	AIs[1].SearchDepth = 1;
+	ai->Flags = EnableAlphaBetaPruning;
+	ai->SearchDepth = 1;
 }
 
 bool PlayersPassedEachOther(Game* g) {
@@ -60,8 +54,8 @@ bool PlayersPassedEachOther(Game* g) {
 }
 
 void RollDice(Game* g) {
-	g->Dice[1] = LlrandShift() % 6 + 1;
-	g->Dice[0] = LlrandShift() % 6 + 1;
+	g->Dice[1] = LlrandShift(g) % 6 + 1;
+	g->Dice[0] = LlrandShift(g) % 6 + 1;
 }
 
 bool ToHome(Move move) {
@@ -71,39 +65,39 @@ bool ToHome(Move move) {
 // Must be called before the move of checkers is performed.
 void AddHash(Game* g, Move move, bool hit) {
 
-	g->Hash ^=     PositionHash[move.color >> 5][move.from][CheckerCount(g->Position[move.from])]; // Counting checkers BEFORE count updated gives the correct number for the moved checker.
+	g->Hash ^= PositionHash[move.color >> 5][move.from][CheckerCount(g->Position[move.from])]; // Counting checkers BEFORE count updated gives the correct number for the moved checker.
 	//printf("%llu\n", PositionHash[move.color >> 5][move.from][CheckerCount(g->Position[move.from])]);
 
 	if (hit) {
 		// First checker of the move color is added to the to-position
-		g->Hash ^= PositionHash[move.color >> 5][move.to][1];     
+		g->Hash ^= PositionHash[move.color >> 5][move.to][1];
 		//printf("%llu\n", PositionHash[move.color >> 5][move.to][1]);
 
 		if (move.color == Black)
 		{
 			// Last white checker removed from to-position
-			g->Hash ^=     PositionHash[1][move.to][1];
+			g->Hash ^= PositionHash[1][move.to][1];
 			//printf("%llu\n", PositionHash[1][move.to][1]);
 
 			// White checker added to its bar
-			g->Hash ^=     PositionHash[1][25][CheckerCount(g->Position[25]) + 1]; 
+			g->Hash ^= PositionHash[1][25][CheckerCount(g->Position[25]) + 1];
 			//printf("%llu\n", PositionHash[1][25][CheckerCount(g->Position[25]) + 1]);
 
 		}
 		else {
 			// Last black checker removed from to-position
-			g->Hash ^=     PositionHash[0][move.to][1]; 
+			g->Hash ^= PositionHash[0][move.to][1];
 			//printf("%llu\n", PositionHash[0][move.to][1]);
 
 			// Black checker added to its bar.
-			g->Hash ^=     PositionHash[0][0][CheckerCount(g->Position[0]) + 1]; 
+			g->Hash ^= PositionHash[0][0][CheckerCount(g->Position[0]) + 1];
 			//printf("%llu\n", PositionHash[0][0][CheckerCount(g->Position[0]) + 1]);
 
 		}
 	}
 	else {
 		// Counting checkers AFTER count updated gives the correct number for the moved checker.
-		g->Hash ^=     PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1];
+		g->Hash ^= PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1];
 		//printf("%llu\n", PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1]);
 
 	}
@@ -280,13 +274,13 @@ bool HashSetExists(U64 hash, Game* g) {
 
 void SetLightScore(Game* g, MoveSet* moveSet) {
 	int score = g->BlackLeft - g->WhiteLeft;
-	char ai = g->CurrentPlayer >> 5;
+	char a = g->CurrentPlayer >> 5;
 
 	for (int i = 0; i < moveSet->Length; i++)
 	{
 		int to = moveSet->Moves[i].to;
 		if (CheckerCount(g->Position[to]) == 1)
-			score -= (int)BlotFactors[ai][to];
+			score -= (int)AI(a).BlotFactors[to];
 	}
 	moveSet->score = score;
 }
@@ -345,7 +339,7 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 		}
 		else if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new set of moves.
-			
+
 			// But first set a light score for ordering			
 			SetLightScore(g, moveSet);
 			int copyCount = diceIdx;
@@ -365,7 +359,7 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 		move->to = toPos;
 		move->color = Black;
 		moveSet->Length++;
-		
+
 		//This is returned to caller. So short sets can be removed later.
 		//Special backgammon rule.
 		*maxSetLength = max(*maxSetLength, moveSet->Length);
@@ -383,7 +377,7 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 			U64 prevHash = g->Hash;
 			bool hit = CheckerCount(g->Position[move->to]) == 1 && (g->Position[move->to] & OtherColor(move->color));
 			// It should be faster to just calculate the hash rather than 
-			AddHash(g, *move, hit); 
+			AddHash(g, *move, hit);
 			moveSet->Hash = g->Hash;
 			g->Hash = prevHash;
 			if (HashSetExists(moveSet->Hash, g))
@@ -574,14 +568,14 @@ int EvaluateCheckers(Game* g, PlayerSide color) {
 		}
 		else {
 			if (blockCount && !playersPassed) {
-				score += (int)pow((double)blockCount, ConnectedBlocksFactor[ai][p]);
+				score += (int)pow((double)blockCount, AI(ai).ConnectedBlocksFactor[p]);
 			}
 			blockCount = 0;
 		}
 
 		if (checkCount == 1 && (v & color) && !playersPassed)
 		{
-			score -= (int)BlotFactors[ai][p];
+			score -= (int)AI(ai).BlotFactors[p];
 		}
 	}
 	return score;
@@ -637,7 +631,7 @@ void PickNextMoveSet(int moveNum, MoveSet* moveSets, int moveCount) {
 int RecursiveScore(Game* g, int depth, int best_black, int best_white) {
 	int bestIdx = 0;
 	int bestScore = g->CurrentPlayer == White ? -INFINITY : INFINITY;
-	
+
 	CreateMoves(g);
 
 	if (g->MoveSetsCount == 0)
@@ -793,6 +787,7 @@ void Pause(Game* g) {
 	fgets(buf, 5000, stdin);
 }
 
+// Playes one game, optimally waits for user input and prints each game state.
 void PlayGame(Game* g, bool pausePlay) {
 
 	StartPosition(g);

@@ -143,6 +143,7 @@
     <ClCompile Include="Game.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="Tests.c" />
+    <ClCompile Include="Trainer.c" />
     <ClCompile Include="Utils.c" />
     <ClCompile Include="Hash.c" />
   </ItemGroup>
@@ -152,6 +153,7 @@
     <ClInclude Include="Hash.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="Tests.h" />
+    <ClInclude Include="Trainer.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

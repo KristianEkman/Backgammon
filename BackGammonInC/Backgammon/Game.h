@@ -62,6 +62,7 @@ typedef struct {
 	uint EvalCounts;
 	//Unique hash for the game state
 	U64 Hash;
+	U64 rnd_seed;
 } Game;
 
 // The global game variable
@@ -72,6 +73,8 @@ GameConfig G_Config;
 // Switch off Check Count == 15 for some tests
 bool CheckerCountAssert;
 
+void InitSeed(Game* g, int seed);
+U64 LlrandShift(Game* g);
 void StartPosition(Game* g);
 void RollDice(Game* g);
 int CountAllCheckers(PlayerSide side, Game* game);
@@ -81,3 +84,4 @@ void ReadGameString(char* s, Game* g);
 void PrintGame(Game* game);
 void SetPointsLeft(Game* g);
 void InitGameConfig();
+void InitHashes();

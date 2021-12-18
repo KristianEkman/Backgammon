@@ -7,6 +7,7 @@
 #include "Game.h"
 #include "Tests.h"
 #include "Ai.h"
+#include "Trainer.h"
 
 #pragma region TestsHelpers
 
@@ -455,7 +456,8 @@ void TestRemoveShorterSets() {
 void TestEvaluation() {
 	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0";
 	ReadGameString(gameString, &G);
-	InitAi(true);
+	InitAi(&AIs[0], true);
+	InitAi(&AIs[1], true);
 	double score = EvaluateCheckers(&G, Black);
 }
 
@@ -525,7 +527,8 @@ void TestPointsLeftHit() {
 void TestGetScore() {
 	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0";
 	ReadGameString(gs, &G);
-	InitAi(true);
+	InitAi(&AIs[0], true);
+	InitAi(&AIs[1], true);
 	double score = GetScore(&G);
 	printf("Score: %f ", score);
 }
@@ -544,7 +547,8 @@ void TestBestBearingOffBlack() {
 	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0";
 	ReadGameString(gs, &G);
 	G.CurrentPlayer = Black;
-	InitAi(true);
+	InitAi(&AIs[0], true);
+	InitAi(&AIs[1], true);
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
 	double score = 0;
@@ -559,7 +563,8 @@ void TestBestBearingOffWhite() {
 	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0";
 	ReadGameString(gs, &G);
 	G.CurrentPlayer = White;
-	InitAi(true);
+	InitAi(&AIs[0], true);
+	InitAi(&AIs[1], true);
 	G.Dice[0] = 3;
 	G.Dice[1] = 2;
 	double score = 0;
@@ -704,11 +709,16 @@ void TestNoMoves() {
  	CheckerCountAssert = true;
 }
 
+
+void TestTraining() {
+	Train();
+}
+
 void RunSelectedTests() {
 	_failedAsserts = 0;
-	Run(TestHashing, "TestHashing");
-	Run(TestHashingHit, "TestHashingHit");
-	Run(TestHashingHit, "TestHashingHit");
+
+	Run(TestTraining, "TrainParallel");
+
 	if (_failedAsserts == 0)
 		PrintGreen("\nSuccess! Tests are good!\n");
 	else
