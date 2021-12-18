@@ -46,7 +46,7 @@ void Train() {
 
 	ThreadGames = malloc(sizeof(Game) * ThreadCount);
 	for (int t = 0; t < ThreadCount; t++)
-		InitSeed(&ThreadGames[t], RandomInt(0, 100));
+		InitSeed(&ThreadGames[t], RandomInt(1, 100));
 
 	int totalScores[TrainedSetCount] = { 0 };
 	

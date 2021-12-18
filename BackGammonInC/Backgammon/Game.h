@@ -1,5 +1,6 @@
 #pragma once
 #include "Utils.h"
+#include "mtwister.h"
 //
 //#define White 32
 //#define Black 16
@@ -63,6 +64,7 @@ typedef struct {
 	//Unique hash for the game state
 	U64 Hash;
 	U64 rnd_seed;
+	MTRand rand;
 } Game;
 
 // The global game variable
@@ -74,7 +76,7 @@ GameConfig G_Config;
 bool CheckerCountAssert;
 
 void InitSeed(Game* g, int seed);
-U64 LlrandShift(Game* g);
+//U64 LlrandShift(Game* g);
 void StartPosition(Game* g);
 void RollDice(Game* g);
 int CountAllCheckers(PlayerSide side, Game* game);

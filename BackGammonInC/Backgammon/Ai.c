@@ -54,8 +54,8 @@ bool PlayersPassedEachOther(Game* g) {
 }
 
 void RollDice(Game* g) {
-	g->Dice[1] = LlrandShift(g) % 6 + 1;
-	g->Dice[0] = LlrandShift(g) % 6 + 1;
+	g->Dice[1] = genDice(&g->rand);// LlrandShift(g) % 6 + 1;
+	g->Dice[0] = genDice(&g->rand); // LlrandShift(g) % 6 + 1;
 }
 
 bool ToHome(Move move) {

@@ -22,7 +22,7 @@ int main() {
 		printf("%d %c\n\n", c, c);*/
 	CheckerCountAssert = true; // Dont change this here. Do it in the tests and switch back after test is done.	
 	system("chcp 437");
-	InitSeed(&G, 0);
+	InitSeed(&G, 100);
 	InitAi(&AIs[0], true);
 	InitAi(&AIs[1], true);
 	InitHashes();

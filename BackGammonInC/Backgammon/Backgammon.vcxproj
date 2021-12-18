@@ -142,6 +142,7 @@
     <ClCompile Include="Ai.c" />
     <ClCompile Include="Game.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="mtwister.c" />
     <ClCompile Include="Tests.c" />
     <ClCompile Include="Trainer.c" />
     <ClCompile Include="Utils.c" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Hash.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="mtwister.h" />
     <ClInclude Include="Tests.h" />
     <ClInclude Include="Trainer.h" />
     <ClInclude Include="Utils.h" />
