@@ -714,6 +714,33 @@ void TestTraining() {
 	Train();
 }
 
+void TestNewGeneration() {
+	InitTrainer();
+	NewGeneration();
+}
+
+void TestLoadSave() {
+	InitTrainer();
+	double d1 = TrainedSet[0].BlotFactors[0];
+	double d2 = TrainedSet[4].BlotFactors[4];
+	double d3 = TrainedSet[9].BlotFactors[25];
+	SaveTrainedSet();
+
+	for (size_t i = 0; i < TrainedSetCount; i++)
+	{
+		for (size_t j = 0; j < 26; j++)
+		{
+			TrainedSet[i].ConnectedBlocksFactor[j] = 999;
+			TrainedSet[i].BlotFactors[j] = 999;
+		}
+	}
+	
+	LoadTrainedSet();
+	Assert(d1 == TrainedSet[0].BlotFactors[0], "File serialization failed 1");
+	Assert(d2 == TrainedSet[4].BlotFactors[4], "File serialization failed 2");
+	Assert(d3 == TrainedSet[9].BlotFactors[25], "File serialization failed 3");
+}
+
 void RunSelectedTests() {
 	_failedAsserts = 0;
 
@@ -764,6 +791,8 @@ void RunAllTests() {
 	Run(TestHashingHit, "TestHashingHit");
 	Run(TestHashingWhiteTwoMoves, "TestHashingWhiteTwoMoves");
 	Run(TestNoMoves, "TestNoMoves");
+	Run(TestNewGeneration, "TestNewGeneration");
+	Run(TestLoadSave, "TestLoadSave");
 
 	Run(Performance, "Performance");
 

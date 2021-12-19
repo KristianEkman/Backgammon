@@ -11,7 +11,7 @@
 #include "Hash.h"
 
 void InitAi(AiConfig* ai, bool constant) {
-	for (int i = 0; i < 25; i++)
+	for (int i = 0; i < 26; i++)
 	{
 		if (constant) {
 			ai->BlotFactors[i] = 1;
