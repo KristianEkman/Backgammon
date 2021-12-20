@@ -23,7 +23,12 @@ void InitAi(AiConfig* ai, bool constant) {
 		}
 	}
 
-	//TODO: extract to own method
+	//Black
+	ai->Flags = EnableAlphaBetaPruning;
+	ai->SearchDepth = 1;
+}
+
+void SetDiceCombinations() {
 	int i = 0;
 	for (int a = 1; a < 7; a++)
 	{
@@ -33,10 +38,6 @@ void InitAi(AiConfig* ai, bool constant) {
 			AllDices[i++][1] = b;
 		}
 	}
-
-	//Black
-	ai->Flags = EnableAlphaBetaPruning;
-	ai->SearchDepth = 1;
 }
 
 bool PlayersPassedEachOther(Game* g) {
@@ -339,7 +340,11 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 		}
 		else if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new set of moves.
-
+			if (g->MoveSetsCount >= MAX_SETS_LENGTH)
+			{
+				printf("\nWarning. Max number of move sets reached.");
+				return;
+			}
 			// But first set a light score for ordering			
 			SetLightScore(g, moveSet);
 			int copyCount = diceIdx;
@@ -442,6 +447,11 @@ void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 		}
 		else if (move->color != 0) {
 			// A move is already generated for this dice in this sequence. Branch off a new sequence.
+			if (g->MoveSetsCount >= MAX_SETS_LENGTH)
+			{
+				printf("\nWarning. Max number of move sets reached.");
+				return;
+			}
 			SetLightScore(g, moveSet);
 			int copyCount = diceIdx;
 			moveSet = &g->PossibleMoveSets[setIdx + 1];

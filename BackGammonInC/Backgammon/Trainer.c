@@ -8,15 +8,17 @@
 #include "Trainer.h";
 #include "Ai.h";
 
-
 void TrainParaThreadStart(int threadNo) {
 	PlayGame(&ThreadGames[threadNo], false);
 }
 
 // Comparing two AIs.
-void PlayBatchMatch(int ai0, int ai1, int* score) {
-	int gameCount = 200;
+void PlayBatchMatch(AiConfig ai0, AiConfig ai1,int gameCount, int* score) {
+	
 	int batches = gameCount / ThreadCount; // batches * threads == no games.
+
+	AIs[0] = ai0;
+	AIs[1] = ai1;
 
 	for (int i = 0; i < batches; i++)
 	{
@@ -74,13 +76,25 @@ void NewGeneration() {
 			memcpy(&TrainedSet[i].ConnectedBlocksFactor[split], &cf1[split], (26 - split) * sizeof(double));
 	}
 
-	// todo mutation
+	// Mutations
+	int set = RandomInt(0, TrainedSetCount);
+	int rndIdx = RandomInt(0, 26);
+	double val = RandomDouble(0, 1);
+	TrainedSet[set].BlotFactors[rndIdx] = val;
+
+	set = RandomInt(0, TrainedSetCount);
+	rndIdx = RandomInt(0, 26);
+	val = RandomDouble(0, 1);
+	TrainedSet[set].ConnectedBlocksFactor[rndIdx] = val;
 }
 
 void InitTrainer() {
-	// 1. Make 10 random sets of Ais
-	for (int i = 0; i < TrainedSetCount; i++)
-		InitAi(&TrainedSet[i], false);
+	if (!LoadTrainedSet())
+	{
+		// 1. Make Random sets of Ais
+		for (int i = 0; i < TrainedSetCount; i++)
+			InitAi(&TrainedSet[i], false);
+	}
 
 	ThreadGames = malloc(sizeof(Game) * ThreadCount);
 	for (int t = 0; t < ThreadCount; t++)
@@ -91,80 +105,79 @@ void SaveTrainedSet() {
 	FILE* file;
 	fopen_s(&file, "TrainedSet.bin", "wb");
 	if (file != NULL) {
-		for (int i = 0; i < TrainedSetCount; i++)
-		{
-			fwrite(&(TrainedSet[i].BlotFactors), sizeof(double), 26, file);
-			fwrite(&(TrainedSet[i].ConnectedBlocksFactor), sizeof(double), 26, file);
-		}
+		fwrite(&TrainedSet, sizeof(TrainedSet), 1, file);
 		fclose(file);
 	}
 	else {
-		printf("Error. Failed to open file in SaveTrainedSet\n");
+		printf("\nError. Failed to open file in SaveTrainedSet\n");
 	}
 }
 
-void LoadTrainedSet() {
+bool LoadTrainedSet() {
 	FILE* file;
 	fopen_s(&file, "TrainedSet.bin", "rb");
 
 	if (file != NULL) {
-		for (int i = 0; i < TrainedSetCount; i++)
-		{
-			fread(&(TrainedSet[i].BlotFactors), sizeof(double), 26, file);
-			fread(&(TrainedSet[i].ConnectedBlocksFactor), sizeof(double), 26, file);
-		}
+		fread(&TrainedSet, sizeof(TrainedSet), 1, file);
 		fclose(file);
+		return true;
 	}
 	else
 	{
-		printf("Error. Failed to open file in LoadTrainedSet\n");
+		printf("\nError. Failed to open file in LoadTrainedSet\n");
+		return false;
 	}
+}
+
+int CompareTrainedSet(const AiConfig* a, const AiConfig* b) {
+	return b->Score - a->Score;
 }
 
 void Train() {
 	InitTrainer();
-
-	int totalScores[TrainedSetCount] = { 0 };
-
-	// Combine all configs
-	for (int i = 0; i < TrainedSetCount; i++)
+	AiConfig untrained;
+	InitAi(&untrained, true);
+	int genCount = 100;
+	for (int g = 0; g < genCount; g++)
 	{
-		for (int j = i + 1; j < TrainedSetCount; j++)
+		printf("\nGeneration %d\n", g);
+		printf("==============\n");
+		for (int i = 0; i < TrainedSetCount; i++)
+			TrainedSet[i].Score = 0;
+
+		// Combine all configs
+		for (int i = 0; i < TrainedSetCount; i++)
 		{
+			for (int j = i + 1; j < TrainedSetCount; j++)
+			{
+				int score[2] = { 0, 0 };
+				// Let them compete, 200 games
+				PlayBatchMatch(TrainedSet[i], TrainedSet[j], 200, score);
+				TrainedSet[i].Score += score[0];
+				TrainedSet[j].Score += score[1];
+				printf("\nScore for %d vs %d: %d-%d", i, j, score[0], score[1]);
+			}
+		}
+
+		//free(ThreadGames);
+		//sorting out best 2
+		qsort(TrainedSet, TrainedSetCount, sizeof(AiConfig), CompareTrainedSet);
+		
+		int tot = TrainedSetCount * (TrainedSetCount - 1);
+		printf("\n\nTotals\n");
+		for (int i = 0; i < TrainedSetCount; i++)
+			printf("Wins for %d: %d\n", i, TrainedSet[i].Score);
+
+		NewGeneration();
+
+		SaveTrainedSet();
+
+		if (g % 3 == 0) {			
 			int score[2] = { 0, 0 };
-			// Let them compete, 100 games
-			PlayBatchMatch(i, j, score);
-			totalScores[i] += score[0];
-			totalScores[j] += score[1];
-			printf("\nScore for %d vs %d: %d-%d", i, j, score[0], score[1]);
+			PlayBatchMatch(TrainedSet[0], untrained, 1000, score);
+			printf("\nScore for trained vs untrained: %d-%d", score[0], score[1]);
 		}
 	}
-	free(ThreadGames);
-
-	//sorting out best 2
-	for (int i = 0; i < TrainedSetCount; i++) {
-		if (totalScores[i] > totalScores[0] || totalScores[i] > totalScores[1])
-		{
-			int temp = totalScores[i];
-			AiConfig tempSet = TrainedSet[i];
-
-			totalScores[i] = totalScores[1];
-			TrainedSet[i] = TrainedSet[1];
-
-			totalScores[1] = totalScores[0];
-			TrainedSet[1] = TrainedSet[0];
-
-			totalScores[0] = temp;
-			TrainedSet[0] = tempSet;
-		}
-	}
-
-	int tot = TrainedSetCount * (TrainedSetCount - 1);
-	printf("\n\nTotals\n");
-	for (int i = 0; i < TrainedSetCount; i++)
-		printf("Wins for %d: %d\n", i, totalScores[i]);
-
-	NewGeneration();
 
 	// 4. Spara historik av vinnare, kontrollera ibland var 10:e gång att utvecklingen blir bättre och bättre.
 
