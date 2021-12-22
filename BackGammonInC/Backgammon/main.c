@@ -57,4 +57,3 @@ int main() {
 	}
 	ConsoleWriteLine("Bye");
 }
-

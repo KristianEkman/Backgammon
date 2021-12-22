@@ -63,8 +63,9 @@ typedef struct {
 	uint EvalCounts;
 	//Unique hash for the game state
 	U64 Hash;
-	U64 rnd_seed;
 	MTRand rand;
+	//Counter for turns in a game
+	uint Turns;
 } Game;
 
 // The global game variable

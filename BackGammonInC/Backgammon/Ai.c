@@ -22,9 +22,7 @@ void InitAi(AiConfig* ai, bool constant) {
 			ai->ConnectedBlocksFactor[i] = RandomDouble(0, 1);
 		}
 	}
-
-	//Black
-	ai->Flags = EnableAlphaBetaPruning;
+	ai->Id = 0;
 	ai->SearchDepth = 1;
 }
 
@@ -808,7 +806,7 @@ void PlayGame(Game* g, bool pausePlay) {
 
 	//Highest dice diceds who starts.
 	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
-	while (g->BlackLeft > 0 && g->WhiteLeft > 0)
+	while (g->BlackLeft > 0 && g->WhiteLeft > 0 && g->Turns < 300)
 	{
 		if (pausePlay)
 			Pause(g);
@@ -825,6 +823,7 @@ void PlayGame(Game* g, bool pausePlay) {
 					Pause(g);
 			}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
+		g->Turns++;
 		RollDice(g);
 	}
 }

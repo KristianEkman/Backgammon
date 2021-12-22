@@ -8,12 +8,16 @@
 //Number of paralell games
 #define ThreadCount 8
 
+typedef struct {
+	int Generation;
+	AiConfig Set[TrainedSetCount];
+} TrainerStruct;
+
+TrainerStruct Trainer;
 Game* ThreadGames;
 
-AiConfig TrainedSet[TrainedSetCount];
-
 bool LoadTrainedSet();
-void SaveTrainedSet();
+void SaveTrainedSet(int generation);
 void InitTrainer();
 void Train();
 void NewGeneration();

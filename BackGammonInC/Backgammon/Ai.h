@@ -6,8 +6,8 @@ typedef enum  {
 } AiFlags;
 
 typedef struct  {
-	AiFlags Flags;
-	ubyte SearchDepth;
+	int Id;
+	int SearchDepth;
 	int Score;
 	//Negative score for leaving a blot on the board.
 	double BlotFactors[26];
@@ -19,7 +19,6 @@ typedef struct  {
 AiConfig AIs[2];
 
 #define AI(color) AIs[(color)>>5]
-
 
 void SetDiceCombinations();
 #define DiceCombos 21
