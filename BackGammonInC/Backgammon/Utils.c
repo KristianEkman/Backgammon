@@ -25,35 +25,25 @@ int ParseChar(char c) {
 	}
 }
 
-U64  rnd_seed = 1070372;
-U64 Llrand() {
-
-	rnd_seed ^= rnd_seed >> 12, rnd_seed ^= rnd_seed << 25, rnd_seed ^= rnd_seed >> 27;
-	return rnd_seed * 2685821657736338717LL;
-}
-bool seeded;
-
-int RandomInt(int lower, int upper)
-{
-	if (!seeded)
-	{
-		srand((unsigned int)time(0));
-		seeded = true;
-	}
-	return (rand() % (upper - lower + 1)) + lower;
-}
-
-double RandomDouble(double max, double min)
-{
-	if (!seeded)
-	{
-		srand((unsigned int)time(0));
-		seeded = true;
-	}
-	double range = (max - min);
-	double div = RAND_MAX / range;
-	return min + (rand() / div);
-}
+//U64  rnd_seed = 1070372;
+//U64 Llrand() {
+//
+//	rnd_seed ^= rnd_seed >> 12, rnd_seed ^= rnd_seed << 25, rnd_seed ^= rnd_seed >> 27;
+//	return rnd_seed * 2685821657736338717LL;
+//}
+//bool seeded;
+//
+//double RandomDouble(double max, double min)
+//{
+//	if (!seeded)
+//	{
+//		srand((unsigned int)time(0));
+//		seeded = true;
+//	}
+//	double range = (max - min);
+//	double div = RAND_MAX / range;
+//	return min + (rand() / div);
+//}
 
 bool Streq(char s1[], char s2[])
 {
@@ -75,7 +65,6 @@ int IndexOf(char* a, char* b) {
 	if (p == NULL) return -1;
 	return (int)(p - a);
 }
-
 
 void Stdout_wl(char* text) {
 	printf("%s\n", text);
@@ -145,3 +134,4 @@ void FailAssert() {
 	printf("\nASSERT failed\n");
 	exit(1);
 }
+

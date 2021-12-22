@@ -65,13 +65,13 @@ void NewGeneration() {
 	for (int i = 0; i < TrainedSetCount; i++)
 	{
 		//combining values from 0 and 1.
-		int split = RandomInt(0, 26); // todo: use mtwister
+		int split = RandomInt(&g_Rand, 0, 26); // todo: use mtwister
 		if (split > 0)
 			memcpy(&Trainer.Set[i].BlotFactors, &bf0, split * sizeof(double));
 		if (split < 26)
 			memcpy(&Trainer.Set[i].BlotFactors[split], &bf1[split], (26ll - split) * sizeof(double));
 
-		split = RandomInt(0, 26); // todo: use mtwister
+		split = RandomInt(&g_Rand, 0, 26); // todo: use mtwister
 		if (split > 0)
 			memcpy(&Trainer.Set[i].ConnectedBlocksFactor, &cf0, split * sizeof(double));
 		if (split < 26)
@@ -79,14 +79,14 @@ void NewGeneration() {
 	}
 
 	// Mutations
-	int set = RandomInt(0, TrainedSetCount);
-	int rndIdx = RandomInt(0, 26);
-	double val = RandomDouble(0, 1);
+	int set = RandomInt(&g_Rand, 0, TrainedSetCount);
+	int rndIdx = RandomInt(&g_Rand, 0, 26);
+	double val = RandomDouble(&g_Rand, 0, 1);
 	Trainer.Set[set].BlotFactors[rndIdx] = val;
 
-	set = RandomInt(0, TrainedSetCount);
-	rndIdx = RandomInt(0, 26);
-	val = RandomDouble(0, 1);
+	set = RandomInt(&g_Rand, 0, TrainedSetCount);
+	rndIdx = RandomInt(&g_Rand, 0, 26);
+	val = RandomDouble(&g_Rand, 0, 1);
 	Trainer.Set[set].ConnectedBlocksFactor[rndIdx] = val;
 }
 
@@ -105,7 +105,7 @@ void InitTrainer() {
 	ThreadGames = malloc(sizeof(Game) * ThreadCount);
 	if (ThreadGames != NULL) {
 		for (int t = 0; t < ThreadCount; t++)
-			InitSeed(&ThreadGames[t], RandomInt(1, 100));
+			InitSeed(&ThreadGames[t], RandomInt(&g_Rand, 1, 100));
 	}
 }
 

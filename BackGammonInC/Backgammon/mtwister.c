@@ -14,8 +14,8 @@
 #define LOWER_MASK		0x7fffffff
 #define TEMPERING_MASK_B	0x9d2c5680
 #define TEMPERING_MASK_C	0xefc60000
-
 #include "mtwister.h"
+#include "Utils.h"
 
 inline static void m_seedRand(MTRand* rand, unsigned long seed) {
   /* set initial seeds to mt[STATE_VECTOR_LENGTH] using the generator
@@ -31,9 +31,9 @@ inline static void m_seedRand(MTRand* rand, unsigned long seed) {
 /**
 * Creates a new random number generator from a given seed.
 */
-MTRand seedRand(unsigned long seed) {
-  MTRand rand;
-  m_seedRand(&rand, seed);
+void seedRand(unsigned long seed, MTRand* rand) {
+  
+  m_seedRand(rand, seed);
   return rand;
 }
 
@@ -79,4 +79,20 @@ double genRand(MTRand* rand) {
 
 unsigned long genDice(MTRand* rand) {
     return genRandLong(rand) % 6 + 1;
+}
+
+int RandomInt(MTRand* rand, int lower, int upper) {
+    return (genRandLong(rand) % (upper - lower + 1)) + lower;
+}
+
+double RandomDouble(MTRand* rand, double lower, double upper) {
+    double range = (upper - lower);
+    double div = 0xFFFFFFFF / range;
+    return lower + ((double)genRandLong(rand) / div);
+}
+
+U64 Random64(MTRand* rand) {
+    U64 r = genRandLong(rand);
+    r = (r << 32) | genRandLong(rand);
+    return r;
 }

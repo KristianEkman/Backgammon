@@ -12,11 +12,12 @@
 #include "Hash.h"
 
 void PrintHelp() {
-	ConsoleWriteLine("\nOptions\n-------\nt/test\np/play\nh/help\nq/quit");
+	ConsoleWriteLine("\nOptions\n-------\nt/test\np/play\nh/help\ns/selected tests\nq/quit");
 }
 
 int main() {
 	system("cls");
+	seedRand(1234, &g_Rand);
 	printf("Welcome to backgammon\n: ");
 	/*for (int c = 170; c < 255; c++)
 		printf("%d %c\n\n", c, c);*/

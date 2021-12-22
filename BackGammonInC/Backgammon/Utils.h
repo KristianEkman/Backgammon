@@ -15,9 +15,6 @@ typedef unsigned char ubyte;
 
 U64 Llrand();
 
-int RandomInt(int lower, int upper);
-double RandomDouble(double lower, double upper);
-
 bool Streq(char s1[], char s2[]);
 
 bool StartsWith(char a[], char b[]);

@@ -1,7 +1,7 @@
 // source from https://github.com/ESultanik/mtwister.git
+#pragma once
+#include "Utils.h"
 
-#ifndef __MTWISTER_H
-#define __MTWISTER_H
 
 #define STATE_VECTOR_LENGTH 624
 #define STATE_VECTOR_M      397 /* changes to STATE_VECTOR_LENGTH also require changes to this */
@@ -11,9 +11,15 @@ typedef struct tagMTRand {
   int index;
 } MTRand;
 
-MTRand seedRand(unsigned long seed);
+MTRand g_Rand;
+
+void seedRand(unsigned long seed, MTRand* rand);
 unsigned long genRandLong(MTRand* rand);
 double genRand(MTRand* rand);
 unsigned long genDice(MTRand* rand);
 
-#endif /* #ifndef __MTWISTER_H */
+int RandomInt(MTRand* rand, int lower, int upper);
+
+double RandomDouble(MTRand* rand, double lower, double upper);
+
+U64 Random64(MTRand* rand);

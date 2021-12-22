@@ -1,9 +1,13 @@
-Performance Eval count: 1867638 - (252.3k evs/sec) 7401.00ms
+Performance Eval count: 1867638 - (239.0k evs/sec) 7814.00ms
 
-Multithreaded auto play.
------------------------
-	move llrand to thread safe game struct
-
+Idéer för training
+------------------
+Depth 0
+Längre batchar
+Längre test
+Inga quads
+Spara parent
+Random multiplier 0.95 - 1.05
 
 Finns det ett fel i chess matrix i att den prioriterar PlainMoves när den bara borde flytta upp PV_Moves?
 
@@ -90,3 +94,7 @@ Config för
 
 Inte jobba med Game* utan matriser, prestanda
 	- Blev 4% sämre prestanda
+
+Multithreaded auto play.
+-----------------------
+	move llrand to thread safe game struct

@@ -18,8 +18,8 @@ void InitAi(AiConfig* ai, bool constant) {
 			ai->ConnectedBlocksFactor[i] = 1;
 		}
 		else {
-			ai->BlotFactors[i] = RandomDouble(0, 1);
-			ai->ConnectedBlocksFactor[i] = RandomDouble(0, 1);
+			ai->BlotFactors[i] = RandomDouble(&g_Rand, 0, 1);
+			ai->ConnectedBlocksFactor[i] = RandomDouble(&g_Rand, 0, 1);
 		}
 	}
 	ai->Id = 0;
