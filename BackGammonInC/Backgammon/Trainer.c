@@ -210,18 +210,24 @@ void Train() {
 		printf("==============\n");
 		for (int i = 0; i < TrainedSetCount; i++)
 			Trainer.Set[i].Score = 0;
-
+		
 		// Combine all configs
 		for (int i = 0; i < TrainedSetCount; i++)
 		{
 			for (int j = i + 1; j < TrainedSetCount; j++)
 			{
-				int score[2] = { 0, 0 };
-				// Let them compete, 200 games
-				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], 400, score);
-				Trainer.Set[i].Score += score[0];
-				Trainer.Set[j].Score += score[1];
-				printf("\nScore for %d vs %d: %d-%d", i, j, score[0], score[1]);
+				int score1[2] = { 0, 0 };
+				// Let them compete, 200 games for each color.
+				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], 200, score1);
+				Trainer.Set[i].Score += score1[0];
+				Trainer.Set[j].Score += score1[1];
+				
+				int score2[2] = { 0, 0 };
+				//Switching sides
+				PlayBatchMatch(Trainer.Set[j], Trainer.Set[i], 200, score2);
+				Trainer.Set[j].Score += score2[0];
+				Trainer.Set[i].Score += score2[1];
+				printf("\nScore for %d vs %d: %d-%d", Trainer.Set[i].Id, Trainer.Set[j].Id, score1[0] + score2[1], score1[1] + score2[0]);
 			}
 		}
 
@@ -229,18 +235,35 @@ void Train() {
 		//sorting out best 2
 		qsort(Trainer.Set, TrainedSetCount, sizeof(AiConfig), CompareTrainedSet);
 
-		int tot = TrainedSetCount * (TrainedSetCount - 1);
+		double tot = 0;
+		for (int i = 0; i < TrainedSetCount; i++)
+			tot += Trainer.Set[i].Score;
+
 		printf("\n\nTotals\n");
 		for (int i = 0; i < TrainedSetCount; i++)
-			printf("Wins for %d: %d\n", Trainer.Set[i].Id, Trainer.Set[i].Score);
+			printf("Wins for %d: %d (%.2f%s)\n", Trainer.Set[i].Id, Trainer.Set[i].Score, (Trainer.Set[i].Score / tot) * 100, "%");
 
 		NewGeneration();
 
 		if (gen % 4 == 0) {
-			int score[2] = { 0, 0 };
-			PlayBatchMatch(Trainer.Set[0], untrained, 2000, score);
-			printf("\nScore for trained vs untrained: %d-%d", score[0], score[1]);
-			SaveTrainedSet(gen, "TrainedSet");
+			untrained.Score = 0;
+			Trainer.Set[0].Score = 0;
+
+			int score1[2] = { 0, 0 };
+			int scrUntrained = 0;
+			int scrTrained = 0;
+			PlayBatchMatch(Trainer.Set[0], untrained, 1000, score1);
+			scrTrained += score1[0];
+			scrUntrained += score1[1];
+
+			int score2[2] = { 0, 0 };			
+			PlayBatchMatch(untrained, Trainer.Set[0], 1000, score2);
+			scrTrained += score2[1];
+			scrUntrained += score2[0];
+
+			double pct = 100 * (scrTrained - scrUntrained) / (double)(scrTrained + scrUntrained);
+			printf("\nScore for trained vs untrained: %d-%d (%.2f%s)", scrTrained, scrUntrained, pct, "%");
+			SaveTrainedSet(Trainer.Generation, "TrainedSet");
 		}
 	}
 }
