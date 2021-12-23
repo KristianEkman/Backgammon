@@ -9,7 +9,7 @@
 #include "Ai.h"
 
 void TrainParaThreadStart(int threadNo) {
-	PlayGame(&ThreadGames[threadNo], false);
+	PlayGame(&ThreadGames[threadNo]);
 }
 
 // Comparing two AIs.
@@ -41,10 +41,10 @@ void PlayBatchMatch(AiConfig ai0, AiConfig ai1, int gameCount, int* score) {
 			else if (ThreadGames[t].WhiteLeft == 0) {
 				score[1] ++;
 			}
-			else {
-				// Added a limit for number of moves
-				ASSERT_DBG(false); // There is no draw in backgammon
-			}
+			//else {
+			//	// Added a limit for number of moves. So there can be a draw.
+			//	//ASSERT_DBG(false); // There is no draw in backgammon
+			//}
 		}
 	}
 }
@@ -62,7 +62,8 @@ void NewGeneration() {
 	memcpy(&cf0, &Trainer.Set[0].ConnectedBlocksFactor, 26 * sizeof(double));
 	memcpy(&cf1, &Trainer.Set[1].ConnectedBlocksFactor, 26 * sizeof(double));
 
-	for (int i = 0; i < TrainedSetCount; i++)
+	//Keep the best
+	for (int i = 1; i < TrainedSetCount; i++)
 	{
 		//combining values from 0 and 1.
 		int split = RandomInt(&g_Rand, 0, 26); // todo: use mtwister
@@ -76,22 +77,29 @@ void NewGeneration() {
 			memcpy(&Trainer.Set[i].ConnectedBlocksFactor, &cf0, split * sizeof(double));
 		if (split < 26)
 			memcpy(&Trainer.Set[i].ConnectedBlocksFactor[split], &cf1[split], (26ll - split) * sizeof(double));
+		
+		double f = RandomDouble(&g_Rand, 0.95, 1.05);
+		for (int x = 0; x < 26; x++)
+		{
+			Trainer.Set[i].BlotFactors[x] *= f;
+			Trainer.Set[i].ConnectedBlocksFactor[x] *= f;
+		}
 	}
 
 	// Mutations
 	int set = RandomInt(&g_Rand, 0, TrainedSetCount);
-	int rndIdx = RandomInt(&g_Rand, 0, 26);
+	int rndIdx = RandomInt(&g_Rand, 0, 25);
 	double val = RandomDouble(&g_Rand, 0, 1);
 	Trainer.Set[set].BlotFactors[rndIdx] = val;
 
 	set = RandomInt(&g_Rand, 0, TrainedSetCount);
-	rndIdx = RandomInt(&g_Rand, 0, 26);
+	rndIdx = RandomInt(&g_Rand, 0, 25);
 	val = RandomDouble(&g_Rand, 0, 1);
 	Trainer.Set[set].ConnectedBlocksFactor[rndIdx] = val;
 }
 
 void InitTrainer() {
-	if (!LoadTrainedSet())
+	if (!LoadTrainedSet("TrainedSet"))
 	{
 		Trainer.Generation = 0;
 		// 1. Make Random sets of Ais
@@ -129,11 +137,11 @@ void CheckDataIntegrity() {
 
 		for (int f = 0; f < 26; f++)
 		{
-			if (Trainer.Set[i].BlotFactors[f] < 0 || Trainer.Set[i].BlotFactors[f] > 1) {
+			if (Trainer.Set[i].BlotFactors[f] < 0) {
 				printf("\nTrainedSet Blotfactor invalid");
 				exit(103);
 			}
-			if (Trainer.Set[i].ConnectedBlocksFactor[f] < 0 || Trainer.Set[i].ConnectedBlocksFactor[f] > 1) {
+			if (Trainer.Set[i].ConnectedBlocksFactor[f] < 0) {
 				printf("\nTrainedSet ConnectedBlocksFactor invalid");
 				exit(104);
 			}
@@ -141,35 +149,40 @@ void CheckDataIntegrity() {
 	}
 }
 
-void SaveTrainedSet(int generation) {
+void SaveTrainedSet(int generation, char* name) {
 	CheckDataIntegrity();
+	char fName1[100];
+	sprintf_s(fName1, sizeof(fName1), "%s.bin", name);
 	FILE* file1;
-	fopen_s(&file1, "TrainedSet.bin", "wb");
+	fopen_s(&file1, fName1, "wb");
 	if (file1 != NULL) {
 		fwrite(&Trainer, sizeof(Trainer), 1, file1);
 		fclose(file1);
 	}
 	else {
-		printf("\nError. Failed to open file TrainedSet.bin in SaveTrainedSet\n");
+		printf("\nError. Failed to open file %s in SaveTrainedSet\n", fName1);
 	}
 
-	//Also saving each generation.
-	char fName[100];
-	sprintf_s(fName, sizeof(fName), "TrainedSet_Gen_%d.bin", generation);
+	//Also saving generation.
+	char fName2[100];
+	sprintf_s(fName2, sizeof(fName2), "%s_Gen_%d.bin", name, Trainer.Generation);
 	FILE* file2;
-	fopen_s(&file2, fName, "wb");
+	fopen_s(&file2, fName2, "wb");
 	if (file2 != NULL) {
 		fwrite(&Trainer, sizeof(Trainer), 1, file2);
 		fclose(file2);
 	}
 	else {
-		printf("\nError. Failed to open file %s in SaveTrainedSet\n", fName);
+		printf("\nError. Failed to open file %s in SaveTrainedSet\n", fName2);
 	}
 }
 
-bool LoadTrainedSet() {
+bool LoadTrainedSet(char* name) {
+	char fName[100];
+	sprintf_s(fName, sizeof(fName), "%s.bin", name);
+
 	FILE* file;
-	fopen_s(&file, "TrainedSet.bin", "rb");
+	fopen_s(&file, fName, "rb");
 
 	if (file != NULL) {
 		fread(&Trainer, sizeof(Trainer), 1, file);
@@ -205,7 +218,7 @@ void Train() {
 			{
 				int score[2] = { 0, 0 };
 				// Let them compete, 200 games
-				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], 200, score);
+				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], 400, score);
 				Trainer.Set[i].Score += score[0];
 				Trainer.Set[j].Score += score[1];
 				printf("\nScore for %d vs %d: %d-%d", i, j, score[0], score[1]);
@@ -223,12 +236,11 @@ void Train() {
 
 		NewGeneration();
 
-		SaveTrainedSet(gen);
-
-		if (gen % 3 == 0) {
+		if (gen % 4 == 0) {
 			int score[2] = { 0, 0 };
-			PlayBatchMatch(Trainer.Set[0], untrained, 1000, score);
+			PlayBatchMatch(Trainer.Set[0], untrained, 2000, score);
 			printf("\nScore for trained vs untrained: %d-%d", score[0], score[1]);
+			SaveTrainedSet(gen, "TrainedSet");
 		}
 	}
 }

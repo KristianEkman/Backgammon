@@ -405,9 +405,11 @@ void TestDoubleDiceBlack() {
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
 	//PrintMoves();
-	AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
-	for (int i = 0; i < G.MoveSetsCount; i++)
-		Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
+	if (QUAD_DICE == 4) {
+		AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
+		for (int i = 0; i < G.MoveSetsCount; i++)
+			Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
+	}
 }
 
 void TestDoubleDiceWhite() {
@@ -418,7 +420,9 @@ void TestDoubleDiceWhite() {
 	G.CurrentPlayer = White;
 	CreateMoves(&G);
 	//PrintMoves();
-	AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
+	if (QUAD_DICE == 4) {
+		AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
+	}
 }
 
 void PlayBothDiceIfPossible() {
@@ -582,10 +586,11 @@ void TestManyCombos() {
 	G.Dice[1] = 1;
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
-
-	AssertAreEqualInts(72, G.MoveSetsCount, "There should be 72 sets of moves.");
-	for (int i = 0; i < G.MoveSetsCount; i++)
-		Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
+	if (QUAD_DICE == 4) {
+		AssertAreEqualInts(72, G.MoveSetsCount, "There should be 72 sets of moves.");
+		for (int i = 0; i < G.MoveSetsCount; i++)
+			Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
+	}
 }
 
 void TestNastyBug() {
@@ -706,7 +711,7 @@ void TestNoMoves() {
 	int r = FindBestMoveSet(&G, &ms, 1);
 	AssertAreEqualInts(-1, r, "Expected no moves");
 	AssertAreEqualInts(0, G.MoveSetsCount, "Expected no moves");
- 	CheckerCountAssert = true;
+	CheckerCountAssert = true;
 }
 
 
@@ -723,8 +728,8 @@ void TestLoadSave() {
 	InitTrainer();
 	double d1 = Trainer.Set[0].BlotFactors[0];
 	double d2 = Trainer.Set[4].BlotFactors[4];
-	double d3 = Trainer.Set[9].BlotFactors[25];
-	SaveTrainedSet(9999);
+	double d3 = Trainer.Set[7].BlotFactors[25];
+	SaveTrainedSet(9999, "Test");
 
 	for (size_t i = 0; i < TrainedSetCount; i++)
 	{
@@ -734,11 +739,11 @@ void TestLoadSave() {
 			Trainer.Set[i].BlotFactors[j] = 999;
 		}
 	}
-	
-	LoadTrainedSet();
+
+	LoadTrainedSet("Test");
 	Assert(d1 == Trainer.Set[0].BlotFactors[0], "File serialization failed 1");
 	Assert(d2 == Trainer.Set[4].BlotFactors[4], "File serialization failed 2");
-	Assert(d3 == Trainer.Set[9].BlotFactors[25], "File serialization failed 3");
+	Assert(d3 == Trainer.Set[7].BlotFactors[25], "File serialization failed 3");
 }
 
 void RunSelectedTests() {

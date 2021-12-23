@@ -341,3 +341,4 @@ healthchecksdb
 /Backend/pw.txt
 /Backend/SavedGames.json
 /Backend/fbapptoken.txt
+*.bin

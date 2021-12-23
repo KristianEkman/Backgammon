@@ -28,13 +28,12 @@ int main() {
 	InitAi(&AIs[0], true);
 	InitAi(&AIs[1], true);
 	InitHashes();
-	InitGameConfig();
 	StartPosition(&G);
 	PrintGame(&G);
 
 	printf("\n: ");
 	char buf[BUF_SIZE];
-	fgets(buf, 5000, stdin);
+	fgets(buf, BUF_SIZE, stdin);
 	while (!Streq(buf, "quit\n") && !Streq(buf, "q\n"))
 	{
 		if (Streq(buf, "test\n") || Streq(buf, "t\n")) {
@@ -54,7 +53,7 @@ int main() {
 			PrintHelp();
 		}
 		printf(": ");
-		fgets(buf, 5000, stdin);
+		fgets(buf, BUF_SIZE, stdin);
 	}
 	ConsoleWriteLine("Bye");
 }

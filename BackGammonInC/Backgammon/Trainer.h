@@ -3,7 +3,7 @@
 #include "Ai.h"
 
 //Number of AIs competing
-#define TrainedSetCount 10
+#define TrainedSetCount 8
 
 //Number of paralell games
 #define ThreadCount 8
@@ -16,8 +16,8 @@ typedef struct {
 TrainerStruct Trainer;
 Game* ThreadGames;
 
-bool LoadTrainedSet();
-void SaveTrainedSet(int generation);
+bool LoadTrainedSet(char* name);
+void SaveTrainedSet(int generation, char* name);
 void InitTrainer();
 void Train();
 void NewGeneration();

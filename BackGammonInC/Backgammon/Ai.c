@@ -533,9 +533,7 @@ void CreateMoves(Game* g) {
 		ReverseDice(g);
 	}
 
-	int diceCount = g->Dice[0] == g->Dice[1]
-		&& (G_Config.Flags & EnableQuads)
-		? 4 : 2;
+	int diceCount = g->Dice[0] == g->Dice[1] ? QUAD_DICE : 2;
 
 	int maxSetLength = 0;
 	for (size_t i = 0; i < 2; i++)
@@ -796,7 +794,7 @@ void Pause(Game* g) {
 }
 
 // Playes one game, optimally waits for user input and prints each game state.
-void PlayGame(Game* g, bool pausePlay) {
+void PlayGame(Game* g) {
 
 	StartPosition(g);
 	RollDice(g);
@@ -808,10 +806,10 @@ void PlayGame(Game* g, bool pausePlay) {
 	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0 && g->Turns < 300)
 	{
-		if (pausePlay)
+		if (PAUSE_PLAY)
 			Pause(g);
 		g->EvalCounts = 0;
-		ubyte depth = (ubyte)AI(g->CurrentPlayer).SearchDepth;
+		int depth = SEARCH_DEPTH;// AI(g->CurrentPlayer).SearchDepth;
 
 		MoveSet bestSet;
 		if (FindBestMoveSet(g, &bestSet, depth) >= 0)
@@ -819,7 +817,7 @@ void PlayGame(Game* g, bool pausePlay) {
 			{
 				DoMove(bestSet.Moves[i], g);
 				ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
-				if (pausePlay)
+				if (PAUSE_PLAY)
 					Pause(g);
 			}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
@@ -834,10 +832,9 @@ void AutoPlay()
 	int blackWins = 0;
 	clock_t start = clock();
 	int batch = 3000;
-	bool pausePlay = G_Config.Flags & EnablePlayPause;
 	for (int i = 0; i < batch; i++)
 	{
-		PlayGame(&G, pausePlay);
+		PlayGame(&G);
 		if (G.BlackLeft == 0)
 			blackWins++;
 		else if (G.WhiteLeft == 0)

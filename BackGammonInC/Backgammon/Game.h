@@ -14,18 +14,6 @@ typedef enum {
 	White = 32
 } PlayerSide;
 
-typedef enum {
-	// When autoplaying, game is printed and paused until return key is pressed after eache move.
-	EnablePlayPause = 1,
-	//Double dice generates four moves as in a standard game.
-	EnableQuads = 2
-} GameFlags;
-
-typedef struct {
-	GameFlags Flags;
-	ubyte ThreadsCount;
-} GameConfig;
-
 typedef struct {
 	ubyte from;
 	ubyte to;
@@ -70,8 +58,6 @@ typedef struct {
 
 // The global game variable
 Game G;
-
-GameConfig G_Config;
 
 // Switch off Check Count == 15 for some tests
 bool CheckerCountAssert;
