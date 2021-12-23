@@ -199,11 +199,67 @@ int CompareTrainedSet(const AiConfig* a, const AiConfig* b) {
 	return b->Score - a->Score;
 }
 
+double CompareTrained(AiConfig untrained) {
+	untrained.Score = 0;
+	Trainer.Set[0].Score = 0;
+
+	int score1[2] = { 0, 0 };
+	int scrUntrained = 0;
+	int scrTrained = 0;
+	PlayBatchMatch(Trainer.Set[0], untrained, 1000, score1);
+	scrTrained += score1[0];
+	scrUntrained += score1[1];
+
+	int score2[2] = { 0, 0 };
+	PlayBatchMatch(untrained, Trainer.Set[0], 1000, score2);
+	scrTrained += score2[1];
+	scrUntrained += score2[0];
+
+	double pct = (double)100 * ((double)scrTrained - (double)scrUntrained) / ((double)scrTrained + (double)scrUntrained);
+	printf("\nScore for trained vs untrained: %d-%d (%.2f%s)", scrTrained, scrUntrained, pct, "%");
+	return pct;
+}
+
+void SaveProgress(double progress, int fullGames) {
+	char text[100];
+	snprintf(text, sizeof(text), "%d;%.1f;%d\n", Trainer.Generation, progress, fullGames);
+	char* fileName = "Progress.csv";
+	FILE* stream;	
+	fopen_s(&stream, fileName, "a");
+	if (stream != NULL)
+	{
+		fwrite(text, strlen(text), 1, stream);
+		fclose(stream);
+	}
+}
+
+void SaveFactors(char* fileName, double* factors) {
+		
+	char text[100];
+	snprintf(text, sizeof(text), "%d;", Trainer.Generation);
+	
+	FILE* stream;
+	fopen_s(&stream, fileName, "a");
+	if (stream != NULL)
+	{
+		fwrite(text, strlen(text), 1, stream);
+		for (int i = 0; i < 26; i++)
+		{
+			char buf[10];
+			snprintf(buf, sizeof(buf), ";%.2f", factors[i]);
+			fwrite(buf, strlen(buf), 1, stream);
+		}
+		char * nl = "\n\0";
+		fwrite(nl, strlen(nl), 1, stream);
+		fclose(stream);
+	}
+}
+
 void Train() {
 	InitTrainer();
 	AiConfig untrained;
 	InitAi(&untrained, true);
-	int genCount = 100;
+	int genCount = 500;
 	for (int gen = 0; gen < genCount; gen++)
 	{
 		printf("\nGeneration %d\n", Trainer.Generation);
@@ -246,24 +302,11 @@ void Train() {
 		NewGeneration();
 
 		if (gen % 4 == 0) {
-			untrained.Score = 0;
-			Trainer.Set[0].Score = 0;
-
-			int score1[2] = { 0, 0 };
-			int scrUntrained = 0;
-			int scrTrained = 0;
-			PlayBatchMatch(Trainer.Set[0], untrained, 1000, score1);
-			scrTrained += score1[0];
-			scrUntrained += score1[1];
-
-			int score2[2] = { 0, 0 };			
-			PlayBatchMatch(untrained, Trainer.Set[0], 1000, score2);
-			scrTrained += score2[1];
-			scrUntrained += score2[0];
-
-			double pct = 100 * (scrTrained - scrUntrained) / (double)(scrTrained + scrUntrained);
-			printf("\nScore for trained vs untrained: %d-%d (%.2f%s)", scrTrained, scrUntrained, pct, "%");
+			double progress = CompareTrained(untrained);			
+			SaveProgress(progress, (int)tot);
 			SaveTrainedSet(Trainer.Generation, "TrainedSet");
+			SaveFactors("BlotFactors.csv", Trainer.Set[0].BlotFactors);
+			SaveFactors("ConnectedBlocksFactor.csv", Trainer.Set[0].ConnectedBlocksFactor);
 		}
 	}
 }
