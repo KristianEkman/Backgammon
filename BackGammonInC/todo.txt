@@ -2,18 +2,16 @@ Performance Eval count: 1867638 - (239.0k evs/sec) 7814.00ms
 
 Idéer för training
 ------------------
-Spela båda sidor, testa båda sidor.
-Skriv test till csv fil.
-Skriv factorer till csv fil.
+	
+	Maxlängd på matcher
+	Stänga av quads
+	Styra depth
+		- app-config
+		- start args
+		- commands
+		- hard coded
+		- 
 
-Depth 0
-Längre batchar
-Längre test
-Inga quads
-Spara parent
-Random multiplier 0.95 - 1.05
-Varför spelade trainer färre matcher när depth var 0? Krockar trådarna på något sätt?
-	Väldigt många matcher gick över 300 drag.
 
 Finns det ett fel i chess matrix i att den prioriterar PlainMoves när den bara borde flytta upp PV_Moves?
 
@@ -104,3 +102,16 @@ Inte jobba med Game* utan matriser, prestanda
 Multithreaded auto play.
 -----------------------
 	move llrand to thread safe game struct
+
+Idéer för training
+------------------
+	Spela båda sidor, testa båda sidor.
+	Skriv test till csv fil.
+	Skriv factorer till csv fil.
+
+	Depth 0
+	Längre batchar
+	Längre test
+	Inga quads
+	Spara parent
+	Random multiplier 0.95 - 1.05

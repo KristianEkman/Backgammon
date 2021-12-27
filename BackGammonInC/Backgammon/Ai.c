@@ -98,7 +98,6 @@ void AddHash(Game* g, Move move, bool hit) {
 		// Counting checkers AFTER count updated gives the correct number for the moved checker.
 		g->Hash ^= PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1];
 		//printf("%llu\n", PositionHash[move.color >> 5][move.to][CheckerCount(g->Position[move.to]) + 1]);
-
 	}
 }
 

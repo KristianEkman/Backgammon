@@ -12,7 +12,7 @@
 #include "Hash.h"
 
 void PrintHelp() {
-	ConsoleWriteLine("\nOptions\n-------\nt/test\np/play\nh/help\ns/selected tests\nq/quit");
+	ConsoleWriteLine("\nOptions\n-------\nt/test\np/play\npos w2 0 0 0 b5... (game string)\nh/help\ns/selected tests\nq/quit");
 }
 
 int main() {
@@ -44,6 +44,10 @@ int main() {
 		}
 		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
 			AutoPlay();
+		}
+		else if (StartsWith(buf, "pos ")) {
+			ReadGameString(&buf[4], &G);
+			PrintGame(&G);
 		}
 		else if (Streq(buf, "help\n") || Streq(buf, "h\n")) {
 			PrintHelp();
