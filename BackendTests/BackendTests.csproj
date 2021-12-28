@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ai\Ai.csproj" />
     <ProjectReference Include="..\Backend\Backend.csproj" />
+    <ProjectReference Include="..\FibsIntegration\FibsIntegration.csproj" />
     <ProjectReference Include="..\Rules\Rules.csproj" />
   </ItemGroup>
 

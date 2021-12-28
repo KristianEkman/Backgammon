@@ -14,7 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rules", "Rules\Rules.csproj", "{3CBBA68E-FBEE-40DC-AF75-7B54E175F133}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ai", "Ai\Ai.csproj", "{E2B8BECB-0236-45C0-A3F8-D7A5392B8E9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ai", "Ai\Ai.csproj", "{E2B8BECB-0236-45C0-A3F8-D7A5392B8E9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FibsIntegration", "FibsIntegration\FibsIntegration.csproj", "{70CC25B4-50A3-466F-8803-9702D8378F7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +40,10 @@ Global
 		{E2B8BECB-0236-45C0-A3F8-D7A5392B8E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2B8BECB-0236-45C0-A3F8-D7A5392B8E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2B8BECB-0236-45C0-A3F8-D7A5392B8E9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70CC25B4-50A3-466F-8803-9702D8378F7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70CC25B4-50A3-466F-8803-9702D8378F7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70CC25B4-50A3-466F-8803-9702D8378F7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70CC25B4-50A3-466F-8803-9702D8378F7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
