@@ -532,7 +532,7 @@ void CreateMoves(Game* g) {
 		ReverseDice(g);
 	}
 
-	int diceCount = g->Dice[0] == g->Dice[1] ? QUAD_DICE : 2;
+	int diceCount = g->Dice[0] == g->Dice[1] ? g_quads : 2;
 
 	int maxSetLength = 0;
 	for (size_t i = 0; i < 2; i++)
@@ -793,7 +793,7 @@ void Pause(Game* g) {
 }
 
 // Playes one game, optimally waits for user input and prints each game state.
-void PlayGame(Game* g) {
+void PlayGame(Game* g, int searchDepth) {
 
 	StartPosition(g);
 	RollDice(g);
@@ -808,7 +808,7 @@ void PlayGame(Game* g) {
 		if (PAUSE_PLAY)
 			Pause(g);
 		g->EvalCounts = 0;
-		int depth = SEARCH_DEPTH;// AI(g->CurrentPlayer).SearchDepth;
+		int depth = searchDepth;// AI(g->CurrentPlayer).SearchDepth;
 
 		MoveSet bestSet;
 		if (FindBestMoveSet(g, &bestSet, depth) >= 0)
@@ -833,7 +833,7 @@ void AutoPlay()
 	int batch = 3000;
 	for (int i = 0; i < batch; i++)
 	{
-		PlayGame(&G);
+		PlayGame(&G, 1);
 		if (G.BlackLeft == 0)
 			blackWins++;
 		else if (G.WhiteLeft == 0)

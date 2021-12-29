@@ -18,6 +18,7 @@ void PrintHelp() {
 int main() {
 	system("cls");
 	seedRand(1234, &g_Rand);
+	g_quads = 4;
 	printf("Welcome to backgammon\n: ");
 	/*for (int c = 170; c < 255; c++)
 		printf("%d %c\n\n", c, c);*/
@@ -43,7 +44,7 @@ int main() {
 			RunSelectedTests();
 		}
 		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {
-			AutoPlay();
+			AutoPlay(); 
 		}
 		else if (StartsWith(buf, "pos ")) {
 			ReadGameString(&buf[4], &G);
@@ -57,6 +58,7 @@ int main() {
 			PrintHelp();
 		}
 		printf(": ");
+		fflush(stdout);
 		fgets(buf, BUF_SIZE, stdin);
 	}
 	ConsoleWriteLine("Bye");

@@ -8,10 +8,10 @@
 #define CheckerCount(x) ((x) & 15)
 #define OtherColor(x) (~(x) & 48)
 #define INFINITY 10000000
-#define SEARCH_DEPTH 0
+
 
 // set this to 2 or 4. 2 is much faster training.
-#define QUAD_DICE 2
+int g_quads;
 
 #define PAUSE_PLAY false
 

@@ -9,7 +9,7 @@
 #include "Ai.h"
 
 void TrainParaThreadStart(int threadNo) {
-	PlayGame(&ThreadGames[threadNo]);
+	PlayGame(&ThreadGames[threadNo], 0);
 }
 
 // Comparing two AIs.
@@ -256,6 +256,7 @@ void SaveFactors(char* fileName, double* factors) {
 }
 
 void Train() {
+	g_quads = 2;
 	InitTrainer();
 	AiConfig untrained;
 	InitAi(&untrained, true);

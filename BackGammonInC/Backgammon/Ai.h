@@ -28,7 +28,7 @@ int AllDices[DiceCombos][2];
 int EvaluateCheckers(Game* g, PlayerSide color);
 void InitAi(AiConfig * config,bool constant);
 int GetScore(Game* g);
-void PlayGame(Game* g);
+void PlayGame(Game* g, int searchDepth);
 int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth);
 void AutoPlay();
 int RecursiveScore(Game* g, int depth, int best_black, int best_white);

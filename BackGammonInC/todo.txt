@@ -1,4 +1,6 @@
-Performance Eval count: 1867638 - (239.0k evs/sec) 7814.00ms
+Performance Eval count: 233744 - (789.7k evs/sec) 296.00ms
+
+Hash side
 
 Idéer för training
 ------------------
@@ -11,7 +13,6 @@ Idéer för training
 		- commands
 		- hard coded
 		- 
-
 
 Finns det ett fel i chess matrix i att den prioriterar PlainMoves när den bara borde flytta upp PV_Moves?
 

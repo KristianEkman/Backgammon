@@ -72,5 +72,4 @@ void ReadGameString(char* s, Game* g);
 
 void PrintGame(Game* game);
 void SetPointsLeft(Game* g);
-void InitGameConfig();
 void InitHashes();
