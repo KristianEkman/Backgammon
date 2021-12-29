@@ -110,12 +110,12 @@ void TestWriteGameString() {
 	char s[100];
 	WriteGameString(s, &G);
 
-	char* expected = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* expected = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 0 0";
 	AssertAreEqual(expected, s, "Unexpected GameString");
 }
 
 void TestReadGameString() {
-	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 4 3";
 	ReadGameString(gameString, &G);
 	AssertAreEqualInts(G.Position[0], 0, "Invalid checker count");
 	AssertAreEqualInts(G.Position[1], 2 | Black, "Invalid checker count");
@@ -146,11 +146,13 @@ void TestReadGameString() {
 	AssertAreEqualInts(G.BlackHome, 0, "Invalid black home count");
 	AssertAreEqualInts(G.WhiteHome, 0, "Invalid white home count");
 	AssertAreEqualInts(G.CurrentPlayer, Black, "Invalid current player");
+	AssertAreEqualInts(G.Dice[0], 4, "Invalid dice 1");
+	AssertAreEqualInts(G.Dice[1], 3, "Invalid dice 2");
 }
 
 void TestGameStringRountTrip() {
 
-	char* gameString = "b2 b1 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 w2 3 4 w";
+	char* gameString = "b2 b1 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 w2 3 4 w 5 6";
 	ReadGameString(gameString, &G);
 	AssertAreEqualInts(G.Position[0], 2 | Black, "Invalid checker count");
 	AssertAreEqualInts(G.Position[1], 1 | Black, "Invalid checker count");
@@ -181,6 +183,8 @@ void TestGameStringRountTrip() {
 	AssertAreEqualInts(G.WhiteHome, 3, "Invalid black home count");
 	AssertAreEqualInts(G.BlackHome, 4, "Invalid white home count");
 	AssertAreEqualInts(G.CurrentPlayer, White, "Invalid current player");
+	AssertAreEqualInts(G.Dice[0], 5, "Invalid dice 1");
+	AssertAreEqualInts(G.Dice[1], 6, "Invalid dice 2");
 
 
 	char written[100];
@@ -189,7 +193,7 @@ void TestGameStringRountTrip() {
 }
 
 void TestTwoDigitGameString() {
-	char* gameString = "b2 b10 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 0 0 b3 0 0 0 0 w2 w2 3 4 w";
+	char* gameString = "b2 b10 w3 0 0 0 w2 w1 w3 0 0 0 b5 w5 0 0 0 0 0 b3 0 0 0 0 w2 w2 3 4 w 1 1";
 	ReadGameString(gameString, &G);
 	AssertAreEqualInts(G.Position[0], 2 | Black, "Invalid checker count");
 	AssertAreEqualInts(G.Position[1], 10 | Black, "Invalid checker count");
@@ -219,6 +223,8 @@ void TestTwoDigitGameString() {
 	AssertAreEqualInts(G.Position[25], 2 | White, "Invalid checker count");
 	AssertAreEqualInts(G.WhiteHome, 3, "Invalid black home count");
 	AssertAreEqualInts(G.BlackHome, 4, "Invalid white home count");
+	AssertAreEqualInts(G.Dice[0], 1, "Invalid dice 1");
+	AssertAreEqualInts(G.Dice[1], 1, "Invalid dice 2");
 	char written[100];
 	WriteGameString(written, &G);
 	AssertAreEqual(gameString, written, "Strings differ");
@@ -245,7 +251,7 @@ void TestDoUndo() {
 
 void TestDoUndoHomeBlack() {
 	CheckerCountAssert = false;
-	ReadGameString("0 0 0 0 0 0 w2 w1 w3 0 0 0 0 w5 0 0 0 0 0 b5 0 0 0 0 w2 w2 0 0 b", &G);
+	ReadGameString("0 0 0 0 0 0 w2 w1 w3 0 0 0 0 w5 0 0 0 0 0 b5 0 0 0 0 w2 w2 0 0 b 0 0", &G);
 
 	AssertAreEqualInts(5 | Black, G.Position[19], "Should be 5 black checkers on 19");
 	AssertAreEqualInts(0, G.BlackHome, "Should be no black checker on Black Home");
@@ -264,7 +270,7 @@ void TestDoUndoHomeBlack() {
 }
 
 void TestDoUndoHomeWhite() {
-	ReadGameString("0 w1 0 0 w2 0 0 0 0 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b", &G);
+	ReadGameString("0 w1 0 0 w2 0 0 0 0 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 0 0", &G);
 
 	AssertAreEqualInts(2 | White, G.Position[4], "Should be 2 white checkers on 4");
 	AssertAreEqualInts(0, G.WhiteHome, "Should be no white checker on White Home");
@@ -304,7 +310,7 @@ void PrintMoves() {
 }
 
 void TestSimpleBlack() {
-	char* gameString = "0 b2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 b";
+	char* gameString = "0 b2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 b 0 0";
 	CheckerCountAssert = false;
 	ReadGameString(gameString, &G);
 	G.Dice[0] = 1;
@@ -324,7 +330,7 @@ void TestCreateMovesBlackStart() {
 	CreateMoves(&G);
 	char gs[100];
 	WriteGameString(gs, &G);
-	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b", gs, "Game string should be start string.");
+	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 4 3", gs, "Game string should be start string.");
 	AssertAreEqualInts(17, G.MoveSetsCount, "There should be 20 sets of moves.");
 	//PrintMoves();
 	// TODO: Assert moves
@@ -338,7 +344,7 @@ void TestCreateMovesWhiteStart() {
 	CreateMoves(&G);
 	char gs[100];
 	WriteGameString(gs, &G);
-	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w", gs, "Game string should be start string.");
+	AssertAreEqual("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w 4 3", gs, "Game string should be start string.");
 	AssertAreEqualInts(17, G.MoveSetsCount, "There should be 20 sets of moves.");
 	for (int i = 0; i < G.MoveSetsCount; i++)
 	{
@@ -348,10 +354,8 @@ void TestCreateMovesWhiteStart() {
 
 void TestBlackCheckerOnBar() {
 	CheckerCountAssert = false;
-	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 6 2";
 	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 6;
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
 	CheckerCountAssert = true;
@@ -361,10 +365,8 @@ void TestBlackCheckerOnBar() {
 
 void TestWhiteCheckerOnBar() {
 	CheckerCountAssert = false;
-	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b1 0 b5 0 0 0 0 w1 w1 0 0 b";
+	char* gameString = "b1 b1 0 0 0 0 w5 0 w1 0 0 0 b5 w5 0 0 0 b1 0 b5 0 0 0 0 w1 w1 0 0 b 6 2";
 	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 6;
 	G.CurrentPlayer = White;
 	CreateMoves(&G);
 	CheckerCountAssert = true;
@@ -374,11 +376,9 @@ void TestWhiteCheckerOnBar() {
 }
 
 void TestBearingOffBlack() {
-	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0 b";
+	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0 b 4 2";
 	CheckerCountAssert = false;
 	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 4;
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
 	CheckerCountAssert = true;
@@ -388,11 +388,9 @@ void TestBearingOffBlack() {
 }
 
 void TestBearingOffWhite() {
-	char* gameString = "0 w2 w2 0 w2 w2 w5 0 0 0 0 0 0 0 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0 b";
+	char* gameString = "0 w2 w2 0 w2 w2 w5 0 0 0 0 0 0 0 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0 w 4 2";
 	CheckerCountAssert = false;
 	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 4;
 	G.CurrentPlayer = White;
 	CreateMoves(&G);
 	CheckerCountAssert = true;
@@ -401,10 +399,8 @@ void TestBearingOffWhite() {
 }
 
 void TestDoubleDiceBlack() {
-	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 2 2";
 	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 2;
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
 	//PrintMoves();
@@ -416,10 +412,8 @@ void TestDoubleDiceBlack() {
 }
 
 void TestDoubleDiceWhite() {
-	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* gameString = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w 2 2";
 	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 2;
 	G.CurrentPlayer = White;
 	CreateMoves(&G);
 	//PrintMoves();
@@ -429,11 +423,9 @@ void TestDoubleDiceWhite() {
 }
 
 void PlayBothDiceIfPossible() {
-	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0 b";
+	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0 w 4 6";
 	ReadGameString(gameString, &G);
 	G.CurrentPlayer = White;
-	G.Dice[0] = 4;
-	G.Dice[1] = 6;
 	CreateMoves(&G);
 	AssertAreEqualInts(1, G.MoveSetsCount, "There should be 1 set of moves.");
 	//PrintMoves();
@@ -441,11 +433,9 @@ void PlayBothDiceIfPossible() {
 
 void TestRemoveShorterSets() {
 
-	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0 b";
+	char* gameString = "0 0 0 0 0 0 w5 0 w1 0 0 0 0 w5 0 0 0 0 0 b5 b2 b2 0 b2 b2 0 0 0 b 2 4";
 	CheckerCountAssert = false;
 	ReadGameString(gameString, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 4;
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
 	AssertAreEqualInts(11, G.MoveSetsCount, "There should be 11 moves");
@@ -461,7 +451,7 @@ void TestRemoveShorterSets() {
 }
 
 void TestEvaluation() {
-	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0 b";
+	char* gameString = "0 0 b2 b2 0 0 w5 w3 0 b2 0 0 0 w5 0 0 0 0 0 b3 b2 0 b2 b2 w2 0 0 0 b 0 0";
 	ReadGameString(gameString, &G);
 	InitAi(&AIs[0], true);
 	InitAi(&AIs[1], true);
@@ -469,7 +459,7 @@ void TestEvaluation() {
 }
 
 void TestPointsLeft() {
-	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 0 0";
 	ReadGameString(gs, &G);
 	AssertAreEqualInts(167, (int)G.BlackLeft, "Expected 167 Points left for Black");
 	AssertAreEqualInts(167, (int)G.WhiteLeft, "Expected 167 Points left for White");
@@ -500,7 +490,7 @@ void TestPointsLeft() {
 }
 
 void TestPointsLeftHit() {
-	char* gs = "0 b2 0 0 0 0 w1 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b1 0 0 0 0 w2 0 0 0 b";
+	char* gs = "0 b2 0 0 0 0 w1 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b1 0 0 0 0 w2 0 0 0 b 0 0";
 	CheckerCountAssert = false;
 	ReadGameString(gs, &G);
 	AssertAreEqualInts(143, (int)G.BlackLeft, "Expcted 143 Points left for Black");
@@ -532,7 +522,7 @@ void TestPointsLeftHit() {
 }
 
 void TestGetScore() {
-	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 0 0";
 	ReadGameString(gs, &G);
 	InitAi(&AIs[0], true);
 	InitAi(&AIs[1], true);
@@ -541,7 +531,7 @@ void TestGetScore() {
 }
 
 void TestPrintGame() {
-	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b";
+	char* gs = "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 6 6";
 	ReadGameString(gs, &G);
 	PrintGame(&G);
 }
@@ -551,13 +541,10 @@ void TestPlayGame() {
 }
 
 void TestBestBearingOffBlack() {
-	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0 b";
+	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0 b 3 2";
 	ReadGameString(gs, &G);
-	G.CurrentPlayer = Black;
 	InitAi(&AIs[0], true);
 	InitAi(&AIs[1], true);
-	G.Dice[0] = 3;
-	G.Dice[1] = 2;
 	double score = 0;
 	MoveSet set;
 	FindBestMoveSet(&G, &set, 1);
@@ -567,13 +554,10 @@ void TestBestBearingOffBlack() {
 }
 
 void TestBestBearingOffWhite() {
-	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0 b";
+	char* gs = "0 0 w6 w2 w2 w2 w3 0 0 0 0 0 0 0 0 0 0 0 0 b2 b2 b5 b5 b1 0 w0 0 0 w 3 2";
 	ReadGameString(gs, &G);
-	G.CurrentPlayer = White;
 	InitAi(&AIs[0], true);
 	InitAi(&AIs[1], true);
-	G.Dice[0] = 3;
-	G.Dice[1] = 2;
 	double score = 0;
 	MoveSet set;
 	FindBestMoveSet(&G, &set, 1);
@@ -583,10 +567,8 @@ void TestBestBearingOffWhite() {
 }
 
 void TestManyCombos() {
-	char* gs = "0 0 w3 w2 w3 0 w2 0 b2 0 0 0 0 0 0 0 w1 w2 b2 b2 0 w2 b2 b5 b2 0 0 0 b";
+	char* gs = "0 0 w3 w2 w3 0 w2 0 b2 0 0 0 0 0 0 0 w1 w2 b2 b2 0 w2 b2 b5 b2 0 0 0 b 1 1";
 	ReadGameString(gs, &G);
-	G.Dice[0] = 1;
-	G.Dice[1] = 1;
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
 	if (g_quads == 4) {
@@ -597,7 +579,7 @@ void TestManyCombos() {
 }
 
 void TestNastyBug() {
-	char* gs = "0 b2 w2 0 b1 0 w4 0 w2 w2 0 0 b3 w4 0 0 0 b2 0 b4 0 0 0 b3 w1 w1 0 0 b";
+	char* gs = "0 b2 w2 0 b1 0 w4 0 w2 w2 0 0 b3 w4 0 0 0 b2 0 b4 0 0 0 b3 w1 w1 0 0 w 0 0";
 	ReadGameString(gs, &G);
 	Move m;
 	m.from = 25;
@@ -611,7 +593,6 @@ void TestNastyBug() {
 void TestBestMoveBlack1() {
 	StartPosition(&G);
 	G.CurrentPlayer = Black;
-	double score = 0;
 	G.Dice[0] = 1;
 	G.Dice[1] = 6;
 	MoveSet ms;
@@ -637,10 +618,8 @@ void TestBestMoveWhite1() {
 }
 
 void Performance() {
-	char* gs = "0 b2 w2 w3 0 0 w6 0 0 0 w1 w1 b2 0 0 0 b1 b1 b2 b4 0 0 b3 0 w2 0 0 0 b";
+	char* gs = "0 b2 w2 w3 0 0 w6 0 0 0 w1 w1 b2 0 0 0 b1 b1 b2 b4 0 0 b3 0 w2 0 0 0 b 2 2";
 	ReadGameString(gs, &G);
-	G.Dice[0] = 2;
-	G.Dice[1] = 2;
 	MoveSet set;
 	G.EvalCounts = 0;
 	time_t start = clock();
@@ -669,7 +648,7 @@ void TestHashing() {
 }
 
 void TestHashingHit() {
-	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 w1 w1 0 0 0 w", &G);
+	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 w1 w1 0 0 0 w 1 1", &G);
 	Move move;
 	move.from = 19;
 	move.to = 23;
@@ -687,7 +666,7 @@ void TestHashingHit() {
 
 
 void TestHashingWhiteTwoMoves() {
-	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w", &G);
+	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w 1 1", &G);
 	Move move;
 	move.from = 24;
 	move.to = 23;
@@ -705,11 +684,8 @@ void TestHashingWhiteTwoMoves() {
 }
 
 void TestNoMoves() {
-	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b2 b2 b2 b2 b2 b2 w1 0 0 w", &G);
-	CheckerCountAssert = false;
-	G.CurrentPlayer = White;
-	G.Dice[0] = 3;
-	G.Dice[1] = 1;
+	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b2 b2 b2 b2 b2 b2 w1 0 0 w 3 1", &G);
+	CheckerCountAssert = false;	
 	MoveSet ms;
 	int r = FindBestMoveSet(&G, &ms, 1);
 	AssertAreEqualInts(-1, r, "Expected no moves");
