@@ -40,7 +40,6 @@ namespace FibsIntegration
             Thread.Sleep(2000);
             var sendBuffer = Encoding.ASCII.GetBytes(data + "\r\n");
             socket.Send(sendBuffer);
-
         }
 
         private string Read()
@@ -49,13 +48,8 @@ namespace FibsIntegration
             var readBuffer = new byte[1000];
             var length = socket.Receive(readBuffer);
             var text = Encoding.ASCII.GetString(readBuffer.Take(length).ToArray());
-            Debug.WriteLine(text);
+            Console.WriteLine(text);
             return text;
         }
-
-        //todo: ai:t ska kunna spela en match mot bot som man väljer.
-        //
-
-
     }
 }
