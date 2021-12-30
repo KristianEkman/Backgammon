@@ -3,7 +3,7 @@
 #include "Ai.h"
 
 //Number of AIs competing
-#define TrainedSetCount 8
+#define TrainedSetCount 10
 
 //Number of paralell games
 #define ThreadCount 8

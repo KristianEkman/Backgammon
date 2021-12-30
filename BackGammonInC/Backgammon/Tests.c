@@ -79,7 +79,6 @@ void AssertAreEqualLongs(U64 expected, U64 actual, char* msg) {
 
 #pragma endregion
 
-
 void Run(void (*test)(), char* name)
 {
 	printf("\n%s ", name);
@@ -185,7 +184,6 @@ void TestGameStringRountTrip() {
 	AssertAreEqualInts(G.CurrentPlayer, White, "Invalid current player");
 	AssertAreEqualInts(G.Dice[0], 5, "Invalid dice 1");
 	AssertAreEqualInts(G.Dice[1], 6, "Invalid dice 2");
-
 
 	char written[100];
 	WriteGameString(written, &G);
@@ -404,7 +402,7 @@ void TestDoubleDiceBlack() {
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
 	//PrintMoves();
-	if (g_quads == 4) {
+	if (Settings.DiceQuads == 4) {
 		AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
 		for (int i = 0; i < G.MoveSetsCount; i++)
 			Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
@@ -417,7 +415,7 @@ void TestDoubleDiceWhite() {
 	G.CurrentPlayer = White;
 	CreateMoves(&G);
 	//PrintMoves();
-	if (g_quads == 4) {
+	if (Settings.DiceQuads == 4) {
 		AssertAreEqualInts(76, G.MoveSetsCount, "There should be 76 sets of moves.");
 	}
 }
@@ -537,7 +535,7 @@ void TestPrintGame() {
 }
 
 void TestPlayGame() {
-	PlayGame(&G, 1);
+	PlayGame(&G);
 }
 
 void TestBestBearingOffBlack() {
@@ -571,7 +569,7 @@ void TestManyCombos() {
 	ReadGameString(gs, &G);
 	G.CurrentPlayer = Black;
 	CreateMoves(&G);
-	if (g_quads == 4) {
+	if (Settings.DiceQuads == 4) {
 		AssertAreEqualInts(72, G.MoveSetsCount, "There should be 72 sets of moves.");
 		for (int i = 0; i < G.MoveSetsCount; i++)
 			Assert(G.PossibleMoveSets[i].Length <= 4, "To many moves in set");
@@ -664,7 +662,6 @@ void TestHashingHit() {
 	Assert(hash1 == G.Hash, "Hash after hit move differ");
 }
 
-
 void TestHashingWhiteTwoMoves() {
 	ReadGameString("0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w 1 1", &G);
 	Move move;
@@ -692,7 +689,6 @@ void TestNoMoves() {
 	AssertAreEqualInts(0, G.MoveSetsCount, "Expected no moves");
 	CheckerCountAssert = true;
 }
-
 
 void TestTraining() {
 	Train();

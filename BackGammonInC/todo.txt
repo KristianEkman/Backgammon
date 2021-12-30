@@ -12,7 +12,10 @@ Idéer för training
 		- start args
 		- commands
 		- hard coded
-		- 
+	
+	Fortsätta träna med quads = 4
+
+	Testa depth 1, 3000 matcher mot otränad.
 
 Finns det ett fel i chess matrix i att den prioriterar PlainMoves när den bara borde flytta upp PV_Moves?
 

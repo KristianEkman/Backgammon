@@ -9,7 +9,7 @@
 #include "Ai.h"
 
 void TrainParaThreadStart(int threadNo) {
-	PlayGame(&ThreadGames[threadNo], 0);
+	PlayGame(&ThreadGames[threadNo]);
 }
 
 // Comparing two AIs.
@@ -66,19 +66,19 @@ void NewGeneration() {
 	for (int i = 1; i < TrainedSetCount; i++)
 	{
 		//combining values from 0 and 1.
-		int split = RandomInt(&g_Rand, 0, 26); // todo: use mtwister
+		int split = RandomInt(&g_Rand, 0, 26);
 		if (split > 0)
 			memcpy(&Trainer.Set[i].BlotFactors, &bf0, split * sizeof(double));
 		if (split < 26)
 			memcpy(&Trainer.Set[i].BlotFactors[split], &bf1[split], (26ll - split) * sizeof(double));
 
-		split = RandomInt(&g_Rand, 0, 26); // todo: use mtwister
+		split = RandomInt(&g_Rand, 0, 26);
 		if (split > 0)
 			memcpy(&Trainer.Set[i].ConnectedBlocksFactor, &cf0, split * sizeof(double));
 		if (split < 26)
 			memcpy(&Trainer.Set[i].ConnectedBlocksFactor[split], &cf1[split], (26ll - split) * sizeof(double));
 		
-		double f = RandomDouble(&g_Rand, 0.95, 1.05);
+		double f = RandomDouble(&g_Rand, 0.92, 1.08);
 		for (int x = 0; x < 26; x++)
 		{
 			Trainer.Set[i].BlotFactors[x] *= f;
@@ -190,7 +190,7 @@ bool LoadTrainedSet(char* name) {
 		return true;
 	}
 	else {
-		printf("\nError. Failed to open file in LoadTrainedSet\n");
+		printf("\nFailed to open file in LoadTrainedSet\n");
 		return false;
 	}
 }
@@ -206,12 +206,12 @@ double CompareTrained(AiConfig untrained) {
 	int score1[2] = { 0, 0 };
 	int scrUntrained = 0;
 	int scrTrained = 0;
-	PlayBatchMatch(Trainer.Set[0], untrained, 1000, score1);
+	PlayBatchMatch(Trainer.Set[0], untrained, 1500, score1);
 	scrTrained += score1[0];
 	scrUntrained += score1[1];
 
 	int score2[2] = { 0, 0 };
-	PlayBatchMatch(untrained, Trainer.Set[0], 1000, score2);
+	PlayBatchMatch(untrained, Trainer.Set[0], 1500, score2);
 	scrTrained += score2[1];
 	scrUntrained += score2[0];
 
@@ -223,6 +223,7 @@ double CompareTrained(AiConfig untrained) {
 void SaveProgress(double progress, int fullGames) {
 	char text[100];
 	snprintf(text, sizeof(text), "%d;%.1f;%d\n", Trainer.Generation, progress, fullGames);
+	
 	char* fileName = "Progress.csv";
 	FILE* stream;	
 	fopen_s(&stream, fileName, "a");
@@ -256,7 +257,13 @@ void SaveFactors(char* fileName, double* factors) {
 }
 
 void Train() {
-	g_quads = 2;
+	Settings.DiceQuads = 2;
+	// When untrained many games goes on for very long because the AIs are so bad at leaving blots.
+	// But after some generations it gets better and it is very rare with long games.
+	Settings.MaxTurns = 200; 
+	Settings.SearchDepth = 0;
+	Settings.PausePlay = false;
+
 	InitTrainer();
 	AiConfig untrained;
 	InitAi(&untrained, true);
@@ -275,13 +282,13 @@ void Train() {
 			{
 				int score1[2] = { 0, 0 };
 				// Let them compete, 200 games for each color.
-				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], 200, score1);
+				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], 250, score1);
 				Trainer.Set[i].Score += score1[0];
 				Trainer.Set[j].Score += score1[1];
 				
 				int score2[2] = { 0, 0 };
 				//Switching sides
-				PlayBatchMatch(Trainer.Set[j], Trainer.Set[i], 200, score2);
+				PlayBatchMatch(Trainer.Set[j], Trainer.Set[i], 250, score2);
 				Trainer.Set[j].Score += score2[0];
 				Trainer.Set[i].Score += score2[1];
 				printf("\nScore for %d vs %d: %d-%d", Trainer.Set[i].Id, Trainer.Set[j].Id, score1[0] + score2[1], score1[1] + score2[0]);

@@ -532,7 +532,7 @@ void CreateMoves(Game* g) {
 		ReverseDice(g);
 	}
 
-	int diceCount = g->Dice[0] == g->Dice[1] ? g_quads : 2;
+	int diceCount = g->Dice[0] == g->Dice[1] ? Settings.DiceQuads : 2;
 
 	int maxSetLength = 0;
 	for (size_t i = 0; i < 2; i++)
@@ -793,7 +793,7 @@ void Pause(Game* g) {
 }
 
 // Playes one game, optimally waits for user input and prints each game state.
-void PlayGame(Game* g, int searchDepth) {
+void PlayGame(Game* g) {
 
 	StartPosition(g);
 	RollDice(g);
@@ -803,12 +803,12 @@ void PlayGame(Game* g, int searchDepth) {
 
 	//Highest dice diceds who starts.
 	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
-	while (g->BlackLeft > 0 && g->WhiteLeft > 0 && g->Turns < 300)
+	while (g->BlackLeft > 0 && g->WhiteLeft > 0 && g->Turns < Settings.MaxTurns)
 	{
-		if (PAUSE_PLAY)
+		if (Settings.PausePlay)
 			Pause(g);
 		g->EvalCounts = 0;
-		int depth = searchDepth;// AI(g->CurrentPlayer).SearchDepth;
+		int depth = Settings.SearchDepth;
 
 		MoveSet bestSet;
 		if (FindBestMoveSet(g, &bestSet, depth) >= 0)
@@ -816,7 +816,7 @@ void PlayGame(Game* g, int searchDepth) {
 			{
 				DoMove(bestSet.Moves[i], g);
 				ASSERT_DBG(CountAllCheckers(Black, g) == 15 && CountAllCheckers(White, g) == 15);
-				if (PAUSE_PLAY)
+				if (Settings.PausePlay)
 					Pause(g);
 			}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
@@ -833,7 +833,7 @@ void AutoPlay()
 	int batch = 3000;
 	for (int i = 0; i < batch; i++)
 	{
-		PlayGame(&G, 1);
+		PlayGame(&G);
 		if (G.BlackLeft == 0)
 			blackWins++;
 		else if (G.WhiteLeft == 0)

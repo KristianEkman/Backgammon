@@ -18,7 +18,13 @@ void PrintHelp() {
 int main() {
 	system("cls");
 	seedRand(1234, &g_Rand);
-	g_quads = 4;
+	
+	//Default values
+	Settings.DiceQuads = 4;
+	Settings.MaxTurns = 2000;
+	Settings.PausePlay = false;
+	Settings.SearchDepth = 1;
+	
 	printf("Welcome to backgammon\n: ");
 	/*for (int c = 170; c < 255; c++)
 		printf("%d %c\n\n", c, c);*/

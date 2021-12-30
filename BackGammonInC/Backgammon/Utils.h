@@ -10,11 +10,6 @@
 #define INFINITY 10000000
 
 
-// set this to 2 or 4. 2 is much faster training.
-int g_quads;
-
-#define PAUSE_PLAY false
-
 typedef enum { false, true } bool;
 typedef unsigned long long U64;
 typedef unsigned char ubyte;
