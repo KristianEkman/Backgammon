@@ -15,18 +15,22 @@ namespace FibsIntegration
         public void Connect()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            
             socket.Connect("fibs.com", 4321);
-            Read();
+            Console.WriteLine(Read("login:"));
             Send("kristianekman");
-            Read();
+            Console.WriteLine(Read("\u0001"));
 
             var pw = File.ReadAllText("fibspw.txt");            
             Send(pw);
-            var reply = Read();
+            var reply = Read(">");
+            Console.WriteLine(reply);
             if (!reply.Contains("User kristianekman authenticated."))
             {
                 throw new ApplicationException("Failed to connect to fibs");
             }
+            Send("set boardstyle 3");
+            Console.WriteLine(Read(">"));
         }
 
         public void Disconnect()
@@ -35,20 +39,31 @@ namespace FibsIntegration
             socket.Disconnect(false);
         }
 
-        private void Send(string data)
+        public void Send(string data)
         {
-            Thread.Sleep(2000);
+            Thread.Sleep(500);
             var sendBuffer = Encoding.ASCII.GetBytes(data + "\r\n");
             socket.Send(sendBuffer);
         }
 
-        private string Read()
+        public string Read(string terminator)
         {
-            Thread.Sleep(2000);
-            var readBuffer = new byte[1000];
-            var length = socket.Receive(readBuffer);
-            var text = Encoding.ASCII.GetString(readBuffer.Take(length).ToArray());
-            Console.WriteLine(text);
+            Thread.Sleep(500);
+            //var readBuffer = new byte[1000];
+            //var length = socket.Receive(readBuffer);
+            //var text = Encoding.ASCII.GetString(readBuffer.Take(length).ToArray());
+            ////Console.WriteLine(text);
+            //return text;
+
+            string text = "";
+            int bytesCount;
+            do
+            {
+                var buffer = new byte[256];
+                bytesCount = socket.Receive(buffer, buffer.Length, SocketFlags.None);
+                text += Encoding.ASCII.GetString(buffer, 0, bytesCount);
+            }
+            while (!text.TrimEnd().EndsWith(terminator));
             return text;
         }
     }

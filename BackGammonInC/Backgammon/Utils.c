@@ -25,26 +25,6 @@ int ParseChar(char c) {
 	}
 }
 
-//U64  rnd_seed = 1070372;
-//U64 Llrand() {
-//
-//	rnd_seed ^= rnd_seed >> 12, rnd_seed ^= rnd_seed << 25, rnd_seed ^= rnd_seed >> 27;
-//	return rnd_seed * 2685821657736338717LL;
-//}
-//bool seeded;
-//
-//double RandomDouble(double max, double min)
-//{
-//	if (!seeded)
-//	{
-//		srand((unsigned int)time(0));
-//		seeded = true;
-//	}
-//	double range = (max - min);
-//	double div = RAND_MAX / range;
-//	return min + (rand() / div);
-//}
-
 bool Streq(char s1[], char s2[])
 {
 	return strcmp(s1, s2) == 0;

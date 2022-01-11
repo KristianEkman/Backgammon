@@ -9,13 +9,14 @@
 #include "Game.h"
 #include "Utils.h"
 #include "Hash.h"
+#include "Trainer.h"
 
 void InitAi(AiConfig* ai, bool constant) {
 	for (int i = 0; i < 26; i++)
 	{
 		if (constant) {
-			ai->BlotFactors[i] = 1;
-			ai->ConnectedBlocksFactor[i] = 1;
+			ai->BlotFactors[i] = 1.0;
+			ai->ConnectedBlocksFactor[i] = 1.0;
 		}
 		else {
 			ai->BlotFactors[i] = RandomDouble(&g_Rand, 0, 1);
@@ -24,6 +25,14 @@ void InitAi(AiConfig* ai, bool constant) {
 	}
 	ai->Id = 0;
 	ai->SearchDepth = 1;
+}
+
+void InitAiManual(AiConfig* ai) {
+	for (int i = 0; i < 26; i++)
+	{
+		ai->BlotFactors[i] = i / 5.0;// 51.37% advantage at depth 1.
+		ai->ConnectedBlocksFactor[i] = 1.0;
+	}
 }
 
 void SetDiceCombinations() {
@@ -823,6 +832,22 @@ void PlayGame(Game* g) {
 		g->Turns++;
 		RollDice(g);
 	}
+}
+
+// Runs the best trained AI agains an untrained.
+void PlayAndEvaluate() {
+	AiConfig untrained;
+	InitAi(&untrained, true);
+	Settings.DiceQuads = 4;
+	Settings.MaxTurns = 400;
+	Settings.PausePlay = false;
+	Settings.SearchDepth = 1;
+
+	InitTrainer();
+
+	InitAiManual(&Trainer.Set[0]);
+
+	CompareAIs(Trainer.Set[0], untrained);	
 }
 
 void AutoPlay()

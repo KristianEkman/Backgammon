@@ -699,7 +699,7 @@ void TestNewGeneration() {
 	NewGeneration();
 }
 
-void TestLoadSave() {
+void TestLoadSave() {	
 	InitTrainer();
 	double d1 = Trainer.Set[0].BlotFactors[0];
 	double d2 = Trainer.Set[4].BlotFactors[4];

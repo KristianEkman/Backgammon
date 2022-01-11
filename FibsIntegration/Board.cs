@@ -29,6 +29,8 @@ namespace FibsIntegration
         public bool ReverseDirection { get; set; }
         //0 or 25, obsolete
         public int HomeIndex { get; set; }
+               
+
         //0 or 25, obsolete
         public int BarIndex { get; set; }
         public int PlayerHome { get; set; }
@@ -45,7 +47,7 @@ namespace FibsIntegration
 
         public static Board Parse(string rawBoard)
         {
-            var split = rawBoard.Split(":");
+            var split = rawBoard.Replace(">", "").Trim().Split(":");
             var b = new Board();
             int i = 0;
             if (split[i++] != "board")
@@ -79,8 +81,43 @@ namespace FibsIntegration
             b.ForcedMove = int.Parse(split[i++]);
             b.DidCrawford = int.Parse(split[i++]);
             b.Redoubles = int.Parse(split[i++]);
-
             return b;
+        }
+
+        public string ToInternal()
+        {
+            // 31 tokens
+            // BlackBar, pos 1 - 24, WhiteBar, BlackHome, WhiteHome, turn, dice1, dice2
+            // "0 b2 0 0 0 0 w5 0 w3 0 0 0 b5 w5 0 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 b 5 6"
+            // Convention Player is always black, Opponent is always white
+
+            //Antar add black alltid spelar framåt.
+            if (YourColor != Turn)
+            {
+                throw new ApplicationException("Not calculating opponnets boards");
+            }
+            var s = "pos ";
+            for (int i = 0; i < 26; i++)
+            {
+                //int r = ReverseDirection ? 25 - i : i;
+                int r = i;
+                if (Checkers[r] < 0)
+                    s += "b";
+                else if (Checkers[r] > 0)
+                    s += "w";
+                s += Math.Abs(Checkers[r]);
+                s += " ";
+            };
+
+            s += Math.Abs(PlayerHome);
+            s += " ";
+            s += Math.Abs(OpponentHome);
+            s += " ";
+            s += ReverseDirection ? "w " : "b ";
+            s += $"{PlayerDice[0]} ";
+            s += $"{PlayerDice[1]}";
+
+            return s;
         }
     }
 

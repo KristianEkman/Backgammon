@@ -8,9 +8,6 @@ Idéer för training
 	Maxlängd på matcher
 	Stänga av quads
 	Styra depth
-		- app-config
-		- start args
-		- commands
 		- hard coded
 	
 	Fortsätta träna med quads = 4

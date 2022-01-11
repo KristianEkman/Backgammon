@@ -11,7 +11,7 @@
 
 // Max number of sets of moves that can be generated.
 // This value is found by running many games and check that it never goes over.
-#define MAX_SETS_LENGTH 2000 
+#define MAX_SETS_LENGTH 3000 
 
 typedef enum {
 	Black = 16,
@@ -89,3 +89,5 @@ void ReadGameString(char* s, Game* g);
 void PrintGame(Game* game);
 void SetPointsLeft(Game* g);
 void InitHashes();
+void PlayAndEvaluate();
+

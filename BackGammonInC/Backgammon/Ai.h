@@ -26,7 +26,8 @@ void SetDiceCombinations();
 int AllDices[DiceCombos][2];
 
 int EvaluateCheckers(Game* g, PlayerSide color);
-void InitAi(AiConfig * config,bool constant);
+void InitAi(AiConfig* config, bool constant);
+void InitAiManual(AiConfig * config);
 int GetScore(Game* g);
 void PlayGame(Game* g);
 int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth);

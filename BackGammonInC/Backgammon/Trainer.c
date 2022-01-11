@@ -55,12 +55,12 @@ void NewGeneration() {
 	// Select two best, and make 10 new children, randomize split pos of lists. Add a random mutation to two of them.
 	double bf0[26];// = TrainedSet[0].BlotFactors;
 	double bf1[26];// = TrainedSet[1].BlotFactors;
-	double cf0[26];// = TrainedSet[0].ConnectedBlocksFactor;
-	double cf1[26];// = TrainedSet[1].ConnectedBlocksFactor;
+	//double cf0[26];// = TrainedSet[0].ConnectedBlocksFactor;
+	//double cf1[26];// = TrainedSet[1].ConnectedBlocksFactor;
 	memcpy(&bf0, &Trainer.Set[0].BlotFactors, 26 * sizeof(double));
 	memcpy(&bf1, &Trainer.Set[1].BlotFactors, 26 * sizeof(double));
-	memcpy(&cf0, &Trainer.Set[0].ConnectedBlocksFactor, 26 * sizeof(double));
-	memcpy(&cf1, &Trainer.Set[1].ConnectedBlocksFactor, 26 * sizeof(double));
+	//memcpy(&cf0, &Trainer.Set[0].ConnectedBlocksFactor, 26 * sizeof(double));
+	//memcpy(&cf1, &Trainer.Set[1].ConnectedBlocksFactor, 26 * sizeof(double));
 
 	//Keep the best
 	for (int i = 1; i < TrainedSetCount; i++)
@@ -72,13 +72,13 @@ void NewGeneration() {
 		if (split < 26)
 			memcpy(&Trainer.Set[i].BlotFactors[split], &bf1[split], (26ll - split) * sizeof(double));
 
-		split = RandomInt(&g_Rand, 0, 26);
+		/*split = RandomInt(&g_Rand, 0, 26);
 		if (split > 0)
 			memcpy(&Trainer.Set[i].ConnectedBlocksFactor, &cf0, split * sizeof(double));
 		if (split < 26)
-			memcpy(&Trainer.Set[i].ConnectedBlocksFactor[split], &cf1[split], (26ll - split) * sizeof(double));
+			memcpy(&Trainer.Set[i].ConnectedBlocksFactor[split], &cf1[split], (26ll - split) * sizeof(double));*/
 		
-		double f = RandomDouble(&g_Rand, 0.92, 1.08);
+		double f = RandomDouble(&g_Rand, 0.96, 1.04);
 		for (int x = 0; x < 26; x++)
 		{
 			Trainer.Set[i].BlotFactors[x] *= f;
@@ -195,27 +195,28 @@ bool LoadTrainedSet(char* name) {
 	}
 }
 
-int CompareTrainedSet(const AiConfig* a, const AiConfig* b) {
+int CompareScores(const AiConfig* a, const AiConfig* b) {
 	return b->Score - a->Score;
 }
 
-double CompareTrained(AiConfig untrained) {
+double CompareAIs(AiConfig trained, AiConfig untrained) {
 	untrained.Score = 0;
-	Trainer.Set[0].Score = 0;
+	trained.Score = 0;
 
 	int score1[2] = { 0, 0 };
 	int scrUntrained = 0;
 	int scrTrained = 0;
-	PlayBatchMatch(Trainer.Set[0], untrained, 1500, score1);
+	int n = 1500;
+	PlayBatchMatch(trained, untrained, n, score1);
 	scrTrained += score1[0];
 	scrUntrained += score1[1];
 
 	int score2[2] = { 0, 0 };
-	PlayBatchMatch(untrained, Trainer.Set[0], 1500, score2);
+	PlayBatchMatch(untrained, trained, n, score2);
 	scrTrained += score2[1];
 	scrUntrained += score2[0];
 
-	double pct = (double)100 * ((double)scrTrained - (double)scrUntrained) / ((double)scrTrained + (double)scrUntrained);
+	double pct = ((double)100 * (double)scrTrained) / ((double)scrTrained + (double)scrUntrained);
 	printf("\nScore for trained vs untrained: %d-%d (%.2f%s)", scrTrained, scrUntrained, pct, "%");
 	return pct;
 }
@@ -257,10 +258,10 @@ void SaveFactors(char* fileName, double* factors) {
 }
 
 void Train() {
-	Settings.DiceQuads = 2;
+	Settings.DiceQuads = 4;
 	// When untrained many games goes on for very long because the AIs are so bad at leaving blots.
 	// But after some generations it gets better and it is very rare with long games.
-	Settings.MaxTurns = 200; 
+	Settings.MaxTurns = 400; 
 	Settings.SearchDepth = 0;
 	Settings.PausePlay = false;
 
@@ -280,15 +281,16 @@ void Train() {
 		{
 			for (int j = i + 1; j < TrainedSetCount; j++)
 			{
+				// Let them compete, n games for each color.
+				int n = 300;
 				int score1[2] = { 0, 0 };
-				// Let them compete, 200 games for each color.
-				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], 250, score1);
+				PlayBatchMatch(Trainer.Set[i], Trainer.Set[j], n, score1);
 				Trainer.Set[i].Score += score1[0];
 				Trainer.Set[j].Score += score1[1];
 				
 				int score2[2] = { 0, 0 };
 				//Switching sides
-				PlayBatchMatch(Trainer.Set[j], Trainer.Set[i], 250, score2);
+				PlayBatchMatch(Trainer.Set[j], Trainer.Set[i], n, score2);
 				Trainer.Set[j].Score += score2[0];
 				Trainer.Set[i].Score += score2[1];
 				printf("\nScore for %d vs %d: %d-%d", Trainer.Set[i].Id, Trainer.Set[j].Id, score1[0] + score2[1], score1[1] + score2[0]);
@@ -297,7 +299,7 @@ void Train() {
 
 		//free(ThreadGames);
 		//sorting out best 2
-		qsort(Trainer.Set, TrainedSetCount, sizeof(AiConfig), CompareTrainedSet);
+		qsort(Trainer.Set, TrainedSetCount, sizeof(AiConfig), CompareScores);
 
 		double tot = 0;
 		for (int i = 0; i < TrainedSetCount; i++)
@@ -309,8 +311,8 @@ void Train() {
 
 		NewGeneration();
 
-		if (gen % 4 == 0) {
-			double progress = CompareTrained(untrained);			
+		if (gen > 0 && gen % 5 == 0) {
+			double progress = CompareAIs(Trainer.Set[0], untrained);			
 			SaveProgress(progress, (int)tot);
 			SaveTrainedSet(Trainer.Generation, "TrainedSet");
 			SaveFactors("BlotFactors.csv", Trainer.Set[0].BlotFactors);
