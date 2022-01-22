@@ -801,6 +801,30 @@ void Pause(Game* g) {
 	fgets(buf, 5000, stdin);
 }
 
+
+void PrintSet(MoveSet set) {
+	printf("\nmove ");
+	for (int i = 0; i < set.Length; i++)
+	{
+		Move m = set.Moves[i];
+		if (m.from == 0 || m.from == 25)
+			printf("bar");
+		else
+			printf("%d", m.from);
+		printf("-");
+		if (m.to == 0 || m.to == 25)
+			printf("off");
+		else
+			printf("%d", m.to);
+
+		if (i < set.Length - 1)
+			printf(" ");
+		else
+			printf("\n");
+	}
+	fflush(stdout);
+}
+
 // Playes one game, optimally waits for user input and prints each game state.
 void PlayGame(Game* g) {
 
@@ -814,13 +838,19 @@ void PlayGame(Game* g) {
 	g->CurrentPlayer = g->Dice[0] > g->Dice[1] ? Black : White;
 	while (g->BlackLeft > 0 && g->WhiteLeft > 0 && g->Turns < Settings.MaxTurns)
 	{
-		if (Settings.PausePlay)
-			Pause(g);
+		/*if (Settings.PausePlay)
+			Pause(g);*/
 		g->EvalCounts = 0;
 		int depth = Settings.SearchDepth;
-
+		char buf[5000];
 		MoveSet bestSet;
 		if (FindBestMoveSet(g, &bestSet, depth) >= 0)
+		{
+			if (Settings.PausePlay)
+			{
+				PrintSet(bestSet);				
+				fgets(buf, 5000, stdin);
+			}
 			for (int i = 0; i < bestSet.Length; i++)
 			{
 				DoMove(bestSet.Moves[i], g);
@@ -828,6 +858,7 @@ void PlayGame(Game* g) {
 				if (Settings.PausePlay)
 					Pause(g);
 			}
+		}
 		g->CurrentPlayer = OtherColor(g->CurrentPlayer);
 		g->Turns++;
 		RollDice(g);
@@ -850,24 +881,12 @@ void PlayAndEvaluate() {
 	CompareAIs(Trainer.Set[0], untrained);	
 }
 
-void AutoPlay()
+void WatchGame()
 {
-	int whiteWins = 0;
-	int blackWins = 0;
-	clock_t start = clock();
-	int batch = 3000;
-	for (int i = 0; i < batch; i++)
-	{
-		PlayGame(&G);
-		if (G.BlackLeft == 0)
-			blackWins++;
-		else if (G.WhiteLeft == 0)
-			whiteWins++;
-		double games = i + (double)1;
-		if ((int)games % 10 == 0)
-			printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", (int)games, whiteWins, whiteWins / games, blackWins, blackWins / games, games / ((float)(clock() - start) / CLOCKS_PER_SEC));
-	}
-	printf("Of: %d   White: %d (%.3f)   Black: %d (%.3f)   %.2fgames/s\n", batch, whiteWins, whiteWins / (double)batch, blackWins, blackWins / (double)batch, batch / ((float)(clock() - start) / CLOCKS_PER_SEC));
-
-	printf("%fms", (float)(clock() - start) * 1000 / CLOCKS_PER_SEC);
+	InitAiManual(&AIs[0]);
+	InitAiManual(&AIs[1]);
+	Settings.PausePlay = true;
+	Settings.SearchDepth = 2;
+	PlayGame(&G);
+	Settings.PausePlay = false;
 }

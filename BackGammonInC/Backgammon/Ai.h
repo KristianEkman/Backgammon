@@ -31,7 +31,7 @@ void InitAiManual(AiConfig * config);
 int GetScore(Game* g);
 void PlayGame(Game* g);
 int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth);
-void AutoPlay();
+void WatchGame();
 int RecursiveScore(Game* g, int depth, int best_black, int best_white);
 
 void RemoveShorterSets(int maxSetLength, Game* g);
@@ -42,3 +42,4 @@ void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 bool DoMove(Move move, Game* g);
 void UndoMove(Move move, bool hit, Game* g, U64 prevHash);
 bool IsBlockedFor(ushort pos, ushort color, Game* g);
+void PrintSet(MoveSet set);

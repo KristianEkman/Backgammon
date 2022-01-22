@@ -25,6 +25,7 @@ void PrintCurrentDir() {
 	_tprintf(TEXT("\nDir: %s\n"), c);
 }
 
+
 void PrintBest() {
 	if (Searching) {
 		printf("AI busy searcing\n");
@@ -38,26 +39,9 @@ void PrintBest() {
 	int depth = G.Dice[0] == G.Dice[1] ? 1 : 2;
 	FindBestMoveSet(&G, &set, depth);
 	fflush(stdout);
-	printf("\nmove ");
-	for (int i = 0; i < set.Length; i++)
-	{
-		Move m = set.Moves[i];
-		if (m.from == 0 || m.from == 25)
-			printf("bar");
-		else
-			printf("%d", m.from);
-		printf("-");
-		if (m.to == 0 || m.to == 25)
-			printf("off");
-		else
-			printf("%d", m.to);
-				
-		if (i < set.Length - 1)
-			printf(" ");
-		else
-			printf("\n");
-	}
-	fflush(stdout);
+
+	PrintSet(set);
+	
 	Searching = false;
 }
 
@@ -104,7 +88,6 @@ int main() {
 		}
 		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {			
 			PlayAndEvaluate();
-			//AutoPlay(); 
 		}
 		else if (StartsWith(buf, "pos ")) {			
 			ReadGameString(&buf[4], &G);
@@ -117,6 +100,9 @@ int main() {
 			printf("searching...\n");
 			fflush(stdout);
 			PrintBest();			
+		}
+		else if (Streq(buf, "w\n") || Streq(buf, "watch\n")) {
+			WatchGame();
 		}
 		else if (Streq(buf, "help\n") || Streq(buf, "h\n")) {
 			PrintHelp();
