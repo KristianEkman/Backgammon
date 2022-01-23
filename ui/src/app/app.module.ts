@@ -1,5 +1,5 @@
-import { ErrorHandler, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ErrorHandler, Injectable, NgModule } from '@angular/core';
+import { BrowserModule, HammerGestureConfig, HammerModule, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StorageServiceModule } from 'ngx-webstorage-service';
 import {
@@ -68,6 +68,12 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
 }
 
+
+@Injectable()
+export class HammerCustomConfig extends HammerGestureConfig {
+  overrides = { 'tap': { enable: true } } as any;
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -116,6 +122,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     HttpClientModule,
     StorageServiceModule,
     ReactiveFormsModule,
+    HammerModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
     }),
@@ -149,8 +156,13 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
       } as SocialAuthServiceConfig
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: ErrorHandler, useClass: GlobalErrorService }
+    { provide: ErrorHandler, useClass: GlobalErrorService },
+    {
+      provide: HAMMER_GESTURE_CONFIG,
+      useClass: HammerCustomConfig,
+    },
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
+

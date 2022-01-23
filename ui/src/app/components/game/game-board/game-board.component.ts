@@ -1121,4 +1121,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     this.handleMove(x - w / 2, y - w / 2);
   }
+
+  onTap(event: any): void {
+    console.log(event.center);
+  }
 }

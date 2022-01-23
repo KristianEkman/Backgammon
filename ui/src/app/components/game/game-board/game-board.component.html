@@ -1,11 +1,3 @@
-<canvas
-  #canvas
-  class="game-board"
-  [ngClass]="{ flipped: flipped }"
-  (mousedown)="onMouseDown($event)"
-  (mousemove)="onMouseMove($event)"
-  (mouseup)="onMouseUp($event)"
-  (touchstart)="onTouchStart($event)"
-  (touchend)="onTouchEnd($event)"
-  (touchmove)="onTouchMove($event)"
-></canvas>
+<canvas #canvas class="game-board" [ngClass]="{ flipped: flipped }" (mousedown)="onMouseDown($event)"
+  (mousemove)="onMouseMove($event)" (mouseup)="onMouseUp($event)" (touchstart)="onTouchStart($event)"
+  (touchend)="onTouchEnd($event)" (touchmove)="onTouchMove($event)" (tap)="onTap($event)"></canvas>
