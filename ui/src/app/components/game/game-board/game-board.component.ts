@@ -1038,7 +1038,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     // Unless the cursor has moved to far, this is a click event, and should move the move of the largest dice.
     const isClick =
-      Math.abs(clientX - xDown) < 10 && Math.abs(clientY - yDown) < 10;
+      Math.abs(clientX - xDown) < 20 && Math.abs(clientY - yDown) < 20;
 
     const allRects: CheckerArea[] = [...this.checkerAreas];
     if (this.game.currentPlayer === PlayerColor.black) {
