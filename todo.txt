@@ -1,3 +1,12 @@
+Bättre precision på click och mouse.
+
+Nytt AI
+    Går det att få stabilt över standard input output?
+    Testa om processesen kan köras av web app?
+    Hur thread safe?
+    Testa om C-AIt är bättre. 3000 matcher.
+
+
 Tutorial
     - "Teach me Backgammon"
     - "First time?"
@@ -5,7 +14,7 @@ Tutorial
         * Just play.
 
     1. Move your checkers this way.
-    2. Opponnent moves this way.
+    2. Opponnents will be moving this way to their home.
     3. Two or more checkers on one point blocks opponent.
     4. 
     5. When all checkers reach home you win.
@@ -37,8 +46,6 @@ Editing of photo.
 
 Reputition: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
-
-Chat
 
 Olika teman, marble, wood.
 
