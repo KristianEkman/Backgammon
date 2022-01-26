@@ -1,9 +1,11 @@
-Bättre precision på click och mouse.
 
 Nytt AI
-    Går det att få stabilt över standard input output?
     Testa om processesen kan köras av web app?
     Hur thread safe?
+    
+    Är första evalueringsfunktionen bättre?
+    Går det att få stabilt över standard input output?
+    
     Testa om C-AIt är bättre. 3000 matcher.
 
 
