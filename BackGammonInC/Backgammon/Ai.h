@@ -26,6 +26,7 @@ void SetDiceCombinations();
 int AllDices[DiceCombos][2];
 
 int EvaluateCheckers(Game* g, PlayerSide color);
+int EvaluateCheckers2(Game* g, PlayerSide color);
 void InitAi(AiConfig* config, bool constant);
 void InitAiManual(AiConfig * config);
 int GetScore(Game* g);
