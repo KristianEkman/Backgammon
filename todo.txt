@@ -1,4 +1,3 @@
-
 Nytt AI
     Testa om processesen kan köras av web app?
     Hur thread safe?
@@ -8,21 +7,8 @@ Nytt AI
     
     Testa om C-AIt är bättre. 3000 matcher.
 
-
-Tutorial
-    - "Teach me Backgammon"
-    - "First time?"
-        * Teach me?
-        * Just play.
-
-    1. Move your checkers this way.
-    2. Opponnents will be moving this way to their home.
-    3. Two or more checkers on one point blocks opponent.
-    4. 
-    5. When all checkers reach home you win.
-    
-
 Språk
+    detektera efter signup
     ryska
 
 
