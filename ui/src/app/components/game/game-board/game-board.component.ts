@@ -377,6 +377,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.moveTo(x - arrowSize, y - arrowSize);
     cx.lineTo(x, y); // -1.5 is a hack. Must be a way to make arrows look better.
     cx.stroke();
+
+    var area1 = this.checkerAreas.filter((r) => r.pointIdx === 19)[0];
+    cx.setLineDash([3, 3]);
+    cx.strokeRect(area1.x, area1.y, area1.width * 6, area1.height);
+    cx.setLineDash([]);
   }
 
   drawOpponentDirection(cx: CanvasRenderingContext2D) {
