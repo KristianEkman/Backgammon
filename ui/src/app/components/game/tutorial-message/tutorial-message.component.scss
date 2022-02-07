@@ -1,0 +1,42 @@
+@import '../../../../styles/themes.scss';
+
+.message-box {
+  display: inline-block;
+  padding: 10px;
+  background-color: var(--app-bg-color);
+  opacity: 0.8;
+  // border: rgb(165, 39, 39) 2px solid;
+  border-radius: 5px;
+  max-width: 300px;
+  font-size: 18px;
+  // backdrop-filter: blur(3px); //looks ugly
+
+  animation: show_dialog_animation 0.4s linear forwards;
+}
+
+.message-button-container {
+  display: block;
+  height: 45px;
+  position: relative;
+  margin-top: 10px;
+}
+
+.next-button {
+  position: absolute;
+  right: 0;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+}
+
+@keyframes show_dialog_animation {
+  from {
+    transform: scale(0);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}

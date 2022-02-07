@@ -41,6 +41,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() flipped = false;
   @Input() themeName: string | null = 'dark';
   @Input() timeLeft: number | null = 0;
+  @Input() tutorialStep: number | null = 0;
 
   @Output() addMove = new EventEmitter<MoveDto>();
   @Output() moveAnimFinished = new EventEmitter<void>();
@@ -107,6 +108,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.cx = canvasEl.getContext('2d');
+    if (this.cx) this.cx.imageSmoothingEnabled = true;
 
     this.translate();
     this.requestDraw();
@@ -272,11 +274,152 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     this.drawClock(cx);
+
+    if (<number>this.tutorialStep > 0) {
+      this.drawTutorial(cx);
+    }
     // *** NOT PROD CODE
     // this.drawIcon(cx);
     // this.drawDebugRects(cx);
     // *** NOT PROD CODE
     return 0;
+  }
+
+  drawTutorial(cx: CanvasRenderingContext2D) {
+    cx.strokeStyle = this.theme.highLight;
+    cx.lineWidth = 2;
+    cx.lineJoin = 'bevel';
+
+    switch (this.tutorialStep) {
+      case 2: {
+        this.drawYourDirection(cx);
+        break;
+      }
+      case 3: {
+        this.drawOpponentDirection(cx);
+        break;
+      }
+      case 4: {
+        this.drawHomeArrow(cx);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  drawYourDirection(cx: CanvasRenderingContext2D) {
+    const chWidth = this.getCheckerWidth();
+    const arrowSize = chWidth / 3;
+    // First arrow from pos 1
+    var area = this.checkerAreas.filter((r) => r.pointIdx === 1)[0];
+    cx.beginPath();
+    var x = area.x + area.width / 2;
+    var y = area.y + chWidth;
+    cx.moveTo(x, y);
+    x -= area.width * 2;
+    cx.lineTo(x, y);
+    cx.lineTo(x + arrowSize, y + arrowSize);
+    cx.moveTo(x + arrowSize, y - arrowSize);
+    cx.lineTo(x, y); // -1.5 is a hack. Must be a way to make arrows look better.
+    cx.stroke();
+
+    // second arrow from pos 12
+    area = this.checkerAreas.filter((r) => r.pointIdx === 12)[0];
+    x = area.x + area.width / 2;
+    y = area.y + area.height - chWidth * 2;
+    cx.moveTo(x, y);
+    y += chWidth * 4;
+    cx.lineTo(x, y);
+    cx.lineTo(x - arrowSize, y - arrowSize);
+    cx.moveTo(x, y);
+    cx.lineTo(x + arrowSize, y - arrowSize);
+    cx.stroke();
+
+    //3rd line from pos 17
+    area = this.checkerAreas.filter((r) => r.pointIdx === 17)[0];
+    x = area.x + area.width / 2;
+    y = area.y + area.height - chWidth;
+    cx.moveTo(x, y);
+    x += area.width * 2;
+    cx.lineTo(x, y);
+    cx.lineTo(x - arrowSize, y - arrowSize);
+    cx.moveTo(x, y);
+    cx.lineTo(x - arrowSize, y + arrowSize);
+
+    cx.stroke();
+
+    //4th line from pos 19
+    area = this.checkerAreas.filter((r) => r.pointIdx === 19)[0];
+    x = area.x + area.width / 2;
+    y = area.y + area.height - chWidth;
+    cx.moveTo(x, y);
+    x += area.width * 6;
+    cx.lineTo(x, y);
+    cx.lineTo(x - arrowSize, y - arrowSize);
+    cx.moveTo(x, y);
+    cx.lineTo(x - arrowSize, y + arrowSize);
+
+    cx.stroke();
+  }
+
+  drawHomeArrow(cx: CanvasRenderingContext2D) {
+    const chWidth = this.getCheckerWidth();
+    const arrowSize = chWidth / 3;
+    var area = this.checkerAreas.filter((r) => r.pointIdx === 22)[0];
+    cx.beginPath();
+    var x = area.x + area.width / 2;
+    var y = area.y + area.height - chWidth;
+    cx.moveTo(x, y);
+    x += area.width * 3;
+    cx.lineTo(x, y);
+    cx.lineTo(x - arrowSize, y + arrowSize);
+    cx.moveTo(x - arrowSize, y - arrowSize);
+    cx.lineTo(x, y); // -1.5 is a hack. Must be a way to make arrows look better.
+    cx.stroke();
+  }
+
+  drawOpponentDirection(cx: CanvasRenderingContext2D) {
+    const chWidth = this.getCheckerWidth();
+    const arrowSize = chWidth / 3;
+    // First arrow from pos 24
+    var area = this.checkerAreas.filter((r) => r.pointIdx === 24)[0];
+    cx.beginPath();
+    var x = area.x + area.width / 2;
+    var y = area.y + area.height - chWidth;
+    cx.moveTo(x, y);
+    x -= area.width * 2;
+    cx.lineTo(x, y);
+    cx.lineTo(x + arrowSize, y + arrowSize);
+    cx.moveTo(x + arrowSize, y - arrowSize);
+    cx.lineTo(x, y); // -1.5 is a hack. Must be a way to make arrows look better.
+    cx.stroke();
+
+    // second arrow from pos 13
+    area = this.checkerAreas.filter((r) => r.pointIdx === 13)[0];
+    x = area.x + area.width / 2;
+    y = area.y + chWidth * 2;
+    cx.moveTo(x, y);
+    y -= chWidth * 4;
+    cx.lineTo(x, y);
+    cx.lineTo(x - arrowSize, y + arrowSize);
+    cx.moveTo(x, y);
+    cx.lineTo(x + arrowSize, y + arrowSize);
+    cx.stroke();
+
+    //3rd line from pos 8
+    area = this.checkerAreas.filter((r) => r.pointIdx === 8)[0];
+    x = area.x + area.width / 2;
+    y = area.y + chWidth;
+    cx.moveTo(x, y);
+    x += area.width * 2;
+    cx.lineTo(x, y);
+    cx.lineTo(x - arrowSize, y - arrowSize);
+    cx.moveTo(x, y);
+    cx.lineTo(x - arrowSize, y + arrowSize);
+    cx.stroke();
+
+    cx.stroke();
   }
 
   drawClock(cx: CanvasRenderingContext2D) {

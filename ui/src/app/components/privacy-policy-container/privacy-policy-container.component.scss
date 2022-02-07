@@ -1,0 +1,11 @@
+.privacy-policy-container {
+  display: block;
+  width: 1024px;
+  height: 700px;
+  overflow-y: auto;
+  padding-left: 25px;
+  margin-top: 65px;
+
+  max-width: calc(100vw - 50px);
+  max-height: 80vh;
+}

@@ -9,12 +9,13 @@
     "signin": "Sign in with"
   },
   "logincontainer": {
-    "goldgame": "Gold Game",
+    "play": "Play",
     "practice": "Practice",
     "friend": "Invite a friend",
     "tip": "Tip",
     "whenyousignin": "Sigin to compete for gold!",
-    "accept": "Accept invite"
+    "accept": "Accept invite",
+    "tutorial": "Rules"
   },
   "accountedit": {
     "editaccount": "Edit Account",
@@ -151,5 +152,18 @@
     "required": "Password is required",
     "format": "Password must have atleast 8 characters",
     "takenname": "The login name is already taken"
+  },
+  "tutorial": {
+    "1": "This tutorial will teach you the rules of backgammon.",
+    "2": "You play the black checkers and move them in this direction.",
+    "3": "Opponent plays white and moves in opposite direction.",
+    "4": "When all your checkers has reached one of the last six points, they can be moved home.",
+    "5": "The player who has moved all checkers home, wins the game.",
+    "6": "You can't move to a point which has two or more opponent checkers.",
+    "7": "A lonely checker is called a blot and can be hit by the opponent.",
+    "8": "That checker has to start over from the bar.",
+    "9": "And lastly, good luck and try to block you opponent!",
+    "next": "Next",
+    "back": "Back"
   }
 }

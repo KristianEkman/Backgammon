@@ -9,12 +9,13 @@
     "signin": "Logga in med"
   },
   "logincontainer": {
-    "goldgame": "Guldspel",
+    "play": "Spela",
     "practice": "Öva",
     "friend": "Bjud in någon",
     "tip": "Tips",
     "whenyousignin": "När du loggar in aktiveras fler funktioner, gratis!",
-    "accept": "Godta inbjudan"
+    "accept": "Godta inbjudan",
+    "tutorial": "Regler"
   },
   "accountedit": {
     "editaccount": "Redigera kontot",
@@ -151,5 +152,18 @@
     "required": "lösenord krävs",
     "format": "Lösenordet måste ha minst 8 tecken",
     "takenname": "Inloggningsnamnet är redan taget"
+  },
+  "tutorial": {
+    "1": "Denna handledning kommer att lära dig reglerna för backgammon.",
+    "2": "Du spelar de svarta brickorna och flyttar dem i den här riktningen.",
+    "3": "Motståndaren spelar vit och flyttar i motsatt riktning.",
+    "4": "När alla dina brickor har nått en av de sista sex punkterna, kan de flyttas hem.",
+    "5": "Den spelare som har flyttat alla brickor hem, vinner spelet.",
+    "6": "Du kan inte flytta till en punkt som har två eller flera motståndarbrickor.",
+    "7": "En ensam bricka kallas en blot och kan träffas av motståndaren.",
+    "8": "Den brickan måste börja om från baren.",
+    "9": "Och slutligen lycka till och försöka blockera motståndaren!",
+    "next": "Nästa",
+    "back": "Tillbaka"
   }
 }

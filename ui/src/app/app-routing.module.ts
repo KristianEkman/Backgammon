@@ -8,6 +8,7 @@ import { InviteContainerComponent } from './components/invite-container/invite-c
 import { LobbyContainerComponent } from './components/lobby-container/lobby-container.component';
 import { MessageContainerComponent } from './components/message-container/message-container.component';
 import { PasswordContainerComponent } from './components/password-container/password-container.component';
+import { PrivacyPolicyContainerComponent } from './components/privacy-policy-container/privacy-policy-container.component';
 import { ToLittleGoldComponent } from './components/to-little-gold/to-little-gold.component';
 import { ToplistContainerComponent } from './components/toplist-container/toplist-container.component';
 import { GoldGuard, LoginGuard } from './guards';
@@ -64,6 +65,10 @@ const routes: Routes = [
     path: 'create-password',
     component: PasswordContainerComponent
     // todo, only enabled when not logged in.
+  },
+  {
+    path: 'privacy-policy',
+    component: PrivacyPolicyContainerComponent
   },
   {
     path: '**',

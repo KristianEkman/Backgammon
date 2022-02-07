@@ -12,6 +12,11 @@ export class HomeButtonComponent {
   get Visible(): boolean {
     if (this.router.url === '/') return false;
 
+    const parsed = this.router.parseUrl(this.router.url);
+    if (parsed.queryParams['tutorial'] === 'true') {
+      return true;
+    }
+
     const hiddenOn = ['/lobby', '/game'];
     for (let i = 0; i < hiddenOn.length; i++) {
       const route = hiddenOn[i];

@@ -1,0 +1,18 @@
+<div *ngIf="show" class="message-box app-colors">
+  {{ 'tutorial.' + step | translate }}
+  <div class="message-button-container">
+    <app-button
+      class="message-box-button back-button"
+      (click)="backButtonClick()"
+      *ngIf="backVisible"
+    >
+      {{ 'tutorial.back' | translate }}
+    </app-button>
+    <app-button
+      class="message-box-button next-button"
+      (click)="nextButtonClick()"
+    >
+      {{ 'tutorial.next' | translate }}
+    </app-button>
+  </div>
+</div>
