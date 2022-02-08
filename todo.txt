@@ -1,3 +1,7 @@
+Hammerjs
+
+Feedback / Guest book
+
 Nytt AI
     Testa om processesen kan köras av web app?
     Hur thread safe?
@@ -15,8 +19,6 @@ Språk
 Visa dubbelslag för första.
 
 Chat. Messages. Guest book.
-
-Leave Feedback
 
 canvas banner
 
