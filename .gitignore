@@ -338,6 +338,8 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# my own
 /Backend/pw.txt
 /Backend/SavedGames.json
 /Backend/fbapptoken.txt

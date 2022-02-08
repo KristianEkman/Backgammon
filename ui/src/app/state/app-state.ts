@@ -40,7 +40,10 @@ export class AppState {
     this.opponentDone = new StateObject<boolean>();
     this.theme = new StateObject<string>();
     this.theme.setValue('dark');
+    this.tutorialStep = new StateObject<number>();
+    this.tutorialStep.setValue(0);
   }
+
   private static _singleton: AppState;
   public static get Singleton(): AppState {
     if (!this._singleton) {
@@ -66,6 +69,7 @@ export class AppState {
   rolled: StateObject<boolean>;
   opponentDone: StateObject<boolean>;
   theme: StateObject<string>;
+  tutorialStep: StateObject<number>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

@@ -9,12 +9,13 @@
     "signin": "Se connecter avec"
   },
   "logincontainer": {
-    "goldgame": "Gold jeu",
+    "play": "Jouer",
     "practice": "Entraine toi",
     "friend": "Invite un ami",
     "tip": "Conseil",
     "whenyousignin": "Lorsque vous vous connectez, plus de fonctionnalités sont activées, gratuitement!",
-    "accept": "Accepter l'invitation"
+    "accept": "Accepter l'invitation",
+    "tutorial": "Des règles"
   },
   "accountedit": {
     "editaccount": "Modifier le compte",
@@ -151,5 +152,18 @@
     "required": "Mot de passe requis",
     "format": "Le mot de passe doit avoir au moins 8 caractères",
     "takenname": "Le nom de connexion est déjà pris"
+  },
+  "tutorial": {
+    "1": "Les règles du backgammon sont simples.Déplacez tout vérificateur le nombre d'étapes des coupes de dés.",
+    "2": "Vous jouez aux dames noirs et les déplacez dans cette direction.",
+    "3": "L'adversaire joue blanche et se déplace dans une direction opposée.",
+    "4": "Lorsque tous vos dames ont atteint l'intérieur du conseil d'administration, ils peuvent être supprimés.",
+    "5": "Le joueur qui a d'abord supprime tous les dames, gagne le jeu.",
+    "6": "Vous ne pouvez pas passer à un point qui a deux ou plusieurs dames adversaires.",
+    "7": "Un vérificateur solitaire s'appelle un blot et peut être frappé par un vérificateur adversaire.",
+    "8": "Ce vérificateur doit recommencer de la barre.",
+    "9": "Et enfin, bonne chance et essayez de bloquer votre adversaire!",
+    "next": "Suivante",
+    "back": "Retour"
   }
 }

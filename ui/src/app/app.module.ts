@@ -63,6 +63,8 @@ import { ToLittleGoldComponent } from './components/to-little-gold/to-little-gol
 import { PlayAiQuestionComponent } from './components/game/play-ai-question/play-ai-question.component';
 import { PasswordContainerComponent } from './components/password-container/password-container.component';
 import { ButtonComponent } from './components/shared/button/button.component';
+import { TutorialMessageComponent } from './components/game/tutorial-message/tutorial-message.component';
+import { PrivacyPolicyContainerComponent } from './components/privacy-policy-container/privacy-policy-container.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -112,7 +114,9 @@ export class HammerCustomConfig extends HammerGestureConfig {
     ToLittleGoldComponent,
     PlayAiQuestionComponent,
     PasswordContainerComponent,
-    ButtonComponent
+    ButtonComponent,
+    TutorialMessageComponent,
+    PrivacyPolicyContainerComponent
   ],
   imports: [
     BrowserModule,

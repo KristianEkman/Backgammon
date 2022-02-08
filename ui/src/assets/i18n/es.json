@@ -9,12 +9,13 @@
     "signin": "Inicia sesión con"
   },
   "logincontainer": {
-    "goldgame": "Juego de oro",
+    "play": "Tocar",
     "practice": "Práctica",
     "friend": "Invita a un amigo",
     "tip": "Consejo",
     "whenyousignin": "Cuando inicia sesión, más funciones se habilitan, ¡gratis!",
-    "accept": "Aceptar invitación"
+    "accept": "Aceptar invitación",
+    "tutorial": "Reglas"    
   },
   "accountedit": {
     "editaccount": "Editar cuenta",
@@ -151,5 +152,18 @@
     "required": "se requiere contraseña",
     "format": "La contraseña debe tener al menos 8 caracteres",
     "takenname": "El nombre de inicio de sesión ya está tomado"
+  },
+  "tutorial": {
+    "1": "Las reglas de backgammon son simples. Mueva cualquier verificador el número de pasos que rueda los dados.",
+    "2": "Tocas las corridas negras y te mueves en esta dirección.",
+    "3": "El oponente juega blanco y se mueve en dirección opuesta.",
+    "4": "Cuando todas sus damas hayan alcanzado dentro de la junta directiva, se pueden eliminar.",
+    "5": "El jugador que ha eliminado primero a todas las damas, gana el juego.",
+    "6": "No puedes moverte a un punto que tiene dos o más damas oponentes.",
+    "7": "Un revista solitario se llama una mancha y puede ser golpeada por un corrector oponente.",
+    "8": "Ese corrector tiene que comenzar de la barra.",
+    "9": "¡Y por último, buena suerte y trata de bloquear a tu oponente!",
+    "next": "Próxima",
+    "back": "atrás"
   }
 }

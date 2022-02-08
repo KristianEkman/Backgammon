@@ -7,6 +7,7 @@
     ></app-messages>
   </div>
   <app-menu
+    *ngIf="!tutorial"
     class="app-menu"
     (flip)="this.flipped = !this.flipped"
     (resign)="resignGame()"
@@ -20,7 +21,8 @@
     <app-player
       [playerDto]="(gameDto$ | async)?.whitePlayer"
       [doubling]="getDoubling(PlayerColor.white) | async"
-    ></app-player>
+    >
+    </app-player>
     <div class="stake-container">
       <div class="stake" [ngClass]="{ hilightStake: animatingStake }">
         {{ lokalStake }}
@@ -30,7 +32,8 @@
     <app-player
       [playerDto]="(gameDto$ | async)?.blackPlayer"
       [doubling]="getDoubling(PlayerColor.black) | async"
-    ></app-player>
+    >
+    </app-player>
   </div>
   <app-game-board
     class="game-board"
@@ -42,6 +45,7 @@
     [flipped]="flipped"
     [themeName]="themeName"
     [timeLeft]="timeLeft$ | async"
+    [tutorialStep]="tutorialStep$ | async"
     (addMove)="doMove($event)"
     (moveAnimFinished)="moveAnimFinished()"
   ></app-game-board>
@@ -52,7 +56,7 @@
       [color]="diceColor"
     ></app-dices>
   </div>
-  <div class="board-buttons" #boardButtons>
+  <div *ngIf="!tutorial" class="board-buttons" #boardButtons>
     <app-board-buttons
       [undoVisible]="undoVisible"
       [sendVisible]="sendVisible"
@@ -70,13 +74,21 @@
       (onRequestDoubling)="requestDoubling()"
       (onAcceptDoubling)="acceptDoubling()"
       (onResign)="resignGame()"
-    ></app-board-buttons>
+    >
+    </app-board-buttons>
   </div>
   <div *ngIf="playAiQuestion" class="playAiQuestion app-colors">
     <app-play-ai-question
       (onPlayAi)="playAi()"
       (onKeepWaiting)="keepWaiting()"
     ></app-play-ai-question>
+  </div>
+  <div *ngIf="tutorial" class="tutorial-message">
+    <app-tutorial-message
+      [step]="tutorialStep$ | async"
+      (next)="nextTutorialMessage()"
+      (back)="previousTutorialMessage()"
+    ></app-tutorial-message>
   </div>
   <!-- <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div> -->
 </div>

@@ -99,11 +99,17 @@ export class LobbyContainerComponent implements OnInit {
     });
   }
 
+  tutorialClick(): void {
+    this.router.navigate(['game'], {
+      queryParams: { playAi: false, forGold: false, tutorial: true }
+    });
+  }
+
   startInvitedGame(id: string): void {
     this.router.navigateByUrl('game?gameId=' + id);
   }
 
-  acceptInviteClick(): void {}
+  acceptInviteClick(): void { }
 
   topListBannerClick(): void {
     this.router.navigateByUrl('/toplist');

@@ -22,16 +22,18 @@ namespace Backend.Db
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            var pw = Secrets.GetPw();
 
 #if DEBUG
             var cnn = ConnectionsString["test"];
 #else
             var cnn = ConnectionsString["prod"];
 #endif
-
-            var connectionString = cnn.Replace("{pw}", pw);
-            options.UseSqlServer(connectionString);
+            if (cnn.Contains("{pw}"))
+            {
+                var pw = Secrets.GetPw();
+                cnn = cnn.Replace("{pw}", pw);
+            }
+            options.UseSqlServer(cnn);
             // options.LogTo(Console.WriteLine);
         }
 

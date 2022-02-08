@@ -37,5 +37,14 @@ namespace BackendTests
             Assert.AreEqual("0 w1 0 0 0 0 b5 w1 b3 0 0 0 w4 b5 w1 0 0 w3 0 w5 0 0 0 0 b2 0 0 0 b 2 5", s);
         }
 
+        [TestMethod]
+        public void TestParseBoard()
+        {
+            // use to debug boards
+            var raw = "board:You:MonteCarlo:1:0:0:0:0:7:5:1:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:-4:0:1:0:0:0:0:1:1:1:0:1:-1:0:25:1:11:0:0:2:5:0:0";
+            var board = Board.Parse(raw);
+
+        }
+
     }
 }

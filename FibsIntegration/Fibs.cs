@@ -15,13 +15,13 @@ namespace FibsIntegration
         public void Connect()
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            
+
             socket.Connect("fibs.com", 4321);
             Console.WriteLine(Read("login:"));
             Send("kristianekman");
             Console.WriteLine(Read("\u0001"));
 
-            var pw = File.ReadAllText("fibspw.txt");            
+            var pw = File.ReadAllText("fibspw.txt");
             Send(pw);
             var reply = Read(">");
             Console.WriteLine(reply);
@@ -49,19 +49,16 @@ namespace FibsIntegration
         public string Read(string terminator)
         {
             Thread.Sleep(500);
-            //var readBuffer = new byte[1000];
-            //var length = socket.Receive(readBuffer);
-            //var text = Encoding.ASCII.GetString(readBuffer.Take(length).ToArray());
-            ////Console.WriteLine(text);
-            //return text;
-
             string text = "";
-            int bytesCount;
+            int bytesCount = 0;
             do
             {
                 var buffer = new byte[256];
                 bytesCount = socket.Receive(buffer, buffer.Length, SocketFlags.None);
-                text += Encoding.ASCII.GetString(buffer, 0, bytesCount);
+                if (bytesCount == 0)
+                    Thread.Sleep(1000);
+                else
+                    text += Encoding.ASCII.GetString(buffer, 0, bytesCount);
             }
             while (!text.TrimEnd().EndsWith(terminator));
             return text;

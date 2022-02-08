@@ -1,25 +1,24 @@
-Tutorial
-    - "Teach me Backgammon"
-    - "First time?"
-        * Teach me?
-        * Just play.
+Hammerjs
 
-    1. Move your checkers this way.
-    2. Opponnent moves this way.
-    3. Two or more checkers on one point blocks opponent.
-    4. 
-    5. When all checkers reach home you win.
+Feedback / Guest book
+
+Nytt AI
+    Testa om processesen kan köras av web app?
+    Hur thread safe?
     
+    Är första evalueringsfunktionen bättre?
+    Går det att få stabilt över standard input output?
+    
+    Testa om C-AIt är bättre. 3000 matcher.
 
 Språk
+    detektera efter signup
     ryska
 
 
 Visa dubbelslag för första.
 
 Chat. Messages. Guest book.
-
-Leave Feedback
 
 canvas banner
 
@@ -37,8 +36,6 @@ Editing of photo.
 
 Reputition: noob, beginner, amature, skilled, expert, elite, grand master
     - låsa upp features efter hand.
-
-Chat
 
 Olika teman, marble, wood.
 

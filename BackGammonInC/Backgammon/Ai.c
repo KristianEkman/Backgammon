@@ -566,7 +566,7 @@ void CreateMoves(Game* g) {
 }
 
 int EvaluateCheckers(Game* g, PlayerSide color) {
-	int score = 0;
+	double score = 0;
 	int blockCount = 0;
 	bool playersPassed = PlayersPassedEachOther(g);
 
@@ -582,17 +582,66 @@ int EvaluateCheckers(Game* g, PlayerSide color) {
 		}
 		else {
 			if (blockCount && !playersPassed) {
-				score += (int)pow((double)blockCount, AI(ai).ConnectedBlocksFactor[p]);
+				score += pow((double)blockCount, AI(ai).ConnectedBlocksFactor[p]);
 			}
 			blockCount = 0;
 		}
 
 		if (checkCount == 1 && (v & color) && !playersPassed)
 		{
-			score -= (int)AI(ai).BlotFactors[p];
+			// todo: det här verkar inte vara correct typecast.
+			// score borde vara double.
+			score -= AI(ai).BlotFactors[p];
 		}
 	}
-	return score;
+	return (int)score;
+}
+
+double Mobility(Game* g, int p, PlayerSide color) {
+	double m = 1;	
+	if (color == White) {
+		for (int i = p; i > p - 6; i--)
+		{
+			if (CheckerCount(i) >= 2 && (g->Position[i] & Black)) {
+				m -= 0.16667;
+			}
+		}
+	} else { // Black
+		for (int i = p; i < p + 6; i++)
+		{
+			if (CheckerCount(i) >= 2 && (g->Position[i] & White)) {
+				m -= 0.16667;
+			}
+		}
+	}
+	return m;
+}
+
+int EvaluateCheckers2(Game* g, PlayerSide color) {
+	double score = 0;
+	bool playersPassed = PlayersPassedEachOther(g);
+
+	char ai = color >> 5;
+	// TODO: Try calculate both colors in same loop. Better performance?
+
+	// TODO: better to have checker on >= 19 if all passed.
+
+	for (int i = 1; i < 25; i++)
+	{
+		int p = color == White ? 25 - i : i;
+		short v = g->Position[p];
+		int checkCount = CheckerCount(v);
+		if (checkCount >= 1 && (v & color)) {
+			double mobil = Mobility(g, i, color);
+			//mobil * ;
+		}
+
+		if (checkCount == 1 && (v & color) && !playersPassed)
+		{
+			score -= AI(ai).BlotFactors[p];
+		}
+	}
+	return (int)score;
 }
 
 int GetScore(Game* g) {

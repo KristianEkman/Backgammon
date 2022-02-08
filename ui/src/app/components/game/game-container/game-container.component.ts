@@ -24,6 +24,7 @@ import { Busy } from 'src/app/state/busy';
 import { StatusMessageService } from 'src/app/services/status-message.service';
 import { Sound } from 'src/app/utils';
 import { map } from 'rxjs/operators';
+import { TutorialService } from 'src/app/services/tutorial.service';
 
 @Component({
   selector: 'app-game',
@@ -34,6 +35,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   constructor(
     private service: SocketsService,
     private accountService: AccountService,
+    private tutorialService: TutorialService,
     private router: Router,
     private statusMessageService: StatusMessageService,
     private changeDetector: ChangeDetectorRef
@@ -57,22 +59,35 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.message$ = AppState.Singleton.statusMessage.observe();
     this.timeLeft$ = AppState.Singleton.moveTimer.observe();
     this.user$ = AppState.Singleton.user.observe();
+    this.tutorialStep$ = AppState.Singleton.tutorialStep.observe();
 
     // if game page is refreshed, restore user from login cookie
     if (!AppState.Singleton.user.getValue()) {
       this.accountService.repair();
     }
 
-    const gameId = this.router.parseUrl(this.router.url).queryParams['gameId'];
-    const playAi = this.router.parseUrl(this.router.url).queryParams['playAi'];
-    const forGold = this.router.parseUrl(this.router.url).queryParams[
-      'forGold'
-    ];
-    service.connect(gameId, playAi, forGold);
+    const parsed = this.router.parseUrl(this.router.url);
+    const gameId = parsed.queryParams['gameId'];
+    const playAi = parsed.queryParams['playAi'];
+    const forGold = parsed.queryParams['forGold'];
+    const tutorial = parsed.queryParams['tutorial'];
+
+    if (tutorial) {
+      // Waiting for everything else before starting makes Input data update components.
+      setTimeout(() => {
+        this.tutorialService.start();
+      }, 1);
+    } else {
+      service.connect(gameId, playAi, forGold);
+    }
+
     this.playAiFlag = playAi === 'true';
     this.forGodlFlag = forGold === 'true';
     this.lokalStake = 0;
-    // For some reason i could not use an observable. Maybe ill figure out why someday.
+    this.tutorial = tutorial === 'true';
+
+    // For some reason i could not use an observable for theme. Maybe i'll figure out why someday
+    // service.connect might need to be in a setTimeout callback.
     this.themeName = AppState.Singleton.user.getValue()?.theme ?? 'dark';
   }
 
@@ -82,6 +97,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   message$: Observable<StatusMessage>;
   timeLeft$: Observable<number>;
   user$: Observable<UserDto>;
+  tutorialStep$: Observable<number>;
   themeName: string;
 
   gameSubs: Subscription;
@@ -102,6 +118,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   lokalStake = 0;
   animatingStake = false;
   playAiQuestion = false;
+  tutorial = false;
   dicesDto: DiceDto[] | undefined;
   nextDoublingFactor = 1;
 
@@ -404,5 +421,13 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   @HostListener('window:beforeunload', ['$event'])
   unloadHandler(event: Event) {
     return !this.started;
+  }
+
+  nextTutorialMessage() {
+    this.tutorialService.nextStep();
+  }
+
+  previousTutorialMessage() {
+    this.tutorialService.previousStep();
   }
 }
