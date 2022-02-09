@@ -109,7 +109,7 @@ export class LobbyContainerComponent implements OnInit {
     this.router.navigateByUrl('game?gameId=' + id);
   }
 
-  acceptInviteClick(): void { }
+  acceptInviteClick(): void {}
 
   topListBannerClick(): void {
     this.router.navigateByUrl('/toplist');

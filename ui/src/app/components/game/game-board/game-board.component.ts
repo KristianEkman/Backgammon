@@ -23,6 +23,7 @@ import {
   LightTheme,
   PinkTheme
 } from './themes';
+declare var $: any;
 
 @Component({
   selector: 'app-game-board',
@@ -281,9 +282,20 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     // *** NOT PROD CODE
     // this.drawIcon(cx);
     // this.drawDebugRects(cx);
+    // this.drawTrace(cx);
     // *** NOT PROD CODE
     return 0;
   }
+
+  // drawTrace(cx: CanvasRenderingContext2D) {
+  //   cx.strokeStyle = 'red';
+  //   if (this.trace.length < 1) return;
+  //   cx.moveTo(this.trace[0].x, this.trace[0].y);
+  //   this.trace.forEach((element) => {
+  //     cx.lineTo(element.x, element.y);
+  //   });
+  //   cx.stroke();
+  // }
 
   drawTutorial(cx: CanvasRenderingContext2D) {
     cx.strokeStyle = this.theme.highLight;
@@ -1013,21 +1025,19 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   getTouchPoint(touch: any): Point {
-    const parent = (this.canvas?.nativeElement as HTMLElement)
-      ?.offsetParent as HTMLElement;
-
     const eventX = touch.pageX || touch.originalEvent?.pageX;
     const eventY = touch.pageY || touch.originalEvent?.pageY;
+    const offset = $('canvas').offset();
 
     if (this.flipped) {
       return {
-        x: this.width - eventX + parent.offsetLeft + this.borderWidth,
-        y: this.height - eventY + parent.offsetTop + this.borderWidth + 20
+        x: this.width - eventX + offset.left,
+        y: this.height - eventY + offset.top
       };
     }
     return {
-      x: eventX - parent.offsetLeft + this.borderWidth,
-      y: eventY - parent.offsetTop + this.borderWidth - 20
+      x: eventX - offset.left,
+      y: eventY - offset.top
     };
   }
 
@@ -1247,7 +1257,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
   onTouchEnd(event: TouchEvent): void {
     // console.log('touchend', event);
-    console.log(this.cursor);
+    // console.log(this.cursor);
 
     if (this.cursor != undefined) {
       this.handleUp(this.cursor.x, this.cursor.y);
@@ -1256,6 +1266,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   lastTouch: Point | undefined = undefined;
+
+  // trace: Point[] = [];
   onTouchMove(event: TouchEvent): void {
     // console.log('touchmove');
     if (event.touches.length !== 1) {
@@ -1263,10 +1275,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
     const touch = event.touches[0];
     const { x, y } = this.getTouchPoint(touch);
+    // this.trace.push({ x: x, y: y });
 
     this.lastTouch = { x, y };
-    const w = this.getCheckerWidth();
-
-    this.handleMove(x - w / 2, y - w / 2);
+    this.handleMove(x, y);
   }
 }
