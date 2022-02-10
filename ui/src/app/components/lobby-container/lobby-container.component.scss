@@ -1,7 +1,6 @@
 @import '../../../styles/colors';
 
 .lobby-container {
-
   .title-container {
     position: relative;
     display: block;
@@ -73,7 +72,7 @@
     position: absolute;
     left: 0;
     top: -45px;
-    animation: fadein .5s;
+    animation: fadein 0.5s;
 
     strong {
       color: $tip-color;
@@ -83,5 +82,10 @@
 
 .invite-friend {
   margin-top: 20px;
+}
 
+.update-button {
+  position: absolute;
+  bottom: 3px;
+  left: 3px;
 }

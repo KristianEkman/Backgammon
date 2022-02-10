@@ -65,6 +65,7 @@ import { PasswordContainerComponent } from './components/password-container/pass
 import { ButtonComponent } from './components/shared/button/button.component';
 import { TutorialMessageComponent } from './components/game/tutorial-message/tutorial-message.component';
 import { PrivacyPolicyContainerComponent } from './components/privacy-policy-container/privacy-policy-container.component';
+import { UpdateButtonComponent } from './components/shared/update-button/update-button.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -110,7 +111,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     PasswordContainerComponent,
     ButtonComponent,
     TutorialMessageComponent,
-    PrivacyPolicyContainerComponent
+    PrivacyPolicyContainerComponent,
+    UpdateButtonComponent
   ],
   imports: [
     BrowserModule,

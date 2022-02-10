@@ -3,7 +3,11 @@ import { Router } from '@angular/router';
 import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { Observable } from 'rxjs';
 import { MessageDto, UserDto } from 'src/app/dto';
-import { AccountService, MessageService } from 'src/app/services';
+import {
+  AccountService,
+  MessageService,
+  AppUpdateService
+} from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { Busy } from 'src/app/state/busy';
 
@@ -17,14 +21,17 @@ export class LobbyContainerComponent implements OnInit {
     public router: Router,
     private authService: SocialAuthService,
     private accountService: AccountService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private updateService: AppUpdateService
   ) {
     this.user$ = AppState.Singleton.user.observe();
     this.messages$ = AppState.Singleton.messages.observe();
+    this.hasNewVersion$ = AppState.Singleton.newVersion.observe();
   }
 
   user$: Observable<UserDto>;
   messages$: Observable<MessageDto[]>;
+  hasNewVersion$: Observable<boolean>;
 
   toplist = false;
   loginClicked = false;
@@ -121,5 +128,9 @@ export class LobbyContainerComponent implements OnInit {
 
   getGold(): void {
     this.accountService.getGold();
+  }
+
+  updateApp() {
+    this.updateService.update();
   }
 }

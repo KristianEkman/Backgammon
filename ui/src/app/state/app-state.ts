@@ -42,6 +42,8 @@ export class AppState {
     this.theme.setValue('dark');
     this.tutorialStep = new StateObject<number>();
     this.tutorialStep.setValue(0);
+    this.newVersion = new StateObject<boolean>();
+    this.newVersion.setValue(false);
   }
 
   private static _singleton: AppState;
@@ -70,6 +72,7 @@ export class AppState {
   opponentDone: StateObject<boolean>;
   theme: StateObject<string>;
   tutorialStep: StateObject<number>;
+  newVersion: StateObject<boolean>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

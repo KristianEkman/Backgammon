@@ -1,11 +1,17 @@
 <div class="lobby-container">
   <div class="top-list" *ngIf="user$ | async">
-    <app-toplist-container [banner]="true" (bannerClick)="topListBannerClick()"></app-toplist-container>
+    <app-toplist-container
+      [banner]="true"
+      (bannerClick)="topListBannerClick()"
+    ></app-toplist-container>
   </div>
   <ng-container *ngIf="!toplist">
     <div class="title-container">
-      <h1 class="title-color" [attr.data-content]="'backgammon' | translate"
-        [ngClass]="{ chinese: (user$ | async)?.preferredLanguage === 'zh' }">
+      <h1
+        class="title-color"
+        [attr.data-content]="'backgammon' | translate"
+        [ngClass]="{ chinese: (user$ | async)?.preferredLanguage === 'zh' }"
+      >
         {{ 'backgammon' | translate }}
       </h1>
     </div>
@@ -22,8 +28,10 @@
           {{ 'logincontainer.tutorial' | translate }}
         </app-button>
         <div *ngIf="showLoginTip && !isLoggedIn()" class="tip-message">
-          <strong>{{ 'logincontainer.tip' | translate }}
-            <i class="fas fa-carrot"></i></strong><br />
+          <strong
+            >{{ 'logincontainer.tip' | translate }}
+            <i class="fas fa-carrot"></i></strong
+          ><br />
           <em>{{ 'logincontainer.whenyousignin' | translate }}</em>
         </div>
       </div>
@@ -34,16 +42,37 @@
         </app-button>
       </div>
     </div>
-    <app-login-buttons (onLogin)="login($event)" [isLoggedIn]="isLoggedIn()"></app-login-buttons>
+    <app-login-buttons
+      (onLogin)="login($event)"
+      [isLoggedIn]="isLoggedIn()"
+    ></app-login-buttons>
   </ng-container>
   <div class="account">
-    <app-account-menu [user]="user$ | async" (logout)="logout()" (onEditAccount)="router.navigateByUrl('edit-user')"
-      (onAdminPage)="router.navigateByUrl('adminpage')" (onAboutPage)="router.navigateByUrl('about')">
+    <app-account-menu
+      [user]="user$ | async"
+      (logout)="logout()"
+      (onEditAccount)="router.navigateByUrl('edit-user')"
+      (onAdminPage)="router.navigateByUrl('adminpage')"
+      (onAboutPage)="router.navigateByUrl('about')"
+    >
     </app-account-menu>
   </div>
   <div class="button-row">
-    <app-gold-button [user]="user$ | async" (getGold)="getGold()"></app-gold-button>
-    <app-new-messages [messages]="messages$ | async" (showMessages)="router.navigateByUrl('messages')">
+    <app-gold-button
+      [user]="user$ | async"
+      (getGold)="getGold()"
+    ></app-gold-button>
+    <app-new-messages
+      [messages]="messages$ | async"
+      (showMessages)="router.navigateByUrl('messages')"
+    >
     </app-new-messages>
   </div>
 </div>
+
+<app-update-button
+  *ngIf="hasNewVersion$ | async"
+  class="update-button"
+  [updateAvailable]="hasNewVersion$ | async"
+  (update)="updateApp()"
+></app-update-button>
