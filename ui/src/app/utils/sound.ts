@@ -46,12 +46,12 @@ export class Sound {
 
     this.coin = new Audio();
     this.coin.src = '../assets/sound/coin.wav';
-    this.coin.preload = 'true';
+    this.coin.preload = 'auto';
     this.coin.load();
 
     this.blues = new Audio();
     this.blues.src = '../assets/sound/blues.mp3';
-    this.blues.preload = 'true';
+    this.blues.preload = 'auto';
     this.blues.load();
 
     this.tick = new Audio();

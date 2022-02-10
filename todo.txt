@@ -1,4 +1,6 @@
-Hammerjs
+Angular 13
+.net core 6 
+ef core 6
 
 Feedback / Guest book
 
@@ -28,7 +30,7 @@ Backa upp Managers till DB, så man kan göra en swap vid release.
 
 Visa statistik på startsidan.
 
-Flytta flera drag på ett klick.
+Kunna dra en checker för båda tärningarna.
 
 Ge extra tid för reconnect.
 

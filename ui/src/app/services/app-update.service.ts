@@ -7,9 +7,9 @@ import { AppState } from '../state/app-state';
 })
 export class AppUpdateService {
   constructor(private updates: SwUpdate) {
-    updates.available.subscribe((event) => {
-      console.log('current version is', event.current);
-      console.log('available version is', event.available);
+    updates.versionUpdates.subscribe((event) => {
+      console.log('current version is', event);
+      console.log('available version is', event);
       this.updates.activateUpdate().then(() => {
         setTimeout(() => {
           AppState.Singleton.newVersion.setValue(true);
@@ -17,9 +17,9 @@ export class AppUpdateService {
       });
     });
 
-    this.updates.activated.subscribe((event) => {
-      console.log('old version was', event.previous);
-      console.log('new version is', event.current);
+    this.updates.activateUpdate().then((event) => {
+      console.log('old version was', event);
+      console.log('new version is', event);
     });
   }
 
