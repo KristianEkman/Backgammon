@@ -20,6 +20,9 @@ namespace Backend.Db
         public DbSet<Player> Player { get; set; }
         public DbSet<Message> Messages { get; set; }
 
+        public DbSet<Feedback> Feedback { get; set; }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
 
