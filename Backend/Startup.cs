@@ -42,7 +42,8 @@ namespace Backend
             services.AddCors();
 
             services.AddControllers(
-                options => options.Filters.Add(new ServiceInterceptor())).SetCompatibilityVersion(CompatibilityVersion.Latest);
+                options => options.Filters.Add(new ServiceInterceptor()));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Backend", Version = "v1" });
