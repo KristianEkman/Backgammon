@@ -5,7 +5,9 @@
 </p>
 <form [formGroup]="formGroup" (ngSubmit)="submit()">
   <textarea class="text-field" formControlName="text"></textarea>
-  <div class="char-counter">{{ textLength }} of 200 used</div>
+  <div [ngClass]="{ 'char-counter': true, 'error-color': textLength > 200 }">
+    {{ textLength }} of 200 used
+  </div>
   <div class="button-container">
     <button class="default-button">Send</button>
     <button class="flat-button small-button" (click)="viewPostList()">
