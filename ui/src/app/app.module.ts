@@ -66,6 +66,9 @@ import { ButtonComponent } from './components/shared/button/button.component';
 import { TutorialMessageComponent } from './components/game/tutorial-message/tutorial-message.component';
 import { PrivacyPolicyContainerComponent } from './components/privacy-policy-container/privacy-policy-container.component';
 import { UpdateButtonComponent } from './components/shared/update-button/update-button.component';
+import { FeedbackContainerComponent } from './components/feedback-container/feedback-container.component';
+import { FeedbackComponent } from './components/feedback-container/feedback/feedback.component';
+import { FeedbackListComponent } from './components/feedback-container/feedback-list/feedback-list.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -112,7 +115,10 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     ButtonComponent,
     TutorialMessageComponent,
     PrivacyPolicyContainerComponent,
-    UpdateButtonComponent
+    UpdateButtonComponent,
+    FeedbackContainerComponent,
+    FeedbackComponent,
+    FeedbackListComponent
   ],
   imports: [
     BrowserModule,

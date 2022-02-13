@@ -3,6 +3,7 @@ using Backend.Dto.feedback;
 using Backend.Dto.message;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,46 +26,64 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        [Route("api/feedback/posts")]
+        [Route("api/feedback")]
         public FeedbackDto[] GetFeedBack(int skip)
         {
             using (var db = new BgDbContext())
             {
-                var user = GetUser(db);
-                var ms = db.Feedback.Skip(skip).Select(m => new FeedbackDto
-                {
-                    Text = m.Text,
-                    Id = m.Id,
-                    SenderName = m.Sender.Name,
-                    Sent = m.Sent.ToString("dd MMM, yy")
-                }).ToArray();
+                var ms = db.Feedback.Include(f => f.Sender)
+                    .OrderByDescending(f => f.PostTime)
+                    .Skip(skip).Take(10)
+                    .ToArray()
+                    .Select(m => new FeedbackDto
+                    {
+                        Text = m.Text,
+                        Id = m.Id,
+                        SenderName = m.Sender.Name,
+                        Sent = m.PostTime.ToString("MMMM dd, yyyy")
+                    }).ToArray();
                 return ms;
             }
         }
 
-        [HttpPut]
-        [Route("api/feedback/addallsharepromptmessages")]
-        public void AddAllSharePromptMessages()
+        [HttpPost]
+        [Route("api/feedback")]
+        public void Post(PostFeedbackDto feedbackDto)
         {
-            AssertAdmin();
-            string adminId = Request.Headers["user-id"].ToString();
-
+            var feedback = feedbackDto.text;
             using (var db = new BgDbContext())
             {
-                var admin = db.Users.First(u => u.Id.ToString() == adminId);
-                foreach (var user in db.Users)
+                var user = GetUser(db);
+                if (user == null)
                 {
-                    // Do not waste space in db for a generic message.
-                    user.ReceivedMessages.Add(new Message
-                    {
-                        Text = "",
-                        Type = MessageType.SharePrompt,
-                        Sender = admin,
-                        Sent = DateTime.Now
-                    });
+                    logger.LogError("Guest is trying to post feedback.");
+                    // return silently incase of an attack to minimize resource use.
+                    // client takes care of validation
+                    return;
                 }
+
+                var today = DateTime.Now.Date;
+                var userId = user.Id;
+                var count = db.Feedback.Where(f => f.PostTime.Date == today && f.Sender.Id == userId).Count();
+                if (count > 50 || feedback.Length > 200)
+                {
+                    logger.LogError("User is trying to post to much feedback.");
+                    // return silently incase of an attack to minimize resource use.
+                    // client takes care of validation
+                    return;
+                }
+
+                var dto = new Feedback
+                {
+                    Sender = user,
+                    PostTime = DateTime.Now,
+                    Text = feedback,                    
+                };
+
+                db.Feedback.Add(dto);
                 db.SaveChanges();
             }
         }
+
     }
 }

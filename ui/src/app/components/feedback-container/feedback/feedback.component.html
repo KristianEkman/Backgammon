@@ -1,0 +1,16 @@
+<h1>{{ 'feedback.title' | translate }}</h1>
+<p>
+  What else do you want to see on this site?<br />Send me your ideas, errors you
+  found or just a friendly hello.<br /><i>In english please.</i>
+</p>
+<form [formGroup]="formGroup" (ngSubmit)="submit()">
+  <textarea class="text-field" formControlName="text"></textarea>
+  <div class="char-counter">{{ textLength }} of 200 used</div>
+  <div class="button-container">
+    <button class="default-button">Send</button>
+    <button class="flat-button small-button" (click)="viewPostList()">
+      <i class="fas fa-eye"></i>
+      View posts
+    </button>
+  </div>
+</form>

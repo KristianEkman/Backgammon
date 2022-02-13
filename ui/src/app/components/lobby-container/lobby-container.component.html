@@ -70,9 +70,20 @@
   </div>
 </div>
 
-<app-update-button
+<button
   *ngIf="hasNewVersion$ | async"
-  class="update-button"
-  [updateAvailable]="hasNewVersion$ | async"
+  class="update-button flat-button"
   (update)="updateApp()"
-></app-update-button>
+>
+  <i class="fas fa-download"></i>
+  {{ 'loadUpdates' | translate }}
+</button>
+
+<button
+  *ngIf="!(hasNewVersion$ | async) && isLoggedIn()"
+  class="feedback-button flat-button"
+  (click)="feedbackClick()"
+>
+  <i class="fas fa-star"></i>
+  {{ 'feedback.title' | translate }}
+</button>

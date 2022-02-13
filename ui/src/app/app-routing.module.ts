@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AboutContainerComponent } from './components/about-container/about-container.component';
 import { AccountEditContainerComponent } from './components/account/account-edit-container/account-edit-container.component';
 import { AdminContainerComponent } from './components/admin-container/admin-container.component';
+import { FeedbackContainerComponent } from './components/feedback-container/feedback-container.component';
 import { GameContainerComponent } from './components/game/game-container/game-container.component';
 import { InviteContainerComponent } from './components/invite-container/invite-container.component';
 import { LobbyContainerComponent } from './components/lobby-container/lobby-container.component';
@@ -69,6 +70,11 @@ const routes: Routes = [
   {
     path: 'privacy-policy',
     component: PrivacyPolicyContainerComponent
+  },
+  {
+    path: 'feedback',
+    component: FeedbackContainerComponent,
+    canActivate: [LoginGuard]
   },
   {
     path: '**',

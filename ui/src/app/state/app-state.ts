@@ -1,6 +1,7 @@
 import { StatusMessage } from '../dto/local/status-message';
 import {
   ConnectionDto,
+  FeedbackDto,
   GameState,
   MoveDto,
   PlayedGameListDto,
@@ -44,6 +45,8 @@ export class AppState {
     this.tutorialStep.setValue(0);
     this.newVersion = new StateObject<boolean>();
     this.newVersion.setValue(false);
+    this.feedbackList = new StateObject<FeedbackDto[]>();
+    this.feedbackList.setValue([]);
   }
 
   private static _singleton: AppState;
@@ -73,6 +76,7 @@ export class AppState {
   theme: StateObject<string>;
   tutorialStep: StateObject<number>;
   newVersion: StateObject<boolean>;
+  feedbackList: StateObject<FeedbackDto[]>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

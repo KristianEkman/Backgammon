@@ -22,7 +22,6 @@
 }
 
 @mixin hovershadow {
-
   &:hover {
     box-shadow: 0px 0px 6px 1px rgba(256, 256, 256, 0.3);
   }
@@ -46,7 +45,10 @@
     left: 0px;
     width: calc(100% - 0px);
     height: 50%;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    background-image: linear-gradient(
+      rgba(255, 255, 255, 0.15),
+      rgba(255, 255, 255, 0.05)
+    );
   }
 }
 
@@ -90,8 +92,21 @@
   @include button();
 }
 
+.small-button {
+  font-size: 16px;
+  padding: 6px 12px;
+  height: auto;
+}
+
 @mixin glod-text {
-  background: linear-gradient(69deg, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C);
+  background: linear-gradient(
+    69deg,
+    #bf953f,
+    #fcf6ba,
+    #b38728,
+    #fbf5b7,
+    #aa771c
+  );
   font-size: 22px;
   background-clip: text;
   -webkit-background-clip: text;

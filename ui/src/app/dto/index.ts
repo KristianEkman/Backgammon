@@ -21,3 +21,5 @@ export * from './admin/playedGameListDto';
 export * from './admin/summaryDto';
 export * from './message/messageDto';
 export * from './message/messageType';
+export * from './feedback/feedbackDto';
+export * from './feedback/postFeedbackDto';

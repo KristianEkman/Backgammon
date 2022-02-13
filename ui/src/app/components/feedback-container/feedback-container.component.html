@@ -1,0 +1,13 @@
+<div class="feedback-container">
+  <app-feedback
+    *ngIf="viewForm"
+    (feedbackText)="onFeedbackText($event)"
+    (viewPosts)="viewPostList()"
+  ></app-feedback>
+  <app-feedback-list
+    *ngIf="viewList"
+    (viewForm)="viewPostForm()"
+    (loadMore)="onLoadMore()"
+    [list]="list$ | async"
+  ></app-feedback-list>
+</div>

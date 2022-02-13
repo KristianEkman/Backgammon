@@ -166,5 +166,8 @@
     "next": "Next",
     "back": "Back"
   },
-  "loadUpdates" : "Load update"
+  "loadUpdates" : "Load update",
+  "feedback": {
+    "title": "Feedback"
+  }
 }

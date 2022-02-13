@@ -1,0 +1,23 @@
+.list-container {
+  display: inline-block;
+  height: 50vh;
+  width: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  // max-height: 500px;
+}
+
+.item-title {
+  font-size: small;
+  font-weight: 600;
+  padding-left: 10px;
+}
+
+.feedback-text {
+  padding-left: 20px;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row-reverse;
+}

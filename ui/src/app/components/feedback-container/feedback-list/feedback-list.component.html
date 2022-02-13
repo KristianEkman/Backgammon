@@ -1,0 +1,14 @@
+<h1>Feedback</h1>
+<div class="list-container" (scroll)="onScroll($event)">
+  <div *ngFor="let feedback of list">
+    <hr />
+    <p class="item-title">{{ feedback.sent }}<br />{{ feedback.senderName }}</p>
+    <p class="feedback-text">{{ feedback.text }}</p>
+  </div>
+</div>
+<div class="button-container">
+  <button class="flat-button small-button" (click)="viewPostForm()">
+    <i class="fas fa-arrow-left"></i>
+    Go back
+  </button>
+</div>

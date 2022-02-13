@@ -133,4 +133,8 @@ export class LobbyContainerComponent implements OnInit {
   updateApp() {
     this.updateService.update();
   }
+
+  feedbackClick() {
+    this.router.navigateByUrl('/feedback');
+  }
 }

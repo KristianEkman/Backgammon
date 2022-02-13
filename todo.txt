@@ -1,8 +1,3 @@
-Angular 13
-.net core 6 
-ef core 6
-
-Feedback / Guest book
 
 Nytt AI
     Testa om processesen kan köras av web app?

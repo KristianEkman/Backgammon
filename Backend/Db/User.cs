@@ -34,6 +34,7 @@ namespace Backend.Db
         public ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();
         [InverseProperty("Sender")]
         public ICollection<Message> SentMessages { get; set; } = new List<Message>();
+        public ICollection<Feedback> SentFeedback { get; set; } = new List<Feedback>();
 
     }
 }
