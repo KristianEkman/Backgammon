@@ -1,10 +1,13 @@
+h1 {
+  text-align: center;
+}
 .list-container {
   display: inline-block;
-  height: 50vh;
+  max-height: 500px;
   width: 100%;
   overflow-y: auto;
   scrollbar-width: none;
-  // max-height: 500px;
+  height: 60vh;
 }
 
 .item-title {

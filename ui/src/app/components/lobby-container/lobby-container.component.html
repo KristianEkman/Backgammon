@@ -73,7 +73,7 @@
 <button
   *ngIf="hasNewVersion$ | async"
   class="update-button flat-button"
-  (update)="updateApp()"
+  (click)="updateApp()"
 >
   <i class="fas fa-download"></i>
   {{ 'loadUpdates' | translate }}
