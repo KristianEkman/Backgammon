@@ -24,9 +24,6 @@ export class AppUpdateService {
   }
 
   update() {
-    this.updates.activateUpdate().then(() => {
-      AppState.Singleton.newVersion.setValue(false);
-      document.location.reload();
-    });
+    document.location.reload();
   }
 }
