@@ -449,6 +449,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const a = ((this.timeLeft ?? 0) / 40) * 2;
     const s = this.height * 0.06;
     cx.fillStyle = 'green';
+    cx.moveTo(x, y);
+    if (this.flipped) {
+      cx.save();
+      cx.translate(x * 2, y * 2);
+      cx.rotate(Math.PI);
+    }
+
     cx.arc(x, y, s, -(a + 0.5) * Math.PI, -0.5 * Math.PI);
     cx.lineTo(x, y);
     cx.shadowBlur = 0;
@@ -475,6 +482,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     cx.fillText(text, tx, ty);
     cx.strokeStyle = this.theme.textColor;
+    if (this.flipped) {
+      cx.restore();
+    }
     // cx.strokeText(text, tx, ty);
   }
 
