@@ -1,4 +1,10 @@
 
+Mer musik
+
+Annan animation på game status.
+
+Varför rensas inte gamla games?
+
 Nytt AI
     Testa om processesen kan köras av web app?
     Hur thread safe?
@@ -15,7 +21,7 @@ Språk
 
 Visa dubbelslag för första.
 
-Chat. Messages. Guest book.
+Chat.
 
 canvas banner
 

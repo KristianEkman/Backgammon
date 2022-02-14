@@ -1,8 +1,11 @@
 .message {
   position: absolute;
-  top: 2px;
-  font-weight: 600;
+  top: 0px;
+  font-weight: 800;
   white-space: nowrap;
+  opacity: 0;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: var(--body-color);
 
   * {
     margin-left: 8px;

@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   Input,
   OnChanges,
@@ -24,16 +23,20 @@ import { StatusMessage, MessageLevel } from '../../../dto/local/status-message';
       state(
         'initial',
         style({
-          left: '{{ initial }}px',
-          opacity: 0
+          left: '{{ shown }}px',
+          transform: 'scale(3)',
+          opacity: 0.3,
+          top: 100
         }),
-        { params: { initial: 0 } }
+        { params: { shown: 0 } }
       ),
       state(
         'shown',
         style({
           left: '{{ shown }}px',
-          opacity: 1
+          transform: 'scale(1)',
+          opacity: 1,
+          top: 0
         }),
         { params: { shown: 0 } }
       ),
@@ -41,21 +44,26 @@ import { StatusMessage, MessageLevel } from '../../../dto/local/status-message';
         'hidden',
         style({
           left: '0px',
-          opacity: 0
+          opacity: 0,
+          transform: 'scale(1)'
         })
       ),
-      transition('shown => hidden', [animate('0.5s')]),
+      transition('shown => hidden', [animate('0.5s ease-out')]),
       transition('hidden => initial', [animate('0.01s')]),
-      transition('initial => shown', [animate('1.0s')])
+      transition('initial => shown', [animate('2s ease')])
     ])
   ]
 })
 export class MessagesComponent implements OnChanges, OnInit {
   @Input() message: StatusMessage | null = StatusMessage.getDefault();
+
   // changing the coordinates will affect all animations coordinates.
   @Input() initial = 0;
+
+  //x coordinate when shown.
   @Input() shown = 0;
-  state = 'initial';
+  state = 'hidden';
+  animating = false;
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['message']) {
       this.animate();
@@ -63,15 +71,19 @@ export class MessagesComponent implements OnChanges, OnInit {
   }
 
   ngOnInit(): void {
-    this.animate();
+    // this.animate();
   }
 
   animate(): void {
+    if (this.animating) return;
+    this.animating = true;
+
     this.state = 'hidden';
     setTimeout(() => {
       this.state = 'initial';
       setTimeout(() => {
         this.state = 'shown';
+        this.animating = false;
       }, 100);
     }, 500);
   }
