@@ -35,27 +35,27 @@
       >Source on Github</a
     >
   </p>
-  <div class="share-container">
-    <div class="share">
-      <app-share-buttons></app-share-buttons>
+  <div class="bottom-row">
+    <div>
+      <a routerLink="/privacy-policy">Privacy Policy</a>
     </div>
-  </div>
-  <div>
-    <a routerLink="/privacy-policy">Privacy Policy</a>
-  </div>
-  <div class="version">
-    <p>
+    <div class="share-container">
+      <div class="share">
+        <app-share-buttons></app-share-buttons>
+      </div>
+    </div>
+    <div class="version">
       Version: {{ version }}&nbsp;<i
         class="fas fa-info-circle"
         (mouseenter)="versionInfo = true"
         (mouseleave)="versionInfo = false"
       ></i>
-    </p>
-    <div *ngIf="versionInfo" class="versionInfo">
-      <ul>
-        <li>Rules Tutorial</li>
-        <li>Privacy Policy</li>
-      </ul>
+      <div *ngIf="versionInfo" class="versionInfo">
+        <ul>
+          <li>Rules Tutorial</li>
+          <li>Privacy Policy</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

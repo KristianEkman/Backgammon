@@ -18,7 +18,7 @@ p {
 .dice {
   position: absolute;
   display: inline-block;
-  opacity: .6;
+  opacity: 0.6;
   margin-left: 15px;
   cursor: pointer;
 }
@@ -47,4 +47,10 @@ p {
   padding-right: 30px;
   right: 0;
   border-radius: 4px;
+}
+
+.bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
