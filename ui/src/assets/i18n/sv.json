@@ -154,8 +154,8 @@
     "takenname": "Inloggningsnamnet är redan taget"
   },
   "tutorial": {
-    "1": "Backgammon regler är enkla. Flytta någon bricka antalet steg tärningarna visar.",
-    "2": "Du spelar de svarta brickorna och flyttar dem i den här riktningen.",
+    "1": "Backgammons regler är enkla. Flytta någon bricka antalet steg tärningarna visar.",
+    "2": "Du spelar med de svarta brickorna och flyttar dem i den här riktningen.",
     "3": "Motståndaren spelar vit och flyttar i motsatt riktning.",
     "4": "När alla dina brickor har nått inuti hembrädet kan de börja tas bort.",
     "5": "Den spelare som först tar bort alla brickor, vinner spelet.",

@@ -1,6 +1,7 @@
 @import '../../../../styles/themes.scss';
 
 .message-box {
+  position: relative;
   display: inline-block;
   padding: 10px;
   background-color: var(--app-bg-color);
@@ -10,8 +11,17 @@
   max-width: 300px;
   font-size: 18px;
   // backdrop-filter: blur(3px); //looks ugly
+  padding-top: 1.2rem;
 
   animation: show_dialog_animation 0.4s linear forwards;
+}
+
+.step-counter {
+  position: absolute;
+  font-size: 0.8rem;
+  font-weight: 600;
+  right: 2px;
+  top: 1px;
 }
 
 .message-button-container {

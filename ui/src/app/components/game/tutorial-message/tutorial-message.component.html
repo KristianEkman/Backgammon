@@ -1,4 +1,5 @@
 <div *ngIf="show" class="message-box app-colors">
+  <span class="step-counter">{{ step }}/10</span>
   {{ 'tutorial.' + step | translate }}
   <div class="message-button-container">
     <app-button
