@@ -240,7 +240,7 @@ namespace Backend
                 }
                 catch (Exception exc)
                 {
-                    Logger.LogInformation($"Cant receive data from socket. Error: {exc.ToString()}");
+                    Logger.LogError($"Can't receive data from socket. Error: {exc.ToString()}");
                     return "";
                 }
             }
@@ -294,9 +294,16 @@ namespace Backend
                 if (text != null && text.Length > 0)
                 {
                     Logger.LogInformation($"Received: {text}");
-                    var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
-                    var otherClient = socket == Client1 ? Client2 : Client1;
-                    await DoAction(action.actionName, text, socket, otherClient);
+                    try
+                    {
+                        var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
+                        var otherClient = socket == Client1 ? Client2 : Client1;
+                        await DoAction(action.actionName, text, socket, otherClient);
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.LogError(e, $"Failed to parse Action text {text}");                        
+                    }                    
                 }
             }
         }

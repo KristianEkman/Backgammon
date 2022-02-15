@@ -3,6 +3,9 @@ Mer musik
 
 Varför rensas inte gamla games?
 
+Json.Deserialze error.
+Fånga och logga!
+
 Nytt AI
     Testa om processesen kan köras av web app?
     Hur thread safe?
