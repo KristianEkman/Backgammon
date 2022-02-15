@@ -1,6 +1,16 @@
 <div class="account-edit-container" *ngIf="user">
   <ng-container *ngIf="!confirm">
-    <h1>{{ 'accountedit.editaccount' | translate }}</h1>
+    <div class="header-container">
+      <h1>
+        <span> {{ 'accountedit.editaccount' | translate }}</span>
+      </h1>
+      <span class="delete">
+        <button type="button" (click)="deleteUser()" class="flat-button">
+          <i class="fas fa-trash-alt"></i>
+          {{ 'accountedit.delete' | translate }}
+        </button>
+      </span>
+    </div>
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <div class="names">
         <div class="nameWidth">
@@ -75,12 +85,6 @@
         <app-button type="submit" [default]="true">
           {{ 'accountedit.save' | translate }}
         </app-button>
-      </div>
-      <div class="delete">
-        <button type="button" (click)="deleteUser()" class="flat-button">
-          <i class="fas fa-trash-alt"></i>
-          {{ 'accountedit.delete' | translate }}
-        </button>
       </div>
     </form>
   </ng-container>

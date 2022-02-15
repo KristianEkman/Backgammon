@@ -1,11 +1,15 @@
 .account-edit-container {
-
   .mt {
     margin-top: 12px;
   }
 
   .pl {
     padding-left: 12px;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
   }
 
   h1 {
@@ -37,11 +41,9 @@
   }
 
   .delete {
-    display: flex;
-    justify-content: center;
-
+    margin-left: 2rem;
     button {
-      font-size: 16px;
+      font-size: 14px;
     }
   }
 
@@ -100,29 +102,29 @@
   border: 2px solid var(--input-bg-color);
 }
 
-.container input:focus~.checkmark {
+.container input:focus ~ .checkmark {
   border: 2px solid black;
 }
 
 /* On mouse-over, add a grey background color */
-.container:hover input~.checkmark {
+.container:hover input ~ .checkmark {
   background-color: #ccc;
 }
 
 /* When the checkbox is checked, add a blue background */
-.container input:checked~.checkmark {
-  background-color: #2196F3;
+.container input:checked ~ .checkmark {
+  background-color: #2196f3;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
 .checkmark:after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
 
 /* Show the checkmark when checked */
-.container input:checked~.checkmark:after {
+.container input:checked ~ .checkmark:after {
   display: block;
 }
 
