@@ -26,7 +26,7 @@ import { StatusMessage, MessageLevel } from '../../../dto/local/status-message';
           left: '{{ shown }}px',
           transform: 'scale(3)',
           opacity: 0.3,
-          top: 100
+          top: 40
         }),
         { params: { shown: 0 } }
       ),
@@ -50,7 +50,7 @@ import { StatusMessage, MessageLevel } from '../../../dto/local/status-message';
       ),
       transition('shown => hidden', [animate('0.5s ease-out')]),
       transition('hidden => initial', [animate('0.01s')]),
-      transition('initial => shown', [animate('2s ease')])
+      transition('initial => shown', [animate('1s ease')])
     ])
   ]
 })
