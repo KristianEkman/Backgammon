@@ -407,10 +407,19 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     );
   }
 
-  playAi(): void {
+  async playAi() {
     this.playAiQuestion = false;
     this.service.exitGame();
+
+    while (AppState.Singleton.myConnection.getValue().connected) {
+      await this.delay(500);
+    }
+
     this.service.connect('', true, this.forGodlFlag);
+  }
+
+  delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   keepWaiting(): void {

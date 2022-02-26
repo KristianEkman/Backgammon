@@ -60,7 +60,7 @@ namespace Backend
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backgammon Backend v1"));
             }
 
-            TryRestoreState(logger);
+            // TryRestoreState(logger);
 
             applicationLifetime.ApplicationStopping.Register(() => { OnShutdown(logger); });
 

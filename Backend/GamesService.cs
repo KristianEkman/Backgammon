@@ -46,7 +46,11 @@ namespace Backend
                 .Where(g => (g.Client2 == null|| g.Client1 == null) && g.SearchingOpponent);
 
             if (GameAlreadyStarted(managers, userId))
-                throw new ApplicationException("The user has already started a game");
+            {
+                string warning = $"The user {userId} has already started a game";
+                logger.LogWarning(warning);
+                throw new ApplicationException(warning);
+            }
                        
             var isGuest = dbUser.Id == Guid.Empty;
             // filter out games having a logged in player            
@@ -85,13 +89,11 @@ namespace Backend
 
         private static bool GameAlreadyStarted(IEnumerable<GameManager> managers, string userId)
         {
-            var list = new List<GameManager>();
             foreach (var m in managers)
             {
                 // Guest vs guest must be allowed. When guest games are enabled.
                 if (m.Game.BlackPlayer.Id.ToString() == userId || m.Game.WhitePlayer.Id.ToString() == userId && userId != Guid.Empty.ToString())
                     return true;
-                list.Add(m);
             }
             return false;
         }
