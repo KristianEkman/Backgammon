@@ -314,8 +314,8 @@ void CreateBlackMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 		int diceVal = diceIdx > 1 ? g->Dice[0] : g->Dice[diceIdx];
 		int toPos = i + diceVal;
 
-		// När man bär av, får man använda tärningar med för högt värde,
-		// men bara på den checker längst från home.
+		// NÃ¤r man bÃ¤r av, fÃ¥r man anvÃ¤nda tÃ¤rningar med fÃ¶r hÃ¶gt vÃ¤rde,
+		// men bara pÃ¥ den checker lÃ¤ngst frÃ¥n home.
 		if (IsBlockedFor(toPos, Black, g))
 			continue;
 
@@ -422,8 +422,8 @@ void CreateWhiteMoveSets(int fromPos, int diceIdx, int diceCount, int* maxSetLen
 		int diceVal = diceIdx > 1 ? g->Dice[0] : g->Dice[diceIdx];
 		int toPos = i - diceVal;
 
-		// När man bär av, får man använda tärningar med för hög summa
-		// Men bara på den checker längst från home.
+		// NÃ¤r man bÃ¤r av, fÃ¥r man anvÃ¤nda tÃ¤rningar med fÃ¶r hÃ¶g summa
+		// Men bara pÃ¥ den checker lÃ¤ngst frÃ¥n home.
 		if (IsBlockedFor(toPos, White, g))
 			continue;
 
@@ -589,7 +589,7 @@ int EvaluateCheckers(Game* g, PlayerSide color) {
 
 		if (checkCount == 1 && (v & color) && !playersPassed)
 		{
-			// todo: det här verkar inte vara correct typecast.
+			// todo: det hÃ¤r verkar inte vara correct typecast.
 			// score borde vara double.
 			score -= AI(ai).BlotFactors[p];
 		}
@@ -782,6 +782,12 @@ int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth) {
 	{
 		// This is not good for the current player.		
 		return -1;
+	}
+
+	if (PlayersPassedEachOther(g)) {
+		// Prio to move checkers inside home
+		// Then prio to move off.
+		return;
 	}
 
 	int setsCount = g->MoveSetsCount;

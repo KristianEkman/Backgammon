@@ -161,6 +161,7 @@ namespace Backend.Rules
             // AtHomeAndOtherAtBar();
             // AtHomeAndOtherAtBar2();
             // Test();
+            // LegalMove();
         }
 
         private void Test()
@@ -290,6 +291,24 @@ namespace Backend.Rules
 
             AddCheckers(1, Player.Color.Black, 19);
             AddCheckers(1, Player.Color.White, 19);
+        }
+
+        private void LegalMove()
+        {
+            AddCheckers(1, Player.Color.White, 0); // 0
+            AddCheckers(1, Player.Color.White, 1); // 1
+            AddCheckers(2, Player.Color.White, 20);  // 20
+            AddCheckers(2, Player.Color.White, 21);  // 21
+            AddCheckers(1, Player.Color.White, 22);  // 22
+            AddCheckers(4, Player.Color.White, 23);  // 23
+            AddCheckers(4, Player.Color.White, 24);  // 24
+
+            AddCheckers(3, Player.Color.Black, 23);
+            AddCheckers(3, Player.Color.Black, 22);
+            AddCheckers(5, Player.Color.Black, 21);
+            AddCheckers(2, Player.Color.Black, 19);
+            AddCheckers(2, Player.Color.Black, 17);
+            SwitchPlayer();
         }
 
         public void ClearCheckers()

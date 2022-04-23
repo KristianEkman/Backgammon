@@ -12,6 +12,7 @@ namespace BackendTests
     public class FibsTest
     {
         [TestMethod]
+        [Ignore]
         public void TestConnect()
         {
             var fibs = new Fibs();

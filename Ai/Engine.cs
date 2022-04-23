@@ -226,7 +226,7 @@ namespace Ai
             GenerateMovesSequence(sequences, moves, 0, game);
 
             // Special case. Sometimes the first dice is blocked, but can be moved after next dice
-            if (sequences.Count == 1 && sequences[0].All(move => move == null))
+            if (sequences.Count == 1 && sequences[0].Any(move => move == null))
             {
                 var temp = game.Roll[0];
                 game.Roll[0] = game.Roll[1];

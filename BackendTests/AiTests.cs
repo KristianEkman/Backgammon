@@ -119,7 +119,7 @@ namespace BackendTests
             game.AddCheckers(3, Player.Color.White, 23);
             game.AddCheckers(2, Player.Color.Black, 24);
             game.AddCheckers(2, Player.Color.White, 24);
-            
+
             game.FakeRoll(1, 4);
 
             Assert.AreEqual(Player.Color.Black, game.CurrentPlayer);
@@ -208,6 +208,5 @@ namespace BackendTests
             Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 22));
             Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 21));
         }
-
     }
 }
