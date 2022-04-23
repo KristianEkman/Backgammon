@@ -124,49 +124,59 @@ namespace Ai
             var opponentMax = game.Points.Where(p => p.Checkers.Any(c => c.Color == other))
                 .Select(p => p.GetNumber(myColor)).Max();
 
+            var myMin = game.Points.Where(p => p.Checkers.Any(c => c.Color == myColor))
+                .Select(p => p.GetNumber(myColor)).Min();
+
             var allPassed = true;
 
-            for (int i = 1; i < 25; i++)
+            if (myMin < opponentMax)
             {
-                // It is important to reverse looping for white.
-                var point = game.Points[i];
-                if (myColor == Player.Color.White)
-                    point = game.Points[25 - i];
-
-                var pointNo = point.GetNumber(myColor);
-
-                // If all opponents checkers has passed this point, blots are not as bad.
-                allPassed = pointNo > opponentMax;
-
-                if (point.Block(myColor))
+                for (int i = 1; i < 25; i++)
                 {
-                    if (inBlock)
-                        blockCount++;
-                    else
-                        blockCount = 1; // Start of blocks.
-                    inBlock = true;
-                }
-                else // not a blocked point
-                {
-                    if (inBlock) 
+                    // It is important to reverse looping for white.
+                    var point = game.Points[i];
+                    if (myColor == Player.Color.White)
+                        point = game.Points[25 - i];
+
+                    var pointNo = point.GetNumber(myColor);
+
+                    // If all opponents checkers has passed this point, blots are not as bad.
+                    allPassed = pointNo > opponentMax;
+
+                    if (point.Block(myColor))
                     {
-                        score += Math.Pow(blockCount * bps, cbf);
-                        blockCount = 0;
+                        if (inBlock)
+                            blockCount++;
+                        else
+                            blockCount = 1; // Start of blocks.
+                        inBlock = true;
                     }
-                    inBlock = false;
-                    if (point.Blot(myColor) && point.GetNumber(myColor) > bt)
-                        score -= point.GetNumber(myColor) / ( allPassed ? bfp : bf);
-                }
-            }
+                    else // not a blocked point
+                    {
+                        if (inBlock)
+                        {
+                            score += Math.Pow(blockCount * bps, cbf);
+                            blockCount = 0;
+                        }
+                        inBlock = false;
+                        if (point.Blot(myColor) && point.GetNumber(myColor) > bt)
+                            score -= point.GetNumber(myColor) / (allPassed ? bfp : bf);
+                    }
+                } // end of loop
 
-            if (inBlock) // the last point.
-                score += Math.Pow(blockCount * bps, cbf);
+                if (inBlock) // the last point.
+                    score += Math.Pow(blockCount * bps, cbf);
 
-            if (allPassed)
-                score += EvaluatePoints(myColor, game) * Configuration.RunOrBlockFactor;
-
-            score += game.GetHome(myColor).Checkers.Count * 10;
-            score -= game.GetHome(other).Checkers.Count * 10;
+                if (allPassed)
+                    score += EvaluatePoints(myColor, game) * Configuration.RunOrBlockFactor;
+            } 
+            else
+            {
+                // When both players has passed each other it is just better to move to home board and then bear off.
+                score += game.GetHome(myColor).Checkers.Count * 100;
+                score += game.Points.Count(p => p.GetNumber(myColor) > 18) * 50;
+            }           
+            
             return score;
         }
 
@@ -336,8 +346,8 @@ namespace Ai
             var myScore = Evaluate(EngineGame.CurrentPlayer, EngineGame);
             var oponent = EngineGame.CurrentPlayer == Player.Color.Black ? Player.Color.White : Player.Color.Black;
             var otherScore = Evaluate(oponent, EngineGame);
-            var oppPips = EngineGame.CurrentPlayer == Player.Color.White ? 
-                EngineGame.BlackPlayer.PointsLeft : 
+            var oppPips = EngineGame.CurrentPlayer == Player.Color.White ?
+                EngineGame.BlackPlayer.PointsLeft :
                 EngineGame.WhitePlayer.PointsLeft;
 
             var k = (myScore - otherScore) / oppPips;
