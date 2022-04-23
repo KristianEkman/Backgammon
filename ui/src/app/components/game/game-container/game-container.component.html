@@ -9,14 +9,15 @@
   <app-menu
     *ngIf="!tutorial"
     class="app-menu"
-    (flip)="this.flipped = !this.flipped"
+    (rotate)="onRotated()"
+    (flip)="onFlipped()"
     (resign)="resignGame()"
   ></app-menu>
   <div
     *ngIf="(gameDto$ | async)?.isGoldGame"
     class="players"
     [ngStyle]="{ height: height + 'px' }"
-    [ngClass]="{ flipped: flipped }"
+    [ngClass]="{ rotated: rotated, flipped: flipped }"
   >
     <app-player
       [playerDto]="(gameDto$ | async)?.whitePlayer"
@@ -42,6 +43,7 @@
     [game]="gameDto$ | async"
     [myColor]="playerColor$ | async"
     [dicesVisible]="dicesVisible"
+    [rotated]="rotated"
     [flipped]="flipped"
     [themeName]="themeName"
     [timeLeft]="timeLeft$ | async"

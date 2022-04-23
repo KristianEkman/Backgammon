@@ -63,7 +63,8 @@
   },
   "menu": {
     "rotate": "Rotera",
-    "resign": "Ge upp"
+    "resign": "Ge upp",
+    "flip": "Vänd"
   },
   "messageread": {
     "delete": "Tabort",

@@ -63,7 +63,8 @@
   },
   "menu": {
     "rotate": "Rotate",
-    "resign": "Resign"
+    "resign": "Resign",
+    "flip": "Turn"
   },
   "messageread": {
     "delete": "Delete",

@@ -1,7 +1,7 @@
 <canvas
   #canvas
   class="game-board"
-  [ngClass]="{ flipped: flipped }"
+  [ngClass]="{ rotated: rotated, flipped: flipped }"
   (mousedown)="onMouseDown($event)"
   (mousemove)="onMouseMove($event)"
   (mouseup)="onMouseUp($event)"

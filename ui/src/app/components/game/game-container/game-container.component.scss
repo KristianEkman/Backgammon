@@ -56,8 +56,12 @@
   overflow: hidden;
   margin-left: 8px;
 
-  &.flipped {
+  &.rotated {
     right: 0;
+    flex-direction: column-reverse;
+  }
+
+  &.flipped {
     flex-direction: column-reverse;
   }
 }

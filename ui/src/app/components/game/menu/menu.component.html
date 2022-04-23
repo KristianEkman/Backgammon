@@ -10,9 +10,14 @@
       &times;
     </button>
     <div *ngIf="open" class="overlay-content">
-      <button class="flat-button" (click)="flipClick()">
+      <button class="flat-button" (click)="rotateClick()">
         <i class="fas fa-sync"></i>
         {{ 'menu.rotate' | translate }}
+      </button>
+      <br />
+      <button class="flat-button" (click)="flipClick()">
+        <i class="fas fa-arrow-up"></i>
+        {{ 'menu.flip' | translate }}
       </button>
       <br />
       <!-- <button class="flat-button">Change theme</button><br /> -->
@@ -20,7 +25,6 @@
         <i class="fas fa-flag"></i>
         {{ 'menu.resign' | translate }}
       </button>
-      <br />
     </div>
   </div>
 </div>

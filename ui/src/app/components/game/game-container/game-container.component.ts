@@ -46,6 +46,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       .observe()
       .subscribe(this.diceChanged.bind(this));
     this.playerColor$ = AppState.Singleton.myColor.observe();
+    this.playerColor$.subscribe(this.gotPlayerColor.bind(this));
     this.gameSubs = AppState.Singleton.game
       .observe()
       .subscribe(this.gameChanged.bind(this));
@@ -111,6 +112,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   rollButtonClicked = false;
   diceColor: PlayerColor | null = PlayerColor.neither;
   messageCenter = 0;
+  rotated = false;
   flipped = false;
   playAiFlag = false;
   forGodlFlag = false;
@@ -125,6 +127,12 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
   @ViewChild('messages') messages: ElementRef | undefined;
+
+  gotPlayerColor() {
+    if (AppState.Singleton.myColor.getValue() == PlayerColor.white) {
+      this.flipped = true;
+    }
+  }
 
   sendMoves(): void {
     this.service.sendMoves();
@@ -438,5 +446,20 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   previousTutorialMessage() {
     this.tutorialService.previousStep();
+  }
+
+  onFlipped(): void {
+    this.flipped = !this.flipped;
+    // both flipped and rotated is not supported
+    if (this.flipped) {
+      this.rotated = false;
+    }
+  }
+
+  onRotated(): void {
+    this.rotated = !this.rotated;
+    if (this.rotated) {
+      this.flipped = false;
+    }
   }
 }

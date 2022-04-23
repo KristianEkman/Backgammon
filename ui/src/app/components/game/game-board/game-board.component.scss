@@ -6,6 +6,10 @@
   max-height: calc(100vh - 20px);
 }
 
-.flipped {
+.rotated {
   transform: rotate(180deg);
+}
+
+.flipped {
+  transform: rotateX(180deg);
 }

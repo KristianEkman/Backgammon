@@ -6,6 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent {
+  @Output() rotate = new EventEmitter<void>();
   @Output() flip = new EventEmitter<void>();
   @Output() resign = new EventEmitter<void>();
   open = false;
@@ -21,6 +22,11 @@ export class MenuComponent {
   flipClick(): void {
     this.open = false;
     this.flip.emit();
+  }
+
+  rotateClick(): void {
+    this.open = false;
+    this.rotate.emit();
   }
 
   resignClick(): void {

@@ -39,6 +39,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() game: GameDto | null = null;
   @Input() myColor: PlayerColor | null = PlayerColor.black;
   @Input() dicesVisible: boolean | null = false;
+  @Input() rotated = false;
   @Input() flipped = false;
   @Input() themeName: string | null = 'dark';
   @Input() timeLeft: number | null = 0;
@@ -87,7 +88,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
             this.getAnimationPoint(moves[0], moves[0].from),
             this.getAnimationPoint(moves[0], moves[0].to),
             this.theme,
-            this.flipped,
+            this.rotated || this.flipped,
             () => {
               // finished callback
               Sound.playChecker();
@@ -142,7 +143,12 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['width'] || changes['height'] || changes['flipped']) {
+    if (
+      changes['width'] ||
+      changes['height'] ||
+      changes['flipped'] ||
+      changes['rotated']
+    ) {
       this.recalculateGeometry();
     }
     this.requestDraw();
@@ -450,10 +456,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const s = this.height * 0.06;
     cx.fillStyle = 'green';
     cx.moveTo(x, y);
-    if (this.flipped) {
+    if (this.rotated) {
       cx.save();
       cx.translate(x * 2, y * 2);
       cx.rotate(Math.PI);
+    }
+
+    if (this.flipped) {
+      cx.save();
+      cx.translate(0, y * 2);
+      cx.scale(1, -1);
     }
 
     cx.arc(x, y, s, -(a + 0.5) * Math.PI, -0.5 * Math.PI);
@@ -482,7 +494,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     cx.fillText(text, tx, ty);
     cx.strokeStyle = this.theme.textColor;
-    if (this.flipped) {
+    if (this.rotated || this.flipped) {
       cx.restore();
     }
     // cx.strokeText(text, tx, ty);
@@ -657,7 +669,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           checker.color,
           highLight,
           false,
-          this.flipped
+          this.rotated || this.flipped
         );
       }
     }
@@ -674,7 +686,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         this.dragging.color,
         false,
         true,
-        this.flipped
+        this.rotated || this.flipped
       );
     }
   }
@@ -705,10 +717,19 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     if (blackCount > 0) {
-      if (this.flipped) {
+      if (this.rotated) {
         cx.save();
         cx.translate(x, y - blackCount * (chb + 1) - fntSize / 2);
         cx.rotate(Math.PI);
+        cx.fillText(`${blackCount}`, -wi, 0);
+        cx.restore();
+      } else if (this.flipped) {
+        cx.save();
+        cx.translate(
+          x + this.blackHome.width,
+          y - blackCount * (chb + 1) - fntSize / 2
+        );
+        cx.scale(1, -1);
         cx.fillText(`${blackCount}`, -wi, 0);
         cx.restore();
       } else {
@@ -733,10 +754,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     }
 
     if (whiteCount > 0) {
-      if (this.flipped) {
+      if (this.rotated) {
         cx.save();
         cx.translate(x, y + whiteCount * (chw + 1));
         cx.rotate(Math.PI);
+        cx.fillText(`${whiteCount}`, -wi, 0);
+        cx.restore();
+      } else if (this.flipped) {
+        cx.save();
+        cx.translate(x + this.whiteHome.width, y + whiteCount * (chw + 1));
+        cx.scale(1, -1);
         cx.fillText(`${whiteCount}`, -wi, 0);
         cx.restore();
       } else {
@@ -791,7 +818,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         PlayerColor.black,
         highLightBlack && i === blackCount - 1,
         false,
-        this.flipped
+        this.rotated || this.flipped
       );
     }
 
@@ -825,7 +852,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         PlayerColor.white,
         highLightWhite && i === whiteCount - 1,
         false,
-        this.flipped
+        this.rotated || this.flipped
       );
     }
   }
@@ -910,6 +937,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.save();
     cx.translate(this.blackHome.x, this.blackHome.y);
     cx.rotate(Math.PI / 2);
+    if (this.flipped) {
+      cx.scale(-1, 1);
+      cx.translate(-this.blackHome.height, 0);
+    }
+
     cx.fillStyle = this.theme.textColor;
     cx.fillText(this.blacksName, 0, -this.blackHome.width - 11);
     cx.fillStyle = this.theme.border;
@@ -925,6 +957,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.save();
     cx.translate(this.whiteHome.x, this.whiteHome.y);
     cx.rotate(Math.PI / 2);
+    if (this.flipped) {
+      cx.scale(-1, 1);
+      cx.translate(-this.whiteHome.height, 0);
+    }
     cx.font = '18px Arial';
     cx.fillStyle = this.theme.textColor;
     cx.fillText(this.whitesName, 0, -this.whiteHome.width - 11);
@@ -955,7 +991,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const h = this.height;
     const w = this.width;
     cx.beginPath();
-    cx.strokeStyle = !this.flipped ? '#444' : '#222';
+    cx.strokeStyle = !this.rotated ? '#444' : '#222';
     cx.lineWidth = 2;
     cx.moveTo(sbw, h);
     cx.lineTo(sbw, 1);
@@ -984,7 +1020,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     // dark 3d effect
     cx.beginPath();
-    cx.strokeStyle = !this.flipped ? '#222' : '#444';
+    cx.strokeStyle = !this.rotated ? '#222' : '#444';
     cx.lineWidth = 2;
     cx.moveTo(sbw + bow, h - bow);
     cx.lineTo(sbw + bow, bow);
@@ -1039,12 +1075,20 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const eventY = touch.pageY || touch.originalEvent?.pageY;
     const offset = $('canvas').offset();
 
-    if (this.flipped) {
+    if (this.rotated) {
       return {
         x: this.width - eventX + offset.left,
         y: this.height - eventY + offset.top
       };
     }
+
+    if (this.flipped) {
+      return {
+        x: eventX - offset.left,
+        y: this.height - eventY + offset.top
+      };
+    }
+
     return {
       x: eventX - offset.left,
       y: eventY - offset.top

@@ -63,7 +63,8 @@
   "menu": {
     "rotate": "استدارة",
     "resign": "استقالة",
-    "about": "حول"
+    "about": "حول",
+    "flip": "دور"
   },
   "messageread": {
     "delete": "حذف",

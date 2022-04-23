@@ -63,7 +63,8 @@
   },
   "menu": {
     "rotate": "Girar",
-    "resign": "Renunciar"
+    "resign": "Renunciar",
+    "flip": "Doblar"
   },
   "messageread": {
     "delete": "Borrar",

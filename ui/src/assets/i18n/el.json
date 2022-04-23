@@ -63,7 +63,8 @@
   },
   "menu": {
     "rotate": "Γυρίζω",
-    "resign": "Παραιτούμαι"
+    "resign": "Παραιτούμαι",
+    "flip": "Στροφή"
   },
   "messageread": {
     "delete": "Διαγράφω",

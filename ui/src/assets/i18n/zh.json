@@ -63,7 +63,8 @@
   },
   "menu": {
     "rotate": "旋轉",
-    "resign": "辭職"
+    "resign": "辭職",
+    "flip": "轉動"
   },
   "messageread": {
     "delete": "刪除",
