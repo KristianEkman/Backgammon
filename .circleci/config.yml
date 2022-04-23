@@ -1,0 +1,54 @@
+# Use the latest 2.1 version of CircleCI pipeline process engine.
+# See: https://circleci.com/docs/2.0/configuration-reference
+version: 2.1
+
+# Define a job to be invoked later in a workflow.
+# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+jobs:
+  build-ui:
+    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
+    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
+    docker:
+      - image: cimg/node:16.14.0
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    working_directory: ~/backgammon/ui
+    steps:
+      - checkout:
+          path: ~/backgammon
+      - run:
+          name: "pwd and ls"
+          command: "pwd && ls"
+      - run:
+          name: "Run yarn"
+          command: "yarn"
+      - run:
+          name: "Run yarn:build"
+          command: "yarn build:prod"
+  build-backend:
+    docker:
+      - image: mcr.microsoft.com/dotnet/sdk:6.0
+    steps:
+      - checkout
+      - run:
+          name: "pwd and ls"
+          command: "pwd && ls"
+      - run:
+          name: "Run dotnet restore"
+          command: "dotnet restore"
+      - run:
+          name: "Compile"
+          command: "dotnet build"
+      - run:
+          name: "Test"
+          command: 'dotnet test -l:"junit;LogFileName=TestOutput.xml" -r:"TestResults"'
+      - store_test_results:
+          path: TestResults
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  build-workflow:
+    jobs:
+      - build-ui
+      - build-backend
