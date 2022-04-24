@@ -55,9 +55,11 @@ namespace Ai
 
             if (bestMoveSequence == null)
                 return new Move[0];
+            
             if (myColor == Player.Color.Black)
-                return bestMoveSequence.OrderBy(m => m.From?.BlackNumber ?? 0).ToArray();
-            return bestMoveSequence.OrderBy(m => m.From?.WhiteNumber ?? 0).ToArray();
+                return bestMoveSequence.Where(m => m != null).OrderBy(m => m.From.BlackNumber).ToArray();
+
+            return bestMoveSequence.Where(m => m != null).OrderBy(m => m.From.WhiteNumber).ToArray();
         }
 
         private Move[] ToLocalSequence(Move[] sequence, Game game)
