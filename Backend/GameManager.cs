@@ -183,7 +183,7 @@ namespace Backend
             using (var db = new Db.BgDbContext())
             {
                 var blackUser = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
-                if (blackUser.Gold < firstBet)
+                if (Game.IsGoldGame && blackUser.Gold < firstBet)
                     throw new ApplicationException("Black player dont have enough gold"); // Should be guarder earlier
                 if (Game.IsGoldGame && !IsAi(blackUser.Id))
                     blackUser.Gold -= firstBet;
@@ -518,17 +518,20 @@ namespace Backend
                 var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
                 var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
                 var computed = Score.NewScore(black.Elo, white.Elo, black.GameCount, white.GameCount, color == PlayerColor.black);
-                var blackInc = computed.black - black.Elo;
-                var whiteInc = computed.white - white.Elo;
+                var blackInc = 0;
+                var whiteInc = 0;
 
                 black.GameCount++;
-                white.GameCount++;
-
-                black.Elo = computed.black;
-                white.Elo = computed.white;
+                white.GameCount++;                
 
                 if (Game.IsGoldGame)
                 {
+                    blackInc = computed.black - black.Elo;
+                    whiteInc = computed.white - white.Elo;
+
+                    black.Elo = computed.black;
+                    white.Elo = computed.white;
+
                     lock (StakeLock) // Preventing other thread to do the same transaction.
                     {
                         Logger.LogInformation("Locked " + Thread.CurrentThread.ManagedThreadId);
