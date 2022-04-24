@@ -52,7 +52,8 @@
     "exit": "مخرج",
     "new": "جديد",
     "acceptDoubling": "قبول",
-    "resign": "استقالة"
+    "resign": "استقالة",
+    "help": "مساعدة"
   },
   "gameboard": {
     "black": "أسود",

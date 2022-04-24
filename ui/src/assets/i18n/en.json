@@ -53,7 +53,8 @@
     "exit": "Exit",
     "new": "New",
     "acceptDoubling": "Accept",
-    "resign": "Resign"
+    "resign": "Resign",
+    "help": "Help"
   },
   "gameboard": {
     "black": "Black",

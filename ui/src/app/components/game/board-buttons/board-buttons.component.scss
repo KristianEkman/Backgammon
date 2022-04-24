@@ -18,4 +18,19 @@
       font-size: 17px;
     }
   }
+
+  .help-button {
+    animation: bounce 1s ease-in-out 3;
+  }
+
+  @keyframes bounce {
+    to {
+        transform: scale(1);
+    }
+    from {
+      transform: scale(1.1);
+    }
+  }
+
+
 }

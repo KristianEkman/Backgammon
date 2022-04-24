@@ -67,6 +67,7 @@
       [exitVisible]="exitVisible"
       [acceptDoublingVisible]="acceptDoublingVisible"
       [requestDoublingVisible]="requestDoublingVisible"
+      [requestHintVisible]="requestHintVisible"
       [doublingFactor]="nextDoublingFactor"
       (onUndoMove)="undoMove()"
       (onSendMoves)="sendMoves()"
@@ -76,6 +77,7 @@
       (onRequestDoubling)="requestDoubling()"
       (onAcceptDoubling)="acceptDoubling()"
       (onResign)="resignGame()"
+      (onRequestHint)="requestHint()"
     >
     </app-board-buttons>
   </div>

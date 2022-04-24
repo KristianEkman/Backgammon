@@ -11,7 +11,8 @@ export class Checker {
     color: PlayerColor,
     highLighted: boolean,
     shaddow: boolean,
-    flipped: boolean
+    flipped: boolean,
+    hint: boolean
   ): void {
     if (!cx) {
       return;
@@ -31,11 +32,15 @@ export class Checker {
     } else {
       cx.fillStyle = theme.whiteChecker;
     }
+
     cx.beginPath();
     cx.ellipse(x, y, width, width, 0, 0, 2 * Math.PI);
     cx.closePath();
+    if (hint) {
+      cx.globalAlpha = 0.5;
+    }
     cx.fill();
-    // cx.stroke();
+    cx.globalAlpha = 1;
 
     if (highLighted) {
       cx.fillStyle = 'rgba(40, 221, 46, 0.3)'; // todo: get from theme

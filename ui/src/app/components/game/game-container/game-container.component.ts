@@ -59,6 +59,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       .subscribe(this.oponnentDone.bind(this));
     this.message$ = AppState.Singleton.statusMessage.observe();
     this.timeLeft$ = AppState.Singleton.moveTimer.observe();
+    AppState.Singleton.moveTimer.observe().subscribe(this.timeTick.bind(this));
+
     this.user$ = AppState.Singleton.user.observe();
     this.tutorialStep$ = AppState.Singleton.tutorialStep.observe();
 
@@ -325,6 +327,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   exitVisible = true;
   acceptDoublingVisible = false;
   requestDoublingVisible = false;
+  requestHintVisible = false;
 
   rollButtonClick(): void {
     this.service.sendRolled();
@@ -402,6 +405,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.service.requestDoubling();
   }
 
+  requestHint(): void {
+    this.requestHintVisible = false;
+    this.service.requestHint();
+  }
+
   acceptDoubling(): void {
     this.acceptDoublingVisible = false;
     this.service.acceptDoubling();
@@ -461,5 +469,22 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     if (this.rotated) {
       this.flipped = false;
     }
+  }
+
+  timeTick(time: number) {
+    if (time < 30 && this.myTurn) {
+      const game = AppState.Singleton.game.getValue();
+      if (
+        game &&
+        !game.isGoldGame &&
+        game.playState === GameState.playing &&
+        !this.rollButtonVisible &&
+        !this.undoVisible
+      ) {
+        this.requestHintVisible = true;
+        return;
+      }
+    }
+    this.requestHintVisible = false;
   }
 }

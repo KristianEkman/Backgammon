@@ -21,7 +21,8 @@ import {
   UndoActionDto,
   ConnectionInfoActionDto,
   GameRestoreActionDto,
-  DoublingActionDto
+  DoublingActionDto,
+  HintMovesActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
 import { Keys, Sound } from '../utils';
@@ -225,6 +226,17 @@ export class SocketsService implements OnDestroy {
         AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
         this.statusMessageService.setTextMessage(dto.game);
         this.startTimer();
+        break;
+      }
+      case ActionNames.hintMoves: {
+        const dto = JSON.parse(message.data) as HintMovesActionDto;
+
+        dto.moves.forEach((hint) => {
+          const clone = [...AppState.Singleton.moveAnimations.getValue()];
+          // console.log('pushing next animation');
+          clone.push(hint);
+          AppState.Singleton.moveAnimations.setValue(clone);
+        });
         break;
       }
 
@@ -508,5 +520,12 @@ export class SocketsService implements OnDestroy {
     AppState.Singleton.moveTimer.setValue(40);
     this.sendMessage(JSON.stringify(action));
     this.statusMessageService.setWaitingForDoubleResponse();
+  }
+
+  requestHint(): void {
+    const action: ActionDto = {
+      actionName: ActionNames.requestHint
+    };
+    this.sendMessage(JSON.stringify(action));
   }
 }

@@ -7,12 +7,16 @@ export class MoveAnimation {
   constructor(
     public move: MoveDto,
     private from: Point,
-    private to: Point,
+    to: Point,
     private theme: IThemes,
     private flipped: boolean,
     finished: (move: MoveDto) => void,
     step: () => void
   ) {
+    if (move.hint) {
+      this.frames = 60;
+    }
+
     this.incrementX = (to.x - from.x) / this.frames;
     this.incrementY = (to.y - from.y) / this.frames;
     this.currentPos = { ...from };
@@ -45,7 +49,8 @@ export class MoveAnimation {
       this.move.color,
       false,
       true,
-      this.flipped
+      this.flipped,
+      this.move.hint
     );
   }
 }

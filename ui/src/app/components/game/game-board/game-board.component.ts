@@ -85,8 +85,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           // console.log('starting animation ');
           this.animatedMove = new MoveAnimation(
             moves[0],
-            this.getAnimationPoint(moves[0], moves[0].from),
-            this.getAnimationPoint(moves[0], moves[0].to),
+            this.getAnimationPoint(moves[0], moves[0].from, true),
+            this.getAnimationPoint(moves[0], moves[0].to, false),
             this.theme,
             this.rotated || this.flipped,
             () => {
@@ -285,6 +285,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (<number>this.tutorialStep > 0) {
       this.drawTutorial(cx);
     }
+
     // *** NOT PROD CODE
     // this.drawIcon(cx);
     // this.drawDebugRects(cx);
@@ -515,6 +516,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       PlayerColor.black,
       false,
       false,
+      false,
       false
     );
     cx.font = 'bold 50px Arial';
@@ -538,7 +540,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.whiteHome.drawBorder(cx, true);
   }
 
-  getAnimationPoint(moveDto: MoveDto, pNum: number): Point {
+  getAnimationPoint(moveDto: MoveDto, pNum: number, start: boolean): Point {
     if (!this.game) {
       return new Point(0, 0);
     }
@@ -568,19 +570,23 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       pointIdx = 25 - pNum;
     }
 
-    const rect = this.checkerAreas.find((r) => r.pointIdx === pointIdx);
-    const checkCount = this.game.points[pointIdx].checkers.length;
-    const cw = this.getCheckerWidth() * 2;
-    if (rect) {
-      let y = Math.min(rect.y + checkCount * cw + cw / 2, rect.y + rect.height);
-      if (pointIdx > 12) {
-        y = Math.max(rect.y + rect.height - checkCount * cw - cw / 2, rect.y);
-      }
-      const x = rect.x + cw;
-      return new Point(x, y);
+    const area = this.checkerAreas.find((r) => r.pointIdx === pointIdx);
+    let checkCount = this.game.points[pointIdx].checkers.length;
+    if (start) {
+      checkCount--;
     }
 
-    return new Point(0, 0);
+    const cw = this.getCheckerWidth();
+    if (!area) return new Point(0, 0);
+
+    // distance between checkers
+    const dist = Math.min(2 * cw, (area.height - cw) / checkCount);
+    let y = area.y + checkCount * dist + dist / 2;
+    if (pointIdx > 12) {
+      y = area.y + area.height - checkCount * dist - dist / 2;
+    }
+    const x = area.x + area.width / 2;
+    return new Point(x, y);
   }
 
   getCheckerRadius(): number {
@@ -632,6 +638,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       //Preventing animated move to be drawn at its destination until animation is finished.
       const dragAnimationTo =
         this.animatedMove &&
+        !this.animatedMove.move.hint &&
         ((this.animatedMove?.move.color === PlayerColor.black &&
           this.animatedMove.move.to == p) ||
           (this.animatedMove?.move.color === PlayerColor.white &&
@@ -669,7 +676,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
           checker.color,
           highLight,
           false,
-          this.rotated || this.flipped
+          this.rotated || this.flipped,
+          false
         );
       }
     }
@@ -686,7 +694,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         this.dragging.color,
         false,
         true,
-        this.rotated || this.flipped
+        this.rotated || this.flipped,
+        false
       );
     }
   }
@@ -818,7 +827,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         PlayerColor.black,
         highLightBlack && i === blackCount - 1,
         false,
-        this.rotated || this.flipped
+        this.rotated || this.flipped,
+        false
       );
     }
 
@@ -852,7 +862,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         PlayerColor.white,
         highLightWhite && i === whiteCount - 1,
         false,
-        this.rotated || this.flipped
+        this.rotated || this.flipped,
+        false
       );
     }
   }

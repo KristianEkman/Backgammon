@@ -302,8 +302,8 @@ namespace Backend
                     }
                     catch (Exception e)
                     {
-                        Logger.LogError(e, $"Failed to parse Action text {text}");                        
-                    }                    
+                        Logger.LogError(e, $"Failed to parse Action text {text}");
+                    }
                 }
             }
         }
@@ -376,6 +376,14 @@ namespace Backend
                 Game.SwitchPlayer();
                 _ = Send(otherSocket, action);
             }
+            else if (actionName == ActionNames.requestHint)
+            {
+                if (!Game.IsGoldGame && Game.CurrentPlayer == Player.Color.Black) // Aina is always white
+                {
+                    var action = GetHintAction();
+                    _ = Send(socket, action);
+                }
+            }
             else if (actionName == ActionNames.connectionInfo)
             {
                 var action = (ConnectionInfoActionDto)JsonSerializer.Deserialize(actionText, typeof(ConnectionInfoActionDto));
@@ -390,6 +398,16 @@ namespace Backend
             {
                 _ = CloseConnections(socket);
             }
+        }
+
+        private HintMovesActionDto GetHintAction()
+        {
+            var moves = Engine.GetBestMoves();
+            return new HintMovesActionDto { moves = moves.Select(x => { 
+                var m = x.ToDto();
+                m.hint = true;
+                return m; 
+            }).ToArray() };
         }
 
         private void DoDoubling()

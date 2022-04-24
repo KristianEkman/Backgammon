@@ -53,7 +53,8 @@
     "exit": "Hem",
     "new": "Nytt",
     "acceptDoubling": "Acceptera",
-    "resign": "Ge upp"
+    "resign": "Ge upp",
+    "help": "Hjälp"
   },
   "gameboard": {
     "black": "Svart",

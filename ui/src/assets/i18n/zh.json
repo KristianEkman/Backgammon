@@ -51,7 +51,8 @@
     "undo": "撤消",
     "roll": "卷",
     "exit": "出口",
-    "new": "新的"
+    "new": "新的",
+    "help": "幫助"
   },
   "gameboard": {
     "black": "黑色的",

@@ -1,4 +1,13 @@
 <div class="container">
+  <button
+    (click)="requestHint()"
+    *ngIf="requestHintVisible"
+    class="blue-button help-button"
+  >
+    {{ 'boardbuttons.help' | translate }}
+    &nbsp;
+    <i class="fas fa-lightbulb"></i>
+  </button>
   <button (click)="sendMoves()" *ngIf="sendVisible" class="default-button">
     {{ 'boardbuttons.done' | translate }}
   </button>

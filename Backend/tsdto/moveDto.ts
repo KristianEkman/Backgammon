@@ -9,4 +9,5 @@ export interface MoveDto {
     nextMoves: MoveDto[];
     to: number;
     animate: boolean;
+    hint: boolean;
 }

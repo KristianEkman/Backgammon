@@ -55,7 +55,9 @@ namespace Ai
 
             if (bestMoveSequence == null)
                 return new Move[0];
-            return bestMoveSequence.ToArray();
+            if (myColor == Player.Color.Black)
+                return bestMoveSequence.OrderBy(m => m.From?.BlackNumber ?? 0).ToArray();
+            return bestMoveSequence.OrderBy(m => m.From?.WhiteNumber ?? 0).ToArray();
         }
 
         private Move[] ToLocalSequence(Move[] sequence, Game game)
@@ -106,7 +108,7 @@ namespace Ai
                 return game.BlackPlayer.PointsLeft - game.WhitePlayer.PointsLeft;
             else
                 return game.WhitePlayer.PointsLeft - game.BlackPlayer.PointsLeft;
-        }               
+        }
 
         private double EvaluateCheckers(Player.Color myColor, Game game)
         {
@@ -169,14 +171,14 @@ namespace Ai
 
                 if (allPassed)
                     score += EvaluatePoints(myColor, game) * Configuration.RunOrBlockFactor;
-            } 
+            }
             else
             {
                 // When both players has passed each other it is just better to move to home board and then bear off.
                 score += game.GetHome(myColor).Checkers.Count * 100;
                 score += game.Points.Count(p => p.GetNumber(myColor) > 18) * 50;
-            }           
-            
+            }
+
             return score;
         }
 
@@ -349,7 +351,7 @@ namespace Ai
             var myScore = Evaluate(EngineGame.CurrentPlayer, EngineGame);
             var oponent = EngineGame.CurrentPlayer == Player.Color.Black ? Player.Color.White : Player.Color.Black;
             var otherScore = Evaluate(oponent, EngineGame);
-            
+
             var oppPips = EngineGame.CurrentPlayer == Player.Color.White ?
                 EngineGame.BlackPlayer.PointsLeft :
                 EngineGame.WhitePlayer.PointsLeft;

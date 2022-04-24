@@ -48,12 +48,13 @@
   },
   "boardbuttons": {
     "done": "Fait",
-    "undo": "annuler",
+    "undo": "Annuler",
     "roll": "Rouleau",
     "exit": "Sortir",
     "new": "Nouvelle",
     "acceptDoubling": "J'accepte",
-    "resign": "Démissionner"
+    "resign": "Démissionner",
+    "help": "Aider"
   },
   "gameboard": {
     "black": "Noire",

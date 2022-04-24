@@ -14,4 +14,6 @@ export enum ActionNames {
     requestedDoubling,
     acceptedDoubling,
     rolled,
+    requestHint,
+    hintMoves,
 }

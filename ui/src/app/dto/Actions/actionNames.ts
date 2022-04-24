@@ -13,5 +13,7 @@ export enum ActionNames {
   exitGame,
   requestedDoubling,
   acceptedDoubling,
-  rolled
+  rolled,
+  requestHint,
+  hintMoves
 }

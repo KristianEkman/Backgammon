@@ -19,6 +19,8 @@ namespace Backend.Dto
         exitGame,
         requestedDoubling,
         acceptedDoubling,
-        rolled
+        rolled,
+        requestHint,
+        hintMoves
     }
 }

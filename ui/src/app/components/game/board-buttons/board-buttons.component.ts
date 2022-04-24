@@ -22,6 +22,7 @@ export class BoardButtonsComponent {
   @Input() acceptDoublingVisible = false;
   @Input() requestDoublingVisible = false;
   @Input() doublingFactor: number | null = 1;
+  @Input() requestHintVisible = false;
 
   @Output() onUndoMove = new EventEmitter<void>();
   @Output() onSendMoves = new EventEmitter<void>();
@@ -31,6 +32,7 @@ export class BoardButtonsComponent {
   @Output() onAcceptDoubling = new EventEmitter<void>();
   @Output() onRequestDoubling = new EventEmitter<void>();
   @Output() onResign = new EventEmitter<void>();
+  @Output() onRequestHint = new EventEmitter<void>();
 
   undoMove(): void {
     this.onUndoMove.emit();
@@ -63,5 +65,9 @@ export class BoardButtonsComponent {
 
   resign(): void {
     this.onResign.emit();
+  }
+
+  requestHint(): void {
+    this.onRequestHint.emit();
   }
 }

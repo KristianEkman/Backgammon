@@ -9,3 +9,4 @@ export * from './undoActionDto';
 export * from './connectionInfoActionDto';
 export * from './gameRestoreActionDto';
 export * from './doublingActionDto';
+export * from './hintMovesActionDto';
