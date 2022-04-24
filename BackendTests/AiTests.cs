@@ -208,5 +208,29 @@ namespace BackendTests
             Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 22));
             Assert.IsTrue(!moves.Any(m => m.To.WhiteNumber == 21));
         }
+
+        [TestMethod]
+        public void PlayersPassedTest()
+        {
+            var game = Game.Create(false);
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.Black, 19);
+            game.AddCheckers(3, Player.Color.Black, 20);
+            game.AddCheckers(3, Player.Color.Black, 21);
+            game.AddCheckers(3, Player.Color.White, 22);
+            game.AddCheckers(3, Player.Color.White, 23);
+            game.AddCheckers(2, Player.Color.White, 24);
+            Assert.IsTrue(game.PlayersPassed());
+
+            game = Game.Create(false);
+            game.ClearCheckers();
+            game.AddCheckers(1, Player.Color.Black, 19);
+            game.AddCheckers(3, Player.Color.Black, 20);
+            game.AddCheckers(3, Player.Color.Black, 21);
+            game.AddCheckers(3, Player.Color.White, 22);
+            game.AddCheckers(3, Player.Color.White, 23);
+            game.AddCheckers(2, Player.Color.White, 3);
+            Assert.IsFalse(game.PlayersPassed());
+        }
     }
 }

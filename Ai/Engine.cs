@@ -106,7 +106,7 @@ namespace Ai
                 return game.BlackPlayer.PointsLeft - game.WhitePlayer.PointsLeft;
             else
                 return game.WhitePlayer.PointsLeft - game.BlackPlayer.PointsLeft;
-        }
+        }               
 
         private double EvaluateCheckers(Player.Color myColor, Game game)
         {
@@ -343,16 +343,20 @@ namespace Ai
 
         public bool AcceptDoubling()
         {
+            if (!EngineGame.PlayersPassed())
+                return true;
+
             var myScore = Evaluate(EngineGame.CurrentPlayer, EngineGame);
             var oponent = EngineGame.CurrentPlayer == Player.Color.Black ? Player.Color.White : Player.Color.Black;
             var otherScore = Evaluate(oponent, EngineGame);
+            
             var oppPips = EngineGame.CurrentPlayer == Player.Color.White ?
                 EngineGame.BlackPlayer.PointsLeft :
                 EngineGame.WhitePlayer.PointsLeft;
 
             var k = (myScore - otherScore) / oppPips;
 
-            return k > -0.15; // Just my best guess.
+            return k > -0.25; // Just my best guess.
         }
     }
 }

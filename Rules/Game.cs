@@ -10,7 +10,7 @@ namespace Backend.Rules
 {
 
     public class Game
-    {        
+    {
         public Guid Id { get; set; }
         public Player BlackPlayer { get; set; }
         public Player WhitePlayer { get; set; }
@@ -30,27 +30,27 @@ namespace Backend.Rules
         public Game Clone()
         {
             var game = new Game
-                {
-                    Id = Id, 
-                    BlackPlayer = BlackPlayer.Clone(),
-                    WhitePlayer = WhitePlayer.Clone(),
-                    Points = Points.Select(p => p.Clone()).ToList(),
-                    BlackStarts = BlackStarts,
-                    WhiteStarts = WhiteStarts,
-                    Created = Created,
-                    CurrentPlayer = CurrentPlayer,
-                    PlayState = PlayState,
-                    Roll = Roll.Select(r => new Dice { Used = r.Used, Value = r.Value }).ToList(),
-                    ThinkStart = ThinkStart,       
-                    GoldMultiplier = GoldMultiplier         ,
-                    IsGoldGame = IsGoldGame,
-                    LastDoubler = LastDoubler,
-                    Stake = Stake
-                };
-                game.Bars = new Point[2];
-                game.Bars[(int)Player.Color.Black] = game.Points[0];
-                game.Bars[(int)Player.Color.White] = game.Points[25];
-            
+            {
+                Id = Id,
+                BlackPlayer = BlackPlayer.Clone(),
+                WhitePlayer = WhitePlayer.Clone(),
+                Points = Points.Select(p => p.Clone()).ToList(),
+                BlackStarts = BlackStarts,
+                WhiteStarts = WhiteStarts,
+                Created = Created,
+                CurrentPlayer = CurrentPlayer,
+                PlayState = PlayState,
+                Roll = Roll.Select(r => new Dice { Used = r.Used, Value = r.Value }).ToList(),
+                ThinkStart = ThinkStart,
+                GoldMultiplier = GoldMultiplier,
+                IsGoldGame = IsGoldGame,
+                LastDoubler = LastDoubler,
+                Stake = Stake
+            };
+            game.Bars = new Point[2];
+            game.Bars[(int)Player.Color.Black] = game.Points[0];
+            game.Bars[(int)Player.Color.White] = game.Points[25];
+
             return game;
         }
 
@@ -85,7 +85,7 @@ namespace Backend.Rules
                 PlayState = State.OpponentConnectWaiting,
                 GoldMultiplier = 1,
                 IsGoldGame = forGold,
-                LastDoubler = null,                
+                LastDoubler = null,
             };
 
             for (int i = 0; i < 26; i++)
@@ -344,7 +344,7 @@ namespace Backend.Rules
                 if (Roll[0].Value > Roll[1].Value)
                 {
                     CurrentPlayer = Player.Color.Black;
-                    BlackStarts++; 
+                    BlackStarts++;
                 }
                 else if (Roll[0].Value < Roll[1].Value)
                 {
@@ -456,7 +456,7 @@ namespace Backend.Rules
                         moves.Add(move);
                         var hit = MakeMove(move);
                         GenerateMoves(move.NextMoves);
-                        UndoMove(move, hit);                       
+                        UndoMove(move, hit);
                     }
 
                     if (IsBearingOff(CurrentPlayer))
@@ -468,10 +468,10 @@ namespace Backend.Rules
                         if (toPoint != null && toPoint.IsOpen(CurrentPlayer) && !moves.Any(m => m.From == fromPoint && m.To == toPoint))
                         {
                             var move = new Move { Color = CurrentPlayer, From = fromPoint, To = toPoint };
-                            moves.Add(move);                           
+                            moves.Add(move);
                             var hit = MakeMove(move);
                             GenerateMoves(move.NextMoves);
-                            UndoMove(move, hit);                            
+                            UndoMove(move, hit);
                         }
                     }
                 }
@@ -488,7 +488,7 @@ namespace Backend.Rules
             move.To.Checkers.Add(checker);
             if (move.Color == Player.Color.Black)
             {
-                BlackPlayer.PointsLeft -= (move.To.BlackNumber - move.From.BlackNumber);                
+                BlackPlayer.PointsLeft -= (move.To.BlackNumber - move.From.BlackNumber);
             }
             else
             {
@@ -542,6 +542,32 @@ namespace Backend.Rules
                     BlackPlayer.PointsLeft -= (move.To.BlackNumber);
             }
             //AssertPointsLeft();
+        }
+
+        public bool PlayersPassed()
+        {
+            int lastBlack = 0;
+            int lastWhite = 0;
+
+            for (int i = 0; i < 25; i++)
+            {
+                if (Points[i].Checkers.Any(p => p.Color == Player.Color.Black))
+                {
+                    lastBlack = Points[i].GetNumber(Player.Color.Black);
+                    break;
+                }
+            }
+
+
+            for (int i = 25 - 1; i >= 1; i--)
+            {
+                if (Points[i].Checkers.Any(p => p.Color == Player.Color.White))
+                {
+                    lastWhite = Points[i].GetNumber(Player.Color.Black);
+                    break;
+                }
+            }
+            return lastBlack > lastWhite;
         }
 
     }
