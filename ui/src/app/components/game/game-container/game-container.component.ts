@@ -388,6 +388,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   newGame(): void {
     this.newVisible = false;
     this.started = false;
+    this.rollButtonClicked = false;
+
     this.service.resetGame();
     this.service.connect('', this.playAiFlag, this.forGodlFlag);
     this.waitForOpponent();
