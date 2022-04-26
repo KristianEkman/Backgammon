@@ -305,7 +305,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   private waitForOpponent() {
-    Sound.playBlues();
+    Sound.playPianoIntro();
     this.startedHandle = setTimeout(() => {
       if (!this.started) {
         this.playAiQuestion = true;

@@ -10,6 +10,7 @@ export class Sound {
   coin: HTMLAudioElement;
   blues: HTMLAudioElement;
   tick: HTMLAudioElement;
+  pianointro: HTMLAudioElement;
 
   private constructor() {
     this.click = new Audio();
@@ -58,6 +59,10 @@ export class Sound {
     this.tick.src = '../assets/sound/ticktock.mp3';
     this.tick.load();
     this.tick.volume = 0.25;
+
+    this.pianointro = new Audio();
+    this.pianointro.src = '../assets/sound/pianointro.mp3';
+    this.pianointro.load();
   }
 
   private static _singleton: Sound;
@@ -111,6 +116,11 @@ export class Sound {
   static playBlues(): void {
     this.Singleton.blues.volume = 1;
     this.Singleton.blues.play();
+  }
+
+  static playPianoIntro(): void {
+    this.Singleton.pianointro.volume = 1;
+    this.Singleton.pianointro.play();
   }
 
   static fadeBlues(): void {
