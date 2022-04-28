@@ -177,6 +177,10 @@ namespace Backend
         public static void AssertOrigin(HttpRequest request)
         {
             var origin = request.Headers["Referer"].ToString();
+            // Need to be allowed for email unsubscibe feature.
+            if (string.IsNullOrEmpty(origin))
+                return;
+
             var allowed = new List<string>();
             allowed.Add("https://backgammon.azurewebsites.net");            
             allowed.Add("https://backgammon-slot1.azurewebsites.net");

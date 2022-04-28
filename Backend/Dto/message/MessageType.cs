@@ -9,6 +9,7 @@ namespace Backend.Dto.message
     {
         SharePrompt,
         Version2Info,
-        Version3Info
+        Version3Info,
+        Version36Info,
     }
 }

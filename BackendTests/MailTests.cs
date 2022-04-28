@@ -1,16 +1,18 @@
 ﻿using Backend.Mail;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
-namespace BackendTests
+namespace BackendTests;
+
+[TestClass]
+public class MailTest
 {
-    [TestClass]
-    public class MailTest
+    [TestMethod]
+    [Ignore]
+    public void TestMail()
     {
-        [TestMethod]
-        [Ignore]
-        public void TestMail()
-        {
-            Mailer.SendTest();
-        }
+        Mailer.SendTest();
     }
 }
+
+

@@ -84,45 +84,42 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("api/message/sendToAll")]
-        public async Task SendToAll(MessageType type)
+        public async Task SendToAll(MassMailDto dto)
         {
             // For each user, add the message. If the user has notification flag, send mail.
             AssertAdmin();
             string adminId = Request.Headers["user-id"].ToString();
-            string pw = config.GetValue<string>("smtppw");
 
             using (var db = new BgDbContext())
             {
                 var admin = db.Users.First(u => u.Id.ToString() == adminId);
-                var users = db.Users.Where(u => u.EmailNotifications);
-                var count = users.Count();
-                foreach (var user in users)
-                {
-                    if (string.IsNullOrWhiteSpace(user.Email))
-                        continue;
 
-                    (string Subject, string Text) st = GetSubjectAndText(type, user.EmailUnsubscribeId, user.Name);
+                foreach (var user in db.Users.Where(u => u.Name != "deleted"))
+                {
+                    (string Subject, string Text) st = GetSubjectAndText(dto.type, user.EmailUnsubscribeId, user.Name);
                     var subject = st.Subject;
                     var text = st.Text;
                     user.ReceivedMessages.Add(new Message
                     {
-                        Text = "",
-                        Type = type,
+                        Text = "Hi. I've just released version 3.6 with a new Practice Hint feature. The AI is also improved with logic and bug fixes.",
+                        Type = dto.type,
                         Sender = admin,
                         Sent = DateTime.Now
                     });
 
-                    try
+                    if (!string.IsNullOrWhiteSpace(user.Email) && user.EmailNotifications)
                     {
-                        //await Mail.Mailer.Send(user.Email, subject, text, pw);
-                        logger.LogInformation($"Emailed {user.Email}");
-                    }
-                    catch (Exception exc)
-                    {
-                        logger.LogError(exc.ToString());
+                        try
+                        {
+                            await Mail.Mailer.Send(user.Email, subject, text, dto.userName, dto.password);
+                            logger.LogInformation($"Emailed {user.Email}");
+                        }
+                        catch (Exception exc)
+                        {
+                            logger.LogError(exc.ToString());
+                        }
                     }
                 }
-
                 db.SaveChanges();
             }
         }
@@ -135,11 +132,19 @@ namespace Backend.Controllers
                     return ("", "");
                 case MessageType.Version2Info:
                 case MessageType.Version3Info:
-                    return ("New version of Backgammon", @$"<p>Hi {name}!</p>
-<img src='https://backgammon.azurewebsites.net/assets/images/banner.jpg'>
-<p>You have a new Backgammon message.</p>
-<p><a href='https://backgammon.azurewebsites.net/messages'>Go there and read the news.<a/></p>
-<p><a href='https://backgammon.azurewebsites.net/api/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from all email notifications.</a></p>
+                case MessageType.Version36Info:
+                    return ("New version of Backgammon", @$"<img src='https://backgammon.azurewebsites.net/assets/images/banner.jpg'>
+<p>Hi {name}!</p>
+<p>There is a new version of Backgammon</p>
+<h3>New features</h3>
+<ul>
+    <li>Practice Hints</li>
+    <li>Bug fixes</li>
+    <li>Slighly improved AI</li>
+</ul>
+<p><small><i>You might need to reload once</i></small></p>
+<p><a href='https://backgammon.azurewebsites.net/messages'>Go there and read try it out.<a/></p>
+<p><a href='https://backgammon.azurewebsites.net/api/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from these email notifications.</a></p>
 <p>
     Kind Regards<br/>
     /Kristian

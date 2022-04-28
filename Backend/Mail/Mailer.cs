@@ -17,10 +17,10 @@ namespace Backend.Mail
             const string to = "kristian.ekman.swe@gmail.com";
             const string subj = "Testar SMTP client.";
             const string body = @"<div><img src='https://backgammon.azurewebsites.net/assets/images/facebook.png'></div><p>Test Tjurgränd 47.</p><a href='https://backgammon.azurewebsites.com'>Testar en html länk.<a/>";
-            _ = Send(to, subj, body, "");
+            _ = Send(to, subj, body, "", "");
         }
 
-        internal static async Task Send(string to, string subject, string text, string pw = "")
+        internal static async Task Send(string to, string subject, string text, string un = "", string pw = "")
         {
             // I trust my own self signed certificate on my smtp server.
             ServicePointManager.ServerCertificateValidationCallback =
@@ -41,7 +41,7 @@ namespace Backend.Mail
                 {
                     IsBodyHtml = true,                    
                 };
-                client.Credentials = new NetworkCredential("backgammon", pw);
+                client.Credentials = new NetworkCredential(un, pw);
                 client.EnableSsl = true;
 
                 client.Send(message);
