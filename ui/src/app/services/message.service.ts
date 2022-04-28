@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { finalize, map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { MessageType } from '../dto';
+import { MassMailDto } from '../dto/message';
 import { MessageDto } from '../dto/message/messageDto';
 import { AppState } from '../state/app-state';
 import { Busy } from '../state/busy';
@@ -43,10 +43,10 @@ export class MessageService {
     this.http.put(this.url + '/addallsharepromptmessages', {}).subscribe();
   }
 
-  sendMessages(type: MessageType): void {
+  sendMessages(dto: MassMailDto): void {
     Busy.show();
     this.http
-      .post(this.url + '/sendToAll?type=' + type, {})
+      .post(this.url + '/sendToAll', dto)
       .pipe(take(1))
       .subscribe(() => {
         Busy.hide();

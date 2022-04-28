@@ -1,5 +1,11 @@
 <div class="mailing">
-  <button class="default-button" (click)="sendInfo()">
-    Send new version info to all users
-  </button>
+  <form [formGroup]="form" (ngSubmit)="send()">
+    <label>
+      <span>User</span><input type="text" formControlName="user" />
+    </label>
+    <label>
+      <span>Password</span><input type="password" formControlName="pass" />
+    </label>
+    <button class="default-button">Send new version info to all users</button>
+  </form>
 </div>

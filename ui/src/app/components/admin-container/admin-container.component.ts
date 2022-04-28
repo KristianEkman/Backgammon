@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { addDays, format } from 'date-fns';
 import { Observable } from 'rxjs';
 import { MessageType, PlayedGameListDto, SummaryDto } from 'src/app/dto';
+import { MassMailDto } from 'src/app/dto/message';
 import { MessageService } from 'src/app/services';
 import { AdminService } from 'src/app/services/admin.service';
 import { AppState } from 'src/app/state/app-state';
@@ -41,7 +42,7 @@ export class AdminContainerComponent implements OnInit {
     this.messageService.addallsharepromptmessages();
   }
 
-  sendMessages(type: MessageType): void {
+  sendMessages(type: MassMailDto): void {
     this.messageService.sendMessages(type);
   }
 

@@ -166,7 +166,7 @@ namespace Backend
     {
         public void OnActionExecuting(ActionExecutingContext context)
         {
-            AssertOrigin(context.HttpContext.Request);
+            //AssertOrigin(context.HttpContext.Request);
         }
 
         public void OnActionExecuted(ActionExecutedContext context)
