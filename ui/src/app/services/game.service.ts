@@ -33,7 +33,7 @@ import { Router, UrlSerializer } from '@angular/router';
 @Injectable({
   providedIn: 'root'
 })
-export class SocketsService implements OnDestroy {
+export class GameService implements OnDestroy {
   socket: WebSocket | undefined;
   url = '';
   userMoves: MoveDto[] = [];

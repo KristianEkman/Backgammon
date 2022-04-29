@@ -11,7 +11,7 @@ import {
   FacebookLoginProvider
 } from 'angularx-social-login';
 
-import { SocketsService } from 'src/app/services/sockets.service';
+import { GameService } from 'src/app/services/game.service';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -140,7 +140,7 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     })
   ],
   providers: [
-    SocketsService,
+    GameService,
     AccountService,
     {
       provide: 'SocialAuthServiceConfig',

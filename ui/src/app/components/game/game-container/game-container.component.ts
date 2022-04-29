@@ -17,7 +17,7 @@ import {
   PlayerColor,
   UserDto
 } from 'src/app/dto';
-import { AccountService, SocketsService } from 'src/app/services';
+import { AccountService, GameService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { StatusMessage } from 'src/app/dto/local/status-message';
 import { Busy } from 'src/app/state/busy';
@@ -33,7 +33,7 @@ import { TutorialService } from 'src/app/services/tutorial.service';
 })
 export class GameContainerComponent implements OnDestroy, AfterViewInit {
   constructor(
-    private service: SocketsService,
+    private service: GameService,
     private accountService: AccountService,
     private tutorialService: TutorialService,
     private router: Router,
