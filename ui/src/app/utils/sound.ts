@@ -119,7 +119,7 @@ export class Sound {
   }
 
   static playPianoIntro(): void {
-    this.Singleton.pianointro.volume = 1;
+    this.Singleton.pianointro.volume = 0.5;
     this.Singleton.pianointro.play();
   }
 
