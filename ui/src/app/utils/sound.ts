@@ -123,20 +123,25 @@ export class Sound {
     this.Singleton.pianointro.play();
   }
 
-  static fadeBlues(): void {
-    const startVol = this.Singleton.blues.volume;
+  static fadeSound(sound: HTMLAudioElement): void {
+    const startVol = sound.volume;
     if (startVol === 0) return;
     const interval = 50; //ms
     const fadeLength = 1000;
     const fadeStep = startVol / (fadeLength / interval);
     const handle = setInterval(() => {
-      let v = this.Singleton.blues.volume;
-      v -= fadeStep;
-      if (v < 0) {
-        v = 0;
+      let b = sound.volume;
+      b -= fadeStep;
+      if (b < 0) {
+        b = 0;
         clearInterval(handle);
       }
-      this.Singleton.blues.volume = v;
+      sound.volume = b;
     }, interval);
+  }
+
+  static fadeIntro() {
+    Sound.fadeSound(Sound.Singleton.blues);
+    Sound.fadeSound(Sound.Singleton.pianointro);
   }
 }

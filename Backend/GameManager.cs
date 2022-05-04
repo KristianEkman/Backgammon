@@ -361,7 +361,10 @@ namespace Backend
                         });
                     }
                     else
+                    {
+                        await Task.Delay(2000);
                         await Resign((PlayerColor)Game.OtherPlayer());
+                    }
                 else
                     _ = Send(otherSocket, action);
             }
@@ -458,7 +461,7 @@ namespace Backend
         private async Task EnginMoves(WebSocket client)
         {
             var rnd = new Random();
-            await Task.Delay(rnd.Next(800, 1500));
+            await Task.Delay(rnd.Next(700, 1200));
             await Send(client, new ActionDto { actionName = ActionNames.rolled });
             var moves = Engine.GetBestMoves();
             var noMoves = true;
@@ -467,7 +470,7 @@ namespace Backend
                 var move = moves[i];
                 if (move == null)
                     continue;
-                await Task.Delay(rnd.Next(800, 1500));
+                await Task.Delay(rnd.Next(700, 1200));
                 var moveDto = move.ToDto();
                 moveDto.animate = true;
                 var dto = new OpponentMoveActionDto
@@ -484,7 +487,7 @@ namespace Backend
                 await Send(client, dto);
             }
             if (noMoves)
-                await Task.Delay(4000); // if turn is switch right away, ui will not have time to display dice.
+                await Task.Delay(2500); // if turn is switch right away, ui will not have time to display dice.
             await NewTurn(client);
         }
 

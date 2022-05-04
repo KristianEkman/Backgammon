@@ -260,6 +260,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     AppState.Singleton.moveTimer.clearValue();
     this.started = false;
     this.service.exitGame();
+    Sound.fadeIntro();
   }
 
   moveAnimFinished(): void {
