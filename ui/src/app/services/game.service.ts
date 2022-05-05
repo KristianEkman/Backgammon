@@ -95,7 +95,7 @@ export class GameService implements OnDestroy {
     console.log('Close', { event });
     const cnn = AppState.Singleton.myConnection.getValue();
     AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
-    this.statusMessageService.setMyConnectionLost(event.reason);
+    // this.statusMessageService.setMyConnectionLost(event.reason);
   }
 
   // Messages received from server.
