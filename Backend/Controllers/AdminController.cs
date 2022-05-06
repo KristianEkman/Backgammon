@@ -15,17 +15,10 @@ namespace Backend.Controllers
     {
         [Route("api/admin/allgames")]
         [HttpGet]
-        public PlayedGameListDto AllGames(string afterDate)
+        public PlayedGameListDto AllGames(int skip)
         {
             AssertAdmin();
-            DateTime date;
-            if (!DateTime.TryParse(afterDate, out date))
-                date = DateTime.Parse("2300-01-01");
-
-            // A trick to prevent loading same game twice.
-            // Will only fail if two games are started the same millisecond which seems impossible.
-            date = date.AddMilliseconds(-1);
-
+            
             using (var db = new Db.BgDbContext())
             {
                 var playedGames = db.Games.Select(g => new
@@ -40,9 +33,9 @@ namespace Backend.Controllers
                     black = pl.black.First().User.Name,
                     white = pl.white.First().User.Name,
                     winner = (PlayerColor)pl.winner
-                })
-                .Where(x => x.started < date)
+                })                
                 .OrderByDescending(x => x.started)
+                .Skip(skip)
                 .Take(30);
 
                 var games = playedGames.ToArray();

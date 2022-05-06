@@ -17,10 +17,12 @@ export class AdminService {
     this.url = `${environment.apiServiceUrl}/admin`;
   }
 
-  loadPlayedGames(afterDate: string): void {
+  loadPlayedGames(): void {
     Busy.showNoOverlay();
+    const games = AppState.Singleton.playedGames.getValue();
+    const skip = games?.games?.length ?? 0;
     this.httpClient
-      .get(`${this.url}/allgames?afterDate=${afterDate}`)
+      .get(`${this.url}/allgames?skip=${skip}`)
       .pipe(
         map((data) => data as PlayedGameListDto),
         finalize(() => {

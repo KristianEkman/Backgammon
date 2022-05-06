@@ -33,8 +33,8 @@ export class AdminContainerComponent implements OnInit {
   summary$: Observable<SummaryDto>;
   formGroup: FormGroup;
 
-  onLoadAfter(date: string): void {
-    this.adminSerivce.loadPlayedGames(date);
+  loadMore(): void {
+    this.adminSerivce.loadPlayedGames();
   }
   ngOnInit(): void {}
 
@@ -51,7 +51,11 @@ export class AdminContainerComponent implements OnInit {
   }
 
   loadGames(): void {
-    const tomorrow = addDays(new Date(), 1);
-    this.adminSerivce.loadPlayedGames(format(tomorrow, 'yyyy-MM-dd'));
+    this.adminSerivce.loadPlayedGames();
+  }
+
+  reload() {
+    AppState.Singleton.playedGames.setValue({ games: [] });
+    this.adminSerivce.loadPlayedGames();
   }
 }

@@ -30,7 +30,8 @@
     <div *ngIf="view === 'games'" class="admin-container">
       <app-played-games
         [list]="playedGames$ | async"
-        (loadAfter)="onLoadAfter($event)"
+        (loadMore)="loadMore()"
+        (reload)="reload()"
       ></app-played-games>
     </div>
     <div *ngIf="view === 'mailing'">

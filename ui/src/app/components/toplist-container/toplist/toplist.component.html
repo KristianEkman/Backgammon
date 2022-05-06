@@ -3,7 +3,7 @@
     <div class="flip-card-front app-colors">
       <div class="caption">
         <span>{{ 'toplist.thisweek' | translate }}</span>
-        <app-button (click)="flipped = true">
+        <app-button (click)="flipped = true" [small]="true">
           {{ 'toplist.alltime' | translate }}
           <i class="fas fa-chevron-right"></i>
         </app-button>
@@ -31,7 +31,7 @@
     <div class="flip-card-back app-colors">
       <div class="caption">
         <span>{{ 'toplist.alltime' | translate }}</span>
-        <app-button (click)="flipped = false">
+        <app-button (click)="flipped = false" [small]="true">
           <i class="fas fa-chevron-left"></i>
           {{ 'toplist.thisweek' | translate }}
         </app-button>

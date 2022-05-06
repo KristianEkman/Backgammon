@@ -10,6 +10,7 @@ import { AppState } from 'src/app/state/app-state';
 export class ButtonComponent implements OnInit {
   @Input() default = false;
   @Input() type = 'button';
+  @Input() small = false;
   constructor(private cd: ChangeDetectorRef) {
     this.theme = AppState.Singleton.theme.observe();
   }

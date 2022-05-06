@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { format, formatISO, parseISO } from 'date-fns';
 import { PlayedGameListDto, PlayerColor } from 'src/app/dto';
+import { AdminService } from 'src/app/services/admin.service';
 
 @Component({
   selector: 'app-played-games',
@@ -9,7 +10,8 @@ import { PlayedGameListDto, PlayerColor } from 'src/app/dto';
 })
 export class PlayedGamesComponent implements OnInit {
   @Input() list: PlayedGameListDto | null = null;
-  @Output() loadAfter = new EventEmitter<string>();
+  @Output() loadMore = new EventEmitter<void>();
+  @Output() reload = new EventEmitter<void>();
 
   constructor() {}
 
@@ -36,16 +38,11 @@ export class PlayedGamesComponent implements OnInit {
   onScroll(event: Event): void {
     const div = event.target as HTMLDivElement;
     if (div.scrollTop + div.clientHeight + 1 >= div.scrollHeight) {
-      const lastDate = this.list?.games[this.list?.games.length - 1].started;
-
-      if (!lastDate) {
-        return;
-      }
-
-      const parsed = parseISO(lastDate.toString());
-      const s = format(parsed, 'yyyy-MM-dd HH:mm:ss.SSS');
-
-      this.loadAfter.emit(s);
+      this.loadMore.emit();
     }
+  }
+
+  refresh() {
+    this.reload.emit();
   }
 }

@@ -1,4 +1,8 @@
-<h2>Played Games</h2>
+<div class="heading">
+  <h2>Played Games</h2>
+  <app-button (click)="refresh()" [small]="true">Refresh</app-button>
+</div>
+
 <table>
   <thead>
     <tr>
@@ -11,10 +15,9 @@
 </table>
 <div class="table-container" (scroll)="onScroll($event)">
   <table *ngIf="list != null">
-
     <tbody>
       <tr *ngFor="let game of list.games">
-        <td class="col1">{{ formatDate(game.started)}}</td>
+        <td class="col1">{{ formatDate(game.started) }}</td>
         <td class="col2">{{ game.black }}</td>
         <td class="col3">{{ game.white }}</td>
         <td class="col4">{{ getColor(game.winner) }}</td>

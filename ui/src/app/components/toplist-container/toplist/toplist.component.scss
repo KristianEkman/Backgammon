@@ -23,15 +23,6 @@ td {
   font-size: 24px;
   text-align: left;
   padding-bottom: 8px;
-
-  ::ng-deep {
-    button {
-      font-size: 16px;
-      right: 0;
-      padding: 6px 12px;
-      height: auto;
-    }
-  }
 }
 
 .flip-card {
@@ -61,7 +52,6 @@ td {
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   padding: 5px;
-
 }
 
 .flip-card-back {

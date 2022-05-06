@@ -6,21 +6,16 @@ $shadow-inset: inset 0 0 10px 0 #9991;
 $shadow-inset-hover: inset 0 0 10px 3px #ccc7;
 $shadow-inset-active: inset 0 0 5px 3px #7777;
 
-$button-shadow-base: $highlight-bottom,
-$shadow-bottom,
-$shadow-top,
-$highlight-top;
+$button-shadow-base: $highlight-bottom, $shadow-bottom, $shadow-top,
+  $highlight-top;
 
-$button-shadow-default: $button-shadow-base,
-$shadow-inset;
+$button-shadow-default: $button-shadow-base, $shadow-inset;
 
-$button-shadow-hover: $button-shadow-base,
-$shadow-inset-hover;
+$button-shadow-hover: $button-shadow-base, $shadow-inset-hover;
 
 $button-shadow-focus: inset 0 0 5px 5px rgba(0, 255, 0, 0.2);
 
-$button-shadow-active: $button-shadow-base,
-$shadow-inset-active;
+$button-shadow-active: $button-shadow-base, $shadow-inset-active;
 
 *,
 *:before,
@@ -29,7 +24,7 @@ $shadow-inset-active;
 }
 
 button,
-[role="button"] {
+[role='button'] {
   background-color: transparent;
   -webkit-appearance: none;
   user-select: none;
@@ -42,10 +37,10 @@ button,
   padding-right: 15px;
   height: 44px;
   border-radius: 22px;
-  transition: all .2s ease;
+  transition: all 0.2s ease;
   font-size: 20px;
 
-  background-image: linear-gradient(to top, #ddd2 0%, #fff2 50%, #Fff6 100%);
+  background-image: linear-gradient(to top, #ddd2 0%, #fff2 50%, #fff6 100%);
   border: 1px solid #0005;
   box-shadow: $button-shadow-default;
   //   color: #0009;
@@ -55,14 +50,14 @@ button,
     border: 0;
   }
 
-  &>* {
-    transition: transform .2s ease;
+  & > * {
+    transition: transform 0.2s ease;
   }
 
   &:hover:not([disabled]) {
     box-shadow: none;
 
-    &>* {
+    & > * {
       transform: scale(1.05);
     }
   }
@@ -75,8 +70,8 @@ button,
   &:active:not([disabled]) {
     box-shadow: $button-shadow-default;
 
-    &>* {
-      transform: scale(.95);
+    & > * {
+      transform: scale(0.95);
     }
   }
 
@@ -88,15 +83,27 @@ button,
   &.icon {
     width: 50px;
   }
+
+  &.small {
+    font-size: 16px;
+    right: 0;
+    padding: 6px 12px;
+    height: auto;
+  }
 }
 
 button.dark {
-  background-image: linear-gradient(to bottom, #151515 0%, #131313 50%, #111 100%);
+  background-image: linear-gradient(
+    to bottom,
+    #151515 0%,
+    #131313 50%,
+    #111 100%
+  );
   box-shadow: -5px -5px 5px #111111, 5px 5px 5px #1b1b1b;
 
   span {
     text-shadow: -1px -1px #333;
-    color: #ccc
+    color: #ccc;
   }
 
   &:active:not([disabled]) {
@@ -104,8 +111,8 @@ button.dark {
     background-color: #2225;
     background-image: none;
 
-    &>* {
-      transform: scale(.95);
+    & > * {
+      transform: scale(0.95);
     }
   }
 }
@@ -121,6 +128,5 @@ button.default.dark {
   span {
     text-shadow: none;
     color: rgb(86, 175, 86);
-
   }
 }

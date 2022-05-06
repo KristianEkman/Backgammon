@@ -1,3 +1,9 @@
-<button [ngClass]="{ dark: (theme | async) === 'dark', default: default }">
+<button
+  [ngClass]="{
+    dark: (theme | async) === 'dark',
+    default: default,
+    small: small
+  }"
+>
   <span><ng-content></ng-content></span>
 </button>
