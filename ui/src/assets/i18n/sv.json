@@ -27,12 +27,13 @@
     "cancel": "Avbryt",
     "save": "Spara",
     "delete": "Ta bort",
-    "allyourgames": "Alla din matcher och sparad data tas bort. Det går inte att ångra.",
+    "allyourgames": "Alla dina matcher och sparad data tas bort. Det går inte att ångra.",
     "sure": "Är du säker?",
     "yesdelete": "Ja tabort det",
     "theme": "Tema",
     "showPhoto": "Visa",
-    "loginname": "Inloggningsnamn"
+    "loginname": "Inloggningsnamn",
+    "issupported": "stöds"
   },
   "theme": {
     "dark": "Mörkt",

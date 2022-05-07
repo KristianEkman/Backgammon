@@ -27,12 +27,13 @@
     "cancel": "Cancelar",
     "save": "Ahorrar",
     "delete": "Borrar",
-    "allyourgames": "Todos los juegos y los datos guardados también se eliminarán.No puedes deshacer esto.",
+    "allyourgames": "Todos sus juegos y datos guardados también serán eliminados.No puedes deshacer esto.",
     "sure": "¿Está seguro?",
     "yesdelete": "Si eliminarlo",
     "theme": "Tema",
     "showPhoto": "show",
-    "loginname": "Nombre de inicio de sesión"
+    "loginname": "Nombre de inicio de sesión",
+    "issupported": "es apoyado"
   },
   "theme": {
     "dark": "Oscura",

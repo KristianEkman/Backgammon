@@ -27,12 +27,13 @@
     "cancel": "Cancel",
     "save": "Save",
     "delete": "Delete",
-    "allyourgames": "All you games and saved data will also be deleted. You can not undo this.",
+    "allyourgames": "All your games and saved data will also be deleted. You can not undo this.",
     "sure": "Are you sure?",
     "yesdelete": "Yes delete it",
     "theme": "Theme",
     "showPhoto": "Show",
-    "loginname": "Login name"
+    "loginname": "Login name",
+    "issupported": "is supported"
   },
   "theme": {
     "dark": "Dark",

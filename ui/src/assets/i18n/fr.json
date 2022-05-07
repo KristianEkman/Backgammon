@@ -27,12 +27,13 @@
     "cancel": "Annuler",
     "save": "Sauvegarder",
     "delete": "Supprimer",
-    "allyourgames": "Toutes vos jeux et données sauvegardées seront également supprimées.Vous ne pouvez pas annuler cela.",
+    "allyourgames": "Tous vos jeux et données enregistrées seront également supprimés.Vous ne pouvez pas défaire cela.",
     "sure": "Êtes-vous sûr?",
     "yesdelete": "Oui supprimez-le",
     "theme": "Thème",
     "showPhoto": "spectacle",
-    "loginname": "Identifiant"
+    "loginname": "Identifiant",
+    "issupported": "est pris en charge"
   },
   "theme": {
     "dark": "Sombre",

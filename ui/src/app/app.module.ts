@@ -69,6 +69,7 @@ import { UpdateButtonComponent } from './components/shared/update-button/update-
 import { FeedbackContainerComponent } from './components/feedback-container/feedback-container.component';
 import { FeedbackComponent } from './components/feedback-container/feedback/feedback.component';
 import { FeedbackListComponent } from './components/feedback-container/feedback-list/feedback-list.component';
+import { LanguageHintComponent } from './components/account/account-edit-container/language-hint/language-hint.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -118,7 +119,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     UpdateButtonComponent,
     FeedbackContainerComponent,
     FeedbackComponent,
-    FeedbackListComponent
+    FeedbackListComponent,
+    LanguageHintComponent
   ],
   imports: [
     BrowserModule,

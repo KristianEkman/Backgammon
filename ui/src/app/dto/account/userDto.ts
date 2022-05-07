@@ -18,4 +18,5 @@ export interface UserDto {
   elo: number;
   passHash: number;
   localLoginName: string;
+  acceptedLanguages: string[];
 }

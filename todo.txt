@@ -1,7 +1,9 @@
 
 Mer musik
 
+Send e-mail, rename.
 
+Fixa av avaktivera e-post-funktion.
 
 Varför rensas inte gamla games?
 

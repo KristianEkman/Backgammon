@@ -54,6 +54,11 @@
                   {{ lang.name }}
                 </option>
               </select>
+              <app-language-hint
+                class="ml"
+                [acceptedLangs]="acceptedLangs$ | async"
+                [selectedLang]="formGroup.get('preferredLanguage')?.value"
+              ></app-language-hint>
             </label>
           </div>
 

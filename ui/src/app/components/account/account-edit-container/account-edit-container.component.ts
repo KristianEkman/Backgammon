@@ -8,6 +8,7 @@ import { AppState } from 'src/app/state/app-state';
 import { Busy } from 'src/app/state/busy';
 import { Theme } from '../theme/theme';
 import { Language } from '../../../utils';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-account-edit-container',
@@ -39,10 +40,6 @@ export class AccountEditContainerComponent {
       this.translateService.use(lang ?? 'en');
     });
 
-    if (this.user.createdNew) {
-      this.suggestLanguage();
-    }
-
     AppState.Singleton.user.observe().subscribe((userDto) => {
       this.user = userDto;
       this.changeDetector.detectChanges();
@@ -62,6 +59,9 @@ export class AccountEditContainerComponent {
   user: UserDto | null = null;
   confirm = false;
   Language = Language;
+  acceptedLangs$ = AppState.Singleton.user
+    .observe()
+    .pipe(map((u) => u.acceptedLanguages));
 
   submit(): void {
     if (this.formGroup.valid) {
@@ -91,6 +91,4 @@ export class AccountEditContainerComponent {
   nameMissing(): boolean {
     return this.formGroup.get('name')?.errors?.required;
   }
-
-  suggestLanguage(): void {}
 }

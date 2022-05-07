@@ -6,6 +6,7 @@ using Backend.Dto.rest;
 using Google.Apis.Auth;
 using Google.Apis.Util;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -112,10 +113,10 @@ namespace Backend.Controllers
             {
                 var user = db.Users.SingleOrDefault((u) => u.Id == userId);
                 var dto = user.ToDto();
-                dto.acceptedLanguages = Request.Headers["Accept-Language"];
+                dto.acceptedLanguages = Request.ParseLanguages();
                 return dto;
             }
-        }
+        }        
 
         private UserDto GetOrCreateUserLogin(UserDto userDto)
         {
@@ -130,7 +131,7 @@ namespace Backend.Controllers
                 if (dbUser != null)
                 {
                     var dto = dbUser.ToDto();
-                    dto.acceptedLanguages = Request.Headers["Accept-Language"];
+                    dto.acceptedLanguages = Request.ParseLanguages();
                     return dto;
                 }
                 else
@@ -172,8 +173,8 @@ namespace Backend.Controllers
                     // The id will not be set until the save is successfull.
                     userDto.id = dbUser.Id.ToString();
                     var dto = dbUser.ToDto();
-                    dto.createdNew = true;    
-                    dto.acceptedLanguages = Request.Headers["Accept-Language"];
+                    dto.createdNew = true;
+                    dto.acceptedLanguages = Request.ParseLanguages();
                     return dto;
                 }
             }
@@ -282,6 +283,25 @@ namespace Backend.Controllers
             }
 
             return isValid;
+        }
+    }
+
+    public static class AccountControllerExtensions {
+        public static string[] ParseLanguages(this HttpRequest request)
+        {
+            var text = (string)request.Headers["Accept-Language"];
+            return ParseLanguages(text);            
+        }
+
+        public static string[] ParseLanguages(string text)
+        {
+            if (text == null) return Array.Empty<string>();
+            var stop = text.IndexOf(";");
+            var length = stop == -1 ? text.Length : stop;
+            var languages = text.Substring(0, length);
+            var split = languages.Split(',');
+
+            return split.Select(l => l.Split("-")[0]).Distinct().ToArray();
         }
     }
 }
