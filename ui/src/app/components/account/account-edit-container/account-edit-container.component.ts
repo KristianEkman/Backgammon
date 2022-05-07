@@ -39,6 +39,10 @@ export class AccountEditContainerComponent {
       this.translateService.use(lang ?? 'en');
     });
 
+    if (this.user.createdNew) {
+      this.suggestLanguage();
+    }
+
     AppState.Singleton.user.observe().subscribe((userDto) => {
       this.user = userDto;
       this.changeDetector.detectChanges();
@@ -87,4 +91,6 @@ export class AccountEditContainerComponent {
   nameMissing(): boolean {
     return this.formGroup.get('name')?.errors?.required;
   }
+
+  suggestLanguage(): void {}
 }

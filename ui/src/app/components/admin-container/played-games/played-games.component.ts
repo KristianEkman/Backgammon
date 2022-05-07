@@ -19,11 +19,13 @@ export class PlayedGamesComponent implements OnInit {
 
   PlayerColor = PlayerColor;
 
-  formatDate(sDate: any): string {
-    if (!sDate) {
+  formatDate(utcDate: any): string {
+    if (!utcDate) {
       return '';
     }
-    const date = new Date(Date.parse(sDate));
+
+    // trick to convert to browsers local time.
+    const date = new Date(utcDate.toString() + 'Z');
 
     return format(date, 'yyyy-MM-dd HH:mm:ss');
   }

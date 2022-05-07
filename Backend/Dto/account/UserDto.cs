@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,6 @@ namespace Backend.Dto.account
         public int elo { get; set; }
         public int passHash { get; set; }
         public string localLoginName { get; set; }
-
-}
+        public string acceptedLanguages { get; internal set; }
+    }
 }

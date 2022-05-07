@@ -111,7 +111,9 @@ namespace Backend.Controllers
             using (var db = new BgDbContext())
             {
                 var user = db.Users.SingleOrDefault((u) => u.Id == userId);
-                return user.ToDto();
+                var dto = user.ToDto();
+                dto.acceptedLanguages = Request.Headers["Accept-Language"];
+                return dto;
             }
         }
 
@@ -127,7 +129,9 @@ namespace Backend.Controllers
                 // todo: is this safe or should email be checked instead or also?
                 if (dbUser != null)
                 {
-                    return dbUser.ToDto();
+                    var dto = dbUser.ToDto();
+                    dto.acceptedLanguages = Request.Headers["Accept-Language"];
+                    return dto;
                 }
                 else
                 {
@@ -167,9 +171,10 @@ namespace Backend.Controllers
                     db.SaveChanges();
                     // The id will not be set until the save is successfull.
                     userDto.id = dbUser.Id.ToString();
-                    var created = dbUser.ToDto();
-                    created.createdNew = true;
-                    return created;
+                    var dto = dbUser.ToDto();
+                    dto.createdNew = true;    
+                    dto.acceptedLanguages = Request.Headers["Accept-Language"];
+                    return dto;
                 }
             }
         }

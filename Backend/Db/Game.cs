@@ -9,7 +9,7 @@ namespace Backend.Db
     public class Game
     {
         public Guid Id { get; set; }
-        public DateTime Started { get; set; }
+        public DateTime UtcStarted { get; set; }
 
         public ICollection<Player> Players { get; set; } = new List<Player>();
         public PlayerColor? Winner { get; set; }

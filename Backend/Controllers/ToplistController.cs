@@ -74,7 +74,7 @@ namespace Backend.Controllers
                 var top10 = db.Users
                     .OrderByDescending(u => u.Elo)
                     .Where(u => u.Id != Guid.Empty && u.Name != "deleted") // filter guest and deleted
-                    .Where(u => u.Players.Any(p => p.Game.Started > weekAgo))
+                    .Where(u => u.Players.Any(p => p.Game.UtcStarted > weekAgo))
                     .Take(10)
                     .Select(user => new
                     {

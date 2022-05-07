@@ -212,7 +212,7 @@ namespace Backend
                 var game = new Db.Game
                 {
                     Id = Game.Id,
-                    Started = DateTime.Now,
+                    UtcStarted = DateTime.UtcNow,
                 };
 
                 black.Game = game;
