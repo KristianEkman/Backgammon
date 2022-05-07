@@ -56,7 +56,7 @@
               </select>
               <app-language-hint
                 class="ml"
-                [acceptedLangs]="acceptedLangs$ | async"
+                [acceptedLangs]="acceptedLangs"
                 [selectedLang]="formGroup.get('preferredLanguage')?.value"
               ></app-language-hint>
             </label>

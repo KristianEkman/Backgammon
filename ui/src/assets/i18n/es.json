@@ -22,7 +22,7 @@
     "name": "Nombre",
     "requiredname": "El nombre es obligatorio",
     "email": "Correo electrónico",
-    "emailNotification": "Enviar correos electrónicos",
+    "emailNotification": "Envíame correos electrónicos",
     "language": "Idioma",
     "cancel": "Cancelar",
     "save": "Ahorrar",

@@ -1,5 +1,7 @@
-<span *ngIf="show"
-  ><i class="fa fa-arrow-left"></i>
-  {{ languageName }}
-  {{ 'accountedit.issupported' | translate }}</span
->
+<div *ngIf="show">
+  <i class="fa fa-arrow-left"></i>
+  <span>
+    {{ languageName }}<br />
+    {{ 'accountedit.issupported' | translate }}
+  </span>
+</div>

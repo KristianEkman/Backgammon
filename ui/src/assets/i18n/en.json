@@ -21,7 +21,7 @@
     "editaccount": "Edit Account",
     "name": "Name",
     "email": "E-mail",
-    "emailNotification": "Send e-mails",
+    "emailNotification": "Send e-mails to me",
     "language": "Language",
     "requiredname": "Name is mandatory",
     "cancel": "Cancel",

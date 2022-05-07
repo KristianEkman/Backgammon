@@ -59,9 +59,7 @@ export class AccountEditContainerComponent {
   user: UserDto | null = null;
   confirm = false;
   Language = Language;
-  acceptedLangs$ = AppState.Singleton.user
-    .observe()
-    .pipe(map((u) => u.acceptedLanguages));
+  acceptedLangs = AppState.Singleton.user.getValue().acceptedLanguages;
 
   submit(): void {
     if (this.formGroup.valid) {
