@@ -37,12 +37,6 @@ namespace Backend.Controllers
         [Route("/api/account/signin")]
         public async Task<UserDto> SigninSocial(UserDto userDto)
         {
-            // todo: 
-            //var settings = new GoogleJsonWebSignature.ValidationSettings
-            //{
-            //	HostedDomain = "http://localhost:4200"				
-            //};
-
             bool valid = false;
             try
             {
@@ -113,10 +107,22 @@ namespace Backend.Controllers
             {
                 var user = db.Users.SingleOrDefault((u) => u.Id == userId);
                 var dto = user.ToDto();
-                dto.acceptedLanguages = Request.ParseLanguages();
+                SetAccetptLanguages(dto);
                 return dto;
             }
-        }        
+        }
+
+        private void SetAccetptLanguages(UserDto dto)
+        {
+            try
+            {
+                dto.acceptedLanguages = Request.ParseLanguages();
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e.Message);                
+            }
+        }
 
         private UserDto GetOrCreateUserLogin(UserDto userDto)
         {
@@ -131,7 +137,7 @@ namespace Backend.Controllers
                 if (dbUser != null)
                 {
                     var dto = dbUser.ToDto();
-                    dto.acceptedLanguages = Request.ParseLanguages();
+                    SetAccetptLanguages(dto);
                     return dto;
                 }
                 else
@@ -174,7 +180,7 @@ namespace Backend.Controllers
                     userDto.id = dbUser.Id.ToString();
                     var dto = dbUser.ToDto();
                     dto.createdNew = true;
-                    dto.acceptedLanguages = Request.ParseLanguages();
+                    SetAccetptLanguages(dto);
                     return dto;
                 }
             }
