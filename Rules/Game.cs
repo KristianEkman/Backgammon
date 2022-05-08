@@ -570,5 +570,9 @@ namespace Backend.Rules
             return lastBlack > lastWhite;
         }
 
+        public bool ReallyStarted()
+        {
+            return BlackPlayer.FirstMoveMade && WhitePlayer.FirstMoveMade;
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Backend.Db
 {
     public class User
     {
-        public const string AiUser = "ECC9A1FC-3E5C-45E6-BCE3-7C24DFE82C98";
+        
         public Guid Id { get; set; }
         public string ProviderId { get; set; }
         public string Name { get; set; }

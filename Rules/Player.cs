@@ -8,6 +8,7 @@ namespace Backend.Rules
 {
     public class Player
     {
+        public const string AiUser = "ECC9A1FC-3E5C-45E6-BCE3-7C24DFE82C98";
         public string Name { get; set; }
         public Color PlayerColor { get; set; }
         public int PointsLeft { get; set; }
@@ -37,6 +38,11 @@ namespace Backend.Rules
         public bool IsGuest()
         {
             return Id == Guid.Empty;
+        }
+
+        public bool IsAi()
+        {
+            return Id.ToString().Equals(Player.AiUser, StringComparison.OrdinalIgnoreCase);
         }
 
         internal Player Clone()

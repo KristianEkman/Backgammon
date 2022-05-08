@@ -13,7 +13,7 @@ namespace Backend.Migrations
                 type: "datetime2",
                 nullable: true);
 
-            var insertGuest = $"INSERT INTO [dbo].[Users] ([Id],[Name],[Email],[PhotoUrl],[ProviderId],[SocialProvider],[Elo],[GameCount]) VALUES('{Db.User.AiUser}', 'Aina', '', '', '', '', 1200, 0)";
+            var insertGuest = $"INSERT INTO [dbo].[Users] ([Id],[Name],[Email],[PhotoUrl],[ProviderId],[SocialProvider],[Elo],[GameCount]) VALUES('{Backend.Rules.Player.AiUser}', 'Aina', '', '', '', '', 1200, 0)";
             migrationBuilder.Sql(insertGuest);
         }
 

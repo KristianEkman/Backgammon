@@ -110,20 +110,20 @@ namespace Backend
                 validMoves = Game.ValidMoves.Select(m => m.ToDto()).ToArray(),
                 moveTimer = Game.ClientCountDown
             };
-            if (!IsAi(Game.BlackPlayer))
+            if (!Game.BlackPlayer.IsAi())
                 _ = Send(Client1, rollAction);
-            if (!IsAi(Game.WhitePlayer))
+            if (!Game.WhitePlayer.IsAi())
                 _ = Send(Client2, rollAction);
         }
 
         private bool IsAi(Player player)
         {
-            return player.Id.ToString().Equals(Db.User.AiUser, StringComparison.OrdinalIgnoreCase);
+            return player.Id.ToString().Equals(Player.AiUser, StringComparison.OrdinalIgnoreCase);
         }
 
         private bool IsAi(Guid id)
         {
-            return id.ToString().Equals(Db.User.AiUser, StringComparison.OrdinalIgnoreCase);
+            return id.ToString().Equals(Player.AiUser, StringComparison.OrdinalIgnoreCase);
         }
 
         internal async Task ConnectAndListen(WebSocket webSocket, Player.Color color, Db.User dbUser, bool playAi)
@@ -143,7 +143,7 @@ namespace Backend
 
                 if (playAi)
                 {
-                    var aiUser = Db.BgDbContext.GetDbUser(Db.User.AiUser);
+                    var aiUser = Db.BgDbContext.GetDbUser(Player.AiUser);
                     Game.WhitePlayer.Id = aiUser.Id;
                     Game.WhitePlayer.Name = aiUser.Name;
                     // TODO: AI image
@@ -455,7 +455,7 @@ namespace Backend
         private bool AisTurn()
         {
             var plyr = Game.CurrentPlayer == Player.Color.Black ? Game.BlackPlayer : Game.WhitePlayer;
-            return IsAi(plyr);
+            return plyr.IsAi();
         }
 
         private async Task EnginMoves(WebSocket client)
@@ -494,27 +494,16 @@ namespace Backend
         public object StakeLock = new object();
         private (NewScoreDto black, NewScoreDto white)? SaveWinner(PlayerColor color)
         {
-            if (Game.BlackPlayer.IsGuest() || Game.WhitePlayer.IsGuest())
-                return null;
-
-            if (!Game.BlackPlayer.FirstMoveMade || !Game.WhitePlayer.FirstMoveMade)
+            if (!Game.ReallyStarted())
             {
-                using (var db = new Db.BgDbContext())
-                {
-                    var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
-                    var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
-                    if (!IsAi(black.Id))
-                        black.Gold += Game.Stake / 2;
-                    if (!IsAi(white.Id))
-                        white.Gold += Game.Stake / 2;
-                    db.SaveChanges();
-                }
-                return null; // todo: return stakes
+                ReturnStakes();
+                return null;
             }
 
             using (var db = new Db.BgDbContext())
             {
                 var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
+
                 if (dbGame.Winner.HasValue) // extra safety
                     return (null, null);
 
@@ -525,7 +514,8 @@ namespace Backend
                 var whiteInc = 0;
 
                 black.GameCount++;
-                white.GameCount++;                
+                white.GameCount++;     
+                dbGame.Winner = color;
 
                 if (Game.IsGoldGame)
                 {
@@ -560,13 +550,27 @@ namespace Backend
                     }
                 }
 
-                dbGame.Winner = color;
                 db.SaveChanges();
 
-                return (
-                    new NewScoreDto { score = black.Elo, increase = blackInc },
-                    new NewScoreDto { score = white.Elo, increase = whiteInc });
+                if (Game.IsGoldGame)
+                    return (
+                        new NewScoreDto { score = black.Elo, increase = blackInc },
+                        new NewScoreDto { score = white.Elo, increase = whiteInc });
+                else
+                    return (null, null);
             }
+        }
+
+        private void ReturnStakes()
+        {
+            using var db = new Db.BgDbContext();
+            var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
+            var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
+            if (!IsAi(black.Id))
+                black.Gold += Game.Stake / 2;
+            if (!IsAi(white.Id))
+                white.Gold += Game.Stake / 2;
+            db.SaveChanges();
         }
 
         private async Task Resign(PlayerColor winner)
