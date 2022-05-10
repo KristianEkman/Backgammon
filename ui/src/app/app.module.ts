@@ -70,6 +70,7 @@ import { FeedbackContainerComponent } from './components/feedback-container/feed
 import { FeedbackComponent } from './components/feedback-container/feedback/feedback.component';
 import { FeedbackListComponent } from './components/feedback-container/feedback-list/feedback-list.component';
 import { LanguageHintComponent } from './components/account/account-edit-container/language-hint/language-hint.component';
+import { UnsubscribeContainerComponent } from './components/unsubscribe-container/unsubscribe-container.component';
 
 export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   return new TranslateHttpLoader(http);
@@ -120,7 +121,8 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
     FeedbackContainerComponent,
     FeedbackComponent,
     FeedbackListComponent,
-    LanguageHintComponent
+    LanguageHintComponent,
+    UnsubscribeContainerComponent
   ],
   imports: [
     BrowserModule,

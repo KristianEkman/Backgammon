@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { finalize, map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { MassMailDto } from '../dto/message';
@@ -51,5 +52,9 @@ export class MessageService {
       .subscribe(() => {
         Busy.hide();
       });
+  }
+
+  emailUnsubscribe(id: string): Observable<Object> {
+    return this.http.get(this.url + `/unsubscribe?id=${id}`);
   }
 }

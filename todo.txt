@@ -1,13 +1,11 @@
 Bug vid ladda ny version mobil.
 
-Fixa av avaktivera e-post-funktion.
-
 Mer musik
-
 
 Varför rensas inte gamla games?
 
 Json.Deserialze error.
+
 Fånga och logga!
 
 Nytt AI

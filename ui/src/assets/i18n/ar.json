@@ -169,5 +169,9 @@
     "next": "التالي",
     "back": "عودة"
   },
-  "loadUpdates" : "تحميل التحديث"
+  "loadUpdates" : "تحميل التحديث",
+  "unsubscribe": {
+    "stopped": "لن تتلقى أي رسائل بريد إلكتروني أخرى من Backgammon.",
+    "error": "آسف.هناك خطأ ما."
+  }
 }

@@ -12,6 +12,7 @@ import { PasswordContainerComponent } from './components/password-container/pass
 import { PrivacyPolicyContainerComponent } from './components/privacy-policy-container/privacy-policy-container.component';
 import { ToLittleGoldComponent } from './components/to-little-gold/to-little-gold.component';
 import { ToplistContainerComponent } from './components/toplist-container/toplist-container.component';
+import { UnsubscribeContainerComponent } from './components/unsubscribe-container/unsubscribe-container.component';
 import { GoldGuard, LoginGuard } from './guards';
 
 const routes: Routes = [
@@ -75,6 +76,10 @@ const routes: Routes = [
     path: 'feedback',
     component: FeedbackContainerComponent,
     canActivate: [LoginGuard]
+  },
+  {
+    path: 'unsubscribe',
+    component: UnsubscribeContainerComponent
   },
   {
     path: '**',

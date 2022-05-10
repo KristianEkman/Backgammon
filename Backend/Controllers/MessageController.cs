@@ -143,8 +143,8 @@ namespace Backend.Controllers
     <li>Slighly improved AI</li>
 </ul>
 <p><small><i>You might need to reload once</i></small></p>
-<p><a href='https://backgammon.azurewebsites.net/messages'>Go there and read try it out.<a/></p>
-<p><a href='https://backgammon.azurewebsites.net/api/message/unsubscribe?id={unsbsciberId}'>Unsubscribe from these email notifications.</a></p>
+<p><a href='https://backgammon.azurewebsites.net/messages'>Go there and try it out.<a/></p>
+<p><a href='https://backgammon.azurewebsites.net/unsubscribe?id={unsbsciberId}'>Unsubscribe from these email notifications.</a></p>
 <p>
     Kind Regards<br/>
     /Kristian
@@ -157,7 +157,7 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Route("api/message/unsubscribe")]
-        public async void Unsubscribe(Guid id)
+        public void Unsubscribe(Guid id)
         {
             using (var db = new BgDbContext())
             {
@@ -165,8 +165,6 @@ namespace Backend.Controllers
                 user.EmailNotifications = false;
                 db.SaveChanges();
             }
-
-            await Response.WriteAsync("You will not receive any more notifications.");
         }
     }
 }

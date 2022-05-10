@@ -35,6 +35,7 @@ export class AppComponent {
     const langs = Language.List.map((l) => l.code);
     this.translateService.addLangs(langs);
     this.translateService.setDefaultLang('en');
+
     // const browserLang = this.translateService.getBrowserLang();
     // let startLang = 'en';
 

@@ -169,5 +169,9 @@
     "next": "Nästa",
     "back": "Tillbaka"
   },
-  "loadUpdates" : "Ladda uppdatering"
+  "loadUpdates" : "Ladda uppdatering",
+  "unsubscribe": {
+    "stopped": "Du kommer inte att få fler e-postmeddelanden från Backgammon.",
+    "error": "Förlåt. Något gick fel."
+  }
 }

@@ -172,5 +172,9 @@
   "loadUpdates" : "Load update",
   "feedback": {
     "title": "Feedback"
+  },
+  "unsubscribe": {
+    "stopped": "You will not receive any more e-mails from Backgammon.",
+    "error": "Sorry. Something went wrong."
   }
 }
