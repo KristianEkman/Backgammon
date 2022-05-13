@@ -18,7 +18,6 @@ Nytt AI
     Testa om C-AIt är bättre. 3000 matcher.
 
 Språk
-    detektera efter signup
     ryska
 
 
