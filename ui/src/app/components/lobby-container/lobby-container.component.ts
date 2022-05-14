@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SocialAuthService, SocialUser } from 'angularx-social-login';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { MessageDto, UserDto } from 'src/app/dto';
 import {
   AccountService,
@@ -27,11 +28,13 @@ export class LobbyContainerComponent implements OnInit {
     this.user$ = AppState.Singleton.user.observe();
     this.messages$ = AppState.Singleton.messages.observe();
     this.hasNewVersion$ = AppState.Singleton.newVersion.observe();
+    this.isAdmin$ = this.user$.pipe(map((u) => u?.isAdmin));
   }
 
   user$: Observable<UserDto>;
   messages$: Observable<MessageDto[]>;
   hasNewVersion$: Observable<boolean>;
+  isAdmin$: Observable<boolean>;
 
   toplist = false;
   loginClicked = false;
@@ -103,6 +106,12 @@ export class LobbyContainerComponent implements OnInit {
   practiceClick(): void {
     this.router.navigate(['game'], {
       queryParams: { playAi: true, forGold: false }
+    });
+  }
+
+  editClick(): void {
+    this.router.navigate(['game'], {
+      queryParams: { editing: true }
     });
   }
 

@@ -48,8 +48,10 @@
     [themeName]="themeName"
     [timeLeft]="timeLeft$ | async"
     [tutorialStep]="tutorialStep$ | async"
+    [editing]="editing"
     (addMove)="doMove($event)"
     (moveAnimFinished)="moveAnimFinished()"
+    (addEditMove)="doEditMove($event)"
   ></app-game-board>
   <div class="dices" #dices>
     <app-dices
@@ -94,5 +96,8 @@
       (back)="previousTutorialMessage()"
     ></app-tutorial-message>
   </div>
-  <!-- <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div> -->
+  <div *ngIf="editing" class="editing-input">
+    <app-input-copy [text]="gameString$ | async"></app-input-copy>
+    <!-- <div class="game-id">{{ (gameDto$ | async)?.id | uppercase }}</div> -->
+  </div>
 </div>

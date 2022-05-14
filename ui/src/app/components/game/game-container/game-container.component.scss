@@ -116,3 +116,13 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+
+.editing-input {
+  display: flex;
+  justify-content: center;
+  ::ng-deep input {
+    font-size: 12px;
+    height: 24px;
+    width: 500px;
+  }
+}

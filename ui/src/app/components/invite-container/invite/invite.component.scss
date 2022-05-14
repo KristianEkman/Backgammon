@@ -10,15 +10,11 @@ p {
   font-size: 20px;
 }
 
-input {
+::ng-deep input {
   width: 600px;
 }
 
 .buttons {
   display: flex;
   justify-content: space-between;
-}
-
-.link-text {
-  font-size: 16px;
 }

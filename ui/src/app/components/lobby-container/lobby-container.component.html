@@ -24,6 +24,9 @@
         <app-button (click)="practiceClick()">
           {{ 'logincontainer.practice' | translate }}
         </app-button>
+        <app-button *ngIf="isAdmin$ | async" (click)="editClick()">
+          {{ 'Editor' | translate }}
+        </app-button>
         <app-button (click)="tutorialClick()">
           {{ 'logincontainer.tutorial' | translate }}
         </app-button>

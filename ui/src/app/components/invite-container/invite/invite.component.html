@@ -1,9 +1,6 @@
 <p>{{ 'invite.copylink' | translate }}</p>
-<div style="display: flex">
-  <input class="link-text" #linkText readonly="readonly" [value]="link" />
-  <button (click)="selectAndCopy()" class="flat-button">
-    <i class="fas fa-copy"></i>
-  </button>
+<div>
+  <app-input-copy [text]="link"></app-input-copy>
 </div>
 <div class="buttons">
   <app-button (click)="cancelClick()">

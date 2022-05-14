@@ -17,14 +17,18 @@ import {
   PlayerColor,
   UserDto
 } from 'src/app/dto';
-import { AccountService, GameService } from 'src/app/services';
+import {
+  AccountService,
+  EditorService,
+  GameService,
+  TutorialService
+} from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { StatusMessage } from 'src/app/dto/local/status-message';
 import { Busy } from 'src/app/state/busy';
 import { StatusMessageService } from 'src/app/services/status-message.service';
 import { Sound } from 'src/app/utils';
 import { map } from 'rxjs/operators';
-import { TutorialService } from 'src/app/services/tutorial.service';
 
 @Component({
   selector: 'app-game',
@@ -38,7 +42,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     private tutorialService: TutorialService,
     private router: Router,
     private statusMessageService: StatusMessageService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private editService: EditorService
   ) {
     this.gameDto$ = AppState.Singleton.game.observe();
     this.dices$ = AppState.Singleton.dices.observe();
@@ -63,6 +68,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
     this.user$ = AppState.Singleton.user.observe();
     this.tutorialStep$ = AppState.Singleton.tutorialStep.observe();
+    this.gameString$ = AppState.Singleton.gameString.observe();
 
     // if game page is refreshed, restore user from login cookie
     if (!AppState.Singleton.user.getValue()) {
@@ -74,21 +80,30 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     const playAi = parsed.queryParams['playAi'];
     const forGold = parsed.queryParams['forGold'];
     const tutorial = parsed.queryParams['tutorial'];
+    const editing = parsed.queryParams['editing'];
+
+    this.playAiFlag = playAi === 'true';
+    this.forGodlFlag = forGold === 'true';
+    this.lokalStake = 0;
+    this.tutorial = tutorial === 'true';
+    this.editing = editing === 'true';
 
     if (tutorial) {
       // Waiting for everything else before starting makes Input data update components.
       setTimeout(() => {
         this.tutorialService.start();
       }, 1);
-    } else {
+    } else if (!this.editing) {
       service.connect(gameId, playAi, forGold);
     }
 
-    this.playAiFlag = playAi === 'true';
-    this.forGodlFlag = forGold === 'true';
-    this.lokalStake = 0;
-    this.tutorial = tutorial === 'true';
-
+    if (this.editing) {
+      this.exitVisible = true;
+      this.newVisible = false;
+      this.sendVisible = false;
+      this.dicesVisible = false;
+      this.editService.setStartPosition();
+    }
     // For some reason i could not use an observable for theme. Maybe i'll figure out why someday
     // service.connect might need to be in a setTimeout callback.
     this.themeName = AppState.Singleton.user.getValue()?.theme ?? 'dark';
@@ -101,6 +116,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   timeLeft$: Observable<number>;
   user$: Observable<UserDto>;
   tutorialStep$: Observable<number>;
+  gameString$: Observable<string>;
   themeName: string;
 
   gameSubs: Subscription;
@@ -123,6 +139,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   animatingStake = false;
   playAiQuestion = false;
   tutorial = false;
+  editing = false;
   dicesDto: DiceDto[] | undefined;
   nextDoublingFactor = 1;
 
@@ -147,6 +164,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.service.sendMove(move);
   }
 
+  doEditMove(move: MoveDto): void {
+    this.editService.doMove(move);
+    this.editService.updateGameString();
+  }
+
   undoMove(): void {
     this.service.undoMove();
     this.service.sendUndo();
@@ -166,6 +188,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   startedHandle: any;
   gameChanged(dto: GameDto): void {
+    if (this.editing) {
+      this.fireResize();
+      return;
+    }
+
     if (!this.started && dto) {
       clearTimeout(this.startedHandle);
       this.started = true;
@@ -301,7 +328,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.playAiQuestion = false;
     this.lokalStake = 0;
 
-    if (!this.playAiFlag) this.waitForOpponent();
+    if (!this.playAiFlag && !this.editing) this.waitForOpponent();
     this.fireResize();
   }
 

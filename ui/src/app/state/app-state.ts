@@ -47,6 +47,7 @@ export class AppState {
     this.newVersion.setValue(false);
     this.feedbackList = new StateObject<FeedbackDto[]>();
     this.feedbackList.setValue([]);
+    this.gameString = new StateObject<string>();
   }
 
   private static _singleton: AppState;
@@ -77,6 +78,7 @@ export class AppState {
   tutorialStep: StateObject<number>;
   newVersion: StateObject<boolean>;
   feedbackList: StateObject<FeedbackDto[]>;
+  gameString: StateObject<string>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

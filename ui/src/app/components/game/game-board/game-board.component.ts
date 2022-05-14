@@ -44,8 +44,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   @Input() themeName: string | null = 'dark';
   @Input() timeLeft: number | null = 0;
   @Input() tutorialStep: number | null = 0;
+  @Input() editing: boolean = false;
 
   @Output() addMove = new EventEmitter<MoveDto>();
+  @Output() addEditMove = new EventEmitter<MoveDto>();
   @Output() moveAnimFinished = new EventEmitter<void>();
 
   borderWidth = 0;
@@ -605,7 +607,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return;
     }
-    // console.log(this.game.points);
 
     const r = this.getCheckerRadius();
     const chWidth = this.getCheckerWidth();
@@ -1115,7 +1116,13 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
 
-    for (let i = 0; i < this.checkerAreas.length; i++) {
+    const areas = this.checkerAreas;
+    if (this.editing) {
+      areas.push(this.blackHome);
+      areas.push(this.whiteHome);
+    }
+
+    for (let i = 0; i < areas.length; i++) {
       const rect = this.checkerAreas[i];
       const x = clientX - this.borderWidth;
       const y = clientY - this.borderWidth;
@@ -1128,13 +1135,15 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       }
       // The moves are ordered  by backend by dice value.
       const move = this.game.validMoves.find((m) => m.from === ptIdx);
-      if (move !== undefined) {
+      const checkers = this.game.points[ptIdx].checkers;
+      if (move !== undefined || (this.editing && checkers.length > 0)) {
+        const lastChecker = checkers[checkers.length - 1];
         this.dragging = new CheckerDrag(
           rect,
           clientX,
           clientY,
           ptIdx,
-          move.color
+          lastChecker.color
         );
         // console.log('dragging', this.dragging);
         break;
@@ -1146,6 +1155,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     if (!this.game) {
       return false;
     }
+
+    if (this.editing) return true;
     if (this.myColor != this.game.currentPlayer) {
       return false;
     }
@@ -1249,6 +1260,11 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       return;
     }
 
+    if (this.editing) {
+      this.doEditMove(clientX, clientY);
+      return;
+    }
+
     if (!this.canMove()) {
       return;
     }
@@ -1294,6 +1310,47 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         this.addMove.emit({ ...move, animate: isClick });
         break;
       }
+    }
+    this.requestDraw();
+    // console.log('dragging null');
+    this.dragging = null;
+  }
+
+  doEditMove(clientX: number, clientY: number): void {
+    if (!this.dragging) return;
+
+    if (!this.game) return;
+
+    const { xDown, yDown, fromIdx, color } = this.dragging;
+
+    const allRects: CheckerArea[] = [...this.checkerAreas];
+    if (color === PlayerColor.black) {
+      allRects.push(this.blackHome);
+    } else {
+      allRects.push(this.whiteHome);
+    }
+
+    for (let i = 0; i < allRects.length; i++) {
+      const rect = allRects[i];
+      const x = clientX - this.borderWidth;
+      const y = clientY - this.borderWidth;
+      if (!rect.contains(x, y)) {
+        continue;
+      }
+
+      let ptIdx = rect.pointIdx;
+
+      let move: MoveDto = {
+        color: this.dragging.color,
+        from: fromIdx,
+        nextMoves: [],
+        to: ptIdx,
+        animate: false,
+        hint: false
+      };
+
+      this.addEditMove.emit({ ...move });
+      break;
     }
     this.requestDraw();
     // console.log('dragging null');

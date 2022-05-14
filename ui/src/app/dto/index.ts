@@ -23,3 +23,5 @@ export * from './message/messageDto';
 export * from './message/messageType';
 export * from './feedback/feedbackDto';
 export * from './feedback/postFeedbackDto';
+export * from './editor/gameStringRequest';
+export * from './editor/gameStringResponseDto';

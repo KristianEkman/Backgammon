@@ -26,11 +26,6 @@ export class InviteComponent implements OnChanges {
 
   ngOnChanges(): void {
     this.link = `${window.location.href}?${Keys.inviteId}=${this.gameId}`;
-    if (this.linkText) {
-      setTimeout(() => {
-        this.selectAndCopy();
-      }, 1);
-    }
   }
 
   startClick(): void {
@@ -39,15 +34,5 @@ export class InviteComponent implements OnChanges {
 
   cancelClick(): void {
     this.cancel.emit(this.gameId);
-  }
-
-  selectAndCopy(): void {
-    setTimeout(() => {
-      const input = this.linkText?.nativeElement as HTMLInputElement;
-      input.focus();
-      input.select();
-      input.setSelectionRange(0, 99999); /* For mobile devices */
-      document.execCommand('copy');
-    }, 1);
   }
 }

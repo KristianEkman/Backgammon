@@ -1,5 +1,34 @@
 Performance Eval count: 233744 - (789.7k evs/sec) 296.00ms
 
+Ny Eval
+-------
+Editor som generar board strings.
+
+Massa testfall.
+Balansera risk att bli träffad och chans att blocka.
+
+score = Medelvärde för eval av alla tärningsutfall.
+
+Eval
+1. ge score för pipcount.
+2. + block * checkers infront of
+   - blot * checker infront of	
+   Båda spelare
+
+
+Ibland vill man slå bort en checker bara för att den ska vara blockerad.
+Pipcount kommer inte öka för dom tärningarna.
+
+
+		 
+
+Helt egen evaluering för all passed.
+	Prioritera off board först
+	Sedan home
+	Sedan - för tom point
+
+
+
 Hash side
 
 Idéer för training
