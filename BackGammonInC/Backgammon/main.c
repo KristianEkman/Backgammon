@@ -16,7 +16,7 @@
 bool Searching;
 
 void PrintHelp() {
-	ConsoleWriteLine("\nOptions\n-------\nt/test\np/play\npos w2 0 0 0 b5... (game string)\ns/selected tests\nh/help\nq/quit");
+	ConsoleWriteLine("\nOptions\n-------\nt/test\np/play\npos w2 0 0 0 b5... (game string)\ns/selected tests\ng/game\nh/help\nq/quit");
 }
 
 void PrintCurrentDir() {
@@ -72,10 +72,12 @@ int main() {
 	StartPosition(&G);
 	G.Dice[0] = 3;
 	G.Dice[1] = 5;
-	PrintGame(&G);
-	PrintCurrentDir();
-
+	//PrintGame(&G);
+	//PrintCurrentDir();
+	printf("ready\n");
 	printf("\n: ");
+	fflush(stdout);
+
 	char buf[BUF_SIZE];
 	fgets(buf, BUF_SIZE, stdin);
 	while (!Streq(buf, "quit\n") && !Streq(buf, "q\n"))

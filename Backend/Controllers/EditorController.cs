@@ -20,13 +20,12 @@ namespace Backend.Controllers
 
 		private string GetGameString(GameDto g, DiceDto[] dice)
 		{
-			var s = new StringBuilder();
+			var s = new StringBuilder("pos ");
 
 			var blackBar = g.points[0].checkers.Count(c => c.color == PlayerColor.black);
-			s.Append($"b{blackBar}");
-			s.Append(' ');
-
-			for (int i = 1; i < 24; i++)
+			s.Append($"b{blackBar} ");
+			
+			for (int i = 1; i < 25; i++)
 			{
 				var checkers = g.points[i].checkers;
 				if (checkers.Length > 0)
@@ -37,21 +36,19 @@ namespace Backend.Controllers
 					else
 						s.Append('w');
 				}												
-				s.Append(checkers.Length);
-				s.Append(' ');
+				s.Append(checkers.Length + " ");				
 			}
 			var whiteBar = g.points[25].checkers.Count(c => c.color == PlayerColor.white);
-			s.Append($"w{whiteBar}");
-			s.Append(' ');
-			var blackHome = g.points[25].checkers.Count(c => c.color == PlayerColor.black);
-			s.Append($"b{blackHome}"); s.Append(' ');
+			s.Append($"w{whiteBar} ");
+
 			var whiteHome = g.points[0].checkers.Count(c => c.color == PlayerColor.white);
-			s.Append($"w{whiteHome}");			
-			s.Append(' ');			
-			s.Append(g.currentPlayer == PlayerColor.black ? 'b' : 'w');
-			s.Append(' ');
-			s.Append(dice[0].value);
-			s.Append(' ');
+			s.Append($"{whiteHome} ");
+
+			var blackHome = g.points[25].checkers.Count(c => c.color == PlayerColor.black);
+			s.Append($"{blackHome} ");
+					
+			s.Append(g.currentPlayer == PlayerColor.black ? "b " : "w ");
+			s.Append(dice[0].value + " ");			
 			s.Append(dice[1].value);
 			return s.ToString();
 		}

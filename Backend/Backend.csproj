@@ -29,6 +29,7 @@
     </PackageReference>
     <PackageReference Include="MTT" Version="0.7.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

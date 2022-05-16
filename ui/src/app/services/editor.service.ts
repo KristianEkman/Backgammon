@@ -315,7 +315,6 @@ export class EditorService {
   }
 
   updateGameString(): void {
-    Busy.show();
     const dice: DiceDto[] = [
       { value: 5, used: false },
       { value: 6, used: false }
@@ -332,7 +331,6 @@ export class EditorService {
       )
       .subscribe((data) => {
         AppState.Singleton.gameString.setValue(data.value);
-        Busy.hide();
       });
   }
 }
