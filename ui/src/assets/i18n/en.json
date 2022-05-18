@@ -13,7 +13,7 @@
     "practice": "Practice",
     "friend": "Invite a friend",
     "tip": "Tip",
-    "whenyousignin": "Please Sign in to play for gold!",    
+    "whenyousignin": "Please Sign in to play for gold!",
     "accept": "Accept invite",
     "tutorial": "Rules"
   },
@@ -169,7 +169,7 @@
     "next": "Next",
     "back": "Back"
   },
-  "loadUpdates" : "Load update",
+  "loadUpdates": "Load update",
   "feedback": {
     "title": "Feedback"
   },
