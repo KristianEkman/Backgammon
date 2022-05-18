@@ -5,38 +5,37 @@ import { finalize, map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { MassMailDto } from '../dto/message';
 import { MessageDto } from '../dto/message/messageDto';
-import { AppState } from '../state/app-state';
-import { Busy } from '../state/busy';
+import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
   url: string;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private appState: AppStateService) {
     this.url = `${environment.apiServiceUrl}/message`;
   }
 
   loadMessages(): void {
-    Busy.showNoOverlay();
+    this.appState.showBusyNoOverlay();
     this.http
       .get(`${this.url}/users`)
       .pipe(
         map((data) => data as MessageDto[]),
         finalize(() => {
-          Busy.hide();
+          this.appState.hideBusy();
         })
       )
       .subscribe((messages) => {
-        AppState.Singleton.messages.setValue(messages);
+        this.appState.messages.setValue(messages);
       });
   }
 
   deleteMessage(id: number): void {
     this.http.delete(this.url + '/delete?id=' + id).subscribe(() => {
-      const messages = AppState.Singleton.messages.getValue();
+      const messages = this.appState.messages.getValue();
       const filtered = messages.filter((m) => m.id !== id);
-      AppState.Singleton.messages.setValue(filtered);
+      this.appState.messages.setValue(filtered);
     });
   }
 
@@ -45,12 +44,12 @@ export class MessageService {
   }
 
   sendMessages(dto: MassMailDto): void {
-    Busy.show();
+    this.appState.showBusy();
     this.http
       .post(this.url + '/sendToAll', dto)
       .pipe(take(1))
       .subscribe(() => {
-        Busy.hide();
+        this.appState.hideBusy();
       });
   }
 

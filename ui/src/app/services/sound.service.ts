@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { AppState } from '../state/app-state';
+import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ export class SoundService implements OnDestroy {
   pianointro: HTMLAudioElement;
   introPlaying = false;
 
-  constructor() {
+  constructor(private appState: AppStateService) {
     this.click = new Audio();
     this.click.src = '../assets/sound/click.wav';
     this.click.load();
@@ -117,7 +117,7 @@ export class SoundService implements OnDestroy {
 
   playBlues(): void {
     let vol = 1;
-    if (AppState.Singleton.user.getValue().muteIntro) vol = 0;
+    if (this.appState.user.getValue().muteIntro) vol = 0;
     this.blues.volume = vol;
     this.blues.play();
   }
@@ -125,7 +125,7 @@ export class SoundService implements OnDestroy {
   playPianoIntro(): void {
     let vol = 0.3;
     this.introPlaying = true;
-    if (AppState.Singleton.user.getValue().muteIntro) vol = 0;
+    if (this.appState.user.getValue().muteIntro) vol = 0;
 
     this.pianointro.volume = vol;
     this.pianointro.play();

@@ -11,7 +11,7 @@ import { AfterViewInit, Component, ElementRef, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
 import { Checker } from './checker';
 import {
@@ -72,12 +72,15 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   black = '';
   left = '';
 
-  constructor(private translateService: TranslateService) {
+  constructor(
+    private translateService: TranslateService,
+    private appState: AppStateService
+  ) {
     for (let r = 0; r < 26; r++) {
       this.checkerAreas.push(new CheckerArea(0, 0, 0, 0, 0));
     }
 
-    this.animationSubscription = AppState.Singleton.moveAnimations
+    this.animationSubscription = this.appState.moveAnimations
       .observe()
       .subscribe((moves: MoveDto[]) => {
         if (moves.length > 0 && this.animatedMove === undefined) {

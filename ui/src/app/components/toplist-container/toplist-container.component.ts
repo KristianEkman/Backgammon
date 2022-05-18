@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Toplist } from 'src/app/dto';
 import { ToplistService } from 'src/app/services';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-toplist-container',
@@ -15,8 +15,11 @@ export class ToplistContainerComponent {
 
   toplist$: Observable<Toplist>;
 
-  constructor(private topListService: ToplistService) {
-    this.toplist$ = AppState.Singleton.toplist.observe();
+  constructor(
+    private topListService: ToplistService,
+    private appState: AppStateService
+  ) {
+    this.toplist$ = this.appState.toplist.observe();
     this.topListService.loadToplist();
   }
 

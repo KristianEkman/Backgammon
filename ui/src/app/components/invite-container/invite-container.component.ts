@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { UserDto } from 'src/app/dto';
 import { InviteResponseDto } from 'src/app/dto/rest';
 import { InviteService } from 'src/app/services';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 import { Keys } from 'src/app/utils';
 
 @Component({
@@ -17,9 +17,13 @@ export class InviteContainerComponent implements OnInit {
   inviteId = '';
   user$: Observable<UserDto>;
 
-  constructor(private router: Router, private inviteService: InviteService) {
+  constructor(
+    private router: Router,
+    private inviteService: InviteService,
+    private appState: AppStateService
+  ) {
     this.invite$ = this.inviteService.createInvite();
-    this.user$ = AppState.Singleton.user.observe();
+    this.user$ = this.appState.user.observe();
   }
 
   ngOnInit(): void {

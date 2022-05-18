@@ -1,14 +1,10 @@
-import { AppState } from 'src/app/state/app-state';
+import { Injectable } from '@angular/core';
+import { inject } from '@angular/core/testing';
+import { AppStateService } from 'src/app/state/app-state.service';
 
+@Injectable({
+  providedIn: 'root'
+})
 export class Theme {
-  public static Themes = ['dark', 'light', 'blue', 'pink', 'green'];
-
-  public static change(theme: string): void {
-    if (!theme || theme.length === 0) theme = 'dark';
-    this.Themes.forEach((v) => {
-      document.body.classList.remove(v);
-    });
-    document.body.classList.add(theme);
-    AppState.Singleton.theme.setValue(theme);
-  }
+  constructor(private appState: AppStateService) {}
 }

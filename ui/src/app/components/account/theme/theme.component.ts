@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Theme } from './theme';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-theme',
@@ -11,5 +11,5 @@ export class ThemeComponent {
 
   @Input() currentTheme: string | undefined = 'dark';
 
-  themes = Theme.Themes;
+  themes = AppStateService.Themes;
 }

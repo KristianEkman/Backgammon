@@ -4,11 +4,8 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
-import { AppState } from 'src/app/state/app-state';
-import { Busy } from 'src/app/state/busy';
-import { Theme } from '../theme/theme';
+import { AppStateService } from 'src/app/state/app-state.service';
 import { Language } from '../../../utils';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-account-edit-container',
@@ -21,9 +18,10 @@ export class AccountEditContainerComponent {
     private formBuidler: FormBuilder,
     private router: Router,
     private translateService: TranslateService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private appState: AppStateService
   ) {
-    this.user = AppState.Singleton.user.getValue();
+    this.user = this.appState.user.getValue();
     this.formGroup = this.formBuidler.group({
       name: [this.user.name, [Validators.required, Validators.maxLength(100)]],
       emailNotification: [this.user.emailNotification],
@@ -33,14 +31,14 @@ export class AccountEditContainerComponent {
     });
 
     this.formGroup.get('theme')?.valueChanges.subscribe((theme) => {
-      Theme.change(theme);
+      this.appState.changeTheme(theme);
     });
 
     this.formGroup.get('preferredLanguage')?.valueChanges.subscribe((lang) => {
       this.translateService.use(lang ?? 'en');
     });
 
-    AppState.Singleton.user.observe().subscribe((userDto) => {
+    this.appState.user.observe().subscribe((userDto) => {
       this.user = userDto;
       this.changeDetector.detectChanges();
       if (userDto) {
@@ -59,22 +57,22 @@ export class AccountEditContainerComponent {
   user: UserDto | null = null;
   confirm = false;
   Language = Language;
-  acceptedLangs = AppState.Singleton.user.getValue().acceptedLanguages;
+  acceptedLangs = this.appState.user.getValue().acceptedLanguages;
 
   submit(): void {
     if (this.formGroup.valid) {
       const user = { ...this.user, ...this.formGroup.value };
-      Busy.show();
+      this.appState.showBusy();
       this.service.saveUser(user).subscribe(() => {
-        Busy.hide();
+        this.appState.hideBusy();
         this.router.navigateByUrl('/lobby');
       });
     }
   }
 
   cancel(): void {
-    const theme = AppState.Singleton.user.getValue().theme;
-    Theme.change(theme);
+    const theme = this.appState.user.getValue().theme;
+    this.appState.changeTheme(theme);
     this.router.navigateByUrl('/lobby');
   }
 

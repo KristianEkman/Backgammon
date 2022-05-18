@@ -4,7 +4,7 @@ import { format, parseISO } from 'date-fns';
 import { finalize, map, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { FeedbackDto, PostFeedbackDto } from '../dto';
-import { AppState } from '../state/app-state';
+import { AppStateService } from '../state/app-state.service';
 import { Busy } from '../state/busy';
 
 @Injectable({
@@ -12,19 +12,19 @@ import { Busy } from '../state/busy';
 })
 export class FeedbackService {
   url: string;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private appState: AppStateService) {
     this.url = `${environment.apiServiceUrl}/feedback`;
   }
 
   postFeedBack(text: string) {
-    Busy.showNoOverlay();
+    this.appState.showBusyNoOverlay();
     const dto: PostFeedbackDto = { text: text };
     this.http
       .post(this.url, dto)
       .pipe(take(1))
       .subscribe(() => {
-        const oldState = AppState.Singleton.feedbackList.getValue();
-        const user = AppState.Singleton.user.getValue();
+        const oldState = this.appState.feedbackList.getValue();
+        const user = this.appState.user.getValue();
         const date = format(new Date(), 'MMMM dd, yyyy');
         const newPost: FeedbackDto = {
           id: 0,
@@ -33,27 +33,28 @@ export class FeedbackService {
           sent: date
         };
         const newList = [newPost, ...oldState];
-        AppState.Singleton.feedbackList.setValue(newList);
-        Busy.hide();
+        this.appState.feedbackList.setValue(newList);
+        this.appState.hideBusy();
       });
   }
 
   loadList(): void {
-    const skip = AppState.Singleton.feedbackList.getValue().length;
-    Busy.showNoOverlay();
+    const skip = this.appState.feedbackList.getValue().length;
+    this.appState.showBusyNoOverlay();
+
     this.http
       .get(`${this.url}?skip=${skip}`)
       .pipe(
         map((data) => data as FeedbackDto[]),
         finalize(() => {
-          Busy.hide();
+          this.appState.hideBusy();
         })
       )
       .subscribe((list) => {
         if (list) {
-          const oldState = AppState.Singleton.feedbackList.getValue();
+          const oldState = this.appState.feedbackList.getValue();
           const newList = [...oldState, ...list];
-          AppState.Singleton.feedbackList.setValue(newList);
+          this.appState.feedbackList.setValue(newList);
         }
       });
   }

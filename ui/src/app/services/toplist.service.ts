@@ -3,14 +3,17 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Toplist } from '../dto';
-import { AppState } from '../state/app-state';
+import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToplistService {
   url: string;
-  constructor(private httpClient: HttpClient) {
+  constructor(
+    private httpClient: HttpClient,
+    private appState: AppStateService
+  ) {
     this.url = `${environment.apiServiceUrl}/toplist`;
   }
 
@@ -22,7 +25,7 @@ export class ToplistService {
         if (!toplist.results.find((t) => t.you)) {
           toplist.results.push(toplist.you); // add you last if not on top 10.
         }
-        AppState.Singleton.toplist.setValue(toplist);
+        this.appState.toplist.setValue(toplist);
       });
   }
 }

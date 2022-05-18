@@ -8,7 +8,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, of, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   DiceDto,
   GameDto,
@@ -18,9 +18,8 @@ import {
   UserDto
 } from 'src/app/dto';
 import { AccountService, GameService, SoundService } from 'src/app/services';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 import { StatusMessage } from 'src/app/dto/local/status-message';
-import { Busy } from 'src/app/state/busy';
 import { StatusMessageService } from 'src/app/services/status-message.service';
 import { map } from 'rxjs/operators';
 import { TutorialService } from 'src/app/services/tutorial.service';
@@ -38,38 +37,39 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     private router: Router,
     private statusMessageService: StatusMessageService,
     private changeDetector: ChangeDetectorRef,
-    private sound: SoundService
+    private sound: SoundService,
+    private appState: AppStateService
   ) {
-    this.gameDto$ = AppState.Singleton.game.observe();
-    this.dices$ = AppState.Singleton.dices.observe();
-    this.diceSubs = AppState.Singleton.dices
+    this.gameDto$ = this.appState.game.observe();
+    this.dices$ = this.appState.dices.observe();
+    this.diceSubs = this.appState.dices
       .observe()
       .subscribe(this.diceChanged.bind(this));
-    this.playerColor$ = AppState.Singleton.myColor.observe();
+    this.playerColor$ = this.appState.myColor.observe();
     this.playerColor$.subscribe(this.gotPlayerColor.bind(this));
-    this.gameSubs = AppState.Singleton.game
+    this.gameSubs = this.appState.game
       .observe()
       .subscribe(this.gameChanged.bind(this));
-    this.rolledSubs = AppState.Singleton.rolled
+    this.rolledSubs = this.appState.rolled
       .observe()
       .subscribe(this.opponentRolled.bind(this));
 
-    this.oponnetDoneSubs = AppState.Singleton.opponentDone
+    this.oponnetDoneSubs = this.appState.opponentDone
       .observe()
       .subscribe(this.oponnentDone.bind(this));
-    this.message$ = AppState.Singleton.statusMessage.observe();
-    this.timeLeft$ = AppState.Singleton.moveTimer.observe();
-    AppState.Singleton.moveTimer.observe().subscribe(this.timeTick.bind(this));
+    this.message$ = this.appState.statusMessage.observe();
+    this.timeLeft$ = this.appState.moveTimer.observe();
+    this.appState.moveTimer.observe().subscribe(this.timeTick.bind(this));
 
-    this.user$ = AppState.Singleton.user.observe();
-    this.tutorialStep$ = AppState.Singleton.tutorialStep.observe();
+    this.user$ = this.appState.user.observe();
+    this.tutorialStep$ = this.appState.tutorialStep.observe();
 
     this.user$.subscribe((user) => {
       this.introMuted = user.muteIntro;
     });
 
     // if game page is refreshed, restore user from login cookie
-    if (!AppState.Singleton.user.getValue()) {
+    if (!this.appState.user.getValue()) {
       this.accountService.repair();
     }
 
@@ -95,7 +95,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
     // For some reason i could not use an observable for theme. Maybe i'll figure out why someday
     // service.connect might need to be in a setTimeout callback.
-    this.themeName = AppState.Singleton.user.getValue()?.theme ?? 'dark';
+    this.themeName = this.appState.user.getValue()?.theme ?? 'dark';
   }
 
   gameDto$: Observable<GameDto>;
@@ -129,14 +129,14 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   tutorial = false;
   dicesDto: DiceDto[] | undefined;
   nextDoublingFactor = 1;
-  introMuted = AppState.Singleton.user.getValue().muteIntro;
+  introMuted = this.appState.user.getValue().muteIntro;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
   @ViewChild('messages') messages: ElementRef | undefined;
 
   gotPlayerColor() {
-    if (AppState.Singleton.myColor.getValue() == PlayerColor.white) {
+    if (this.appState.myColor.getValue() == PlayerColor.white) {
       this.flipped = true;
     }
   }
@@ -159,11 +159,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   myTurn(): boolean {
-    return AppState.Singleton.myTurn();
+    return this.appState.myTurn();
   }
 
   doublingRequested(): boolean {
-    return AppState.Singleton.doublingRequested();
+    return this.appState.doublingRequested();
   }
 
   oponnentDone(): void {
@@ -223,7 +223,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       gameDto.playState === GameState.requestedDoubling &&
       this.myTurn();
     // Visible if it is a gold-game and if it is my turn to double.
-    const turn = AppState.Singleton.myColor.getValue() !== gameDto.lastDoubler;
+    const turn = this.appState.myColor.getValue() !== gameDto.lastDoubler;
     const rightType = gameDto.isGoldGame;
     this.requestDoublingVisible =
       turn &&
@@ -247,7 +247,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setSendVisible();
     this.setUndoVisible();
     this.fireResize();
-    const game = AppState.Singleton.game.getValue();
+    const game = this.appState.game.getValue();
     this.exitVisible =
       game?.playState !== GameState.playing &&
       game?.playState !== GameState.requestedDoubling;
@@ -259,11 +259,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.rolledSubs.unsubscribe();
     this.oponnetDoneSubs.unsubscribe();
     clearTimeout(this.startedHandle);
-    AppState.Singleton.game.clearValue();
-    AppState.Singleton.myColor.clearValue();
-    AppState.Singleton.dices.clearValue();
-    AppState.Singleton.messages.clearValue();
-    AppState.Singleton.moveTimer.clearValue();
+    this.appState.game.clearValue();
+    this.appState.myColor.clearValue();
+    this.appState.dices.clearValue();
+    this.appState.messages.clearValue();
+    this.appState.moveTimer.clearValue();
     this.started = false;
     this.service.exitGame();
     this.sound.fadeIntro();
@@ -348,7 +348,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setSendVisible();
     this.fireResize();
     this.requestDoublingVisible = false;
-    const gme = AppState.Singleton.game.getValue();
+    const gme = this.appState.game.getValue();
     if (!gme.validMoves || gme.validMoves.length === 0) {
       this.statusMessageService.setBlockedMessage();
     }
@@ -375,7 +375,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       return;
     }
 
-    const game = AppState.Singleton.game.getValue();
+    const game = this.appState.game.getValue();
     this.sendVisible = !game || game.validMoves.length == 0;
   }
 
@@ -385,7 +385,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       return;
     }
 
-    const dices = AppState.Singleton.dices.getValue();
+    const dices = this.appState.dices.getValue();
     this.undoVisible = dices && dices.filter((d) => d.used).length > 0;
   }
 
@@ -406,7 +406,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   exitGame(): void {
     clearTimeout(this.startedHandle);
     this.service.exitGame();
-    Busy.hide();
+    this.appState.hideBusy();
     this.router.navigateByUrl('/lobby');
   }
 
@@ -437,7 +437,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.playAiQuestion = false;
     this.service.exitGame();
 
-    while (AppState.Singleton.myConnection.getValue().connected) {
+    while (this.appState.myConnection.getValue().connected) {
       await this.delay(500);
     }
 
@@ -483,7 +483,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   timeTick(time: number) {
     if (time < 30 && this.myTurn) {
-      const game = AppState.Singleton.game.getValue();
+      const game = this.appState.game.getValue();
       if (
         game &&
         !game.isGoldGame &&

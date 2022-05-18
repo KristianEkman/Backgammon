@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-button',
@@ -11,13 +11,13 @@ export class ButtonComponent implements OnInit {
   @Input() default = false;
   @Input() type = 'button';
   @Input() small = false;
-  constructor(private cd: ChangeDetectorRef) {
-    this.theme = AppState.Singleton.theme.observe();
+  constructor(private appState: AppStateService) {
+    this.theme = this.appState.theme.observe();
   }
 
   ngOnInit(): void {
     setTimeout(() => {
-      AppState.Singleton.theme.next();
+      this.appState.theme.next();
     }, 1);
   }
 

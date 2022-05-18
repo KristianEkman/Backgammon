@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FeedbackDto } from 'src/app/dto';
 import { FeedbackService } from 'src/app/services';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-feedback-container',
@@ -10,8 +10,11 @@ import { AppState } from 'src/app/state/app-state';
   styleUrls: ['./feedback-container.component.scss']
 })
 export class FeedbackContainerComponent {
-  constructor(private service: FeedbackService) {
-    this.list$ = AppState.Singleton.feedbackList.observe();
+  constructor(
+    private service: FeedbackService,
+    private appState: AppStateService
+  ) {
+    this.list$ = this.appState.feedbackList.observe();
   }
 
   viewForm = true;

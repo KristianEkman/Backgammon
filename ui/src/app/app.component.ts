@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { AppState } from './state/app-state';
+import { AppStateService } from './state/app-state.service';
 import { AccountService, ErrorReportService } from './services';
 import { Observable } from 'rxjs';
 import { ErrorState } from './state/ErrorState';
@@ -26,10 +26,11 @@ export class AppComponent {
     private errorReportService: ErrorReportService,
     private translateService: TranslateService,
     @Inject(DOCUMENT) private document: Document,
-    private router: Router
+    private router: Router,
+    private appState: AppStateService
   ) {
-    this.errors$ = AppState.Singleton.errors.observe();
-    this.busy$ = AppState.Singleton.busy.observe();
+    this.errors$ = this.appState.errors.observe();
+    this.busy$ = this.appState.busy.observe();
     this.accountService.repair();
 
     const langs = Language.List.map((l) => l.code);
