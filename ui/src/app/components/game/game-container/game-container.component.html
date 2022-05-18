@@ -6,13 +6,27 @@
       [message]="message$ | async"
     ></app-messages>
   </div>
+  <div *ngIf="introPlaying" class="mute-button">
+    <app-button [small]="true" (click)="toggleMuted()">
+      <i
+        [ngClass]="{
+          fas: true,
+          'fa-music': introMuted,
+          'fa-volume-off': !introMuted
+        }"
+      >
+      </i
+      ><span class="x-char">{{ introMuted ? '' : 'x' }}</span>
+    </app-button>
+  </div>
   <app-menu
     *ngIf="!tutorial"
     class="app-menu"
     (rotate)="onRotated()"
     (flip)="onFlipped()"
     (resign)="resignGame()"
-  ></app-menu>
+  >
+  </app-menu>
   <div
     *ngIf="(gameDto$ | async)?.isGoldGame"
     class="players"

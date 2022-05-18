@@ -64,6 +64,10 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.user$ = AppState.Singleton.user.observe();
     this.tutorialStep$ = AppState.Singleton.tutorialStep.observe();
 
+    this.user$.subscribe((user) => {
+      this.introMuted = user.muteIntro;
+    });
+
     // if game page is refreshed, restore user from login cookie
     if (!AppState.Singleton.user.getValue()) {
       this.accountService.repair();
@@ -125,6 +129,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   tutorial = false;
   dicesDto: DiceDto[] | undefined;
   nextDoublingFactor = 1;
+  introMuted = AppState.Singleton.user.getValue().muteIntro;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;
@@ -489,5 +494,13 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       }
     }
     this.requestHintVisible = false;
+  }
+
+  toggleMuted() {
+    this.accountService.toggleIntro();
+  }
+
+  get introPlaying() {
+    return Sound.introPlaying;
   }
 }

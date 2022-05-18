@@ -1,3 +1,9 @@
+import { Injectable } from '@angular/core';
+import { AppState } from '../state/app-state';
+
+@Injectable({
+  providedIn: 'root'
+})
 export class Sound {
   click: HTMLAudioElement;
   dice: HTMLAudioElement;
@@ -11,6 +17,7 @@ export class Sound {
   blues: HTMLAudioElement;
   tick: HTMLAudioElement;
   pianointro: HTMLAudioElement;
+  static introPlaying = false;
 
   private constructor() {
     this.click = new Audio();
@@ -63,6 +70,9 @@ export class Sound {
     this.pianointro = new Audio();
     this.pianointro.src = '../assets/sound/pianointro.mp3';
     this.pianointro.load();
+    this.pianointro.onended = () => {
+      Sound.introPlaying = false;
+    };
   }
 
   private static _singleton: Sound;
@@ -114,13 +124,24 @@ export class Sound {
   }
 
   static playBlues(): void {
-    this.Singleton.blues.volume = 1;
+    let vol = 1;
+    if (AppState.Singleton.user.getValue().muteIntro) vol = 0;
+    this.Singleton.blues.volume = vol;
     this.Singleton.blues.play();
   }
 
   static playPianoIntro(): void {
-    this.Singleton.pianointro.volume = 0.5;
+    let vol = 0.3;
+    Sound.introPlaying = true;
+    if (AppState.Singleton.user.getValue().muteIntro) vol = 0;
+
+    this.Singleton.pianointro.volume = vol;
     this.Singleton.pianointro.play();
+  }
+
+  static unMuteIntro(): void {
+    this.Singleton.pianointro.volume = 0.3;
+    this.Singleton.blues.volume = 1;
   }
 
   static fadeSound(sound: HTMLAudioElement): void {

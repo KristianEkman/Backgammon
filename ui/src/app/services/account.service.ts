@@ -181,4 +181,23 @@ export class AccountService {
       take(1)
     );
   }
+
+  toggleIntro(): void {
+    this.http
+      .get(`${this.url}/toggleIntro`)
+      .pipe(
+        map((response) => {
+          const mute = response as boolean;
+          const user = AppState.Singleton.user.getValue();
+          AppState.Singleton.user.setValue({ ...user, muteIntro: mute });
+          if (mute) {
+            Sound.fadeIntro();
+          } else {
+            Sound.unMuteIntro();
+          }
+        }),
+        take(1)
+      )
+      .subscribe();
+  }
 }

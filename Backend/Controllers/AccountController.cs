@@ -254,6 +254,25 @@ namespace Backend.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("/api/account/toggleIntro")]
+        public bool ToggleIntro()
+        {
+            var mute = false;
+            var usId = GetUserId();
+            using (var db = new Db.BgDbContext())
+            {
+                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+                mute = dbUser.MuteIntro;
+
+                dbUser.MuteIntro = !mute;
+                db.SaveChanges();
+            }
+
+            return !mute;
+        }
+
+
         private async Task<bool> ValidateFacebookJwt(string token)
         {
             var appToken = Secrets.FbAppToken();

@@ -26,6 +26,12 @@
   display: inline-block;
 }
 
+.mute-button {
+  position: absolute;
+  right: 24px;
+  top: -14px;
+}
+
 .board-buttons {
   display: inline-block;
   position: absolute;
@@ -115,4 +121,12 @@
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.x-char {
+  position: relative;
+  top: -2px;
+  left: 1px;
+  font-weight: 600;
+  font-size: 12px;
 }
