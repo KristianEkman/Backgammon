@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { finalize, map, take } from 'rxjs/operators';
 import { AppState } from '../state/app-state';
-import { Keys, Sound } from '../utils';
+import { Keys } from '../utils';
 import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -20,6 +20,7 @@ import {
   NewLocalUserDto,
   UserDto
 } from '../dto';
+import { SoundService } from '.';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,8 @@ export class AccountService {
     private topListService: ToplistService,
     private authService: SocialAuthService,
     private messageService: MessageService,
-    private trans: TranslateService
+    private trans: TranslateService,
+    private sound: SoundService
   ) {
     this.url = `${environment.apiServiceUrl}/account`;
   }
@@ -115,7 +117,7 @@ export class AccountService {
         map((response) => {
           const dto = response as GoldGiftDto;
           const user = AppState.Singleton.user.getValue();
-          if (dto.gold > user.gold) Sound.playCoin();
+          if (dto.gold > user.gold) this.sound.playCoin();
           AppState.Singleton.user.setValue({
             ...user,
             gold: dto.gold,
@@ -191,9 +193,9 @@ export class AccountService {
           const user = AppState.Singleton.user.getValue();
           AppState.Singleton.user.setValue({ ...user, muteIntro: mute });
           if (mute) {
-            Sound.fadeIntro();
+            this.sound.fadeIntro();
           } else {
-            Sound.unMuteIntro();
+            this.sound.unMuteIntro();
           }
         }),
         take(1)

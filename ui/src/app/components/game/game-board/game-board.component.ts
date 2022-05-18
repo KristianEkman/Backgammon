@@ -12,7 +12,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { MoveDto, GameDto, PlayerColor, GameState } from 'src/app/dto';
 import { AppState } from 'src/app/state/app-state';
-import { Sound } from 'src/app/utils';
 import { CheckerArea, CheckerDrag, Point, MoveAnimation } from './';
 import { Checker } from './checker';
 import {
@@ -90,8 +89,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
             this.theme,
             this.rotated || this.flipped,
             () => {
-              // finished callback
-              Sound.playChecker();
               this.animatedMove = undefined;
               this.moveAnimFinished.emit();
             },
@@ -1290,7 +1287,6 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         );
       }
       if (move) {
-        if (!isClick) Sound.playChecker();
         this.addMove.emit({ ...move, animate: isClick });
         break;
       }

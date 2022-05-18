@@ -3,14 +3,14 @@ import { StatusMessage } from '../dto/local/status-message';
 import { GameDto, NewScoreDto, PlayerColor } from '../dto';
 import { AppState } from '../state/app-state';
 import { Busy } from '../state/busy';
-import { Sound } from '../utils';
 import { TranslateService } from '@ngx-translate/core';
+import { SoundService } from '.';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatusMessageService {
-  constructor(private trans: TranslateService) {}
+  constructor(private trans: TranslateService, private sound: SoundService) {}
   setTextMessage(game: GameDto): void {
     const myColor = AppState.Singleton.myColor.getValue();
     let message: StatusMessage;
@@ -69,13 +69,13 @@ export class StatusMessageService {
     );
     AppState.Singleton.statusMessage.setValue(message);
     if (myColor === game.winner) {
-      Sound.playWinner();
+      this.sound.playWinner();
       if (game.isGoldGame)
         setTimeout(() => {
-          Sound.playCoin;
+          this.sound.playCoin();
         }, 2000);
     } else {
-      Sound.playLooser();
+      this.sound.playLooser();
     }
   }
 
@@ -88,7 +88,7 @@ export class StatusMessageService {
   setMoveNow(): void {
     const m = this.trans.instant('statusmessage.movenow');
     const message = StatusMessage.warning(m);
-    Sound.playWarning();
+    this.sound.playWarning();
     AppState.Singleton.statusMessage.setValue(message);
   }
 

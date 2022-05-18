@@ -17,12 +17,11 @@ import {
   PlayerColor,
   UserDto
 } from 'src/app/dto';
-import { AccountService, GameService } from 'src/app/services';
+import { AccountService, GameService, SoundService } from 'src/app/services';
 import { AppState } from 'src/app/state/app-state';
 import { StatusMessage } from 'src/app/dto/local/status-message';
 import { Busy } from 'src/app/state/busy';
 import { StatusMessageService } from 'src/app/services/status-message.service';
-import { Sound } from 'src/app/utils';
 import { map } from 'rxjs/operators';
 import { TutorialService } from 'src/app/services/tutorial.service';
 
@@ -38,7 +37,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     private tutorialService: TutorialService,
     private router: Router,
     private statusMessageService: StatusMessageService,
-    private changeDetector: ChangeDetectorRef
+    private changeDetector: ChangeDetectorRef,
+    private sound: SoundService
   ) {
     this.gameDto$ = AppState.Singleton.game.observe();
     this.dices$ = AppState.Singleton.dices.observe();
@@ -148,6 +148,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   doMove(move: MoveDto): void {
+    if (!move.animate) this.sound.playChecker();
     this.service.doMove(move);
     this.service.sendMove(move);
   }
@@ -175,7 +176,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
       clearTimeout(this.startedHandle);
       this.started = true;
       this.playAiQuestion = false;
-      if (dto.isGoldGame) Sound.playCoin();
+      if (dto.isGoldGame) this.sound.playCoin();
     }
     // console.log(dto?.id);
     this.setRollButtonVisible();
@@ -265,10 +266,11 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     AppState.Singleton.moveTimer.clearValue();
     this.started = false;
     this.service.exitGame();
-    Sound.fadeIntro();
+    this.sound.fadeIntro();
   }
 
   moveAnimFinished(): void {
+    this.sound.playChecker();
     this.service.shiftMoveAnimationsQueue();
   }
 
@@ -311,7 +313,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   private waitForOpponent() {
-    Sound.playPianoIntro();
+    this.sound.playPianoIntro();
     this.startedHandle = setTimeout(() => {
       if (!this.started) {
         this.playAiQuestion = true;
@@ -341,7 +343,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.setRollButtonVisible();
     this.dicesVisible = true;
 
-    Sound.playDice();
+    this.sound.playDice();
 
     this.setSendVisible();
     this.fireResize();
@@ -355,7 +357,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
 
   opponentRolled(): void {
     this.dicesVisible = true;
-    Sound.playDice();
+    this.sound.playDice();
   }
 
   setRollButtonVisible(): void {
@@ -447,7 +449,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   keepWaiting(): void {
-    Sound.playBlues();
+    this.sound.playBlues();
     this.playAiQuestion = false;
   }
 
@@ -501,6 +503,6 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   get introPlaying() {
-    return Sound.introPlaying;
+    return this.sound.introPlaying;
   }
 }

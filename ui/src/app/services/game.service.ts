@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, ɵPlayState } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '../../environments/environment';
 import {
   CheckerDto,
@@ -25,10 +25,11 @@ import {
   HintMovesActionDto
 } from '../dto/Actions';
 import { AppState } from '../state/app-state';
-import { Keys, Sound } from '../utils';
+import { Keys } from '../utils';
 import { StatusMessageService } from './status-message.service';
 import { MessageLevel } from '../dto/local/status-message';
 import { Router, UrlSerializer } from '@angular/router';
+import { SoundService } from '.';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +45,8 @@ export class GameService implements OnDestroy {
     private cookieService: CookieService,
     private statusMessageService: StatusMessageService,
     private router: Router,
-    private serializer: UrlSerializer
+    private serializer: UrlSerializer,
+    private sound: SoundService
   ) {}
 
   connect(gameId: string, playAi: boolean, forGold: boolean): void {
@@ -115,7 +117,7 @@ export class GameService implements OnDestroy {
         this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
         this.statusMessageService.setTextMessage(dto.game);
         AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
-        Sound.fadeIntro();
+        this.sound.fadeIntro();
         this.startTimer();
         break;
       }
@@ -186,7 +188,7 @@ export class GameService implements OnDestroy {
             gold: game.blackPlayer.gold - game.stake / 2
           }
         });
-        Sound.playCoin();
+        this.sound.playCoin();
         this.statusMessageService.setDoublingAccepted();
         break;
       }
@@ -258,7 +260,7 @@ export class GameService implements OnDestroy {
       time -= 0.25;
       AppState.Singleton.moveTimer.setValue(time);
       if (time > 0 && time < 10) {
-        Sound.playTick();
+        this.sound.playTick();
       }
       if (time <= 0) {
         const currentMes = AppState.Singleton.statusMessage.getValue();
@@ -324,7 +326,7 @@ export class GameService implements OnDestroy {
     );
 
     if (hit) {
-      if (move.to < 25) Sound.playCheckerWood();
+      if (move.to < 25) this.sound.playCheckerWood();
       const hitIdx = gameClone.points[to].checkers.indexOf(hit);
       gameClone.points[to].checkers.splice(hitIdx, 1);
       const barIdx = isWhite ? 0 : 25;

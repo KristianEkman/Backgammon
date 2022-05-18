@@ -8,3 +8,4 @@ export * from './global-error-service';
 export * from './message.service';
 export * from './app-update.service';
 export * from './feedback.service';
+export * from './sound.service';
