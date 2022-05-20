@@ -4,6 +4,6 @@ import { DiceDto } from "./../diceDto";
 import { GameDto } from "./../gameDto";
 
 export interface GameStringRequest {
-    dice: DiceDto[];
-    game: GameDto;
+  dice: DiceDto[];
+  game: GameDto;
 }

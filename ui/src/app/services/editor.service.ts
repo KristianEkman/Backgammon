@@ -11,20 +11,22 @@ import {
   MoveDto,
   PlayerColor
 } from '../dto';
-import { AppState } from '../state/app-state';
-import { Busy } from '../state/busy';
+import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EditorService {
-  constructor(private httpClient: HttpClient) {
+  constructor(
+    private httpClient: HttpClient,
+    private appState: AppStateService
+  ) {
     this.url = `${environment.apiServiceUrl}/editor/`;
   }
 
   url: string = '';
   doMove(move: MoveDto) {
-    const prevGame = AppState.Singleton.game.getValue();
+    const prevGame = this.appState.game.getValue();
     const gameClone = JSON.parse(JSON.stringify(prevGame)) as GameDto;
     const isWhite = move.color === PlayerColor.white;
     const from = move.from;
@@ -46,7 +48,7 @@ export class EditorService {
     //push checker to new point
     gameClone.points[to].checkers.push(checker);
 
-    AppState.Singleton.game.setValue(gameClone);
+    this.appState.game.setValue(gameClone);
   }
 
   setStartPosition(): void {
@@ -309,7 +311,7 @@ export class EditorService {
     };
 
     setTimeout(() => {
-      AppState.Singleton.game.setValue(game);
+      this.appState.game.setValue(game);
       this.updateGameString();
     }, 1);
   }
@@ -320,7 +322,7 @@ export class EditorService {
       { value: 6, used: false }
     ];
     const dto: GameStringRequest = {
-      game: AppState.Singleton.game.getValue(),
+      game: this.appState.game.getValue(),
       dice: dice
     };
     this.httpClient
@@ -330,7 +332,7 @@ export class EditorService {
         map((dto) => dto as GameStringResponseDto)
       )
       .subscribe((data) => {
-        AppState.Singleton.gameString.setValue(data.value);
+        this.appState.gameString.setValue(data.value);
       });
   }
 }

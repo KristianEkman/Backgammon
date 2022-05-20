@@ -17,7 +17,13 @@ import {
   PlayerColor,
   UserDto
 } from 'src/app/dto';
-import { AccountService, GameService, SoundService } from 'src/app/services';
+import {
+  AccountService,
+  EditorService,
+  GameService,
+  SoundService,
+  TutorialService
+} from 'src/app/services';
 import { AppStateService } from 'src/app/state/app-state.service';
 import { StatusMessage } from 'src/app/dto/local/status-message';
 import { StatusMessageService } from 'src/app/services/status-message.service';
@@ -37,7 +43,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     private statusMessageService: StatusMessageService,
     private changeDetector: ChangeDetectorRef,
     private sound: SoundService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private editService: EditorService
   ) {
     this.gameDto$ = this.appState.game.observe();
     this.dices$ = this.appState.dices.observe();
@@ -61,8 +68,8 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.appState.moveTimer.observe().subscribe(this.timeTick.bind(this));
 
     this.user$ = this.appState.user.observe();
-      this.tutorialStep$ = this.appState.tutorialStep.observe();
-      this.gameString$ = AppState.Singleton.gameString.observe();
+    this.tutorialStep$ = this.appState.tutorialStep.observe();
+    this.gameString$ = this.appState.gameString.observe();
 
     this.user$.subscribe((user) => {
       this.introMuted = user.muteIntro;
