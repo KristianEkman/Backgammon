@@ -1,57 +1,60 @@
 import { Injectable } from '@angular/core';
 import { StatusMessage } from '../dto/local/status-message';
 import { GameDto, NewScoreDto, PlayerColor } from '../dto';
-import { AppState } from '../state/app-state';
-import { Busy } from '../state/busy';
-import { Sound } from '../utils';
+import { AppStateService } from '../state/app-state.service';
 import { TranslateService } from '@ngx-translate/core';
+import { SoundService } from '.';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatusMessageService {
-  constructor(private trans: TranslateService) {}
+  constructor(
+    private trans: TranslateService,
+    private sound: SoundService,
+    private appState: AppStateService
+  ) {}
   setTextMessage(game: GameDto): void {
-    const myColor = AppState.Singleton.myColor.getValue();
+    const myColor = this.appState.myColor.getValue();
     let message: StatusMessage;
     const currentColor = this.trans.instant(PlayerColor[game.currentPlayer]);
     if (game && myColor === game.currentPlayer) {
-      Busy.hide();
+      this.appState.hideBusy();
       const m = this.trans.instant('statusmessage.yourturn', {
         color: currentColor
       });
       message = StatusMessage.info(m);
     } else {
-      Busy.hide();
+      this.appState.hideBusy();
       const m = this.trans.instant('statusmessage.waitingfor', {
         color: currentColor
       });
       message = StatusMessage.info(m);
     }
-    AppState.Singleton.statusMessage.setValue(message);
+    this.appState.statusMessage.setValue(message);
   }
 
   setMyConnectionLost(reason: string): void {
     const m = this.trans.instant('statusmessage.noconnection');
     const statusMessage = StatusMessage.error(reason || m);
-    AppState.Singleton.statusMessage.setValue(statusMessage);
+    this.appState.statusMessage.setValue(statusMessage);
   }
 
   setOpponentConnectionLost(): void {
     const m = this.trans.instant('statusmessage.opponentconnectionlost');
     const statusMessage = StatusMessage.warning(m);
-    AppState.Singleton.statusMessage.setValue(statusMessage);
+    this.appState.statusMessage.setValue(statusMessage);
   }
 
   setWaitingForConnect(): void {
     const m = this.trans.instant('statusmessage.waitingoppcnn');
     const statusMessage = StatusMessage.info(m);
-    Busy.showNoOverlay();
-    AppState.Singleton.statusMessage.setValue(statusMessage);
+    this.appState.showBusyNoOverlay();
+    this.appState.statusMessage.setValue(statusMessage);
   }
 
   setGameEnded(game: GameDto, newScore: NewScoreDto): void {
-    const myColor = AppState.Singleton.myColor.getValue();
+    const myColor = this.appState.myColor.getValue();
     let score = '';
     if (newScore) {
       let increase = newScore.increase.toString();
@@ -67,46 +70,46 @@ export class StatusMessageService {
         ? this.trans.instant('statusmessage.youwon', { score: score })
         : this.trans.instant('statusmessage.youlost', { score: score })
     );
-    AppState.Singleton.statusMessage.setValue(message);
+    this.appState.statusMessage.setValue(message);
     if (myColor === game.winner) {
-      Sound.playWinner();
+      this.sound.playWinner();
       if (game.isGoldGame)
         setTimeout(() => {
-          Sound.playCoin;
+          this.sound.playCoin();
         }, 2000);
     } else {
-      Sound.playLooser();
+      this.sound.playLooser();
     }
   }
 
   setBlockedMessage(): void {
     const text = this.trans.instant('statusmessage.youareblocked');
     const msg = StatusMessage.warning(text);
-    AppState.Singleton.statusMessage.setValue(msg);
+    this.appState.statusMessage.setValue(msg);
   }
 
   setMoveNow(): void {
     const m = this.trans.instant('statusmessage.movenow');
     const message = StatusMessage.warning(m);
-    Sound.playWarning();
-    AppState.Singleton.statusMessage.setValue(message);
+    this.sound.playWarning();
+    this.appState.statusMessage.setValue(message);
   }
 
   setDoublingAccepted() {
     const text = this.trans.instant('statusmessage.dblaccepted');
     const msg = StatusMessage.info(text);
-    AppState.Singleton.statusMessage.setValue(msg);
+    this.appState.statusMessage.setValue(msg);
   }
 
   setDoublingRequested() {
     const text = this.trans.instant('statusmessage.dblrequested');
     const msg = StatusMessage.info(text);
-    AppState.Singleton.statusMessage.setValue(msg);
+    this.appState.statusMessage.setValue(msg);
   }
 
   setWaitingForDoubleResponse() {
     const text = this.trans.instant('statusmessage.waitfordblresponse');
     const msg = StatusMessage.info(text);
-    AppState.Singleton.statusMessage.setValue(msg);
+    this.appState.statusMessage.setValue(msg);
   }
 }

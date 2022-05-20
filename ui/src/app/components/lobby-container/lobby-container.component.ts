@@ -9,8 +9,7 @@ import {
   MessageService,
   AppUpdateService
 } from 'src/app/services';
-import { AppState } from 'src/app/state/app-state';
-import { Busy } from 'src/app/state/busy';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-lobby-container',
@@ -23,12 +22,13 @@ export class LobbyContainerComponent implements OnInit {
     private authService: SocialAuthService,
     private accountService: AccountService,
     private messageService: MessageService,
-    private updateService: AppUpdateService
+    private updateService: AppUpdateService,
+    private appState: AppStateService
   ) {
-    this.user$ = AppState.Singleton.user.observe();
-    this.messages$ = AppState.Singleton.messages.observe();
-    this.hasNewVersion$ = AppState.Singleton.newVersion.observe();
-    this.isAdmin$ = this.user$.pipe(map((u) => u?.isAdmin));
+    this.user$ = this.appState.user.observe();
+    this.messages$ = this.appState.messages.observe();
+      this.hasNewVersion$ = this.appState.newVersion.observe();
+      this.isAdmin$ = this.user$.pipe(map((u) => u?.isAdmin));
   }
 
   user$: Observable<UserDto>;
@@ -60,7 +60,8 @@ export class LobbyContainerComponent implements OnInit {
           photoUrl: user.photoUrl
         } as UserDto;
         // google and facebook have different names on the token field.
-        Busy.show();
+
+        this.appState.showBusy();
         this.accountService.signIn(userDto, user.idToken || user.authToken);
       }
     });
@@ -132,7 +133,7 @@ export class LobbyContainerComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    return !!AppState.Singleton.user.getValue();
+    return !!this.appState.user.getValue();
   }
 
   getGold(): void {

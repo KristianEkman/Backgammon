@@ -19,4 +19,5 @@ export interface UserDto {
     passHash: number;
     localLoginName: string;
     acceptedLanguages: string[];
+    muteIntro: boolean;
 }

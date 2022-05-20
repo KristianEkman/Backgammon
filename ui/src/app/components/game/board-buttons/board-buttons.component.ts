@@ -5,7 +5,6 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { Sound } from 'src/app/utils';
 
 @Component({
   selector: 'app-board-buttons',
@@ -43,7 +42,6 @@ export class BoardButtonsComponent {
   }
 
   rollButtonClick(): void {
-    Sound.playDice();
     this.onRoll.emit();
   }
 

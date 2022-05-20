@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AppState } from '../state/app-state';
+import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private appState: AppStateService) {}
   canActivate():
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const ok = !!AppState.Singleton.user.getValue();
+    const ok = !!this.appState.user.getValue();
 
     if (!ok) {
       this.router.navigateByUrl('/lobby');

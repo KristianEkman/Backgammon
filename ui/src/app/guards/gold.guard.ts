@@ -7,13 +7,13 @@ import {
   UrlTree
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import { AppState } from '../state/app-state';
+import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GoldGuard implements CanActivate {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private appState: AppStateService) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     routerState: RouterStateSnapshot
@@ -22,7 +22,7 @@ export class GoldGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    const user = AppState.Singleton.user.getValue();
+    const user = this.appState.user.getValue();
     const urlTree = this.router.parseUrl(routerState.url);
     const forGold = urlTree.queryParams['forGold'] === 'true';
 

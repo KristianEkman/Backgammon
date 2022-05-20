@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/services';
-import { Busy } from 'src/app/state/busy';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-unsubscribe-container',
@@ -10,8 +10,12 @@ import { Busy } from 'src/app/state/busy';
   styleUrls: ['./unsubscribe-container.component.scss']
 })
 export class UnsubscribeContainerComponent implements OnInit {
-  constructor(messageService: MessageService, route: ActivatedRoute) {
-    Busy.show();
+  constructor(
+    messageService: MessageService,
+    route: ActivatedRoute,
+    private appState: AppStateService
+  ) {
+    this.appState.showBusy();
     route.queryParams.subscribe((params) => {
       const unsubid = params.id;
       messageService
@@ -20,11 +24,12 @@ export class UnsubscribeContainerComponent implements OnInit {
         .subscribe(
           () => {
             this.show = true;
-            Busy.hide();
+            this.appState.hideBusy();
           },
           (err) => {
             this.hasError = true;
-            Busy.hide();
+            this.appState.hideBusy();
+
             throw err;
           }
         );

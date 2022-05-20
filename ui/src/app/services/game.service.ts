@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, ɵPlayState } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '../../environments/environment';
 import {
   CheckerDto,
@@ -24,11 +24,11 @@ import {
   DoublingActionDto,
   HintMovesActionDto
 } from '../dto/Actions';
-import { AppState } from '../state/app-state';
-import { Keys, Sound } from '../utils';
-import { StatusMessageService } from './status-message.service';
+import { AppStateService } from '../state/app-state.service';
+import { Keys } from '../utils';
 import { MessageLevel } from '../dto/local/status-message';
 import { Router, UrlSerializer } from '@angular/router';
+import { SoundService, StatusMessageService } from '.';
 
 @Injectable({
   providedIn: 'root'
@@ -44,7 +44,9 @@ export class GameService implements OnDestroy {
     private cookieService: CookieService,
     private statusMessageService: StatusMessageService,
     private router: Router,
-    private serializer: UrlSerializer
+    private serializer: UrlSerializer,
+    private sound: SoundService,
+    private appState: AppStateService
   ) {}
 
   connect(gameId: string, playAi: boolean, forGold: boolean): void {
@@ -55,7 +57,7 @@ export class GameService implements OnDestroy {
     if (environment.production) {
       this.url = origin.replace('https://', 'wss://') + '/ws';
     }
-    const user = AppState.Singleton.user.getValue();
+    const user = this.appState.user.getValue();
     const userId = user ? user.id : '';
     const tree = this.router.createUrlTree([], {
       queryParams: {
@@ -79,22 +81,22 @@ export class GameService implements OnDestroy {
     const now = new Date();
     const ping = now.getTime() - this.connectTime.getTime();
     this.statusMessageService.setWaitingForConnect();
-    AppState.Singleton.myConnection.setValue({ connected: true, pingMs: ping });
-    AppState.Singleton.game.clearValue();
-    AppState.Singleton.dices.clearValue();
+    this.appState.myConnection.setValue({ connected: true, pingMs: ping });
+    this.appState.game.clearValue();
+    this.appState.dices.clearValue();
   }
 
   onError(event: Event): void {
     console.error('Error', { event });
-    const cnn = AppState.Singleton.myConnection.getValue();
-    AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
+    const cnn = this.appState.myConnection.getValue();
+    this.appState.myConnection.setValue({ ...cnn, connected: false });
     this.statusMessageService.setMyConnectionLost('');
   }
 
   onClose(event: CloseEvent): void {
     console.log('Close', { event });
-    const cnn = AppState.Singleton.myConnection.getValue();
-    AppState.Singleton.myConnection.setValue({ ...cnn, connected: false });
+    const cnn = this.appState.myConnection.getValue();
+    this.appState.myConnection.setValue({ ...cnn, connected: false });
     // this.statusMessageService.setMyConnectionLost(event.reason);
   }
 
@@ -102,26 +104,26 @@ export class GameService implements OnDestroy {
   onMessage(message: MessageEvent<string>): void {
     const action = JSON.parse(message.data) as ActionDto;
     // console.log(message.data);
-    const game = AppState.Singleton.game.getValue();
+    const game = this.appState.game.getValue();
     switch (action.actionName) {
       case ActionNames.gameCreated: {
         const dto = JSON.parse(message.data) as GameCreatedActionDto;
-        AppState.Singleton.myColor.setValue(dto.myColor);
-        AppState.Singleton.game.setValue(dto.game);
+        this.appState.myColor.setValue(dto.myColor);
+        this.appState.game.setValue(dto.game);
 
         const cookie: GameCookieDto = { id: dto.game.id, color: dto.myColor };
         this.cookieService.deleteAll(Keys.gameIdKey);
         // console.log('Settings cookie', cookie);
         this.cookieService.set(Keys.gameIdKey, JSON.stringify(cookie), 2);
         this.statusMessageService.setTextMessage(dto.game);
-        AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
-        Sound.fadeIntro();
+        this.appState.moveTimer.setValue(dto.game.thinkTime);
+        this.sound.fadeIntro();
         this.startTimer();
         break;
       }
       case ActionNames.dicesRolled: {
         const dicesAction = JSON.parse(message.data) as DicesRolledActionDto;
-        AppState.Singleton.dices.setValue(dicesAction.dices);
+        this.appState.dices.setValue(dicesAction.dices);
         const cGame = {
           ...game,
           validMoves: dicesAction.validMoves,
@@ -129,10 +131,10 @@ export class GameService implements OnDestroy {
           playState: GameState.playing
         };
         // console.log(dicesAction.validMoves);
-        AppState.Singleton.game.setValue(cGame);
+        this.appState.game.setValue(cGame);
         this.statusMessageService.setTextMessage(cGame);
-        AppState.Singleton.moveTimer.setValue(dicesAction.moveTimer);
-        AppState.Singleton.opponentDone.setValue(true);
+        this.appState.moveTimer.setValue(dicesAction.moveTimer);
+        this.appState.opponentDone.setValue(true);
         break;
       }
       case ActionNames.movesMade: {
@@ -142,7 +144,7 @@ export class GameService implements OnDestroy {
       case ActionNames.gameEnded: {
         const endedAction = JSON.parse(message.data) as GameEndedActionDto;
         // console.log('game ended', endedAction.game.winner);
-        AppState.Singleton.game.setValue({
+        this.appState.game.setValue({
           ...endedAction.game,
           playState: GameState.ended
         });
@@ -150,32 +152,32 @@ export class GameService implements OnDestroy {
           endedAction.game,
           endedAction.newScore
         );
-        AppState.Singleton.moveTimer.setValue(0);
+        this.appState.moveTimer.setValue(0);
         break;
       }
       case ActionNames.requestedDoubling: {
         // Opponent has requested
         const action = JSON.parse(message.data) as DoublingActionDto;
-        AppState.Singleton.moveTimer.setValue(action.moveTimer);
+        this.appState.moveTimer.setValue(action.moveTimer);
 
-        AppState.Singleton.game.setValue({
+        this.appState.game.setValue({
           ...game,
           playState: GameState.requestedDoubling,
-          currentPlayer: AppState.Singleton.myColor.getValue()
+          currentPlayer: this.appState.myColor.getValue()
         });
         this.statusMessageService.setDoublingRequested();
         break;
       }
       case ActionNames.acceptedDoubling: {
         const action = JSON.parse(message.data) as DoublingActionDto;
-        AppState.Singleton.moveTimer.setValue(action.moveTimer);
+        this.appState.moveTimer.setValue(action.moveTimer);
         // Opponent has accepted
-        AppState.Singleton.game.setValue({
+        this.appState.game.setValue({
           ...game,
           playState: GameState.playing,
           goldMultiplier: game.goldMultiplier * 2,
-          lastDoubler: AppState.Singleton.myColor.getValue(),
-          currentPlayer: AppState.Singleton.myColor.getValue(),
+          lastDoubler: this.appState.myColor.getValue(),
+          currentPlayer: this.appState.myColor.getValue(),
           stake: game.stake * 2,
           whitePlayer: {
             ...game.whitePlayer,
@@ -186,7 +188,7 @@ export class GameService implements OnDestroy {
             gold: game.blackPlayer.gold - game.stake / 2
           }
         });
-        Sound.playCoin();
+        this.sound.playCoin();
         this.statusMessageService.setDoublingAccepted();
         break;
       }
@@ -202,7 +204,7 @@ export class GameService implements OnDestroy {
       }
       case ActionNames.rolled: {
         // this is just to fire the changed event. The value is not important.
-        AppState.Singleton.rolled.setValue(true);
+        this.appState.rolled.setValue(true);
         break;
       }
       case ActionNames.connectionInfo: {
@@ -211,8 +213,8 @@ export class GameService implements OnDestroy {
           console.log('Opponent disconnected');
           this.statusMessageService.setOpponentConnectionLost();
         }
-        const cnn = AppState.Singleton.opponentConnection.getValue();
-        AppState.Singleton.opponentConnection.setValue({
+        const cnn = this.appState.opponentConnection.getValue();
+        this.appState.opponentConnection.setValue({
           ...cnn,
           connected: action.connection.connected
         });
@@ -220,10 +222,10 @@ export class GameService implements OnDestroy {
       }
       case ActionNames.gameRestore: {
         const dto = JSON.parse(message.data) as GameRestoreActionDto;
-        AppState.Singleton.myColor.setValue(dto.color);
-        AppState.Singleton.game.setValue(dto.game);
-        AppState.Singleton.dices.setValue(dto.dices);
-        AppState.Singleton.moveTimer.setValue(dto.game.thinkTime);
+        this.appState.myColor.setValue(dto.color);
+        this.appState.game.setValue(dto.game);
+        this.appState.dices.setValue(dto.dices);
+        this.appState.moveTimer.setValue(dto.game.thinkTime);
         this.statusMessageService.setTextMessage(dto.game);
         this.startTimer();
         break;
@@ -232,10 +234,10 @@ export class GameService implements OnDestroy {
         const dto = JSON.parse(message.data) as HintMovesActionDto;
 
         dto.moves.forEach((hint) => {
-          const clone = [...AppState.Singleton.moveAnimations.getValue()];
+          const clone = [...this.appState.moveAnimations.getValue()];
           // console.log('pushing next animation');
           clone.push(hint);
-          AppState.Singleton.moveAnimations.setValue(clone);
+          this.appState.moveAnimations.setValue(clone);
         });
         break;
       }
@@ -254,16 +256,16 @@ export class GameService implements OnDestroy {
     }
     this.timerStarted = true;
     this.timerId = setInterval(() => {
-      let time = AppState.Singleton.moveTimer.getValue();
+      let time = this.appState.moveTimer.getValue();
       time -= 0.25;
-      AppState.Singleton.moveTimer.setValue(time);
+      this.appState.moveTimer.setValue(time);
       if (time > 0 && time < 10) {
-        Sound.playTick();
+        this.sound.playTick();
       }
       if (time <= 0) {
-        const currentMes = AppState.Singleton.statusMessage.getValue();
+        const currentMes = this.appState.statusMessage.getValue();
         if (
-          AppState.Singleton.myTurn() &&
+          this.appState.myTurn() &&
           currentMes.level !== MessageLevel.warning
         ) {
           this.statusMessageService.setMoveNow();
@@ -273,7 +275,7 @@ export class GameService implements OnDestroy {
   }
 
   doOpponentMove(move: MoveDto): void {
-    const game = AppState.Singleton.game.getValue();
+    const game = this.appState.game.getValue();
     const gameClone = JSON.parse(JSON.stringify(game)) as GameDto;
     const isWhite = move.color === PlayerColor.white;
     const from = isWhite ? 25 - move.from : move.from;
@@ -292,12 +294,12 @@ export class GameService implements OnDestroy {
 
     gameClone.points[to].checkers.push(checker);
 
-    AppState.Singleton.game.setValue(gameClone);
+    this.appState.game.setValue(gameClone);
   }
 
   doMove(move: MoveDto): void {
     this.userMoves.push({ ...move, nextMoves: [] }); // server does not need to know nextMoves.
-    const prevGame = AppState.Singleton.game.getValue();
+    const prevGame = this.appState.game.getValue();
     this.gameHistory.push(prevGame);
 
     const gameClone = JSON.parse(JSON.stringify(prevGame)) as GameDto;
@@ -324,7 +326,7 @@ export class GameService implements OnDestroy {
     );
 
     if (hit) {
-      if (move.to < 25) Sound.playCheckerWood();
+      if (move.to < 25) this.sound.playCheckerWood();
       const hitIdx = gameClone.points[to].checkers.indexOf(hit);
       gameClone.points[to].checkers.splice(hitIdx, 1);
       const barIdx = isWhite ? 0 : 25;
@@ -338,9 +340,9 @@ export class GameService implements OnDestroy {
 
     //push checker to new point
     gameClone.points[to].checkers.push(checker);
-    AppState.Singleton.game.setValue(gameClone);
+    this.appState.game.setValue(gameClone);
 
-    const dices = AppState.Singleton.dices.getValue();
+    const dices = this.appState.dices.getValue();
     this.dicesHistory.push(dices);
 
     const diceClone = JSON.parse(JSON.stringify(dices)) as DiceDto[];
@@ -358,13 +360,13 @@ export class GameService implements OnDestroy {
     }
     const dice = diceClone[diceIdx];
     dice.used = true;
-    AppState.Singleton.dices.setValue(diceClone);
+    this.appState.dices.setValue(diceClone);
 
     if (move.animate) {
-      const clone = [...AppState.Singleton.moveAnimations.getValue()];
+      const clone = [...this.appState.moveAnimations.getValue()];
       // console.log('pushing next animation');
       clone.push(move);
-      AppState.Singleton.moveAnimations.setValue(clone);
+      this.appState.moveAnimations.setValue(clone);
     }
   }
 
@@ -377,15 +379,15 @@ export class GameService implements OnDestroy {
       return;
     }
     const game = this.gameHistory.pop() as GameDto;
-    AppState.Singleton.game.setValue(game);
+    this.appState.game.setValue(game);
 
     const dices = this.dicesHistory.pop() as DiceDto[];
-    AppState.Singleton.dices.setValue(dices);
+    this.appState.dices.setValue(dices);
 
-    const clone = [...AppState.Singleton.moveAnimations.getValue()];
+    const clone = [...this.appState.moveAnimations.getValue()];
     // console.log('pushing next animation');
     clone.push({ ...move, from: move.to, to: move.from });
-    AppState.Singleton.moveAnimations.setValue(clone);
+    this.appState.moveAnimations.setValue(clone);
   }
 
   sendMessage(message: string): void {
@@ -395,7 +397,7 @@ export class GameService implements OnDestroy {
   }
 
   sendMoves(): void {
-    const myColor = AppState.Singleton.myColor.getValue();
+    const myColor = this.appState.myColor.getValue();
     // Opponent moves are also stored in userMoves but we cant send them back.
     const action: MovesMadeActionDto = {
       actionName: ActionNames.movesMade,
@@ -409,9 +411,9 @@ export class GameService implements OnDestroy {
 
   shiftMoveAnimationsQueue(): void {
     // console.log('shifting animation queue');
-    const clone = [...AppState.Singleton.moveAnimations.getValue()];
+    const clone = [...this.appState.moveAnimations.getValue()];
     clone.shift();
-    AppState.Singleton.moveAnimations.setValue(clone);
+    this.appState.moveAnimations.setValue(clone);
   }
 
   sendMove(move: MoveDto): void {
@@ -473,13 +475,13 @@ export class GameService implements OnDestroy {
       actionName: ActionNames.acceptedDoubling,
       moveTimer: 0 // Set on the server
     };
-    const game = AppState.Singleton.game.getValue();
-    AppState.Singleton.game.setValue({
+    const game = this.appState.game.getValue();
+    this.appState.game.setValue({
       ...game,
       playState: GameState.playing,
       goldMultiplier: game.goldMultiplier * 2,
-      lastDoubler: AppState.Singleton.getOtherPlayer(),
-      currentPlayer: AppState.Singleton.getOtherPlayer(),
+      lastDoubler: this.appState.getOtherPlayer(),
+      currentPlayer: this.appState.getOtherPlayer(),
       whitePlayer: {
         ...game.whitePlayer,
         gold: game.whitePlayer.gold - game.stake / 2
@@ -493,18 +495,16 @@ export class GameService implements OnDestroy {
 
     // TODO: The client countdown is currently only a constant on the backend.
     // What is the best design here?
-    AppState.Singleton.moveTimer.setValue(40);
+    this.appState.moveTimer.setValue(40);
     this.sendMessage(JSON.stringify(action));
-    this.statusMessageService.setTextMessage(
-      AppState.Singleton.game.getValue()
-    );
+    this.statusMessageService.setTextMessage(this.appState.game.getValue());
   }
 
   //This player requests doubling.
   requestDoubling() {
-    const game = AppState.Singleton.game.getValue();
-    const otherPlyr = AppState.Singleton.getOtherPlayer();
-    AppState.Singleton.game.setValue({
+    const game = this.appState.game.getValue();
+    const otherPlyr = this.appState.getOtherPlayer();
+    this.appState.game.setValue({
       ...game,
       playState: GameState.requestedDoubling,
       currentPlayer: otherPlyr
@@ -517,7 +517,7 @@ export class GameService implements OnDestroy {
 
     // TODO: The client countdown is currently only a constant on the backend.
     // What is the best design here? Where to store the constant? One extra server message for this case?
-    AppState.Singleton.moveTimer.setValue(40);
+    this.appState.moveTimer.setValue(40);
     this.sendMessage(JSON.stringify(action));
     this.statusMessageService.setWaitingForDoubleResponse();
   }

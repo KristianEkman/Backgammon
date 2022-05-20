@@ -15,8 +15,12 @@ import { StateObject } from './state-object';
 import { Busy } from './busy';
 import { ErrorState } from './ErrorState';
 import { MessageDto } from '../dto/message/messageDto';
+import { Injectable } from '@angular/core';
 
-export class AppState {
+@Injectable({
+  providedIn: 'root'
+})
+export class AppStateService {
   constructor() {
     this.busy = new StateObject<Busy>();
     this.game = new StateObject<GameDto>();
@@ -48,14 +52,6 @@ export class AppState {
     this.feedbackList = new StateObject<FeedbackDto[]>();
     this.feedbackList.setValue([]);
     this.gameString = new StateObject<string>();
-  }
-
-  private static _singleton: AppState;
-  public static get Singleton(): AppState {
-    if (!this._singleton) {
-      this._singleton = new AppState();
-    }
-    return this._singleton;
   }
 
   busy: StateObject<Busy>;
@@ -99,5 +95,28 @@ export class AppState {
     return this.myColor.getValue() === PlayerColor.black
       ? PlayerColor.white
       : PlayerColor.black;
+  }
+
+  showBusy(): void {
+    this.busy.setValue(new Busy('Please wait', true));
+  }
+
+  hideBusy(): void {
+    this.busy.clearValue();
+  }
+
+  showBusyNoOverlay(): void {
+    this.busy.setValue(new Busy('Please wait', false));
+  }
+
+  public static Themes = ['dark', 'light', 'blue', 'pink', 'green'];
+
+  changeTheme(theme: string): void {
+    if (!theme || theme.length === 0) theme = 'dark';
+    AppStateService.Themes.forEach((v) => {
+      document.body.classList.remove(v);
+    });
+    document.body.classList.add(theme);
+    this.theme.setValue(theme);
   }
 }

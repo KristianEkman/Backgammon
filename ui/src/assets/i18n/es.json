@@ -169,7 +169,7 @@
     "next": "Próxima",
     "back": "atrás"
   },
-  "loadUpdates" : "Actualización de carga",
+  "loadUpdates": "Actualización de carga",
   "unsubscribe": {
     "stopped": "No recibirá más correos electrónicos de Backgammon.",
     "error": "Lo siento.Algo salió mal."

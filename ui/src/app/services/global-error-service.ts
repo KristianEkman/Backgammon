@@ -1,19 +1,19 @@
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
-import { AppState } from '../state/app-state';
+import { AppStateService } from '../state/app-state.service';
 import { ErrorState } from '../state/ErrorState';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalErrorService implements ErrorHandler {
-  constructor(private zone: NgZone) {}
+  constructor(private zone: NgZone, private appState: AppStateService) {}
 
   handleError(error: any): void {
     if (!error) {
       return;
     }
     console.error(error);
-    let current = AppState.Singleton.errors.getValue()?.message ?? '';
+    let current = this.appState.errors.getValue()?.message ?? '';
     let sError = error.stack ?? '';
     sError += error.message ?? error;
 
@@ -34,7 +34,7 @@ export class GlobalErrorService implements ErrorHandler {
     const err = date + '\n' + sError + '\n\n';
     current += err;
     this.zone.run(() => {
-      AppState.Singleton.errors.setValue(new ErrorState(current));
+      this.appState.errors.setValue(new ErrorState(current));
     });
   }
 }

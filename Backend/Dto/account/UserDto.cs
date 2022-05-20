@@ -8,7 +8,6 @@ namespace Backend.Dto.account
 {
     public class UserDto
     {
-
         public string id { get; set; }        
         public string name { get; set; }
         public string email { get; set; }
@@ -27,5 +26,6 @@ namespace Backend.Dto.account
         public int passHash { get; set; }
         public string localLoginName { get; set; }
         public string[] acceptedLanguages { get; set; }
+        public bool muteIntro { get; set; }
     }
 }

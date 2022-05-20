@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { addDays, format } from 'date-fns';
 import { Observable } from 'rxjs';
-import { MessageType, PlayedGameListDto, SummaryDto } from 'src/app/dto';
+import { PlayedGameListDto, SummaryDto } from 'src/app/dto';
 import { MassMailDto } from 'src/app/dto/message';
 import { MessageService } from 'src/app/services';
 import { AdminService } from 'src/app/services/admin.service';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-admin-container',
@@ -19,9 +18,10 @@ export class AdminContainerComponent implements OnInit {
     private adminSerivce: AdminService,
     public router: Router,
     private messageService: MessageService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private appState: AppStateService
   ) {
-    this.playedGames$ = AppState.Singleton.playedGames.observe();
+    this.playedGames$ = this.appState.playedGames.observe();
 
     this.summary$ = this.adminSerivce.getSummary();
     this.formGroup = this.fb.group({
@@ -55,7 +55,7 @@ export class AdminContainerComponent implements OnInit {
   }
 
   reload() {
-    AppState.Singleton.playedGames.setValue({ games: [] });
+    this.appState.playedGames.setValue({ games: [] });
     this.adminSerivce.loadPlayedGames();
   }
 }

@@ -1,4 +1,10 @@
-export class Sound {
+import { Injectable, OnDestroy } from '@angular/core';
+import { AppStateService } from '../state/app-state.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class SoundService implements OnDestroy {
   click: HTMLAudioElement;
   dice: HTMLAudioElement;
   checker: HTMLAudioElement;
@@ -11,8 +17,9 @@ export class Sound {
   blues: HTMLAudioElement;
   tick: HTMLAudioElement;
   pianointro: HTMLAudioElement;
+  introPlaying = false;
 
-  private constructor() {
+  constructor(private appState: AppStateService) {
     this.click = new Audio();
     this.click.src = '../assets/sound/click.wav';
     this.click.load();
@@ -63,67 +70,73 @@ export class Sound {
     this.pianointro = new Audio();
     this.pianointro.src = '../assets/sound/pianointro.mp3';
     this.pianointro.load();
+    this.pianointro.onended = () => {
+      this.introPlaying = false;
+    };
   }
 
-  private static _singleton: Sound;
-  public static get Singleton(): Sound {
-    if (!this._singleton) {
-      this._singleton = new Sound();
-    }
-    return this._singleton;
+  playClick(): void {
+    this.click.play();
   }
 
-  static playClick(): void {
-    this.Singleton.click.play();
+  playDice(): void {
+    this.dice.play();
   }
 
-  static playDice(): void {
-    this.Singleton.dice.play();
+  playChecker(): void {
+    this.checker.play();
   }
 
-  static playChecker(): void {
-    this.Singleton.checker.play();
+  playCheckerWood(): void {
+    this.checkerWood.play();
   }
 
-  static playCheckerWood(): void {
-    this.Singleton.checkerWood.play();
+  playLooser(): void {
+    this.looser.play();
   }
 
-  static playLooser(): void {
-    this.Singleton.looser.play();
+  playSwish(): void {
+    this.swish.play();
   }
 
-  static playSwish(): void {
-    this.Singleton.swish.play();
+  playWarning(): void {
+    this.warning.play();
   }
 
-  static playWarning(): void {
-    this.Singleton.warning.play();
+  playWinner(): void {
+    this.winner.play();
   }
 
-  static playWinner(): void {
-    this.Singleton.winner.play();
+  playCoin(): void {
+    this.coin.play();
   }
 
-  static playCoin(): void {
-    this.Singleton.coin.play();
+  playTick(): void {
+    this.tick.play();
   }
 
-  static playTick(): void {
-    this.Singleton.tick.play();
+  playBlues(): void {
+    let vol = 1;
+    if (this.appState.user.getValue().muteIntro) vol = 0;
+    this.blues.volume = vol;
+    this.blues.play();
   }
 
-  static playBlues(): void {
-    this.Singleton.blues.volume = 1;
-    this.Singleton.blues.play();
+  playPianoIntro(): void {
+    let vol = 0.3;
+    this.introPlaying = true;
+    if (this.appState.user.getValue().muteIntro) vol = 0;
+
+    this.pianointro.volume = vol;
+    this.pianointro.play();
   }
 
-  static playPianoIntro(): void {
-    this.Singleton.pianointro.volume = 0.5;
-    this.Singleton.pianointro.play();
+  unMuteIntro(): void {
+    this.pianointro.volume = 0.3;
+    this.blues.volume = 1;
   }
 
-  static fadeSound(sound: HTMLAudioElement): void {
+  fadeSound(sound: HTMLAudioElement): void {
     const startVol = sound.volume;
     if (startVol === 0) return;
     const interval = 50; //ms
@@ -140,8 +153,12 @@ export class Sound {
     }, interval);
   }
 
-  static fadeIntro() {
-    Sound.fadeSound(Sound.Singleton.blues);
-    Sound.fadeSound(Sound.Singleton.pianointro);
+  fadeIntro() {
+    this.fadeSound(this.blues);
+    this.fadeSound(this.pianointro);
+  }
+
+  ngOnDestroy() {
+    this.fadeIntro();
   }
 }

@@ -8,5 +8,7 @@ export * from './global-error-service';
 export * from './message.service';
 export * from './app-update.service';
 export * from './feedback.service';
+export * from './sound.service';
+export * from './status-message.service';
 export * from './tutorial.service';
 export * from './editor.service';

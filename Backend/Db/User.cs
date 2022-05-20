@@ -36,5 +36,7 @@ namespace Backend.Db
         public ICollection<Message> SentMessages { get; set; } = new List<Message>();
         public ICollection<Feedback> SentFeedback { get; set; } = new List<Feedback>();
 
+        public bool MuteIntro { get; set; }
+
     }
 }

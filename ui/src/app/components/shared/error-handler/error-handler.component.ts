@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ErrorReportDto } from 'src/app/dto';
-import { AppState } from 'src/app/state/app-state';
+import { AppStateService } from 'src/app/state/app-state.service';
 import { ErrorState } from 'src/app/state/ErrorState';
 
 @Component({
@@ -24,9 +24,9 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
   @Output() save = new EventEmitter<ErrorReportDto>();
   formGroup: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private appState: AppStateService) {
     this.showErrors.bind(this);
-    this.formGroup = fb.group({
+    this.formGroup = this.fb.group({
       errors: ['']
     });
   }
@@ -63,6 +63,6 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
 
   clearErrors(): void {
     this.textVisible = false;
-    AppState.Singleton.errors.clearValue();
+    this.appState.errors.clearValue();
   }
 }
