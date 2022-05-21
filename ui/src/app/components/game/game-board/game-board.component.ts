@@ -1122,6 +1122,8 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       areas.push(this.whiteHome);
     }
 
+    const currentColor = this.game?.currentPlayer;
+
     for (let i = 0; i < areas.length; i++) {
       const rect = this.checkerAreas[i];
       const x = clientX - this.borderWidth;
@@ -1130,12 +1132,16 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         continue;
       }
       let ptIdx = rect.pointIdx;
-      if (this.game?.currentPlayer === PlayerColor.white) {
+      // console.log({ ptIdx, currentColor });
+      if (currentColor === PlayerColor.white) {
         ptIdx = 25 - rect.pointIdx;
       }
       // The moves are ordered  by backend by dice value.
       const move = this.game.validMoves.find((m) => m.from === ptIdx);
-      const checkers = this.game.points[ptIdx].checkers;
+      const checkers = this.game.points[rect.pointIdx].checkers.filter(
+        (c) => c.color === currentColor
+      );
+      // console.log(checkers, this.game.points);
       if (move !== undefined || (this.editing && checkers.length > 0)) {
         const lastChecker = checkers[checkers.length - 1];
         this.dragging = new CheckerDrag(
