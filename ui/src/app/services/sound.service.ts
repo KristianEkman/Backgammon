@@ -117,7 +117,7 @@ export class SoundService implements OnDestroy {
 
   playBlues(): void {
     let vol = 1;
-    if (this.appState.user.getValue().muteIntro) vol = 0;
+    if (this.appState.user.getValue()?.muteIntro) vol = 0;
     this.blues.volume = vol;
     this.blues.play();
   }
@@ -125,7 +125,7 @@ export class SoundService implements OnDestroy {
   playPianoIntro(): void {
     let vol = 0.3;
     this.introPlaying = true;
-    if (this.appState.user.getValue().muteIntro) vol = 0;
+    if (this.appState.user.getValue()?.muteIntro) vol = 0;
 
     this.pianointro.volume = vol;
     this.pianointro.play();

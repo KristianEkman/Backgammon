@@ -72,7 +72,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
     this.gameString$ = this.appState.gameString.observe();
 
     this.user$.subscribe((user) => {
-      this.introMuted = user.muteIntro;
+      if (user) this.introMuted = user.muteIntro;
     });
 
     // if game page is refreshed, restore user from login cookie
@@ -147,7 +147,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   editing = false;
   dicesDto: DiceDto[] | undefined;
   nextDoublingFactor = 1;
-  introMuted = this.appState.user.getValue().muteIntro;
+  introMuted = this.appState.user.getValue()?.muteIntro ?? false;
 
   @ViewChild('dices') dices: ElementRef | undefined;
   @ViewChild('boardButtons') boardButtons: ElementRef | undefined;

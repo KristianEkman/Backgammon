@@ -1,9 +1,9 @@
 ﻿/* Auto Generated */
 
-import { DiceDto } from "./../diceDto";
 import { GameDto } from "./../gameDto";
+import { DiceDto } from "./../diceDto";
 
 export interface GameStringRequest {
-  dice: DiceDto[];
-  game: GameDto;
+    game: GameDto;
+    dice: DiceDto[];
 }
