@@ -1139,7 +1139,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
       // The moves are ordered  by backend by dice value.
       const move = this.game.validMoves.find((m) => m.from === ptIdx);
       const checkers = this.game.points[rect.pointIdx].checkers.filter(
-        (c) => c.color === currentColor
+        (c) => c.color === currentColor || this.editing
       );
       // console.log(checkers, this.game.points);
       if (move !== undefined || (this.editing && checkers.length > 0)) {
