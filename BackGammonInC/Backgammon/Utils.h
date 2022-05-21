@@ -40,7 +40,7 @@ void FailAssert();
 	#define ASSERT_DBG(condition) // does nothing
 #endif // _DEBUG
 
-#define VERIFY(condition) if (!(condition)) {printf("\n Condition (%s) failed verification in function %s\n", ""#condition"", __func__); exit(0);}
+#define VERIFY(condition) if (!(condition)) {fprintf(stderr, "\n Condition (%s) failed verification in function %s\n", ""#condition"", __func__); exit(1);}
 
 typedef enum {
 	black,

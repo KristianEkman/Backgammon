@@ -36,6 +36,9 @@
             this.labelEngine2 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.buttonSearch = new System.Windows.Forms.Button();
+            this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.buttonSearch2 = new System.Windows.Forms.Button();
+            this.buttonPlay = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // openFileDialog1
@@ -72,7 +75,7 @@
             // 
             // buttonLoad2
             // 
-            this.buttonLoad2.Location = new System.Drawing.Point(694, 16);
+            this.buttonLoad2.Location = new System.Drawing.Point(1138, 12);
             this.buttonLoad2.Name = "buttonLoad2";
             this.buttonLoad2.Size = new System.Drawing.Size(130, 29);
             this.buttonLoad2.TabIndex = 3;
@@ -90,17 +93,19 @@
             // 
             // richTextBox1
             // 
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.richTextBox1.ForeColor = System.Drawing.Color.White;
-            this.richTextBox1.Location = new System.Drawing.Point(12, 67);
+            this.richTextBox1.Location = new System.Drawing.Point(18, 61);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(676, 377);
+            this.richTextBox1.Size = new System.Drawing.Size(676, 426);
             this.richTextBox1.TabIndex = 5;
             this.richTextBox1.Text = "";
             // 
             // buttonSearch
             // 
-            this.buttonSearch.Location = new System.Drawing.Point(594, 12);
+            this.buttonSearch.Location = new System.Drawing.Point(148, 12);
             this.buttonSearch.Name = "buttonSearch";
             this.buttonSearch.Size = new System.Drawing.Size(94, 29);
             this.buttonSearch.TabIndex = 6;
@@ -108,12 +113,47 @@
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
+            // richTextBox2
+            // 
+            this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.richTextBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.richTextBox2.ForeColor = System.Drawing.Color.White;
+            this.richTextBox2.Location = new System.Drawing.Point(700, 61);
+            this.richTextBox2.Name = "richTextBox2";
+            this.richTextBox2.Size = new System.Drawing.Size(676, 426);
+            this.richTextBox2.TabIndex = 5;
+            this.richTextBox2.Text = "";
+            // 
+            // buttonSearch2
+            // 
+            this.buttonSearch2.Location = new System.Drawing.Point(1274, 12);
+            this.buttonSearch2.Name = "buttonSearch2";
+            this.buttonSearch2.Size = new System.Drawing.Size(94, 29);
+            this.buttonSearch2.TabIndex = 6;
+            this.buttonSearch2.Text = "Search";
+            this.buttonSearch2.UseVisualStyleBackColor = true;
+            this.buttonSearch2.Click += new System.EventHandler(this.buttonSearch2_Click);
+            // 
+            // buttonPlay
+            // 
+            this.buttonPlay.Location = new System.Drawing.Point(651, 12);
+            this.buttonPlay.Name = "buttonPlay";
+            this.buttonPlay.Size = new System.Drawing.Size(94, 29);
+            this.buttonPlay.TabIndex = 6;
+            this.buttonPlay.Text = "Play";
+            this.buttonPlay.UseVisualStyleBackColor = true;
+            this.buttonPlay.Click += new System.EventHandler(this.buttonPlay_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1311, 450);
+            this.ClientSize = new System.Drawing.Size(1380, 503);
+            this.Controls.Add(this.buttonSearch2);
+            this.Controls.Add(this.buttonPlay);
             this.Controls.Add(this.buttonSearch);
+            this.Controls.Add(this.richTextBox2);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.buttonLoad2);
             this.Controls.Add(this.labelEngine2);
@@ -138,5 +178,8 @@
         private Label labelEngine2;
         private RichTextBox richTextBox1;
         private Button buttonSearch;
+        private RichTextBox richTextBox2;
+        private Button buttonSearch2;
+        private Button buttonPlay;
     }
 }

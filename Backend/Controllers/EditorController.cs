@@ -1,5 +1,6 @@
 ﻿using Backend.Dto;
 using Backend.Dto.editor;
+using Backend.Rules;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,8 @@ namespace Backend.Controllers
 
 		private string GetGameString(GameDto g, DiceDto[] dice)
 		{
-			var s = new StringBuilder("pos ");
-
+			var s = new StringBuilder("board ");
+			
 			var blackBar = g.points[0].checkers.Count(c => c.color == PlayerColor.black);
 			s.Append($"b{blackBar} ");
 			

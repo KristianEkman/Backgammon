@@ -13,22 +13,22 @@ public class ExeEngine
     public event EventHandler Log;
     public event EventHandler Move;
 
-
     public Process Process { get; set; }
     public string Path { get; }
 
     public void Start()
     {
-        KillAll();
-        Process = new Process();
-        Process.StartInfo = new ProcessStartInfo
+        Process = new Process
         {
-            CreateNoWindow = true,
-            FileName = Path,
-            RedirectStandardInput = true,
-            RedirectStandardOutput = true,
-            StandardInputEncoding = Encoding.ASCII,
-            RedirectStandardError = true,
+            StartInfo = new ProcessStartInfo
+            {
+                CreateNoWindow = true,
+                FileName = Path,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                StandardInputEncoding = Encoding.ASCII,
+                RedirectStandardError = true,
+            }
         };
         Process.OutputDataReceived += Process_OutputDataReceived;
         Process.ErrorDataReceived += Process_ErrorDataReceived;
@@ -43,13 +43,8 @@ public class ExeEngine
         Process.StandardInput.WriteLine("q");
 
     }
-    private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
-    {
-        if (!string.IsNullOrEmpty(e.Data))
-            throw new ApplicationException(e.Data);
-    }
 
-    public void KillAll()
+    public static void KillAll()
     {
         var siblings = Process.GetProcessesByName("Backgammon");
         foreach (var sibling in siblings)
@@ -60,9 +55,7 @@ public class ExeEngine
 
     public void SearchBoard(string internalboard)
     {
-        Process.StandardInput.WriteLine(internalboard);
-        Thread.Sleep(500);
-        Process.StandardInput.WriteLine("search");
+        Process.StandardInput.WriteLine(internalboard);        
     }
 
     private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -71,5 +64,11 @@ public class ExeEngine
         Log?.Invoke(this, message);
         if (message.StartsWith("move"))
             Move.Invoke(this, message);
+    }
+
+    private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+    {
+        if (!string.IsNullOrEmpty(e.Data))
+            throw new ApplicationException(e.Data);
     }
 }

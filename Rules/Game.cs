@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 //https://www.bkgm.com/rules.html
@@ -573,6 +574,41 @@ namespace Backend.Rules
         public bool ReallyStarted()
         {
             return BlackPlayer.FirstMoveMade && WhitePlayer.FirstMoveMade;
+        }
+
+        public string GameString()
+        {
+            var s = new StringBuilder("board ");
+
+            var blackBar = Points[0].Checkers.Count(c => c.Color == Player.Color.Black);
+            s.Append($"b{blackBar} ");
+
+            for (int i = 1; i < 25; i++)
+            {
+                var checkers = Points[i].Checkers;
+                if (checkers.Count > 0)
+                {
+                    var color = checkers[0].Color;
+                    if (color == Player.Color.Black)
+                        s.Append('b');
+                    else
+                        s.Append('w');
+                }
+                s.Append(checkers.Count + " ");
+            }
+            var whiteBar = Points[25].Checkers.Count(c => c.Color == Player.Color.White);
+            s.Append($"w{whiteBar} ");
+
+            var whiteHome = Points[0].Checkers.Count(c => c.Color == Player.Color.White);
+            s.Append($"{whiteHome} ");
+
+            var blackHome = Points[25].Checkers.Count(c => c.Color == Player.Color.Black);
+            s.Append($"{blackHome} ");
+
+            s.Append(CurrentPlayer == Player.Color.Black ? "b " : "w ");
+            s.Append(Roll[0].Value + " ");
+            s.Append(Roll[1].Value);
+            return s.ToString();
         }
     }
 }

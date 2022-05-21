@@ -35,7 +35,7 @@ namespace BackendTests
             var raw = "board:You:udacity_capstone:1:0:0:0:-1:0:0:0:0:5:-1:3:0:0:0:-4:5:-1:0:0:-3:0:-5:0:0:0:0:2:0:1:2:5:0:0:1:1:1:0:1:-1:0:25:0:0:0:0:2:0:0:0";
             var board = Board.Parse(raw);
             var s = board.ToInternal();
-            Assert.AreEqual("pos 0 b1 0 0 0 0 w5 b1 w3 0 0 0 b4 w5 b1 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w 2 5", s);
+            Assert.AreEqual("board 0 b1 0 0 0 0 w5 b1 w3 0 0 0 b4 w5 b1 0 0 b3 0 b5 0 0 0 0 w2 0 0 0 w 2 5", s);
         }
 
         [TestMethod]

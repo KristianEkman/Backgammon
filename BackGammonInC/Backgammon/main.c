@@ -91,9 +91,9 @@ int main() {
 		else if (Streq(buf, "play\n") || Streq(buf, "p\n")) {			
 			PlayAndEvaluate();
 		}
-		else if (StartsWith(buf, "pos ")) {			
-			ReadGameString(&buf[4], &G);
-			//PrintGame(&G);
+		else if (StartsWith(buf, "board ")) {					
+			ReadGameString(&buf[6], &G);
+			PrintBest();
 		}
 		else if (Streq(buf, "game\n") || Streq(buf, "g\n") ) {
 			PrintGame(&G);

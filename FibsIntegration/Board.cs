@@ -96,7 +96,7 @@ namespace FibsIntegration
             {
                 throw new ApplicationException("Not calculating opponnets boards");
             }
-            var s = "pos ";
+            var s = "board ";
             for (int i = 0; i < 26; i++)
             {
                 //int r = ReverseDirection ? 25 - i : i;
