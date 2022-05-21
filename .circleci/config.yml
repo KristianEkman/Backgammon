@@ -35,13 +35,13 @@ jobs:
           command: "pwd && ls"
       - run:
           name: "Run dotnet restore"
-          command: "dotnet restore"
+          command: "dotnet restore Backgammon.sln"
       - run:
           name: "Compile"
-          command: "dotnet build"
+          command: "dotnet build Backgammon.sln"
       - run:
           name: "Test"
-          command: 'dotnet test -l:"junit;LogFileName=TestOutput.xml" -r:"TestResults"'
+          command: 'dotnet test  Backgammon.sln -l:"junit;LogFileName=TestOutput.xml" -r:"TestResults"'
       - store_test_results:
           path: TestResults
 
