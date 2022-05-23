@@ -780,15 +780,14 @@ int FindBestMoveSet(Game* g, MoveSet* bestSet, int depth) {
 
 	if (g->MoveSetsCount == 0)
 	{
-		// This is not good for the current player.		
 		return -1;
 	}
 
-	if (PlayersPassedEachOther(g)) {
-		// Prio to move checkers inside home
-		// Then prio to move off.
-		return;
-	}
+	//if (PlayersPassedEachOther(g)) {
+	//	// Prio to move checkers inside home
+	//	// Then prio to move off.
+	//	return;
+	//}
 
 	int setsCount = g->MoveSetsCount;
 	MoveSet* localSets = malloc(sizeof(MoveSet) * g->MoveSetsCount);
@@ -859,6 +858,10 @@ void Pause(Game* g) {
 
 void PrintSet(MoveSet set) {
 	printf("\nmove ");
+	
+	if (set.Length < 1)
+		printf("none\n");
+
 	for (int i = 0; i < set.Length; i++)
 	{
 		Move m = set.Moves[i];

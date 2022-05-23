@@ -32,16 +32,16 @@ void PrintBest() {
 		fflush(stdout);
 		return;
 	}
-	MoveSet set;
+	MoveSet set;	
+	set.Length = 0;
 	Searching = true;
 	InitAiManual(&AIs[0]);
 	InitAiManual(&AIs[1]);
-	int depth = G.Dice[0] == G.Dice[1] ? 1 : 2;
-	FindBestMoveSet(&G, &set, depth);
-	fflush(stdout);
+	int depth = G.Dice[0] == G.Dice[1] ? 1 : 1;
+	int setIdx = FindBestMoveSet(&G, &set, depth);
 
-	PrintSet(set);
-	
+	fflush(stdout);	
+	PrintSet(set);	
 	Searching = false;
 }
 

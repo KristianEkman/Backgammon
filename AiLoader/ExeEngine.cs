@@ -61,9 +61,12 @@ public class ExeEngine
     private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
     {
         var message = e.Data ?? "";
-        Log?.Invoke(this, message);
+        if (string.IsNullOrEmpty(message)) return;
+
         if (message.StartsWith("move"))
             Move.Invoke(this, message);
+        else
+            Log?.Invoke(this, message);
     }
 
     private void Process_ErrorDataReceived(object sender, DataReceivedEventArgs e)
