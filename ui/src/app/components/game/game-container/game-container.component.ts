@@ -510,7 +510,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   timeTick(time: number) {
-    if (time < 30 && this.myTurn) {
+    if (time < 30 && this.myTurn()) {
       const game = this.appState.game.getValue();
       if (
         game &&
