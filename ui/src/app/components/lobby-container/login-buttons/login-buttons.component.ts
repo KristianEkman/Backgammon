@@ -8,7 +8,7 @@ import {
 import {
   FacebookLoginProvider,
   GoogleLoginProvider
-} from 'angularx-social-login';
+} from '@abacritt/angularx-social-login';
 
 @Component({
   selector: 'app-login-buttons',

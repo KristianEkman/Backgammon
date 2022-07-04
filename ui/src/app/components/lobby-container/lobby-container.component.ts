@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SocialAuthService, SocialUser } from 'angularx-social-login';
+import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MessageDto, UserDto } from 'src/app/dto';
@@ -27,8 +27,8 @@ export class LobbyContainerComponent implements OnInit {
   ) {
     this.user$ = this.appState.user.observe();
     this.messages$ = this.appState.messages.observe();
-      this.hasNewVersion$ = this.appState.newVersion.observe();
-      this.isAdmin$ = this.user$.pipe(map((u) => u?.isAdmin));
+    this.hasNewVersion$ = this.appState.newVersion.observe();
+    this.isAdmin$ = this.user$.pipe(map((u) => u?.isAdmin));
   }
 
   user$: Observable<UserDto>;

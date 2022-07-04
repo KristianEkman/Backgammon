@@ -5,11 +5,11 @@ import { StorageServiceModule } from 'ngx-webstorage-service';
 import {
   SocialLoginModule,
   SocialAuthServiceConfig
-} from 'angularx-social-login';
+} from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,
   FacebookLoginProvider
-} from 'angularx-social-login';
+} from '@abacritt/angularx-social-login';
 
 import { GameService } from 'src/app/services/game.service';
 
