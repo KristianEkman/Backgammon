@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
@@ -59,7 +63,7 @@ export class PasswordContainerComponent {
     this.submitClicked = true;
     const me = this;
     if (!this.formGroup.valid) {
-      console.log(this.formGroup);
+      // console.log(this.formGroup);
       return;
     }
 

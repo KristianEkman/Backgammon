@@ -35,11 +35,10 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("/api/account/signin")]
-        public async Task<UserDto> SigninSocial([FromBody] UserDto body)
+        public async Task<UserDto> SigninSocial([FromBody] UserDto userDto)
         {
             bool valid = false;
-            string provider = body.socialProvider;
-            var userDto = new UserDto();
+            var provider = userDto.socialProvider;            
             try
             {
                 logger.LogInformation("Signing in new user");
@@ -59,7 +58,8 @@ namespace Backend.Controllers
                 }
                 else if (provider == "FACEBOOK")
                 {
-                    valid = await ValidateFacebookJwt(Request.Headers["Authorization"]);
+                    var token = Request.Headers["Authorization"];
+                    valid = await ValidateFacebookJwt(token);                   
                 }
             }
             catch (Exception exc)

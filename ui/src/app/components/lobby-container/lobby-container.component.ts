@@ -41,28 +41,6 @@ export class LobbyContainerComponent implements OnInit {
   showLoginTip = false;
 
   ngOnInit(): void {
-    // this.authService.authState.subscribe((user: SocialUser) => {
-    //   if (!this.loginClicked) {
-    //     // This gets fired sometimes for unknow reasons.
-    //     // Makes sure it only does things when I want to.
-    //     return;
-    //   }
-    //   this.loginClicked = false;
-    //   // send user, store secret user id
-    //   if (user) {
-    //     const userDto = {
-    //       name: user.name, // todo: What about first name and last name. Should I use them if one is missing?
-    //       email: user.email,
-    //       socialProviderId: user.id,
-    //       socialProvider: user.provider,
-    //       photoUrl: user.photoUrl
-    //     } as UserDto;
-    //     // google and facebook have different names on the token field.
-
-    //     this.appState.showBusy();
-    //     this.accountService.signIn(userDto, user.idToken || user.authToken);
-    //   }
-    // });
     this.accountService.repair();
 
     if (this.accountService.isLoggedIn()) {
@@ -79,17 +57,17 @@ export class LobbyContainerComponent implements OnInit {
 
   loginFacebook(token: string): void {
     this.loginClicked = true;
-    // this.authService.signIn(provider);
+    this.accountService.signIn(token, 'FACEBOOK');
   }
 
   loginGoogle(token: string) {
+    this.loginClicked = true;
     this.accountService.signIn(token, 'GOOGLE');
   }
 
   logout(): void {
     this.accountService.signOut();
     location.href = '/';
-
     // this.authService.signOut(true);
   }
 

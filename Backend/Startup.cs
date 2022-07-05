@@ -64,7 +64,7 @@ namespace Backend
 
             applicationLifetime.ApplicationStopping.Register(() => { OnShutdown(logger); });
 
-            app.UseCors(options => options.WithOrigins("http://localhost:4200")
+            app.UseCors(options => options.WithOrigins("https://localhost:4200")
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowAnyOrigin()

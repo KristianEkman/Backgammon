@@ -18,8 +18,21 @@ export class LoginButtonsComponent implements AfterViewInit {
   @Input() isLoggedIn: boolean | undefined = false;
 
   show = false;
+  facebookLoginResponse: any;
 
   ngAfterViewInit(): void {
+    this.initGoogle();
+    this.initFacebook();
+  }
+
+  initFacebook() {
+    const FB = (window as any).FB;
+    FB.getLoginStatus((response: any) => {
+      this.facebookLoginResponse = response;
+    });
+  }
+
+  initGoogle() {
     const google = (window as any).google;
     google.accounts.id.initialize({
       client_id:
@@ -45,5 +58,28 @@ export class LoginButtonsComponent implements AfterViewInit {
 
   passwordLoginClick(): void {
     this.loggedinPassword.emit();
+  }
+
+  facebookLoginClick() {
+    const FB = (window as any).FB;
+    if (
+      this.facebookLoginResponse &&
+      this.facebookLoginResponse.status === 'connected'
+    ) {
+      const token = this.facebookLoginResponse.authResponse.accessToken;
+      this.loggedinFacebook.emit(token);
+      return;
+    }
+
+    // calling login when connected will raise an error.
+    FB.login((respons: any) => {
+      if (
+        respons?.status === 'connected' &&
+        respons.authResponse?.accessToken
+      ) {
+        const token = respons.authResponse.accessToken;
+        this.loggedinFacebook.emit(token);
+      }
+    });
   }
 }

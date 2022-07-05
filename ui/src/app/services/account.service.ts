@@ -10,7 +10,6 @@ import { Observable } from 'rxjs';
 import { ToplistService } from './toplist.service';
 import { MessageService } from './message.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Theme } from '../components/account/theme/theme';
 import { GoldGiftDto } from '../dto/rest';
 import {
   LocalAccountStatus,
@@ -38,18 +37,23 @@ export class AccountService {
     this.url = `${environment.apiServiceUrl}/account`;
   }
 
-  public signIn(idToken: string, provider: string): void {
+  public async signIn(idToken: string, provider: string): Promise<void> {
     const options = {
       headers: { Authorization: idToken }
     };
     // Gets or creates the user in backgammon database.
+
+    // Google user data is fetched by the backend.
+    let userDto = { socialProvider: provider };
+
+    if (provider === 'FACEBOOK') {
+      // Getting some info from the provider. Only name email and photo.
+      userDto = await this.getFacebookUser();
+    }
+
     this.appState.showBusy();
     this.http
-      .post<UserDto>(
-        `${this.url}/signin`,
-        { socialProvider: provider },
-        options
-      )
+      .post<UserDto>(`${this.url}/signin`, userDto, options)
       .pipe(
         map((data) => {
           return data;
@@ -57,10 +61,10 @@ export class AccountService {
         take(1) // unsubscribes
       )
       .subscribe((userDto: UserDto) => {
-        this.trans.use(userDto.preferredLanguage ?? 'en');
+        this.trans.use(userDto?.preferredLanguage ?? 'en');
         this.storage.set(Keys.loginKey, userDto);
         this.appState.user.setValue(userDto);
-        if (userDto) this.appState.changeTheme(userDto.theme);
+        if (userDto) this.appState.changeTheme(userDto?.theme);
         this.appState.hideBusy();
         if (userDto?.createdNew) {
           this.router.navigateByUrl('/edit-user');
@@ -70,6 +74,20 @@ export class AccountService {
           this.messageService.loadMessages();
         }
       });
+  }
+
+  async getFacebookUser(): Promise<UserDto> {
+    const FB = (window as any).FB;
+    let userDto: UserDto;
+    const promise = new Promise<UserDto>((reslove) => {
+      FB.api('/me?fields=id,name,email,picture', (response: any) => {
+        userDto = { ...response };
+        userDto.photoUrl = response?.picture?.data?.url;
+        userDto.socialProvider = 'FACEBOOK';
+        return reslove(userDto);
+      });
+    });
+    return await promise;
   }
 
   signOut(): void {
