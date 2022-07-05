@@ -139,27 +139,6 @@ export function HttpLoaderFactory(http: HttpClient): TranslateHttpLoader {
   providers: [
     GameService,
     AccountService,
-    // {
-    //   provide: 'SocialAuthServiceConfig',
-    //   useValue: {
-    //     autoLogin: navigator.userAgent.indexOf('Firefox') == -1, // firefox must have false. dont know why
-    //     providers: [
-    //       {
-    //         id: GoogleLoginProvider.PROVIDER_ID,
-    //         provider: new GoogleLoginProvider(
-    //           '296204915760-builmppcda4nq2t6gh3rgtiq5o4v6976.apps.googleusercontent.com'
-    //         )
-    //       },
-    //       {
-    //         id: FacebookLoginProvider.PROVIDER_ID,
-    //         provider: new FacebookLoginProvider('548694169142603')
-    //       }
-    //     ],
-    //     onError: (err) => {
-    //       console.error(err);
-    //     }
-    //   } as SocialAuthServiceConfig
-    // },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: ErrorHandler, useClass: GlobalErrorService }
   ],
