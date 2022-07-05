@@ -35,18 +35,29 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("/api/account/signin")]
-        public async Task<UserDto> SigninSocial(UserDto userDto)
+        public async Task<UserDto> SigninSocial([FromBody] UserDto body)
         {
             bool valid = false;
+            string provider = body.socialProvider;
+            var userDto = new UserDto();
             try
             {
-                if (userDto.socialProvider == "GOOGLE")
+                logger.LogInformation("Signing in new user");
+                if (provider == "GOOGLE")
                 {
                     var validPayload = await GoogleJsonWebSignature.ValidateAsync(Request.Headers["Authorization"]);
                     // todo: more validation?
                     valid = validPayload != null;
+                    if (valid)
+                    {
+                        userDto.email = validPayload.Email;
+                        userDto.name = validPayload.Name;
+                        userDto.socialProviderId = validPayload.Subject;
+                        userDto.socialProvider = provider;
+                        userDto.photoUrl = validPayload.Picture;
+                    }
                 }
-                else if (userDto.socialProvider == "FACEBOOK")
+                else if (provider == "FACEBOOK")
                 {
                     valid = await ValidateFacebookJwt(Request.Headers["Authorization"]);
                 }
@@ -64,7 +75,8 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("/api/account/newlocal")]
-        public UserDto NewLocal(NewLocalUserDto dto) {
+        public UserDto NewLocal(NewLocalUserDto dto)
+        {
             using (var db = new BgDbContext())
             {
                 var existing = db.Users.FirstOrDefault(u => u.LocalLogin.Equals(dto.name.ToLower()));
@@ -88,7 +100,8 @@ namespace Backend.Controllers
 
         [HttpPost]
         [Route("/api/account/signinlocal")]
-        public UserDto SigninLocal(LocalLoginDto userDto) {
+        public UserDto SigninLocal(LocalLoginDto userDto)
+        {
 
             using (var db = new BgDbContext())
             {
@@ -102,7 +115,8 @@ namespace Backend.Controllers
 
         [HttpGet]
         [Route("/api/account/getuser")]
-        public UserDto GetUser(Guid userId) {
+        public UserDto GetUser(Guid userId)
+        {
             using (var db = new BgDbContext())
             {
                 var user = db.Users.SingleOrDefault((u) => u.Id == userId);
@@ -120,7 +134,7 @@ namespace Backend.Controllers
             }
             catch (Exception e)
             {
-                logger.LogError(e.Message);                
+                logger.LogError(e.Message);
             }
         }
 
@@ -311,11 +325,12 @@ namespace Backend.Controllers
         }
     }
 
-    public static class AccountControllerExtensions {
+    public static class AccountControllerExtensions
+    {
         public static string[] ParseLanguages(this HttpRequest request)
         {
             var text = (string)request.Headers["Accept-Language"];
-            return ParseLanguages(text);            
+            return ParseLanguages(text);
         }
 
         public static string[] ParseLanguages(string text)

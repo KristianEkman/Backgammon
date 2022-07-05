@@ -46,7 +46,9 @@
       </div>
     </div>
     <app-login-buttons
-      (onLogin)="login($event)"
+      (loggedinGoogle)="loginGoogle($event)"
+      (loggedinFacebook)="loginFacebook($event)"
+      (loggedinPassword)="loginPassword()"
       [isLoggedIn]="isLoggedIn()"
     ></app-login-buttons>
   </ng-container>

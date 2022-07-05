@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PlayedGameListDto, SummaryDto } from 'src/app/dto';
@@ -18,7 +18,7 @@ export class AdminContainerComponent implements OnInit {
     private adminSerivce: AdminService,
     public router: Router,
     private messageService: MessageService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private appState: AppStateService
   ) {
     this.playedGames$ = this.appState.playedGames.observe();
@@ -31,7 +31,7 @@ export class AdminContainerComponent implements OnInit {
   allGames = false;
   playedGames$: Observable<PlayedGameListDto>;
   summary$: Observable<SummaryDto>;
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
 
   loadMore(): void {
     this.adminSerivce.loadPlayedGames();

@@ -11,6 +11,11 @@
   transform: scaleY(1) scaleX(1);
 }
 
+.buttonParent {
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
 app-button {
   margin-right: 15px;
   margin-top: 15px;
@@ -23,7 +28,7 @@ app-button {
   }
 
   img {
-    opacity: .6;
+    opacity: 0.6;
     width: 24px;
     height: 24px;
     margin-right: 8px;

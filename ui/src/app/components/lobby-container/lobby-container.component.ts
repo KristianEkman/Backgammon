@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { SocialAuthService, SocialUser } from '@abacritt/angularx-social-login';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MessageDto, UserDto } from 'src/app/dto';
@@ -19,7 +18,6 @@ import { AppStateService } from 'src/app/state/app-state.service';
 export class LobbyContainerComponent implements OnInit {
   constructor(
     public router: Router,
-    private authService: SocialAuthService,
     private accountService: AccountService,
     private messageService: MessageService,
     private updateService: AppUpdateService,
@@ -43,28 +41,28 @@ export class LobbyContainerComponent implements OnInit {
   showLoginTip = false;
 
   ngOnInit(): void {
-    this.authService.authState.subscribe((user: SocialUser) => {
-      if (!this.loginClicked) {
-        // This gets fired sometimes for unknow reasons.
-        // Makes sure it only does things when I want to.
-        return;
-      }
-      this.loginClicked = false;
-      // send user, store secret user id
-      if (user) {
-        const userDto = {
-          name: user.name, // todo: What about first name and last name. Should I use them if one is missing?
-          email: user.email,
-          socialProviderId: user.id,
-          socialProvider: user.provider,
-          photoUrl: user.photoUrl
-        } as UserDto;
-        // google and facebook have different names on the token field.
+    // this.authService.authState.subscribe((user: SocialUser) => {
+    //   if (!this.loginClicked) {
+    //     // This gets fired sometimes for unknow reasons.
+    //     // Makes sure it only does things when I want to.
+    //     return;
+    //   }
+    //   this.loginClicked = false;
+    //   // send user, store secret user id
+    //   if (user) {
+    //     const userDto = {
+    //       name: user.name, // todo: What about first name and last name. Should I use them if one is missing?
+    //       email: user.email,
+    //       socialProviderId: user.id,
+    //       socialProvider: user.provider,
+    //       photoUrl: user.photoUrl
+    //     } as UserDto;
+    //     // google and facebook have different names on the token field.
 
-        this.appState.showBusy();
-        this.accountService.signIn(userDto, user.idToken || user.authToken);
-      }
-    });
+    //     this.appState.showBusy();
+    //     this.accountService.signIn(userDto, user.idToken || user.authToken);
+    //   }
+    // });
     this.accountService.repair();
 
     if (this.accountService.isLoggedIn()) {
@@ -75,19 +73,24 @@ export class LobbyContainerComponent implements OnInit {
     }
   }
 
-  login(provider: string): void {
-    if (provider === 'PASSWORD') {
-      this.router.navigate(['password']);
-      return;
-    }
+  loginPassword(): void {
+    this.router.navigate(['password']);
+  }
+
+  loginFacebook(token: string): void {
     this.loginClicked = true;
-    this.authService.signIn(provider);
+    // this.authService.signIn(provider);
+  }
+
+  loginGoogle(token: string) {
+    this.accountService.signIn(token, 'GOOGLE');
   }
 
   logout(): void {
     this.accountService.signOut();
+    location.href = '/';
 
-    this.authService.signOut(true);
+    // this.authService.signOut(true);
   }
 
   playClick(): void {

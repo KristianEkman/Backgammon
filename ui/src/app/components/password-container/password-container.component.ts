@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
@@ -17,14 +17,14 @@ import { AccountService } from 'src/app/services';
 })
 export class PasswordContainerComponent {
   create = false;
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
   submitClicked = false;
   nameExists = false;
   invalidLogin = false;
 
   constructor(
     private service: AccountService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private translateService: TranslateService

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserDto } from 'src/app/dto';
@@ -15,7 +15,7 @@ import { Language } from '../../../utils';
 export class AccountEditContainerComponent {
   constructor(
     private service: AccountService,
-    private formBuidler: FormBuilder,
+    private formBuidler: UntypedFormBuilder,
     private router: Router,
     private translateService: TranslateService,
     private changeDetector: ChangeDetectorRef,
@@ -53,7 +53,7 @@ export class AccountEditContainerComponent {
     });
   }
 
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
   user: UserDto | null = null;
   confirm = false;
   Language = Language;

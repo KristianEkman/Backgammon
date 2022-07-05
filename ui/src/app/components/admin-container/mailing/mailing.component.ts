@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MessageType } from 'src/app/dto';
 import { MassMailDto } from 'src/app/dto/message';
 
@@ -11,9 +11,9 @@ import { MassMailDto } from 'src/app/dto/message';
 export class MailingComponent {
   @Output() onSend = new EventEmitter<MassMailDto>();
 
-  form: FormGroup;
+  form: UntypedFormGroup;
 
-  constructor(fb: FormBuilder) {
+  constructor(fb: UntypedFormBuilder) {
     this.form = fb.group({ user: [''], pass: [''] });
   }
 

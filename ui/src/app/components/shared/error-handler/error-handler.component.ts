@@ -7,7 +7,7 @@ import {
   Output,
   SimpleChanges
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { ErrorReportDto } from 'src/app/dto';
 import { AppStateService } from 'src/app/state/app-state.service';
 import { ErrorState } from 'src/app/state/ErrorState';
@@ -22,9 +22,9 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
   textVisible = false;
   @Input() errors: ErrorState | null = new ErrorState('');
   @Output() save = new EventEmitter<ErrorReportDto>();
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
 
-  constructor(private fb: FormBuilder, private appState: AppStateService) {
+  constructor(private fb: UntypedFormBuilder, private appState: AppStateService) {
     this.showErrors.bind(this);
     this.formGroup = this.fb.group({
       errors: ['']

@@ -8,7 +8,6 @@ import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { ToplistService } from './toplist.service';
-import { SocialAuthService } from '@abacritt/angularx-social-login';
 import { MessageService } from './message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Theme } from '../components/account/theme/theme';
@@ -31,7 +30,6 @@ export class AccountService {
     @Inject(LOCAL_STORAGE) private storage: StorageService,
     private router: Router,
     private topListService: ToplistService,
-    private authService: SocialAuthService,
     private messageService: MessageService,
     private trans: TranslateService,
     private sound: SoundService,
@@ -40,13 +38,18 @@ export class AccountService {
     this.url = `${environment.apiServiceUrl}/account`;
   }
 
-  public signIn(userDto: UserDto, idToken: string): void {
+  public signIn(idToken: string, provider: string): void {
     const options = {
       headers: { Authorization: idToken }
     };
     // Gets or creates the user in backgammon database.
+    this.appState.showBusy();
     this.http
-      .post<UserDto>(`${this.url}/signin`, userDto, options)
+      .post<UserDto>(
+        `${this.url}/signin`,
+        { socialProvider: provider },
+        options
+      )
       .pipe(
         map((data) => {
           return data;
@@ -100,7 +103,7 @@ export class AccountService {
     const user = this.appState.user.getValue();
     this.http.post(`${this.url}/delete`, user).subscribe(() => {
       this.appState.user.clearValue();
-      this.authService.signOut();
+      // this.authService.signOut();
       this.storage.set(Keys.loginKey, null);
       this.router.navigateByUrl('/lobby');
     });

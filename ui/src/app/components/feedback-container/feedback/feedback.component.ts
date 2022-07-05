@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-feedback',
@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./feedback.component.scss']
 })
 export class FeedbackComponent {
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: UntypedFormBuilder) {
     this.formGroup = this.formBuilder.group({
       text: ['', [Validators.required, Validators.maxLength(200)]]
     });
@@ -16,7 +16,7 @@ export class FeedbackComponent {
   @Output() feedbackText = new EventEmitter<string>();
   @Output() viewPosts = new EventEmitter<void>();
 
-  formGroup: FormGroup;
+  formGroup: UntypedFormGroup;
 
   submit() {
     if (this.formGroup.valid) {
