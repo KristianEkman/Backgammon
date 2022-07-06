@@ -68,7 +68,7 @@ namespace Backend.Controllers
             }
 
             if (!valid)
-                return null;
+                throw new UnauthorizedAccessException("JWT was not found valid");
 
             return GetOrCreateUserLogin(userDto);
         }

@@ -1,7 +1,7 @@
 .login-buttons {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   width: 330px;
   transform: scaleY(0) scaleX(0);
   transition: all 500ms;
@@ -28,7 +28,6 @@ app-button {
   }
 
   img {
-    opacity: 0.6;
     width: 24px;
     height: 24px;
     margin-right: 8px;

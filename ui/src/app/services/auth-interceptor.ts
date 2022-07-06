@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, NgZone } from '@angular/core';
 import {
   HttpEvent,
   HttpInterceptor,
@@ -12,11 +12,17 @@ import { StorageService, LOCAL_STORAGE } from 'ngx-webstorage-service';
 import { Keys } from '../utils';
 import { UserDto } from '../dto';
 import { catchError } from 'rxjs/operators';
+import { AppStateService } from '../state/app-state.service';
+import { ErrorState } from '../state/ErrorState';
 
 /** Pass untouched request through to the next request handler. */
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(@Inject(LOCAL_STORAGE) private storage: StorageService) {}
+  constructor(
+    @Inject(LOCAL_STORAGE) private storage: StorageService,
+    private zone: NgZone,
+    private appState: AppStateService
+  ) {}
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
@@ -37,7 +43,11 @@ export class AuthInterceptor implements HttpInterceptor {
           // server-side error
           errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
         }
-        return throwError(errorMessage);
+        this.zone.run(() => {
+          this.appState.errors.setValue(new ErrorState(errorMessage));
+          this.appState.hideBusy();
+        });
+        return throwError(() => new Error(errorMessage));
       })
     );
   }

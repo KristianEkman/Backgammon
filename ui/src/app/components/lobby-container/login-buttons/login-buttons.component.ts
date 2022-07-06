@@ -42,7 +42,7 @@ export class LoginButtonsComponent implements AfterViewInit {
     const parentDiv = document.getElementById('googlebuttondiv');
     google.accounts.id.renderButton(parentDiv, {
       type: 'standard',
-      theme: 'outline',
+      theme: 'dark',
       size: 'large',
       text: 'sign_in_with',
       shape: 'pill',
@@ -53,14 +53,17 @@ export class LoginButtonsComponent implements AfterViewInit {
   }
 
   handleCredentialResponse(response: any) {
+    this.show = false;
     this.loggedinGoogle.emit(response.credential);
   }
 
   passwordLoginClick(): void {
+    this.show = false;
     this.loggedinPassword.emit();
   }
 
   facebookLoginClick() {
+    this.show = false;
     const FB = (window as any).FB;
     if (
       this.facebookLoginResponse &&
