@@ -7,6 +7,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="free online backgammon" />
     <script src="https://accounts.google.com/gsi/client"></script>
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: '548694169142603',
+          autoLogAppEvents: true,
+          xfbml: true,
+          version: 'v14.0'
+        });
+      };
+    </script>
+    <script
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
 
     <script
       src="https://kit.fontawesome.com/f9661891a2.js"
@@ -15,10 +29,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <script
-      src="https://kit.fontawesome.com/f9661891a2.js"
-      crossorigin="anonymous"
-    ></script>
     <link
       rel="apple-touch-icon"
       sizes="76x76"
@@ -63,11 +73,6 @@
   </head>
   <body class="dark">
     <div id="fb-root"></div>
-    <script
-      crossorigin="anonymous"
-      src="https://connect.facebook.net/sv_SE/sdk.js#xfbml=1&version=v14.0&appId=548694169142603&autoLogAppEvents=1"
-      nonce="1xjW55Gw"
-    ></script>
     <app-root></app-root>
     <noscript>
       <h1>Free Online Backgammon</h1>

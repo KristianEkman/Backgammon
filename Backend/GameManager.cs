@@ -399,7 +399,7 @@ namespace Backend
             }
             else if (actionName == ActionNames.exitGame)
             {
-                _ = CloseConnections(socket);
+                await CloseConnections(socket);
             }
         }
 
