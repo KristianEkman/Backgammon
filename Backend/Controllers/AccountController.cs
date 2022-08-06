@@ -8,6 +8,7 @@ using Google.Apis.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -27,10 +28,12 @@ namespace Backend.Controllers
     public class AccountController : AuthorizedController
     {
         private readonly ILogger<AccountController> logger;
+        private readonly IConfiguration configuration;
 
-        public AccountController(ILogger<AccountController> logger)
+        public AccountController(ILogger<AccountController> logger, IConfiguration configuration)
         {
             this.logger = logger;
+            this.configuration = configuration;
         }
 
         [HttpPost]
@@ -59,6 +62,7 @@ namespace Backend.Controllers
                 else if (provider == "FACEBOOK")
                 {
                     var token = Request.Headers["Authorization"];
+                    var appToken = Secrets.FbAppToken(configuration);
                     valid = await ValidateFacebookJwt(token);                   
                 }
             }
@@ -144,7 +148,8 @@ namespace Backend.Controllers
             {
                 var dbUser = db.Users.SingleOrDefault(user =>
                     user.SocialProvider.Equals(userDto.socialProvider) &&
-                    user.ProviderId.Equals(userDto.socialProviderId)
+                    user.ProviderId.Equals(userDto.socialProviderId) &&
+                    userDto.socialProviderId != null
                     );
 
                 // todo: is this safe or should email be checked instead or also?
@@ -289,7 +294,8 @@ namespace Backend.Controllers
 
         private async Task<bool> ValidateFacebookJwt(string token)
         {
-            var appToken = Secrets.FbAppToken();
+            //return true;
+            var appToken = Secrets.FbAppToken(configuration);
             var sReq = $"https://graph.facebook.com/debug_token?input_token={token}&access_token={appToken}";
             var request = new HttpRequestMessage(HttpMethod.Get, sReq);
             var isValid = false;

@@ -84,6 +84,7 @@ export class AccountService {
         userDto = { ...response };
         userDto.photoUrl = response?.picture?.data?.url;
         userDto.socialProvider = 'FACEBOOK';
+        userDto.socialProviderId = response.id;
         return reslove(userDto);
       });
     });

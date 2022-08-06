@@ -28,6 +28,7 @@ export class LoginButtonsComponent implements AfterViewInit {
   initFacebook() {
     const FB = (window as any).FB;
     FB.getLoginStatus((response: any) => {
+      console.log('FB init response', response);
       this.facebookLoginResponse = response;
     });
   }
