@@ -64,7 +64,7 @@ namespace Backend.Controllers
             }
             catch (Exception exc)
             {
-                logger.LogError(exc.ToString());
+                logger.LogError(exc, "Failed to sign in user");
             }
 
             if (!valid)
@@ -77,25 +77,22 @@ namespace Backend.Controllers
         [Route("/api/account/newlocal")]
         public UserDto NewLocal(NewLocalUserDto dto)
         {
-            using (var db = new BgDbContext())
+            using var db = new BgDbContext();
+            var existing = db.Users.FirstOrDefault(u => u.LocalLogin.Equals(dto.name.ToLower()));
+            if (existing != null)
+                return null;
+
+            var userDto = new UserDto
             {
-                var existing = db.Users.FirstOrDefault(u => u.LocalLogin.Equals(dto.name.ToLower()));
-                if (existing != null)
-                    return null;
-
-                var userDto = new UserDto
-                {
-                    localLoginName = dto.name,
-                    name = dto.name,
-                    passHash = dto.passHash,
-                    photoUrl = "/assets/images/locallogin.jpg"
-                };
-
-                userDto.socialProvider = "PASSWORD";
-                userDto.socialProviderId = Guid.NewGuid().ToString();
-                var ret = GetOrCreateUserLogin(userDto);
-                return ret;
-            }
+                localLoginName = dto.name,
+                name = dto.name,
+                passHash = dto.passHash,
+                photoUrl = "/assets/images/locallogin.jpg",
+                socialProvider = "PASSWORD",
+                socialProviderId = Guid.NewGuid().ToString()
+            };
+            var ret = GetOrCreateUserLogin(userDto);
+            return ret;
         }
 
         [HttpPost]
@@ -103,27 +100,23 @@ namespace Backend.Controllers
         public UserDto SigninLocal(LocalLoginDto userDto)
         {
 
-            using (var db = new BgDbContext())
-            {
-                var user = db.Users.SingleOrDefault(u => u.LocalLogin.Equals(userDto.name.ToLower()) && u.PassHash == userDto.passHash);
-                if (user == null)
-                    return null;
+            using var db = new BgDbContext();
+            var user = db.Users.SingleOrDefault(u => u.LocalLogin.Equals(userDto.name.ToLower()) && u.PassHash == userDto.passHash);
+            if (user == null)
+                return null;
 
-                return user.ToDto();
-            }
+            return user.ToDto();
         }
 
         [HttpGet]
         [Route("/api/account/getuser")]
         public UserDto GetUser(Guid userId)
         {
-            using (var db = new BgDbContext())
-            {
-                var user = db.Users.SingleOrDefault((u) => u.Id == userId);
-                var dto = user.ToDto();
-                SetAccetptLanguages(dto);
-                return dto;
-            }
+            using var db = new BgDbContext();
+            var user = db.Users.SingleOrDefault((u) => u.Id == userId);
+            var dto = user.ToDto();
+            SetAccetptLanguages(dto);
+            return dto;
         }
 
         private void SetAccetptLanguages(UserDto dto)
@@ -134,7 +127,7 @@ namespace Backend.Controllers
             }
             catch (Exception e)
             {
-                logger.LogError(e.Message);
+                logger.LogError(e, "Failed to parse language");
             }
         }
 
@@ -205,16 +198,14 @@ namespace Backend.Controllers
         public void SaveUser(UserDto userDto)
         {
             var usId = GetUserId();
-            using (var db = new Db.BgDbContext())
-            {
-                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
-                dbUser.Name = userDto.name;
-                dbUser.PreferredLanguage = userDto.preferredLanguage;
-                dbUser.Theme = userDto.theme;
-                dbUser.EmailNotifications = userDto.emailNotification;
-                dbUser.ShowPhoto = userDto.showPhoto;
-                db.SaveChanges();
-            }
+            using var db = new Db.BgDbContext();
+            var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+            dbUser.Name = userDto.name;
+            dbUser.PreferredLanguage = userDto.preferredLanguage;
+            dbUser.Theme = userDto.theme;
+            dbUser.EmailNotifications = userDto.emailNotification;
+            dbUser.ShowPhoto = userDto.showPhoto;
+            db.SaveChanges();
         }
 
         [HttpPost]
@@ -226,22 +217,20 @@ namespace Backend.Controllers
             if (userDto.id != usId)
                 throw new ApplicationException("User id missmatch"); // The id in the request header should always be the same as sent by client.
 
-            using (var db = new Db.BgDbContext())
-            {
-                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
-                // maybe delete all records in player table, (has to be modeled out)                
-                dbUser.Name = "deleted";
-                dbUser.Elo = 0;
-                dbUser.SocialProvider = "";
-                dbUser.Email = "";
-                dbUser.GameCount = 0;
-                dbUser.PhotoUrl = "";
-                dbUser.ShowPhoto = false;
-                dbUser.ProviderId = "";
-                dbUser.PreferredLanguage = "";
-                dbUser.Admin = false;
-                db.SaveChanges();
-            }
+            using var db = new Db.BgDbContext();
+            var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+            // maybe delete all records in player table, (has to be modeled out)                
+            dbUser.Name = "deleted";
+            dbUser.Elo = 0;
+            dbUser.SocialProvider = "";
+            dbUser.Email = "";
+            dbUser.GameCount = 0;
+            dbUser.PhotoUrl = "";
+            dbUser.ShowPhoto = false;
+            dbUser.ProviderId = "";
+            dbUser.PreferredLanguage = "";
+            dbUser.Admin = false;
+            db.SaveChanges();
         }
 
         [HttpGet]
@@ -249,23 +238,21 @@ namespace Backend.Controllers
         public GoldGiftDto RequestGold()
         {
             var usId = GetUserId();
-            using (var db = new Db.BgDbContext())
+            using var db = new Db.BgDbContext();
+            var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
+            if (dbUser.Gold < GoldGiftDto.Gift && DateTime.UtcNow > dbUser.LastFreeGold.AddDays(1))
             {
-                var dbUser = db.Users.Single(u => u.Id.ToString() == usId);
-                if (dbUser.Gold < GoldGiftDto.Gift && DateTime.UtcNow > dbUser.LastFreeGold.AddDays(1))
-                {
-                    dbUser.Gold += GoldGiftDto.Gift;
-                    dbUser.LastFreeGold = DateTime.UtcNow;
-                    db.SaveChanges();
-                }
-
-                int unixTimestamp = (int)dbUser.LastFreeGold.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                return new GoldGiftDto
-                {
-                    gold = dbUser.Gold,
-                    lastFreeGold = unixTimestamp
-                };
+                dbUser.Gold += GoldGiftDto.Gift;
+                dbUser.LastFreeGold = DateTime.UtcNow;
+                db.SaveChanges();
             }
+
+            int unixTimestamp = (int)dbUser.LastFreeGold.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
+            return new GoldGiftDto
+            {
+                gold = dbUser.Gold,
+                lastFreeGold = unixTimestamp
+            };
         }
 
         [HttpGet]
@@ -307,17 +294,17 @@ namespace Backend.Controllers
                         if (isValid)
                             logger.LogInformation("Facebook auth token found valid.");
                         else
-                            logger.LogWarning($"A facebook auth token found invalid. {responseString}");
+                            logger.LogWarning("A facebook auth token found invalid. {responseString}", responseString);
                     }
                     else
                     {
-                        logger.LogError($"Facebook login jwt was not valid. {responseString}");
+                        logger.LogError("Facebook login jwt was not valid: {response}", responseString);
                         return false;
                     }
                 }
                 catch (Exception exc)
                 {
-                    logger.LogError(exc.ToString());
+                    logger.LogError(exc, "Failed to parse Facebook JWT");
                 }
             }
 
@@ -338,7 +325,7 @@ namespace Backend.Controllers
             if (text == null) return Array.Empty<string>();
             var stop = text.IndexOf(";");
             var length = stop == -1 ? text.Length : stop;
-            var languages = text.Substring(0, length);
+            var languages = text[..length];
             var split = languages.Split(',');
 
             return split.Select(l => l.Split("-")[0]).Distinct().ToArray();

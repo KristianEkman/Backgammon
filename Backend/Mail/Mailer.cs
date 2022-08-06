@@ -34,19 +34,17 @@ namespace Backend.Mail
                 return true;
             };
 
-            using (var client = new SmtpClient("smtp1.kristianekman.com", 2525))
+            using var client = new SmtpClient("smtp1.kristianekman.com", 2525);
+            string from = "backgammon@kristianekman.com";
+            var message = new MailMessage(from, to, subject, text)
             {
-                string from = "backgammon@kristianekman.com";
-                var message = new MailMessage(from, to, subject, text)
-                {
-                    IsBodyHtml = true,                    
-                };
-                client.Credentials = new NetworkCredential(un, pw);
-                client.EnableSsl = true;
+                IsBodyHtml = true,
+            };
+            client.Credentials = new NetworkCredential(un, pw);
+            client.EnableSsl = true;
 
-                client.Send(message);
-                await Task.Delay(1000);
-            }
+            client.Send(message);
+            await Task.Delay(1000);
         }
     }
 }

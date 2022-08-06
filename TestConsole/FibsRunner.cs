@@ -73,7 +73,7 @@ namespace TestConsole
                         var boardIndex = row.IndexOf("board:");
                         if (boardIndex > -1)
                         {
-                            var board = Board.Parse(row.Substring(boardIndex));
+                            var board = Board.Parse(row[boardIndex..]);
                             if (board.Turn == Players.Player && board.PlayerDice[0] > 0 && board.PlayerDice[1] > 0 && board.CanMove > 0)
                             {
                                 var intString = board.ToInternal();
@@ -93,14 +93,16 @@ namespace TestConsole
 
         private static void StartAi()
         {
-            AIinC = new Process();
-            AIinC.StartInfo = new ProcessStartInfo
+            AIinC = new Process
             {
-                CreateNoWindow = true,
-                FileName = "Backgammon.exe",
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
-                StandardInputEncoding = System.Text.Encoding.ASCII,
+                StartInfo = new ProcessStartInfo
+                {
+                    CreateNoWindow = true,
+                    FileName = "Backgammon.exe",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    StandardInputEncoding = System.Text.Encoding.ASCII,
+                }
             };
             AIinC.OutputDataReceived += AIinC_OutputDataReceived;
             AIinC.Start();

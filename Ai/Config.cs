@@ -58,7 +58,7 @@ namespace Ai
 
         public override string ToString()
         {
-            return $"BF: {BlotsFactor.ToString("0.##")}  BFP: {BlotsFactorPassed}  BT: {BlotsThreshold}  CB: {ConnectedBlocksFactor.ToString("0.##")}  BP: {BlockedPointScore.ToString("0.##")}  RB: {RunOrBlockFactor.ToString("0.##")}";
+            return $"BF: {BlotsFactor:0.##}  BFP: {BlotsFactorPassed}  BT: {BlotsThreshold}  CB: {ConnectedBlocksFactor:0.##}  BP: {BlockedPointScore:0.##}  RB: {RunOrBlockFactor:0.##}";
         }
 
         public static Config Untrained()

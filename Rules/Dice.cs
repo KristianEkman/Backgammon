@@ -11,7 +11,7 @@ namespace Backend.Rules
         public int Value { get; set; }
         public bool Used { get; set; }
 
-        private static Random Random = new Random();
+        private static readonly Random Random = new();
 
         public static int RollOne()
         {

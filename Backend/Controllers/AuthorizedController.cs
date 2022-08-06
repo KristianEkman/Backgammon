@@ -49,13 +49,11 @@ namespace Backend.Controllers
             if (string.IsNullOrWhiteSpace(userId))
                 throw new UnauthorizedAccessException();
 
-            using (var db = new Db.BgDbContext())
+            using var db = new Db.BgDbContext();
+            var user = db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
+            if (user == null || !user.Admin)
             {
-                var user = db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
-                if (user == null || !user.Admin)
-                {
-                    throw new UnauthorizedAccessException();
-                }
+                throw new UnauthorizedAccessException();
             }
         }        
     }

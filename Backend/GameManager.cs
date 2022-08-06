@@ -39,7 +39,7 @@ namespace Backend
         internal event EventHandler Ended;
 
         internal Ai.Engine Engine = null;
-        CancellationTokenSource moveTimeOut = new CancellationTokenSource();
+        CancellationTokenSource moveTimeOut = new();
 
         private void StartGame()
         {
@@ -47,9 +47,9 @@ namespace Backend
             var gameDto = Game.ToDto();
             var action = new GameCreatedActionDto
             {
-                game = gameDto
+                game = gameDto,
+                myColor = PlayerColor.black
             };
-            action.myColor = PlayerColor.black;
             _ = Send(Client1, action);
             action.myColor = PlayerColor.white;
             _ = Send(Client2, action);
@@ -82,7 +82,7 @@ namespace Backend
                 var ellapsed = DateTime.Now - Game.ThinkStart;
                 if (ellapsed.TotalSeconds > Game.TotalThinkTime)
                 {
-                    Logger.LogInformation($"The time run out for {Game.CurrentPlayer}");
+                    Logger.LogInformation("The time run out for {Game.CurrentPlayer}", Game?.CurrentPlayer);
                     moveTimeOut.Cancel();
                     var winner = Game.CurrentPlayer == Player.Color.Black ? PlayerColor.white : PlayerColor.black;
                     _ = EndGame(winner);
@@ -94,7 +94,7 @@ namespace Backend
         {
             moveTimeOut.Cancel();
             Game.PlayState = Game.State.Ended;
-            Logger.LogInformation($"The winner is ${winner}");
+            Logger.LogInformation("The winner is {winner}", winner);
             var newScore = SaveWinner(winner);
             await SendWinner(winner, newScore);
             Ended?.Invoke(this, EventArgs.Empty);
@@ -116,12 +116,7 @@ namespace Backend
                 _ = Send(Client2, rollAction);
         }
 
-        private bool IsAi(Player player)
-        {
-            return player.Id.ToString().Equals(Player.AiUser, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private bool IsAi(Guid id)
+        private static bool IsAi(Guid id)
         {
             return id.ToString().Equals(Player.AiUser, StringComparison.OrdinalIgnoreCase);
         }
@@ -180,49 +175,47 @@ namespace Backend
 
         private void CreateDbGame()
         {
-            using (var db = new Db.BgDbContext())
+            using var db = new Db.BgDbContext();
+            var blackUser = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
+            if (Game.IsGoldGame && blackUser.Gold < firstBet)
+                throw new ApplicationException("Black player dont have enough gold"); // Should be guarder earlier
+            if (Game.IsGoldGame && !IsAi(blackUser.Id))
+                blackUser.Gold -= firstBet;
+            var black = new Db.Player
             {
-                var blackUser = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
-                if (Game.IsGoldGame && blackUser.Gold < firstBet)
-                    throw new ApplicationException("Black player dont have enough gold"); // Should be guarder earlier
-                if (Game.IsGoldGame && !IsAi(blackUser.Id))
-                    blackUser.Gold -= firstBet;
-                var black = new Db.Player
-                {
-                    Id = Guid.NewGuid(), // A player is not the same as a user.
-                    Color = Db.Color.Black,
-                    User = blackUser,
-                };
-                blackUser.Players.Add(black);
+                Id = Guid.NewGuid(), // A player is not the same as a user.
+                Color = Db.Color.Black,
+                User = blackUser,
+            };
+            blackUser.Players.Add(black);
 
-                var whiteUser = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
-                if (Game.IsGoldGame && whiteUser.Gold < firstBet)
-                    throw new ApplicationException("White player dont have enough gold"); // Should be guarder earlier
+            var whiteUser = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
+            if (Game.IsGoldGame && whiteUser.Gold < firstBet)
+                throw new ApplicationException("White player dont have enough gold"); // Should be guarder earlier
 
-                if (Game.IsGoldGame && !IsAi(whiteUser.Id))
-                    whiteUser.Gold -= firstBet;
-                var white = new Db.Player
-                {
-                    Id = Guid.NewGuid(),
-                    Color = Db.Color.White,
-                    User = whiteUser
-                };
-                whiteUser.Players.Add(white);
+            if (Game.IsGoldGame && !IsAi(whiteUser.Id))
+                whiteUser.Gold -= firstBet;
+            var white = new Db.Player
+            {
+                Id = Guid.NewGuid(),
+                Color = Db.Color.White,
+                User = whiteUser
+            };
+            whiteUser.Players.Add(white);
 
-                var game = new Db.Game
-                {
-                    Id = Game.Id,
-                    UtcStarted = DateTime.UtcNow,
-                };
+            var game = new Db.Game
+            {
+                Id = Game.Id,
+                UtcStarted = DateTime.UtcNow,
+            };
 
-                black.Game = game;
-                white.Game = game;
+            black.Game = game;
+            white.Game = game;
 
-                game.Players.Add(black);
-                game.Players.Add(white);
-                db.Games.Add(game);
-                db.SaveChanges();
-            }
+            game.Players.Add(black);
+            game.Players.Add(white);
+            db.Games.Add(game);
+            db.SaveChanges();
         }
 
         private async Task<string> ReceiveText(WebSocket socket)
@@ -240,7 +233,7 @@ namespace Backend
                 }
                 catch (Exception exc)
                 {
-                    Logger.LogError($"Can't receive data from socket. Error: {exc.ToString()}");
+                    Logger.LogError(exc, "Can't receive data from socket.");
                     return "";
                 }
             }
@@ -293,7 +286,7 @@ namespace Backend
                 var text = await ReceiveText(socket);
                 if (text != null && text.Length > 0)
                 {
-                    Logger.LogInformation($"Received: {text}");
+                    Logger.LogInformation("Received: {text}", text);
                     try
                     {
                         var action = (ActionDto)JsonSerializer.Deserialize(text, typeof(ActionDto));
@@ -302,7 +295,7 @@ namespace Backend
                     }
                     catch (Exception e)
                     {
-                        Logger.LogError(e, $"Failed to parse Action text {text}");
+                        Logger.LogError(e, "Failed to parse Action text: {text}", text);
                     }
                 }
             }
@@ -310,7 +303,7 @@ namespace Backend
 
         private async Task DoAction(ActionNames actionName, string actionText, WebSocket socket, WebSocket otherSocket)
         {
-            Logger.LogInformation($"Doing action: {actionName}");
+            Logger.LogInformation("Doing action: {actionName}", actionName);
             if (actionName == ActionNames.movesMade)
             {
                 Game.ThinkStart = DateTime.Now;
@@ -491,7 +484,7 @@ namespace Backend
             await NewTurn(client);
         }
 
-        public object StakeLock = new object();
+        public object StakeLock = new();
         private (NewScoreDto black, NewScoreDto white)? SaveWinner(PlayerColor color)
         {
             if (!Game.ReallyStarted())
@@ -500,65 +493,63 @@ namespace Backend
                 return null;
             }
 
-            using (var db = new Db.BgDbContext())
+            using var db = new Db.BgDbContext();
+            var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
+
+            if (dbGame.Winner.HasValue) // extra safety
+                return (null, null);
+
+            var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
+            var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
+            var computed = Score.NewScore(black.Elo, white.Elo, black.GameCount, white.GameCount, color == PlayerColor.black);
+            var blackInc = 0;
+            var whiteInc = 0;
+
+            black.GameCount++;
+            white.GameCount++;
+            dbGame.Winner = color;
+
+            if (Game.IsGoldGame)
             {
-                var dbGame = db.Games.Single(g => g.Id == this.Game.Id);
+                blackInc = computed.black - black.Elo;
+                whiteInc = computed.white - white.Elo;
 
-                if (dbGame.Winner.HasValue) // extra safety
-                    return (null, null);
+                black.Elo = computed.black;
+                white.Elo = computed.white;
 
-                var black = db.Users.Single(u => u.Id == Game.BlackPlayer.Id);
-                var white = db.Users.Single(u => u.Id == Game.WhitePlayer.Id);
-                var computed = Score.NewScore(black.Elo, white.Elo, black.GameCount, white.GameCount, color == PlayerColor.black);
-                var blackInc = 0;
-                var whiteInc = 0;
-
-                black.GameCount++;
-                white.GameCount++;     
-                dbGame.Winner = color;
-
-                if (Game.IsGoldGame)
+                lock (StakeLock) // Preventing other thread to do the same transaction.
                 {
-                    blackInc = computed.black - black.Elo;
-                    whiteInc = computed.white - white.Elo;
+                    Logger.LogInformation("Locked {threadid}", Environment.CurrentManagedThreadId);
+                    var stake = Game.Stake;
+                    Game.Stake = 0;
+                    Logger.LogInformation("Stake {stake}", stake);
+                    Logger.LogInformation($"Initial gold: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
 
-                    black.Elo = computed.black;
-                    white.Elo = computed.white;
-
-                    lock (StakeLock) // Preventing other thread to do the same transaction.
+                    if (color == PlayerColor.black)
                     {
-                        Logger.LogInformation("Locked " + Thread.CurrentThread.ManagedThreadId);
-                        var stake = Game.Stake;
-                        Game.Stake = 0;
-                        Logger.LogInformation("Stake" + stake);
-                        Logger.LogInformation($"Initial gold: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
-
-                        if (color == PlayerColor.black)
-                        {
-                            if (!IsAi(black.Id))
-                                black.Gold += stake;
-                            Game.BlackPlayer.Gold += stake;
-                        }
-                        else
-                        {
-                            if (!IsAi(white.Id))
-                                white.Gold += stake;
-                            Game.WhitePlayer.Gold += stake;
-                        }
-                        Logger.LogInformation($"After transfer: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
-                        Logger.LogInformation("Release Thread " + Thread.CurrentThread.ManagedThreadId);
+                        if (!IsAi(black.Id))
+                            black.Gold += stake;
+                        Game.BlackPlayer.Gold += stake;
                     }
+                    else
+                    {
+                        if (!IsAi(white.Id))
+                            white.Gold += stake;
+                        Game.WhitePlayer.Gold += stake;
+                    }
+                    Logger.LogInformation($"After transfer: {black.Gold} {Game.BlackPlayer.Gold} {white.Gold} {Game.WhitePlayer.Gold}");
+                    Logger.LogInformation("Release Thread {thredid}", Environment.CurrentManagedThreadId);
                 }
-
-                db.SaveChanges();
-
-                if (Game.IsGoldGame)
-                    return (
-                        new NewScoreDto { score = black.Elo, increase = blackInc },
-                        new NewScoreDto { score = white.Elo, increase = whiteInc });
-                else
-                    return (null, null);
             }
+
+            db.SaveChanges();
+
+            if (Game.IsGoldGame)
+                return (
+                    new NewScoreDto { score = black.Elo, increase = blackInc },
+                    new NewScoreDto { score = white.Elo, increase = whiteInc });
+            else
+                return (null, null);
         }
 
         private void ReturnStakes()
@@ -648,9 +639,9 @@ namespace Backend
             game.winner = color;
             var gameEndedAction = new GameEndedActionDto
             {
-                game = game
+                game = game,
+                newScore = newScore?.black
             };
-            gameEndedAction.newScore = newScore?.black;
             await Send(Client1, gameEndedAction);
 
             gameEndedAction.newScore = newScore?.white;
@@ -665,7 +656,7 @@ namespace Backend
                 return;
             }
             var json = JsonSerializer.Serialize<object>(obj);
-            Logger.LogInformation($"Sending to client ${json}");
+            Logger.LogInformation("Sending to client {json}", json);
             var buffer = System.Text.Encoding.UTF8.GetBytes(json);
             try
             {
@@ -673,7 +664,7 @@ namespace Backend
             }
             catch (Exception exc)
             {
-                Logger.LogError($"Failed to send socket data. Exception: {exc}");
+                Logger.LogError(exc, "Failed to send socket data.");
             }
         }
 

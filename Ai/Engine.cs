@@ -54,7 +54,7 @@ namespace Ai
             });
 
             if (bestMoveSequence == null)
-                return new Move[0];
+                return Array.Empty<Move>();
             
             if (myColor == Player.Color.Black)
                 return bestMoveSequence.Where(m => m != null).OrderBy(m => m.From.BlackNumber).ToArray();
@@ -62,7 +62,7 @@ namespace Ai
             return bestMoveSequence.Where(m => m != null).OrderBy(m => m.From.WhiteNumber).ToArray();
         }
 
-        private Move[] ToLocalSequence(Move[] sequence, Game game)
+        private static Move[] ToLocalSequence(Move[] sequence, Game game)
         {
             var moves = new Move[sequence.Length];
             for (int i = 0; i < sequence.Length; i++)
@@ -190,9 +190,9 @@ namespace Ai
             var allDiceRoll = AllRolls();
             var scores = new List<double>();
             var oponent = myColor == Player.Color.Black ? Player.Color.White : Player.Color.Black;
-            foreach (var roll in allDiceRoll)
+            foreach (var (dice1, dice2) in allDiceRoll)
             {
-                game.FakeRoll(roll.dice1, roll.dice2);
+                game.FakeRoll(dice1, dice2);
                 var bestScore = double.MinValue;
                 var seqs = GenerateMovesSequence(game);
                 foreach (var s in seqs)
@@ -204,7 +204,7 @@ namespace Ai
                         bestScore = score;
                     UndoSequence(s, hits, game);
                 }
-                int m = roll.dice1 == roll.dice2 ? 1 : 2; // dice roll with not same value on dices are twice as probable. 2 / 36, vs 1 / 36
+                int m = dice1 == dice2 ? 1 : 2; // dice roll with not same value on dices are twice as probable. 2 / 36, vs 1 / 36
                 if (seqs.Any())
                     scores.Add(bestScore * m);
                 // Get best score of each roll, and make an average.
@@ -242,9 +242,7 @@ namespace Ai
             // Special case. Sometimes the first dice is blocked, but can be moved after next dice
             if (sequences.Count == 1 && sequences[0].Any(move => move == null))
             {
-                var temp = game.Roll[0];
-                game.Roll[0] = game.Roll[1];
-                game.Roll[1] = temp;
+                (game.Roll[1], game.Roll[0]) = (game.Roll[0], game.Roll[1]);
                 GenerateMovesSequence(sequences, moves, 0, game);
             }
 

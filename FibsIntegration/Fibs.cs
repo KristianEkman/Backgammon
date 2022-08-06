@@ -50,11 +50,10 @@ namespace FibsIntegration
         {
             Thread.Sleep(500);
             string text = "";
-            int bytesCount = 0;
             do
             {
                 var buffer = new byte[256];
-                bytesCount = socket.Receive(buffer, buffer.Length, SocketFlags.None);
+                int bytesCount = socket.Receive(buffer, buffer.Length, SocketFlags.None);
                 if (bytesCount == 0)
                     Thread.Sleep(1000);
                 else

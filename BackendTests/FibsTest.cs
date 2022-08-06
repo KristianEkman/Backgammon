@@ -43,7 +43,7 @@ namespace BackendTests
         {
             // use to debug boards
             var raw = "board:You:MonteCarlo:1:0:0:0:0:7:5:1:1:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:0:-4:0:1:0:0:0:0:1:1:1:0:1:-1:0:25:1:11:0:0:2:5:0:0";
-            var board = Board.Parse(raw);
+            _ = Board.Parse(raw);
 
         }
 

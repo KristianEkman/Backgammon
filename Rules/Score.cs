@@ -33,13 +33,13 @@ namespace Rules
 
             if (blackWon == true)
             {
-                black = black + blackK * (1 - blackProb);
-                white = white + whiteK * (0 - whiteProb);
+                black += blackK * (1 - blackProb);
+                white += whiteK * (0 - whiteProb);
             }
             else
             {
-                black = black + blackK * (0 - blackProb);
-                white = white + whiteK * (1 - whiteProb);
+                black += blackK * (0 - blackProb);
+                white += whiteK * (1 - whiteProb);
             }
             var b =(int) Math.Round(black);
             var w =(int) Math.Round(white);

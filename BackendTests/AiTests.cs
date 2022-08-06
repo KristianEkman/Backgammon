@@ -68,7 +68,7 @@ namespace BackendTests
             var game = Game.Create(false);
             var ai = new Ai.Engine(game);
             game.FakeRoll(2, 2);
-            var moves = ai.GetBestMoves();
+            _ = ai.GetBestMoves();
 
         }
 

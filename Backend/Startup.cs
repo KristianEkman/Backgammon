@@ -99,7 +99,7 @@ namespace Backend
                         }
                         catch (Exception exc)
                         {
-                            logger.LogError(exc.ToString());
+                            logger.LogError(exc, "Failed to connect to GameService");
                             await context.Response.WriteAsync(exc.Message, CancellationToken.None);
                             context.Response.StatusCode = 400;
                         }
@@ -132,7 +132,7 @@ namespace Backend
             app.UseStaticFiles();
         }               
 
-        private void TryRestoreState(ILogger<GameManager> logger)
+        private static void TryRestoreState(ILogger<GameManager> logger)
         {
             try
             {
@@ -140,7 +140,7 @@ namespace Backend
             }
             catch (Exception e)
             {
-                logger.LogError(e.ToString());
+                logger.LogError(e, "Failed to restore state.");
             }
         }
 
@@ -157,7 +157,7 @@ namespace Backend
             }
             catch (Exception e)
             {
-                logger.LogError(e.ToString());
+                logger.LogError(e, "Failed to save State");
             }
         }
     }

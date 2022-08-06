@@ -46,9 +46,9 @@ namespace Backend.Rules
                 GoldMultiplier = GoldMultiplier,
                 IsGoldGame = IsGoldGame,
                 LastDoubler = LastDoubler,
-                Stake = Stake
+                Stake = Stake,
+                Bars = new Point[2]
             };
-            game.Bars = new Point[2];
             game.Bars[(int)Player.Color.Black] = game.Points[0];
             game.Bars[(int)Player.Color.White] = game.Points[25];
 
@@ -91,9 +91,11 @@ namespace Backend.Rules
 
             for (int i = 0; i < 26; i++)
             {
-                game.Points[i] = new Point();
-                game.Points[i].BlackNumber = i;
-                game.Points[i].WhiteNumber = 25 - i;
+                game.Points[i] = new Point
+                {
+                    BlackNumber = i,
+                    WhiteNumber = 25 - i
+                };
             }
             game.Bars = new Point[2];
             game.Bars[(int)Player.Color.Black] = game.Points[0];
@@ -414,7 +416,7 @@ namespace Backend.Rules
             return Points.Single(p => p.GetNumber(color) == 25);
         }
 
-        public (int black, int white) CalcPointsLeft2(Game game)
+        public static (int black, int white) CalcPointsLeft2(Game game)
         {
             var black = 0;
             var white = 0;
@@ -515,10 +517,10 @@ namespace Backend.Rules
 
         private void AssertPointsLeft()
         {
-            var p = CalcPointsLeft2(this);
-            if (p.black != BlackPlayer.PointsLeft)
+            var (black, white) = CalcPointsLeft2(this);
+            if (black != BlackPlayer.PointsLeft)
                 Debugger.Break();
-            if (p.white != WhitePlayer.PointsLeft)
+            if (white != WhitePlayer.PointsLeft)
                 Debugger.Break();
         }
 

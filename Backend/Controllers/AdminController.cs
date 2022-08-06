@@ -18,32 +18,30 @@ namespace Backend.Controllers
         public PlayedGameListDto AllGames(int skip)
         {
             AssertAdmin();
-            
-            using (var db = new Db.BgDbContext())
-            {
-                var playedGames = db.Games.Select(g => new
-                {
-                    started = g.UtcStarted,
-                    black = g.Players.Where(p => p.Color == Db.Color.Black),
-                    white = g.Players.Where(p => p.Color == Db.Color.White),
-                    winner = g.Winner
-                }).Select(pl => new PlayedGameDto
-                {
-                    utcStarted = pl.started,
-                    black = pl.black.First().User.Name,
-                    white = pl.white.First().User.Name,
-                    winner = (PlayerColor)pl.winner
-                })                
-                .OrderByDescending(x => x.utcStarted)
-                .Skip(skip)
-                .Take(30);
 
-                var games = playedGames.ToArray();
-                return new PlayedGameListDto
-                {
-                    games = games
-                };
-            }
+            using var db = new Db.BgDbContext();
+            var playedGames = db.Games.Select(g => new
+            {
+                started = g.UtcStarted,
+                black = g.Players.Where(p => p.Color == Db.Color.Black),
+                white = g.Players.Where(p => p.Color == Db.Color.White),
+                winner = g.Winner
+            }).Select(pl => new PlayedGameDto
+            {
+                utcStarted = pl.started,
+                black = pl.black.First().User.Name,
+                white = pl.white.First().User.Name,
+                winner = (PlayerColor)pl.winner
+            })
+            .OrderByDescending(x => x.utcStarted)
+            .Skip(skip)
+            .Take(30);
+
+            var games = playedGames.ToArray();
+            return new PlayedGameListDto
+            {
+                games = games
+            };
         }
 
         [Route("api/admin/summary")]

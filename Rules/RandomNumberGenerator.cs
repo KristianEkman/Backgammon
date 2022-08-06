@@ -9,6 +9,7 @@
 /// inspired from : http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/VERSIONS/C-LANG/980409/mt19937-2.c
 /// </summary>
 using System;
+namespace Backend.Rules;
 public class RandomNumberGenerator
 {
     #region constants
@@ -56,7 +57,7 @@ public class RandomNumberGenerator
     #region singleton
     private static volatile RandomNumberGenerator instance;
 
-    private static object syncRoot = new Object();
+    private static object syncRoot = new();
 
     public static RandomNumberGenerator Instance
     {
@@ -79,7 +80,7 @@ public class RandomNumberGenerator
     private RandomNumberGenerator()
     {
         //init
-        this.sgenrand(4327);
+        this.Sgenrand(4327);
     }
     #endregion
 
@@ -125,14 +126,14 @@ public class RandomNumberGenerator
     /// [KNUTH 1981, The Art of Computer Programming Vol. 2 (2nd Ed.), pp102] 
     /// </summary>
     /// <param name="seed"></param>
-    private void sgenrand(ulong seed)
+    private void Sgenrand(ulong seed)
     {
         mt[0] = seed & 0xffffffff;
         for (mti = 1; mti < N; mti++)
             mt[mti] = (69069 * mt[mti - 1]) & 0xffffffff;
     }
 
-    private double genrand()
+    private double Genrand()
     {
         ulong y;
         ulong[] mag01 = new ulong[2] { 0x0, MATRIX_A };
@@ -143,7 +144,7 @@ public class RandomNumberGenerator
             int kk;
 
             if (mti == N + 1)   /* if sgenrand() has not been called, */
-                sgenrand(4357); /* a default initial seed is used   */
+                Sgenrand(4357); /* a default initial seed is used   */
 
             for (kk = 0; kk < N - M; kk++)
             {
@@ -180,7 +181,7 @@ public class RandomNumberGenerator
     /// <returns></returns>
     public double Generate()
     {
-        return this.genrand();
+        return this.Genrand();
     }
 
     /// <summary>

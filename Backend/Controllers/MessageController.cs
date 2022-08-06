@@ -27,19 +27,17 @@ namespace Backend.Controllers
         [Route("api/message/users")]
         public MessageDto[] GetMessages()
         {
-            using (var db = new BgDbContext())
+            using var db = new BgDbContext();
+            var user = GetUser(db);
+            var ms = db.Messages.Where(m => m.Receiver == user).Select(m => new MessageDto
             {
-                var user = GetUser(db);
-                var ms = db.Messages.Where(m => m.Receiver == user).Select(m => new MessageDto
-                {
-                    Text = m.Text,
-                    Type = m.Type,
-                    Id = m.Id,
-                    Sender = m.Sender.Name,
-                    Date = m.Sent.ToString("dd MMM, yy")
-                }).ToArray();
-                return ms;
-            }
+                Text = m.Text,
+                Type = m.Type,
+                Id = m.Id,
+                Sender = m.Sender.Name,
+                Date = m.Sent.ToString("dd MMM, yy")
+            }).ToArray();
+            return ms;
         }
 
         [HttpPut]
@@ -49,37 +47,33 @@ namespace Backend.Controllers
             AssertAdmin();
             string adminId = Request.Headers["user-id"].ToString();
 
-            using (var db = new BgDbContext())
+            using var db = new BgDbContext();
+            var admin = db.Users.First(u => u.Id.ToString() == adminId);
+            foreach (var user in db.Users)
             {
-                var admin = db.Users.First(u => u.Id.ToString() == adminId);
-                foreach (var user in db.Users)
+                // Do not waste space in db for a generic message.
+                user.ReceivedMessages.Add(new Message
                 {
-                    // Do not waste space in db for a generic message.
-                    user.ReceivedMessages.Add(new Message
-                    {
-                        Text = "",
-                        Type = MessageType.SharePrompt,
-                        Sender = admin,
-                        Sent = DateTime.Now
-                    });
-                }
-                db.SaveChanges();
+                    Text = "",
+                    Type = MessageType.SharePrompt,
+                    Sender = admin,
+                    Sent = DateTime.Now
+                });
             }
+            db.SaveChanges();
         }
 
         [HttpDelete]
         [Route("api/message/delete")]
         public void Delete(int id)
         {
-            using (var db = new BgDbContext())
-            {
-                var user = GetUser(db);
-                var message = db.Messages.Single(m => m.Id == id);
-                if (message.Receiver != user)
-                    throw new UnauthorizedAccessException("Not allowed to delete that message.");
-                user.ReceivedMessages.Remove(message);
-                db.SaveChanges();
-            }
+            using var db = new BgDbContext();
+            var user = GetUser(db);
+            var message = db.Messages.Single(m => m.Id == id);
+            if (message.Receiver != user)
+                throw new UnauthorizedAccessException("Not allowed to delete that message.");
+            user.ReceivedMessages.Remove(message);
+            db.SaveChanges();
         }
 
         [HttpPost]
@@ -90,38 +84,36 @@ namespace Backend.Controllers
             AssertAdmin();
             string adminId = Request.Headers["user-id"].ToString();
 
-            using (var db = new BgDbContext())
+            using var db = new BgDbContext();
+            var admin = db.Users.First(u => u.Id.ToString() == adminId);
+
+            foreach (var user in db.Users.Where(u => u.Name != "deleted"))
             {
-                var admin = db.Users.First(u => u.Id.ToString() == adminId);
-
-                foreach (var user in db.Users.Where(u => u.Name != "deleted"))
+                (string Subject, string Text) st = GetSubjectAndText(dto.type, user.EmailUnsubscribeId, user.Name);
+                var subject = st.Subject;
+                var text = st.Text;
+                user.ReceivedMessages.Add(new Message
                 {
-                    (string Subject, string Text) st = GetSubjectAndText(dto.type, user.EmailUnsubscribeId, user.Name);
-                    var subject = st.Subject;
-                    var text = st.Text;
-                    user.ReceivedMessages.Add(new Message
-                    {
-                        Text = "Hi. I've just released version 3.6 with a new Practice Hint feature. The AI is also improved with logic and bug fixes.",
-                        Type = dto.type,
-                        Sender = admin,
-                        Sent = DateTime.Now
-                    });
+                    Text = "Hi. I've just released version 3.6 with a new Practice Hint feature. The AI is also improved with logic and bug fixes.",
+                    Type = dto.type,
+                    Sender = admin,
+                    Sent = DateTime.Now
+                });
 
-                    if (!string.IsNullOrWhiteSpace(user.Email) && user.EmailNotifications)
+                if (!string.IsNullOrWhiteSpace(user.Email) && user.EmailNotifications)
+                {
+                    try
                     {
-                        try
-                        {
-                            await Mail.Mailer.Send(user.Email, subject, text, dto.userName, dto.password);
-                            logger.LogInformation($"Emailed {user.Email}");
-                        }
-                        catch (Exception exc)
-                        {
-                            logger.LogError(exc.ToString());
-                        }
+                        await Mail.Mailer.Send(user.Email, subject, text, dto.userName, dto.password);
+                        logger.LogInformation("Emailed {email}", user.Email);
+                    }
+                    catch (Exception exc)
+                    {
+                        logger.LogError(exc, "Failed to end email.");
                     }
                 }
-                db.SaveChanges();
             }
+            db.SaveChanges();
         }
 
         private (string, string) GetSubjectAndText(MessageType type, Guid unsbsciberId, string name)
@@ -159,12 +151,10 @@ namespace Backend.Controllers
         [Route("api/message/unsubscribe")]
         public void Unsubscribe(Guid id)
         {
-            using (var db = new BgDbContext())
-            {
-                var user = db.Users.Single(u => u.EmailUnsubscribeId == id);
-                user.EmailNotifications = false;
-                db.SaveChanges();
-            }
+            using var db = new BgDbContext();
+            var user = db.Users.Single(u => u.EmailUnsubscribeId == id);
+            user.EmailNotifications = false;
+            db.SaveChanges();
         }
     }
 }

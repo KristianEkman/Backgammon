@@ -45,7 +45,7 @@ namespace Ai
             var time = DateTime.Now - start;
 
             var runsPs = runs / time.TotalSeconds;
-            Console.WriteLine($"Games per second: {runsPs.ToString("0.#")}");
+            Console.WriteLine($"Games per second: {runsPs:0.#}");
             Console.WriteLine($"Starts: B {runner.Game.BlackStarts}, W {runner.Game.WhiteStarts}");
             return result.WhitePct;
         }
@@ -72,7 +72,7 @@ namespace Ai
                     Console.CursorLeft = 0;
                     var blackPct = blackWins / (double)i;
                     var whitePct = whitekWins / (double)i;
-                    Console.Write($"{i} Black: {blackPct.ToString("P")} White: {whitePct.ToString("P")} Errors: {errors}");
+                    Console.Write($"{i} Black: {blackPct:P} White: {whitePct:P} Errors: {errors}");
                     PreventSleep();
                 }
             }
@@ -272,7 +272,7 @@ namespace Ai
             Console.WriteLine("*********************");
             Console.WriteLine(config.ToString());
             Console.WriteLine("*********************");
-            var csvName = $"{Environment.CurrentDirectory}\\MaximizeAll{DateTime.Now.ToString("yyMMddHHmmss")}.csv";
+            var csvName = $"{Environment.CurrentDirectory}\\MaximizeAll{DateTime.Now:yyMMddHHmmss}.csv";
             Console.WriteLine(csvName);
 
             File.WriteAllText(csvName, "BlockedPointScore;ConnectedBlocksFactor;BlotsFactor;BlotsFactorPassed;BlotsThreshold;RunOrBlockFactor\n");
@@ -290,32 +290,32 @@ namespace Ai
                 var eBf = config.BlotsFactor + 0.5;
                 var bf = OptimizeBlotsFactor(sBf, eBf, config);
                 if (bf > 0)
-                    config.BlotsFactor = config.BlotsFactor + (bf - config.BlotsFactor) * lr;
+                    config.BlotsFactor += (bf - config.BlotsFactor) * lr;
 
                 var sBfp = Math.Max(config.BlotsFactorPassed - 0.5, 0.1);
                 var eBfp = config.BlotsFactorPassed + 0.5;
                 var bfp = OptimizeBlotsFactorPassed(sBfp, eBfp, config);
                 if (bfp > 0)
-                    config.BlotsFactorPassed = config.BlotsFactorPassed + (bfp - config.BlotsFactorPassed) * lr;
+                    config.BlotsFactorPassed += (bfp - config.BlotsFactorPassed) * lr;
 
 
                 var sCb = Math.Max(config.ConnectedBlocksFactor - 0.5, 0);
                 var eCb = config.ConnectedBlocksFactor + 0.5;
                 var cb = OptimizeConnectedBlocksFactor(sCb, eCb, config);
                 if (cb > 0)
-                    config.ConnectedBlocksFactor = config.ConnectedBlocksFactor + (cb - config.ConnectedBlocksFactor) * lr;
+                    config.ConnectedBlocksFactor += (cb - config.ConnectedBlocksFactor) * lr;
 
                 var sBp = Math.Max(config.BlockedPointScore - 0.5, 0);
                 var eBp = config.BlockedPointScore + 0.5;
                 var bp = OptimizeBlockedPointScore(sBp, eBp, config);
                 if (bp > 0)
-                    config.BlockedPointScore = config.BlockedPointScore + (bp - config.BlockedPointScore) * lr;
+                    config.BlockedPointScore += (bp - config.BlockedPointScore) * lr;
 
                 var sRb = Math.Max(config.RunOrBlockFactor - 0.5, 0);
                 var eRb = config.RunOrBlockFactor + 0.5;
                 var rb = OptimizeRunOrBlockFactor(sRb, eRb, config);
                 if (rb > 0)
-                    config.RunOrBlockFactor = config.RunOrBlockFactor + (rb - config.RunOrBlockFactor) * lr;
+                    config.RunOrBlockFactor += (rb - config.RunOrBlockFactor) * lr;
 
                 Console.WriteLine("*********************");
                 Console.WriteLine(DateTime.Now.ToString() + " " + config.ToString());
@@ -335,10 +335,10 @@ namespace Ai
             var runner = new Trainer();
             runner.Black.Configuration = Config.NoDoubles41Epochs();
             runner.White.Configuration = Config.Untrained();
-            var res = RunMany(runner);
+            _ = RunMany(runner);
         }
 
-        void PreventSleep()
+        static void PreventSleep()
         {
             // Prevent Idle-to-Sleep (monitor not affected) (see note above)
             SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_AWAYMODE_REQUIRED);

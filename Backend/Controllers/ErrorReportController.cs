@@ -22,17 +22,15 @@ namespace Backend.Controllers
         {
             var userId = GetUserOrGuestId();
 
-            using (var db = new Db.BgDbContext())
+            using var db = new Db.BgDbContext();
+            db.ErrorReports.Add(new ErrorReport()
             {
-                db.ErrorReports.Add(new ErrorReport()
-                {
-                    Error = dto.Error,
-                    Reporter = db.Users.Single(u => u.Id.ToString() == userId),
-                    Reproduce = dto.Reproduce
-                });
+                Error = dto.Error,
+                Reporter = db.Users.Single(u => u.Id.ToString() == userId),
+                Reproduce = dto.Reproduce
+            });
 
-                db.SaveChanges();
-            }
+            db.SaveChanges();
         }
     }
 }

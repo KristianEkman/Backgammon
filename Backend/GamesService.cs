@@ -14,7 +14,7 @@ namespace Backend
 {
     public class GamesService
     {
-        internal static List<GameManager> AllGames = new List<GameManager>();
+        internal static List<GameManager> AllGames = new();
 
         internal static async Task Connect(WebSocket webSocket, HttpContext context, ILogger<GameManager> logger, string userId, string gameId, bool playAi, bool forGold)
         {
@@ -47,9 +47,8 @@ namespace Backend
 
             if (GameAlreadyStarted(managers, userId))
             {
-                string warning = $"The user {userId} has already started a game";
-                logger.LogWarning(warning);
-                throw new ApplicationException(warning);
+                logger.LogError("The user {userId} has already started a game", userId);
+                throw new ApplicationException();
             }
                        
             var isGuest = dbUser.Id == Guid.Empty;
@@ -67,7 +66,7 @@ namespace Backend
                 manager.Ended += Game_Ended;
                 manager.SearchingOpponent = !playAi;
                 AllGames.Add(manager);
-                logger.LogInformation($"Added a new game and waiting for opponent. Game id {manager.Game.Id}");
+                logger.LogInformation("Added a new game and waiting for opponent. Game id {manager.Game.Id}", manager.Game.Id);
                 // entering socket loop
                 await manager.ConnectAndListen(webSocket, Player.Color.Black, dbUser, playAi);
                 await SendConnectionLost(PlayerColor.white, manager);
@@ -76,11 +75,11 @@ namespace Backend
             else
             {
                 manager.SearchingOpponent = false;
-                logger.LogInformation($"Found a game and added a second player. Game id {manager.Game.Id}");
+                logger.LogInformation("Found a game and added a second player. Game id {id}", manager?.Game?.Id);
                 var color = manager.Client1 == null ? Player.Color.Black : Player.Color.White;
                 // entering socket loop
                 await manager.ConnectAndListen(webSocket, color, dbUser, false);
-                logger.LogInformation($"{color} player disconnected.");
+                logger.LogInformation("{color} player disconnected.", color);
                 await SendConnectionLost(PlayerColor.black, manager);
                 //This is the end of the connection
             }
@@ -159,7 +158,7 @@ namespace Backend
                     if (gameManager != null && MyColor(gameManager, dbUser, color))
                     {
                         gameManager.Engine = new Ai.Engine(gameManager.Game);
-                        logger.LogInformation($"Restoring game {cookie.id} for {color}");
+                        logger.LogInformation("Restoring game {cookie.id} for {color}", cookie.id, color);
                         // entering socket loop
                         await gameManager.Restore(color, webSocket);
                         var otherColor = color == PlayerColor.black ?
@@ -198,7 +197,7 @@ namespace Backend
                 (manager.Client2 == null || manager.Client2.State != WebSocketState.Open))
             {
                 AllGames.Remove(manager);
-                manager.Logger.LogInformation($"Removing game {manager.Game.Id} which is not used.");
+                manager.Logger.LogInformation("Removing game {id} which is not used.", manager?.Game?.Id);
             }
         }
 

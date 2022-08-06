@@ -45,10 +45,8 @@ namespace Backend.Db
 
             if (string.IsNullOrWhiteSpace(userId))
                 userId = Guid.Empty.ToString();
-            using (var db = new Db.BgDbContext())
-            {
-                return db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
-            }
+            using var db = new Db.BgDbContext();
+            return db.Users.SingleOrDefault(u => u.Id.ToString() == userId);
         }
 
         public static IConfigurationSection ConnectionsString { get; internal set; }
