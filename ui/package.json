@@ -3,7 +3,7 @@
   "version": "3.8.2",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
     "test": "ng test",

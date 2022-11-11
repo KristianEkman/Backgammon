@@ -76,8 +76,8 @@
           "options": {
             "browserTarget": "ui:build",
             "ssl": true,
-            "sslKey": ".ssh/ca.key",
-            "sslCert": ".ssh/ca.crt"
+            "sslKey": "ssh/localhost.key",
+            "sslCert": "ssh/localhost.crt"
           },
           "configurations": {
             "production": {
@@ -132,5 +132,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
