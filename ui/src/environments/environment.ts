@@ -4,8 +4,10 @@
 
 export const environment = {
   production: false,
-  socketServiceUrl: 'wss://localhost:44394/ws',
-  apiServiceUrl: 'https://localhost:44394/api'
+  socketServiceUrl: 'wss://localhost:5001/ws',
+  apiServiceUrl: 'https://localhost:5001/api'
+
+  // port 44394 for visual studio
 };
 
 /*

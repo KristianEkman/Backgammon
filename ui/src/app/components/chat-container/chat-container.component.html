@@ -1,0 +1,17 @@
+<div
+  class="app-chat"
+  [ngClass]="{ 'app-chat__open': open, 'app-chat__close': !open }"
+>
+  <div class="open-button">
+    <button (click)="toggle()" class="flat-button">
+      <i class="fas fa-comments"></i>
+    </button>
+  </div>
+  <div class="grid" [ngClass]="{ 'grid-hidden': !open }">
+    <textarea class="conversation" readonly></textarea>
+    <textarea class="users" readonly></textarea>
+    <form autocomplete="chrome-off">
+      <input #msginput type="text" class="msginput" />
+    </form>
+  </div>
+</div>
