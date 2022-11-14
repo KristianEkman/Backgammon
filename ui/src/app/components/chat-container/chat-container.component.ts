@@ -1,25 +1,29 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-chat-container',
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.scss']
 })
-export class ChatContainerComponent implements OnInit {
-  open = false;
-
-  ngOnInit(): void {}
+export class ChatContainerComponent {
+  constructor(private stateService: AppStateService) {}
 
   @ViewChild('msginput') input!: ElementRef;
 
-  toggle() {
-    this.open = !this.open;
-    if (this.open) {
+  open = this.stateService.chatOpen.observe();
+  onClickOpen() {
+    const open = this.stateService.chatOpen.getValue();
+    this.stateService.chatOpen.setValue(!open);
+    if (!open) {
       setTimeout(() => {
-        this.input?.nativeElement?.focus();
+        console.log('focus');
+        this.input.nativeElement.focus();
       }, 1);
-
-      console.log(this.input);
     }
+  }
+
+  onClickClose() {
+    this.stateService.chatOpen.setValue(false);
   }
 }

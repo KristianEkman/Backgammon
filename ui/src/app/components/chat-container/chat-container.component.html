@@ -1,17 +1,34 @@
 <div
   class="app-chat"
-  [ngClass]="{ 'app-chat__open': open, 'app-chat__close': !open }"
+  [ngClass]="{
+    'app-chat__open': open | async,
+    'app-chat__close': !(open | async)
+  }"
 >
-  <div class="open-button">
-    <button (click)="toggle()" class="flat-button">
+  <div *ngIf="!(open | async)" class="open-button">
+    <button (click)="onClickOpen()" class="flat-button">
       <i class="fas fa-comments"></i>
     </button>
   </div>
-  <div class="grid" [ngClass]="{ 'grid-hidden': !open }">
-    <textarea class="conversation" readonly></textarea>
-    <textarea class="users" readonly></textarea>
+  <div class="grid" [ngClass]="{ 'grid-hidden': !(open | async) }">
+    <button (click)="onClickClose()" class="close-button flat-button">X</button>
+    <textarea
+      class="conversation"
+      readonly
+      [textContent]="'Här kommer chatten\nskrivas ut'"
+    ></textarea>
+    <textarea
+      class="users"
+      readonly
+      [textContent]="'Aina\nKristian'"
+    ></textarea>
     <form autocomplete="chrome-off">
-      <input #msginput type="text" class="msginput" />
+      <input
+        #msginput
+        type="text"
+        class="msginput"
+        placeholder="Enter chat messages here"
+      />
     </form>
   </div>
 </div>

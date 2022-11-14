@@ -3,13 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: start;
-  height: calc(100% - 60px);
-  top: 30px;
-  right: 30px;
-  opacity: 0.7;
+  height: calc(100% - 100px);
+  top: 50px;
+  right: 50px;
 
   &__open {
-    width: calc(100% - 60px);
+    width: calc(100% - 140px);
     transition: width 0.6s;
   }
 
@@ -21,27 +20,43 @@
 
 .grid {
   display: grid;
-  border: 1px solid rgb(170, 169, 169);
+  gap: 2px;
   border-radius: 15px;
   grid-template-columns: 80% 20%;
   grid-template-rows: calc(100% - 30px) 30px;
   width: 100%;
   height: 100%;
+
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.4);
 }
 
 .grid-hidden {
   visibility: hidden;
-  transition: all 1s;
+  transition: visibility 0.6s;
+  textarea {
+    visibility: hidden;
+  }
+}
+
+@mixin glassBorder {
+  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: 2px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.3);
 }
 
 .conversation {
   grid-column: 1 / 2;
   grid-row: 1 / 2;
-  color: white;
+  padding-top: 36px !important;
   resize: none;
   border-top-left-radius: 15px;
-  background-color: black;
   padding: 10px;
+  background-color: transparent;
+  color: var(--text-color);
+  @include glassBorder;
 }
 
 .users {
@@ -49,8 +64,9 @@
   grid-row: 1/2;
   border-top-right-radius: 15px;
   resize: none;
-  background-color: black;
-  color: white;
+  background-color: transparent;
+  @include glassBorder;
+  color: var(--text-color);
 }
 
 form {
@@ -61,9 +77,14 @@ form {
 .msginput {
   border-bottom-right-radius: 15px;
   border-bottom-left-radius: 15px;
-  background-color: black;
-  color: white;
+  background-color: transparent;
   padding-left: 10px;
   width: calc(100% - 16px);
-  height: 100%;
+  height: 25px;
+  @include glassBorder;
+  color: var(--text-color);
+}
+
+.close-button {
+  position: absolute;
 }

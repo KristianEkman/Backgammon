@@ -27,12 +27,14 @@ export class LobbyContainerComponent implements OnInit {
     this.messages$ = this.appState.messages.observe();
     this.hasNewVersion$ = this.appState.newVersion.observe();
     this.isAdmin$ = this.user$.pipe(map((u) => u?.isAdmin));
+    this.chatOpen$ = appState.chatOpen.observe();
   }
 
   user$: Observable<UserDto>;
   messages$: Observable<MessageDto[]>;
   hasNewVersion$: Observable<boolean>;
   isAdmin$: Observable<boolean>;
+  chatOpen$: Observable<boolean>;
 
   toplist = false;
   loginClicked = false;

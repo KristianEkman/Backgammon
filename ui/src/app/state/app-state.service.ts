@@ -52,6 +52,7 @@ export class AppStateService {
     this.feedbackList = new StateObject<FeedbackDto[]>();
     this.feedbackList.setValue([]);
     this.gameString = new StateObject<string>();
+    this.chatOpen = new StateObject<boolean>();
   }
 
   busy: StateObject<Busy>;
@@ -75,6 +76,7 @@ export class AppStateService {
   newVersion: StateObject<boolean>;
   feedbackList: StateObject<FeedbackDto[]>;
   gameString: StateObject<string>;
+  chatOpen: StateObject<boolean>;
 
   myTurn(): boolean {
     const game = this.game.getValue();
