@@ -22,9 +22,10 @@
       readonly
       [textContent]="'Aina\nKristian'"
     ></textarea>
-    <form autocomplete="chrome-off">
+    <form [formGroup]="formGroup" (submit)="onSubmit()" autocomplete="chrome-off">
       <input
         #msginput
+        formControlName="message"
         type="text"
         class="msginput"
         placeholder="Enter chat messages here"

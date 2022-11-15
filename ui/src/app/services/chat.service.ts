@@ -1,12 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { ChatMessageDto } from '../dto/chat/chatMessageDto';
 import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ChatServiceService implements OnDestroy {
+export class ChatService implements OnDestroy {
+  
   socket: WebSocket | undefined;
   url: string = '';
 
@@ -21,7 +23,7 @@ export class ChatServiceService implements OnDestroy {
 
     this.url = environment.chatServiceUrl;
     if (environment.production) {
-      this.url = origin.replace('https://', 'wss://') + '/chat';
+      this.url = origin.replace('https://', 'wss://') + '/chat'; // TODO: is this correct?
     }
 
     const user = this.appState.user.getValue();
@@ -41,7 +43,7 @@ export class ChatServiceService implements OnDestroy {
   }
 
   onOpen(event: Event): void {
-    // console.log('Open', { event });
+    console.log('Open', { event });
     const now = new Date();
     // const ping = now.getTime() - this.connectTime.getTime();
 
@@ -53,13 +55,26 @@ export class ChatServiceService implements OnDestroy {
   }
 
   onClose(event: CloseEvent): void {
-    // console.log('Close', { event });
+    console.log('Close', { event });
     // this.statusMessageService.setMyConnectionLost(event.reason);
   }
 
   // Messages received from server.
   onMessage(message: MessageEvent<string>): void {
-    const action = JSON.parse(message.data); // as ActionDto;
+    const dto = JSON.parse(message.data); // as ChatDto;
+  }
+
+  // sending to server
+  sendMessage(message: string) {
+    const dto : ChatMessageDto = {
+      fromUser: "",
+      type: "ChatMessageDto",
+      message: message
+    }
+    
+    if (this.socket && this.socket.readyState === this.socket.OPEN){
+      this.socket?.send(JSON.stringify(dto));
+    }
   }
 
   ngOnDestroy(): void {

@@ -1,3 +1,9 @@
+
+Chat.
+
+Serverside http only userid secure cookie
+    - kräver inloggning vaje gång app startas.
+
 Bug vid ladda ny version mobil.
 
 Mer musik
@@ -5,8 +11,6 @@ Mer musik
 Varför rensas inte gamla games?
 
 Json.Deserialze error.
-
-Fånga och logga!
 
 Nytt AI
     Testa om processesen kan köras av web app?
@@ -23,9 +27,7 @@ Språk
 
 Visa dubbelslag för första.
 
-Chat.
-
-canvas banner
+Canvas banner
 
 Tärningsanimation.
 
@@ -59,9 +61,6 @@ Sepegeleffekt i board.
 Coolare grafik när man vinner.
 
 Automatiska e2e-tester, selenium.
-
-serverside http only userid cookie
-    - kräver inloggning vaje gång app startas.
 
 Offline validering av jwt's
 
