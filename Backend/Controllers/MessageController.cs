@@ -27,9 +27,14 @@ namespace Backend.Controllers
         [Route("api/message/users")]
         public MessageDto[] GetMessages()
         {
+            User user;
             using (var db = new BgDbContext())
             {
-                var user = GetUser(db);
+                user = GetUser(db);
+            }
+
+            using (var db = new BgDbContext())
+            {
                 var ms = db.Messages.Where(m => m.Receiver == user).Select(m => new MessageDto
                 {
                     Text = m.Text,

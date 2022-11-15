@@ -1,4 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ChatService } from 'src/app/services/chat.service';
 import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
@@ -7,7 +9,14 @@ import { AppStateService } from 'src/app/state/app-state.service';
   styleUrls: ['./chat-container.component.scss']
 })
 export class ChatContainerComponent {
-  constructor(private stateService: AppStateService) {}
+  constructor(private stateService: AppStateService, private fb : FormBuilder, private chatService: ChatService) {
+    
+    this.formGroup = this.fb.group({
+      message: ['']
+    })    
+  }
+
+  formGroup : FormGroup;
 
   @ViewChild('msginput') input!: ElementRef;
 
@@ -15,9 +24,10 @@ export class ChatContainerComponent {
   onClickOpen() {
     const open = this.stateService.chatOpen.getValue();
     this.stateService.chatOpen.setValue(!open);
+    this.chatService.connect();
+
     if (!open) {
       setTimeout(() => {
-        console.log('focus');
         this.input.nativeElement.focus();
       }, 1);
     }
@@ -25,5 +35,13 @@ export class ChatContainerComponent {
 
   onClickClose() {
     this.stateService.chatOpen.setValue(false);
+  }
+
+  onSubmit() {
+    const ctrl = this.formGroup.get("message");
+    const message = ctrl?.value;
+    ctrl?.setValue(''); 
+    console.log(message);
+    this.chatService.sendMessage(message);
   }
 }
