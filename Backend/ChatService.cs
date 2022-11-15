@@ -31,7 +31,7 @@ namespace Backend
             var client = AllClients.FirstOrDefault(cl => cl.UserId == dbUser.Id);
             if (client == null)
             {
-                client = new ChatClient(dbUser.Id, webSocket);
+                client = new ChatClient(dbUser.Id, webSocket, logger);
                 //manager.Ended += Game_Ended;
                 client.MessageReceived += Client_MessageReceived;
 

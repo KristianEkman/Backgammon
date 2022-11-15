@@ -16,6 +16,7 @@ import { Busy } from './busy';
 import { ErrorState } from './ErrorState';
 import { MessageDto } from '../dto/message/messageDto';
 import { Injectable } from '@angular/core';
+import { ChatMessageDto } from '../dto/chat/chatMessageDto';
 
 @Injectable({
   providedIn: 'root'
@@ -53,6 +54,8 @@ export class AppStateService {
     this.feedbackList.setValue([]);
     this.gameString = new StateObject<string>();
     this.chatOpen = new StateObject<boolean>();
+    this.chatMessages = new StateObject<ChatMessageDto[]>();
+    this.chatMessages.setValue([]);
   }
 
   busy: StateObject<Busy>;
@@ -77,6 +80,7 @@ export class AppStateService {
   feedbackList: StateObject<FeedbackDto[]>;
   gameString: StateObject<string>;
   chatOpen: StateObject<boolean>;
+  chatMessages: StateObject<ChatMessageDto[]>;
 
   myTurn(): boolean {
     const game = this.game.getValue();

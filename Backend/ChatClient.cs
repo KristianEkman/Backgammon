@@ -15,11 +15,14 @@ namespace Backend
     {
         public Guid UserId { get; }
         public WebSocket Socket { get; }
+        ILogger<GameManager> Logger { get; }
 
-        public ChatClient(Guid userId, WebSocket socket)
+        public ChatClient(Guid userId, WebSocket socket, ILogger<GameManager> logger)
         {
             this.UserId = userId;
             this.Socket = socket;
+            Logger = logger;
+
         }
 
         internal event EventHandler Exited;
@@ -34,7 +37,7 @@ namespace Backend
                 var text = await ReceiveText();
                 if (text != null && text.Length > 0)
                 {
-                    // Logger.LogInformation($"Received: {text}");
+                    Logger.LogInformation($"Received: {text}");
                     try
                     {
                         var dto = (ChatDto)JsonSerializer.Deserialize(text, typeof(ChatDto));
@@ -47,7 +50,7 @@ namespace Backend
                     }
                     catch (Exception e)
                     {
-                        // Logger.LogError(e, $"Failed to parse Action text {text}");
+                        Logger.LogError(e, $"Failed to parse Action text {text}");
                     }
                 }
             }
@@ -68,7 +71,7 @@ namespace Backend
                 }
                 catch (Exception exc)
                 {
-                    // Logger.LogError($"Can't receive data from socket. Error: {exc.ToString()}");
+                    Logger.LogError($"Can't receive data from socket. Error: {exc.ToString()}");
                     return "";
                 }
             }
@@ -79,7 +82,7 @@ namespace Backend
         {
             if (Socket == null || Socket.State != WebSocketState.Open)
             {
-                // Logger.LogInformation("Cannot send to socket, connection was lost.");
+                Logger.LogInformation("Cannot send to socket, connection was lost.");
                 return;
             }
             var json = JsonSerializer.Serialize<object>(obj);
@@ -91,7 +94,7 @@ namespace Backend
             }
             catch (Exception exc)
             {
-                // Logger.LogError($"Failed to send socket data. Exception: {exc}");
+                    Logger.LogError($"Failed to send socket data. Exception: {exc}");
             }
         }
     }

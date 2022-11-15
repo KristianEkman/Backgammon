@@ -8,7 +8,6 @@ import { AppStateService } from '../state/app-state.service';
   providedIn: 'root'
 })
 export class ChatService implements OnDestroy {
-  
   socket: WebSocket | undefined;
   url: string = '';
 
@@ -61,18 +60,29 @@ export class ChatService implements OnDestroy {
 
   // Messages received from server.
   onMessage(message: MessageEvent<string>): void {
-    const dto = JSON.parse(message.data); // as ChatDto;
+    const dto = JSON.parse(message.data);
+
+    if (dto.type === 'ChatMessageDto') {
+      const msg = this.appState.chatMessages.getValue();
+      this.appState.chatMessages.setValue([...msg, dto]);
+    } else if (dto.type === 'joinedChatDto') {
+    } else if (dto.type === 'leftChatDto') {
+    }
+
+    console.log(dto);
   }
 
   // sending to server
   sendMessage(message: string) {
-    const dto : ChatMessageDto = {
-      fromUser: "",
-      type: "ChatMessageDto",
-      message: message
-    }
-    
-    if (this.socket && this.socket.readyState === this.socket.OPEN){
+    const utcNow = new Date().toISOString();
+    const dto: ChatMessageDto = {
+      fromUser: this.appState.user.getValue().name,
+      type: 'ChatMessageDto',
+      message: message,
+      utcDateTime: utcNow
+    };
+
+    if (this.socket && this.socket.readyState === this.socket.OPEN) {
       this.socket?.send(JSON.stringify(dto));
     }
   }

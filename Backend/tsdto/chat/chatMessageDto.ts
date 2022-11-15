@@ -5,4 +5,5 @@ import { ChatDto } from "./chatDto";
 export interface ChatMessageDto extends ChatDto {
     fromUser: string;
     message: string;
+    date: string;
 }

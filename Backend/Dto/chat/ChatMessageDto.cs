@@ -4,5 +4,6 @@
     {
         public string fromUser { get; set; }
         public string message { get; set; }
+        public string utcDateTime { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Observable, map } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
 import { AppStateService } from 'src/app/state/app-state.service';
 
@@ -9,18 +10,27 @@ import { AppStateService } from 'src/app/state/app-state.service';
   styleUrls: ['./chat-container.component.scss']
 })
 export class ChatContainerComponent {
-  constructor(private stateService: AppStateService, private fb : FormBuilder, private chatService: ChatService) {
-    
+  constructor(
+    private stateService: AppStateService,
+    private fb: FormBuilder,
+    private chatService: ChatService
+  ) {
     this.formGroup = this.fb.group({
       message: ['']
-    })    
+    });
   }
 
-  formGroup : FormGroup;
+  map = map;
+  formGroup: FormGroup;
 
   @ViewChild('msginput') input!: ElementRef;
 
-  open = this.stateService.chatOpen.observe();
+  open$ = this.stateService.chatOpen.observe();
+  chatMessages$ = this.stateService.chatMessages.observe().pipe(
+    map((m) => m.map((n) => n.message)),
+    map((m) => m.join('\n'))
+  );
+
   onClickOpen() {
     const open = this.stateService.chatOpen.getValue();
     this.stateService.chatOpen.setValue(!open);
@@ -38,10 +48,9 @@ export class ChatContainerComponent {
   }
 
   onSubmit() {
-    const ctrl = this.formGroup.get("message");
+    const ctrl = this.formGroup.get('message');
     const message = ctrl?.value;
-    ctrl?.setValue(''); 
-    console.log(message);
+    ctrl?.setValue('');
     this.chatService.sendMessage(message);
   }
 }

@@ -1,28 +1,28 @@
 <div
   class="app-chat"
   [ngClass]="{
-    'app-chat__open': open | async,
-    'app-chat__close': !(open | async)
+    'app-chat__open': open$ | async,
+    'app-chat__close': !(open$ | async)
   }"
 >
-  <div *ngIf="!(open | async)" class="open-button">
+  <div *ngIf="!(open$ | async)" class="open-button">
     <button (click)="onClickOpen()" class="flat-button">
       <i class="fas fa-comments"></i>
     </button>
   </div>
-  <div class="grid" [ngClass]="{ 'grid-hidden': !(open | async) }">
+  <div class="grid" [ngClass]="{ 'grid-hidden': !(open$ | async) }">
     <button (click)="onClickClose()" class="close-button flat-button">X</button>
     <textarea
       class="conversation"
       readonly
-      [textContent]="'Här kommer chatten\nskrivas ut'"
+      [textContent]="chatMessages$.pipe() | async"
     ></textarea>
-    <textarea
-      class="users"
-      readonly
-      [textContent]="'Aina\nKristian'"
-    ></textarea>
-    <form [formGroup]="formGroup" (submit)="onSubmit()" autocomplete="chrome-off">
+    <textarea class="users" readonly [textContent]=""></textarea>
+    <form
+      [formGroup]="formGroup"
+      (submit)="onSubmit()"
+      autocomplete="chrome-off"
+    >
       <input
         #msginput
         formControlName="message"
