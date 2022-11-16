@@ -2,6 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ChatMessageDto } from '../dto/chat/chatMessageDto';
+import { JoinedChatDto } from '../dto/chat/joinedChatDto';
+import { LeftChatDto } from '../dto/chat/leftChatDto';
 import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
@@ -65,11 +67,13 @@ export class ChatService implements OnDestroy {
     if (dto.type === 'ChatMessageDto') {
       const msg = this.appState.chatMessages.getValue();
       this.appState.chatMessages.setValue([...msg, dto]);
-    } else if (dto.type === 'joinedChatDto') {
-    } else if (dto.type === 'leftChatDto') {
+    } else if (dto.type === 'JoinedChatDto') {
+      const users = (dto as JoinedChatDto).users;
+      this.appState.chatUsers.setValue(users);
+    } else if (dto.type === 'LeftChatDto') {
+      const users = (dto as JoinedChatDto).users;
+      this.appState.chatUsers.setValue(users);
     }
-
-    console.log(dto);
   }
 
   // sending to server
@@ -94,6 +98,21 @@ export class ChatService implements OnDestroy {
   private cleanup() {
     if (this.socket && this.socket.readyState !== this.socket.CLOSED) {
       this.socket.close();
+    }
+  }
+
+  disconnect() {
+    var users = [...this.appState.chatUsers.getValue()];
+    var index = users.indexOf(this.appState.user.getValue().name);
+    users.splice(index, 1);
+
+    const dto: LeftChatDto = {
+      users: users,
+      type: 'LeftChatDto'
+    };
+
+    if (this.socket?.readyState === this.socket?.OPEN) {
+      this.socket?.send(JSON.stringify(dto));
     }
   }
 }

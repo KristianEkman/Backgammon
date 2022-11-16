@@ -2,6 +2,6 @@
 {
     public class JoinedChatDto : ChatDto
     {
-        public string userName { get; set; }
+        public string[] users { get; set; }
     }
 }

@@ -1,7 +1,8 @@
-﻿using Backend.Dto;
+﻿using Backend.Db;
+using Backend.Dto;
 using Backend.Dto.chat;
-using Backend.Rules;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -31,26 +32,49 @@ namespace Backend
             var client = AllClients.FirstOrDefault(cl => cl.UserId == dbUser.Id);
             if (client == null)
             {
-                client = new ChatClient(dbUser.Id, webSocket, logger);
-                //manager.Ended += Game_Ended;
+                client = new ChatClient(dbUser.Id, dbUser.Name, webSocket, logger);
                 client.MessageReceived += Client_MessageReceived;
 
                 AllClients.Add(client);
+                SendJoined();
+
                 logger.LogInformation($"Added a new chat client");
-                
+
                 // entering socket loop
                 await client.ListenOn();
+
                 //This is the end of the connection
+                logger.LogInformation("Chat client disconnected");
+            }
+            else
+            {
+                logger.LogInformation("Reuse previous client");
             }
 
-            AllClients.Remove(client);
         }
 
+        private static void SendJoined()
+        {
+            var users = AllClients.Select(c => c.UserName).ToArray();
+            foreach (var clnt in AllClients)
+            {
+                _ = clnt.Send(
+                    new JoinedChatDto {
+                        type = nameof(JoinedChatDto),
+                        users = users
+                    });
+            }
+        }
+        
         private static void Client_MessageReceived(ChatClient sender, ChatDto dto)
         {
-            foreach (var client in AllClients)
+            foreach (var clnt in AllClients)
+                _ = clnt.Send(dto);
+
+            if (dto.type == nameof(LeftChatDto))
             {
-                _ = client.Send(dto);
+                AllClients.Remove(sender);
+                sender.Disconnect();
             }
         }
 
@@ -61,40 +85,6 @@ namespace Backend
                 var m = db.Maintenance.OrderByDescending(m => m.Time).FirstOrDefault();
                 return m != null && m.On;
             }
-        }
-
-
-        private static async Task SendConnectionLost(PlayerColor color, GameManager manager)
-        {
-            var socket = manager.Client1;
-            if (color == PlayerColor.white)
-                socket = manager.Client2;
-            if (socket != null && socket.State == WebSocketState.Open)
-            {
-                var action = new Dto.Actions.ConnectionInfoActionDto
-                {
-                    connection = new ConnectionDto
-                    {
-                        connected = false
-                    }
-                };
-                await manager.Send(socket, action);
-            }
-        }
-
-        private static bool MyColor(GameManager manager, Db.User dbUser, PlayerColor color)
-        {
-            //prevents someone with same game id, get someone elses side in the game.
-            var player = manager.Game.BlackPlayer;
-            if (color == PlayerColor.white)
-                player = manager.Game.WhitePlayer;
-
-            return dbUser != null && dbUser.Id == player.Id;
-        }
-
-        private static void Game_Ended(object sender, EventArgs e)
-        {
-            AllClients.Remove(sender as ChatClient);
         }
     }
 }

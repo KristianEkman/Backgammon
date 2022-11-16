@@ -24,7 +24,8 @@ namespace Backend.Db
         {
 #if DEBUG
             return File.ReadAllText("fbapptoken.txt");
-#endif
+#else
+
             var options = new SecretClientOptions()
             {
                 Retry =
@@ -39,6 +40,7 @@ namespace Backend.Db
             KeyVaultSecret secret = client.GetSecret("bgfbat");
             string secretValue = secret.Value;
             return secretValue;
+#endif
         }
     }
 }

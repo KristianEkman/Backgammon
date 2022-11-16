@@ -3,5 +3,5 @@
 import { ChatDto } from "./chatDto";
 
 export interface JoinedChatDto extends ChatDto {
-    userName: string;
+    users: string[];
 }

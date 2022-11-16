@@ -15,9 +15,9 @@
     <textarea
       class="conversation"
       readonly
-      [textContent]="chatMessages$.pipe() | async"
+      [textContent]="chatMessages$ | async"
     ></textarea>
-    <textarea class="users" readonly [textContent]=""></textarea>
+    <textarea class="users" readonly [textContent]="users$ | async"></textarea>
     <form
       [formGroup]="formGroup"
       (submit)="onSubmit()"

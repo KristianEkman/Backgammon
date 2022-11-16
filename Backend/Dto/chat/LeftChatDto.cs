@@ -2,6 +2,6 @@
 {
     public class LeftChatDto : ChatDto
     {
-        public string userName { get; set; }
+        public string[] users { get; set; }
     }
 }

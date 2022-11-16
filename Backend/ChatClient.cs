@@ -14,18 +14,18 @@ namespace Backend
     public class ChatClient
     {
         public Guid UserId { get; }
+        public string UserName { get; }
         public WebSocket Socket { get; }
         ILogger<GameManager> Logger { get; }
 
-        public ChatClient(Guid userId, WebSocket socket, ILogger<GameManager> logger)
+        public ChatClient(Guid userId, string userName, WebSocket socket, ILogger<GameManager> logger)
         {
             this.UserId = userId;
             this.Socket = socket;
+            this.UserName = userName;
             Logger = logger;
-
         }
 
-        internal event EventHandler Exited;
         internal event DtoReceivedEvent MessageReceived;
 
         internal async Task ListenOn()
@@ -46,7 +46,7 @@ namespace Backend
                         else if (dto.type == nameof(JoinedChatDto))
                             MessageReceived?.Invoke(this, (JoinedChatDto)JsonSerializer.Deserialize(text, typeof(JoinedChatDto)));
                         else if (dto.type == nameof(LeftChatDto))
-                            MessageReceived?.Invoke(this, (JoinedChatDto)JsonSerializer.Deserialize(text, typeof(LeftChatDto)));
+                            MessageReceived?.Invoke(this, (LeftChatDto)JsonSerializer.Deserialize(text, typeof(LeftChatDto)));
                     }
                     catch (Exception e)
                     {
@@ -96,6 +96,12 @@ namespace Backend
             {
                     Logger.LogError($"Failed to send socket data. Exception: {exc}");
             }
+        }
+
+        internal void Disconnect()
+        {
+            Logger.LogInformation($"Closing chat socket for ${UserName}");
+            Socket.Abort();
         }
     }
 

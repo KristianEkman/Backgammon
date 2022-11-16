@@ -30,6 +30,10 @@ export class ChatContainerComponent {
     map((m) => m.map((n) => n.message)),
     map((m) => m.join('\n'))
   );
+  users$ = this.stateService.chatUsers.observe().pipe(
+    map((u) => u?.map((v) => v)),
+    map((u) => u?.join('\n'))
+  );
 
   onClickOpen() {
     const open = this.stateService.chatOpen.getValue();
@@ -45,6 +49,7 @@ export class ChatContainerComponent {
 
   onClickClose() {
     this.stateService.chatOpen.setValue(false);
+    this.chatService.disconnect();
   }
 
   onSubmit() {

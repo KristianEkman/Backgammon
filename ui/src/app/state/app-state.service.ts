@@ -56,6 +56,8 @@ export class AppStateService {
     this.chatOpen = new StateObject<boolean>();
     this.chatMessages = new StateObject<ChatMessageDto[]>();
     this.chatMessages.setValue([]);
+    this.chatUsers = new StateObject<string[]>();
+    this.chatUsers.setValue([]);
   }
 
   busy: StateObject<Busy>;
@@ -81,6 +83,7 @@ export class AppStateService {
   gameString: StateObject<string>;
   chatOpen: StateObject<boolean>;
   chatMessages: StateObject<ChatMessageDto[]>;
+  chatUsers: StateObject<string[]>;
 
   myTurn(): boolean {
     const game = this.game.getValue();
