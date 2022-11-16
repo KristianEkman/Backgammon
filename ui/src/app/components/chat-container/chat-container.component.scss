@@ -1,21 +1,29 @@
 .app-chat {
   position: absolute;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: flex-start;
-  height: calc(100% - 100px);
-  top: 50px;
-  right: 50px;
+  height: 40px;
+  bottom: 20px;
+  right: 20px;
 
   &__open {
-    width: calc(100% - 140px);
-    transition: width 0.6s;
+    height: calc(70% - 0px);
+    width: calc(70% - 0px);
+    transition: all 0.6s;
   }
 
   &__close {
     width: 35px;
-    transition: width 0.6s;
+    height: 40px;
+    transition: all 0.6s;
   }
+}
+
+.open-button {
+  position: absolute;
+  right: -10px;
+  bottom: -10px;
 }
 
 .grid {
@@ -29,7 +37,7 @@
 
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .grid-hidden {
@@ -50,12 +58,11 @@
 .conversation {
   grid-column: 1 / 2;
   grid-row: 1 / 2;
-  padding-top: 36px !important;
   resize: none;
   border-top-left-radius: 15px;
   padding: 10px;
   background-color: transparent;
-  color: var(--text-color);
+  color: var(--chat-text-color);
   @include glassBorder;
 }
 
@@ -66,7 +73,7 @@
   resize: none;
   background-color: transparent;
   @include glassBorder;
-  color: var(--text-color);
+  color: var(--chat-text-color);
 }
 
 form {
@@ -82,9 +89,12 @@ form {
   width: calc(100% - 16px);
   height: 25px;
   @include glassBorder;
-  color: var(--text-color);
+  color: var(--chat-text-color);
 }
 
 .close-button {
   position: absolute;
+  bottom: -10px;
+  right: -10px;
+  color: black;
 }

@@ -11,36 +11,24 @@ import { AppStateService } from '../state/app-state.service';
 })
 export class ChatService implements OnDestroy {
   socket: WebSocket | undefined;
-  url: string = '';
 
-  constructor(
-    private appState: AppStateService,
-    private router: Router,
-    private serializer: UrlSerializer
-  ) {}
+  constructor(private appState: AppStateService) {}
 
   connect() {
     this.cleanup();
 
-    this.url = environment.chatServiceUrl;
-    if (environment.production) {
-      this.url = origin.replace('https://', 'wss://') + '/chat'; // TODO: is this correct?
-    }
-
-    const user = this.appState.user.getValue();
-    const userId = user ? user.id : '';
-    const tree = this.router.createUrlTree([], {
-      queryParams: {
-        userId: userId
-      }
-    });
-    const url = this.url + this.serializer.serialize(tree);
-
-    this.socket = new WebSocket(url);
+    this.socket = new WebSocket(this.getUri());
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
     this.socket.onopen = this.onOpen.bind(this);
     this.socket.onclose = this.onClose.bind(this);
+  }
+
+  getUri() {
+    const user = this.appState.user.getValue();
+    if (environment.production)
+      return `wss://${window.location.host}/ws/chat?userId=${user.id}`;
+    return `${environment.chatServiceUrl}?userId=${user.id}`;
   }
 
   onOpen(event: Event): void {

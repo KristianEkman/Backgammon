@@ -16,8 +16,14 @@
       class="conversation"
       readonly
       [textContent]="chatMessages$ | async"
+      tabindex="-1"
     ></textarea>
-    <textarea class="users" readonly [textContent]="users$ | async"></textarea>
+    <textarea
+      class="users"
+      readonly
+      [textContent]="users$ | async"
+      tabindex="-1"
+    ></textarea>
     <form
       [formGroup]="formGroup"
       (submit)="onSubmit()"

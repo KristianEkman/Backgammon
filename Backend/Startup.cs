@@ -93,7 +93,7 @@ namespace Backend
                         context.Response.StatusCode = 400;
                     }
                 }
-                else if (context.Request.Path == "/ws/chat/")
+                else if (context.Request.Path == "/ws/chat")
                 {
                     if (context.WebSockets.IsWebSocketRequest)
                     {

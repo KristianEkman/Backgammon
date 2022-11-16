@@ -1,4 +1,10 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Observable, map } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
@@ -9,7 +15,7 @@ import { AppStateService } from 'src/app/state/app-state.service';
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.scss']
 })
-export class ChatContainerComponent {
+export class ChatContainerComponent implements OnDestroy {
   constructor(
     private stateService: AppStateService,
     private fb: FormBuilder,
@@ -27,9 +33,10 @@ export class ChatContainerComponent {
 
   open$ = this.stateService.chatOpen.observe();
   chatMessages$ = this.stateService.chatMessages.observe().pipe(
-    map((m) => m.map((n) => n.message)),
+    map((m) => m.map((n) => `${n.fromUser}:\n  ${n.message}`)),
     map((m) => m.join('\n'))
   );
+
   users$ = this.stateService.chatUsers.observe().pipe(
     map((u) => u?.map((v) => v)),
     map((u) => u?.join('\n'))
@@ -49,13 +56,35 @@ export class ChatContainerComponent {
 
   onClickClose() {
     this.stateService.chatOpen.setValue(false);
+    this.stateService.chatMessages.setValue([]);
     this.chatService.disconnect();
   }
 
   onSubmit() {
     const ctrl = this.formGroup.get('message');
     const message = ctrl?.value;
-    ctrl?.setValue('');
-    this.chatService.sendMessage(message);
+    if (message?.trim()) {
+      ctrl?.setValue('');
+      this.chatService.sendMessage(message);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.chatService.disconnect();
+  }
+
+  wasInside = false;
+
+  @HostListener('click')
+  clickInside() {
+    this.wasInside = true;
+  }
+
+  @HostListener('document:click')
+  clickout() {
+    if (!this.wasInside) {
+      this.onClickClose();
+    }
+    this.wasInside = false;
   }
 }

@@ -8,6 +8,7 @@
   --error-color: rgb(253, 82, 82);
   --message-bg-color: #333;
   --input-bg-color: #bbb;
+  --chat-text-color: white;
 
   select {
     background-color: var(--input-bg-color);
@@ -24,6 +25,7 @@
   --error-color: #962b2b;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
 }
 
 // ******************* Blue Theme ********************
@@ -36,6 +38,7 @@
   --error-color: #962b2b;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
 }
 
 // ******************* Pink Theme ********************
@@ -48,8 +51,8 @@
   --error-color: #962b2b;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
 }
-
 
 // ******************* Green Theme ********************
 .green {
@@ -61,6 +64,7 @@
   --error-color: #962b2b;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
 }
 
 body {
@@ -87,7 +91,14 @@ button {
 }
 
 .banner-gradient {
-  background-image: linear-gradient(to right, var(--app-bg-color), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), var(--app-bg-color));
+  background-image: linear-gradient(
+    to right,
+    var(--app-bg-color),
+    rgba(255, 0, 0, 0),
+    rgba(255, 0, 0, 0),
+    rgba(255, 0, 0, 0),
+    var(--app-bg-color)
+  );
 }
 
 .title-color {

@@ -28,6 +28,7 @@ namespace Backend
             }
 
             var dbUser = Db.BgDbContext.GetDbUser(userId);
+            CleanupClients();
 
             var client = AllClients.FirstOrDefault(cl => cl.UserId == dbUser.Id);
             if (client == null)
@@ -49,8 +50,13 @@ namespace Backend
             else
             {
                 logger.LogInformation("Reuse previous client");
+                SendJoined();
             }
+        }
 
+        private static void CleanupClients()
+        {
+            AllClients = AllClients.Where(c => c.Socket.State == WebSocketState.Open).ToList();
         }
 
         private static void SendJoined()
