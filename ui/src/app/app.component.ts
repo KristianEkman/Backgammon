@@ -9,6 +9,7 @@ import { DOCUMENT } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { Language } from './utils';
 import { Busy } from './state/busy';
+import { ChatService } from './services/chat.service';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,8 @@ export class AppComponent {
     private translateService: TranslateService,
     @Inject(DOCUMENT) private document: Document,
     private router: Router,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private chatService: ChatService
   ) {
     this.errors$ = this.appState.errors.observe();
     this.busy$ = this.appState.busy.observe();
@@ -64,6 +66,8 @@ export class AppComponent {
         }, 1);
       }
     });
+
+    this.chatService.connect();
   }
 
   saveErrorReport(errorDto: ErrorReportDto): void {

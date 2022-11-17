@@ -2,6 +2,6 @@
 
 import { ChatDto } from './chatDto';
 
-export interface JoinedChatDto extends ChatDto {
+export interface ChatUsersDto extends ChatDto {
   users: string[];
 }

@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router, UrlSerializer } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ChatMessageDto } from '../dto/chat/chatMessageDto';
-import { JoinedChatDto } from '../dto/chat/joinedChatDto';
+import { ChatUsersDto } from '../dto/chat/joinedChatDto';
 import { LeftChatDto } from '../dto/chat/leftChatDto';
 import { AppStateService } from '../state/app-state.service';
 
@@ -55,11 +55,11 @@ export class ChatService implements OnDestroy {
     if (dto.type === 'ChatMessageDto') {
       const msg = this.appState.chatMessages.getValue();
       this.appState.chatMessages.setValue([dto, ...msg]);
-    } else if (dto.type === 'JoinedChatDto') {
-      const users = (dto as JoinedChatDto).users;
+    } else if (dto.type === 'ChatUsersDto') {
+      const users = (dto as ChatUsersDto).users;
       this.appState.chatUsers.setValue(users);
     } else if (dto.type === 'LeftChatDto') {
-      const users = (dto as JoinedChatDto).users;
+      const users = (dto as LeftChatDto).users;
       this.appState.chatUsers.setValue(users);
     }
   }

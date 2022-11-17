@@ -18,6 +18,20 @@
     height: 40px;
     transition: all 0.6s;
   }
+
+  &__counter {
+    background-color: var(--chat-users-color);
+    font-weight: 800;
+    font-size: small;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+    position: absolute;
+    top: 7px;
+    right: 17px;
+    border-radius: 50%;
+    color: white;
+  }
 }
 
 .open-button {

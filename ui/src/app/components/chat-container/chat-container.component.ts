@@ -1,12 +1,12 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
-  OnDestroy,
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
 import { AppStateService } from 'src/app/state/app-state.service';
 
@@ -15,18 +15,24 @@ import { AppStateService } from 'src/app/state/app-state.service';
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.scss']
 })
-export class ChatContainerComponent implements OnDestroy {
+export class ChatContainerComponent {
   constructor(
     private stateService: AppStateService,
     private fb: FormBuilder,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.formGroup = this.fb.group({
       message: ['']
     });
+
+    // todo: get this to work with observables
+    setInterval(() => {
+      this.usersCount = this.stateService.chatUsers.getValue().length;
+      this.othersInChat = this.usersCount > 1;
+    }, 2000);
   }
 
-  map = map;
   formGroup: FormGroup;
 
   @ViewChild('msginput') input!: ElementRef;
@@ -42,22 +48,26 @@ export class ChatContainerComponent implements OnDestroy {
     map((u) => u?.join('\n'))
   );
 
+  usersCount = 0;
+
+  othersInChat = false;
+
   onClickOpen() {
     const open = this.stateService.chatOpen.getValue();
     this.stateService.chatOpen.setValue(!open);
-    this.chatService.connect();
 
     if (!open) {
       setTimeout(() => {
         this.input.nativeElement.focus();
       }, 1);
     }
+    this.changeDetector.detectChanges();
   }
 
   onClickClose() {
     this.stateService.chatOpen.setValue(false);
     this.stateService.chatMessages.setValue([]);
-    this.chatService.disconnect();
+    this.changeDetector.detectChanges();
   }
 
   onSubmit() {
@@ -67,10 +77,6 @@ export class ChatContainerComponent implements OnDestroy {
       ctrl?.setValue('');
       this.chatService.sendMessage(message);
     }
-  }
-
-  ngOnDestroy(): void {
-    this.chatService.disconnect();
   }
 
   wasInside = false;

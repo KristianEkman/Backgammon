@@ -37,7 +37,7 @@ namespace Backend
                 client.MessageReceived += Client_MessageReceived;
 
                 AllClients.Add(client);
-                SendJoined();
+                SendChatUsers();
 
                 logger.LogInformation($"Added a new chat client");
 
@@ -46,11 +46,13 @@ namespace Backend
 
                 //This is the end of the connection
                 logger.LogInformation("Chat client disconnected");
+                AllClients.Remove(client);
+                SendChatUsers();
             }
             else
             {
                 logger.LogInformation("Reuse previous client");
-                SendJoined();
+                SendChatUsers();
             }
         }
 
@@ -59,14 +61,14 @@ namespace Backend
             AllClients = AllClients.Where(c => c.Socket.State == WebSocketState.Open).ToList();
         }
 
-        private static void SendJoined()
+        private static void SendChatUsers()
         {
             var users = AllClients.Select(c => c.UserName).ToArray();
             foreach (var clnt in AllClients)
             {
                 _ = clnt.Send(
-                    new JoinedChatDto {
-                        type = nameof(JoinedChatDto),
+                    new ChatUsersDto {
+                        type = nameof(ChatUsersDto),
                         users = users
                     });
             }

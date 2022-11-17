@@ -43,8 +43,8 @@ namespace Backend
                         var dto = (ChatDto)JsonSerializer.Deserialize(text, typeof(ChatDto));
                         if (dto.type == nameof(ChatMessageDto))
                             MessageReceived?.Invoke(this, (ChatMessageDto)JsonSerializer.Deserialize(text, typeof(ChatMessageDto)));
-                        else if (dto.type == nameof(JoinedChatDto))
-                            MessageReceived?.Invoke(this, (JoinedChatDto)JsonSerializer.Deserialize(text, typeof(JoinedChatDto)));
+                        else if (dto.type == nameof(ChatUsersDto))
+                            MessageReceived?.Invoke(this, (ChatUsersDto)JsonSerializer.Deserialize(text, typeof(ChatUsersDto)));
                         else if (dto.type == nameof(LeftChatDto))
                             MessageReceived?.Invoke(this, (LeftChatDto)JsonSerializer.Deserialize(text, typeof(LeftChatDto)));
                     }
