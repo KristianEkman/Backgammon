@@ -54,7 +54,7 @@ export class ChatService implements OnDestroy {
 
     if (dto.type === 'ChatMessageDto') {
       const msg = this.appState.chatMessages.getValue();
-      this.appState.chatMessages.setValue([...msg, dto]);
+      this.appState.chatMessages.setValue([dto, ...msg]);
     } else if (dto.type === 'JoinedChatDto') {
       const users = (dto as JoinedChatDto).users;
       this.appState.chatUsers.setValue(users);
