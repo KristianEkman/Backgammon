@@ -1,8 +1,7 @@
 
 Chat.
     - Begränsa flooding
-    - Testa att man kan chatta och spela samtidigt
-    - Ta bort client när browser stängs eller sidan laddas om.
+    - Visa indikator på att någon skrivit något.
 
 Serverside http only userid secure cookie
     - kräver inloggning vaje gång app startas.
