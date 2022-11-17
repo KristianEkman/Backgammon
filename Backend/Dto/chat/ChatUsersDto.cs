@@ -1,6 +1,6 @@
 ﻿namespace Backend.Dto.chat
 {
-    public class JoinedChatDto : ChatDto
+    public class ChatUsersDto : ChatDto
     {
         public string[] users { get; set; }
     }
