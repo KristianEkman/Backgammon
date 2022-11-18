@@ -18,6 +18,7 @@ import {
   UserDto
 } from '../dto';
 import { SoundService } from '.';
+import { ChatService } from './chat.service';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,8 @@ export class AccountService {
     private messageService: MessageService,
     private trans: TranslateService,
     private sound: SoundService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private chatService: ChatService
   ) {
     this.url = `${environment.apiServiceUrl}/account`;
   }
@@ -72,6 +74,7 @@ export class AccountService {
         if (userDto) {
           this.topListService.loadToplist();
           this.messageService.loadMessages();
+          this.chatService.connect();
         }
       });
   }
@@ -104,6 +107,7 @@ export class AccountService {
     if (user) {
       this.appState.changeTheme(user.theme);
       this.synchUser();
+      this.chatService.connect();
     }
   }
 
