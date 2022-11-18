@@ -16,6 +16,7 @@ import {
 } from '@angular/animations';
 import { Toplist, ToplistResult } from 'src/app/dto';
 import { TranslateService } from '@ngx-translate/core';
+import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-toplist-banner',
@@ -56,7 +57,12 @@ export class ToplistBannerComponent implements OnChanges {
   timeoutHandle: any = null;
   started = false;
 
-  constructor(private trans: TranslateService) {}
+  constructor(
+    private trans: TranslateService,
+    private state: AppStateService
+  ) {}
+
+  chatOpen$ = this.state.chatOpen.observe();
 
   ngOnChanges(): void {
     if (this.toplist) {

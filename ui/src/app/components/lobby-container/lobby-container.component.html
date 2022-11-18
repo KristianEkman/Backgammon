@@ -1,5 +1,5 @@
 <div class="lobby-container">
-  <div class="top-list" *ngIf="(user$ | async) && !(chatOpen$ | async)">
+  <div class="top-list" *ngIf="user$ | async">
     <app-toplist-container
       [banner]="true"
       (bannerClick)="topListBannerClick()"
