@@ -14,7 +14,6 @@
     </button>
   </div>
   <div class="grid" [ngClass]="{ 'grid-hidden': !(open$ | async) }">
-    <button (click)="onClickClose()" class="close-button flat-button">X</button>
     <textarea
       class="conversation"
       readonly
@@ -31,6 +30,7 @@
       [formGroup]="formGroup"
       (submit)="onSubmit()"
       autocomplete="chrome-off"
+      class="input-form"
     >
       <input
         #msginput
@@ -38,7 +38,18 @@
         type="text"
         class="msginput"
         placeholder="Enter chat messages here"
+        tabindex="0"
       />
+      <button class="return-button flat-button" tabindex="1">
+        <i class="fas fa-share"></i>
+      </button>
+      <button
+        (click)="onClickClose()"
+        class="close-button flat-button"
+        tabindex="2"
+      >
+        X
+      </button>
     </form>
   </div>
 </div>
