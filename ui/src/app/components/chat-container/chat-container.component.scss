@@ -58,7 +58,8 @@
 
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: var(--chat-bg-color);
+  border: 1px solid white;
 }
 
 .grid-hidden {
@@ -86,6 +87,8 @@
   resize: none;
   background-color: transparent;
   color: var(--chat-text-color);
+  padding: 10px;
+  font-weight: 700;
 }
 
 form {
@@ -103,10 +106,16 @@ form {
   width: calc(100% - 16px);
   height: 25px;
   color: var(--chat-text-color);
+  &::placeholder {
+    color: var(--chat-text-color);
+    font-style: italic;
+    font-size: small;
+    opacity: 0.5;
+  }
 }
 
 .close-button {
-  color: black;
+  color: var(--chat-text-color);
   font-size: 14px;
   height: 25px;
 }

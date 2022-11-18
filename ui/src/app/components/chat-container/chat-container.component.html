@@ -5,7 +5,7 @@
     'app-chat__close': !(open$ | async)
   }"
 >
-  <div class="open-button">
+  <div *ngIf="!(open$ | async)" class="open-button">
     <button (click)="onClickOpen()" class="flat-button">
       <i class="fas fa-comments"></i>
       <span *ngIf="othersInChat" class="app-chat__counter">{{

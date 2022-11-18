@@ -31,15 +31,39 @@ export class ChatContainerComponent {
       this.usersCount = this.stateService.chatUsers.getValue().length;
       this.othersInChat = this.usersCount > 1;
     }, 2000);
+
+    this.chatMessages$.subscribe(() => {
+      setTimeout(() => {
+        const textarea = document.getElementsByClassName('conversation')[0]!;
+        textarea.scrollTop = textarea.scrollHeight;
+      }, 1);
+    });
   }
 
   formGroup: FormGroup;
 
   @ViewChild('msginput') input!: ElementRef;
+  @ViewChild('conversation') conversation!: ElementRef;
 
   open$ = this.stateService.chatOpen.observe();
+
+  // chatMessages$ = this.stateService.chatMessages.observe().pipe(
+  //   map((m) => m.map((n) => `${n.fromUser}:\n  ${n.message}`)),
+  //   map((m) => m.join('\n'))
+  // );
+
   chatMessages$ = this.stateService.chatMessages.observe().pipe(
-    map((m) => m.map((n) => `${n.fromUser}:\n  ${n.message}`)),
+    map((messages) => {
+      const bld = [];
+      for (let i = 0; i < messages.length; i++) {
+        const element = messages[i];
+        if (i === 0 || messages[i - 1].fromUser !== element.fromUser) {
+          bld.push(`\n${element.fromUser}`);
+        }
+        bld.push(`  ${element.message}`);
+      }
+      return bld;
+    }),
     map((m) => m.join('\n'))
   );
 
@@ -49,7 +73,6 @@ export class ChatContainerComponent {
   );
 
   usersCount = 0;
-
   othersInChat = false;
 
   onClickOpen() {
