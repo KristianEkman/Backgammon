@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import { ChatMessageDto } from '../dto/chat/chatMessageDto';
 import { ChatUsersDto } from '../dto/chat/joinedChatDto';
 import { LeftChatDto } from '../dto/chat/leftChatDto';
+import { UserTypingDto } from '../dto/chat/userTypingDto';
 import { AppStateService } from '../state/app-state.service';
 
 @Injectable({
@@ -61,6 +62,9 @@ export class ChatService implements OnDestroy {
     } else if (dto.type === 'LeftChatDto') {
       const users = (dto as LeftChatDto).users;
       this.appState.chatUsers.setValue(users);
+    } else if (dto.type === 'UserTypingDto') {
+      const typingUsers = this.appState.typingUsers.getValue();
+      const typingDto = <UserTypingDto>dto;
     }
   }
 
@@ -97,6 +101,17 @@ export class ChatService implements OnDestroy {
     const dto: LeftChatDto = {
       users: users,
       type: 'LeftChatDto'
+    };
+
+    if (this.socket?.readyState === this.socket?.OPEN) {
+      this.socket?.send(JSON.stringify(dto));
+    }
+  }
+
+  userIsTyping(message: string) {
+    const dto: UserTypingDto = {
+      message: message,
+      type: 'UserTypingDto'
     };
 
     if (this.socket?.readyState === this.socket?.OPEN) {

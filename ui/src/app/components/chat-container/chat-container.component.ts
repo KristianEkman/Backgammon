@@ -6,7 +6,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { map } from 'rxjs';
+import { bufferTime, filter, map } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
 import { AppStateService } from 'src/app/state/app-state.service';
 
@@ -25,6 +25,17 @@ export class ChatContainerComponent {
     this.formGroup = this.fb.group({
       message: ['']
     });
+
+    this.formGroup
+      .get('message')
+      ?.valueChanges.pipe(
+        bufferTime(500),
+        filter((x) => !!x.length),
+        map((x) => x[x.length - 1])
+      )
+      .subscribe((message) => {
+        this.chatService.userIsTyping(message);
+      });
 
     // todo: get this to work with observables
     setInterval(() => {

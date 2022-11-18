@@ -17,6 +17,7 @@ import { ErrorState } from './ErrorState';
 import { MessageDto } from '../dto/message/messageDto';
 import { Injectable } from '@angular/core';
 import { ChatMessageDto } from '../dto/chat/chatMessageDto';
+import { UserTypingDto } from '../dto/chat/userTypingDto';
 
 @Injectable({
   providedIn: 'root'
@@ -84,6 +85,7 @@ export class AppStateService {
   chatOpen: StateObject<boolean>;
   chatMessages: StateObject<ChatMessageDto[]>;
   chatUsers: StateObject<string[]>;
+  typingUsers: StateObject<UserTypingDto[]>;
 
   myTurn(): boolean {
     const game = this.game.getValue();
