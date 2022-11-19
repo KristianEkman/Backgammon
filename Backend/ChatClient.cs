@@ -18,6 +18,8 @@ namespace Backend
         public WebSocket Socket { get; }
         ILogger<GameManager> Logger { get; }
 
+        private DateTime ThrottleTime { get; set; } = DateTime.Now;
+
         public ChatClient(Guid userId, string userName, WebSocket socket, ILogger<GameManager> logger)
         {
             this.UserId = userId;
@@ -66,6 +68,7 @@ namespace Backend
                 try
                 {
                     result = await Socket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
                     var text = Encoding.UTF8.GetString(buffer.Take(result.Count).ToArray());
                     sb.Append(text);
                 }
@@ -75,6 +78,17 @@ namespace Backend
                     return "";
                 }
             }
+
+            var pace = DateTime.Now - ThrottleTime;
+            ThrottleTime = DateTime.Now;
+            // flooding is just ignored
+            if (pace < TimeSpan.FromSeconds(0.5))
+                return "";
+
+            // messages to long are ignored
+            if (sb.Length > 250)
+                return "";
+
             return sb.ToString();
         }
 
