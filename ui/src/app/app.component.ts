@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, HostListener, Inject } from '@angular/core';
 import { AppStateService } from './state/app-state.service';
 import { AccountService, ErrorReportService } from './services';
 import { Observable } from 'rxjs';
@@ -64,6 +64,11 @@ export class AppComponent {
         }, 1);
       }
     });
+  }
+
+  @HostListener('document:keydown.escape', ['$event'])
+  onKeydownHandler(event: KeyboardEvent) {
+    this.appState.chatOpen.setValue(false);
   }
 
   saveErrorReport(errorDto: ErrorReportDto): void {

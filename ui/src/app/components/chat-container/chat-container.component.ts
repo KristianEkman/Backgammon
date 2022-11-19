@@ -57,10 +57,13 @@ export class ChatContainerComponent {
       const bld = [];
       for (let i = 0; i < messages.length; i++) {
         const element = messages[i];
-        if (i === 0 || messages[i - 1].fromUser !== element.fromUser) {
+
+        if (i === 0) {
+          bld.push(`${element.fromUser}`);
+        } else if (messages[i - 1].fromUser !== element.fromUser) {
           bld.push(`\n${element.fromUser}`);
         }
-        bld.push(`  ${element.message}`);
+        bld.push(`- ${element.message}`);
       }
       return bld;
     }),

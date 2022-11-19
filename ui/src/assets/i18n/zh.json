@@ -173,5 +173,8 @@
   "unsubscribe": {
     "stopped": "您將不會再收到Backgammon的任何電子郵件。",
     "error": "對不起。出問題了。"
+  },
+  "chat": {
+    "entermessage": "在這裡聊天"
   }
 }

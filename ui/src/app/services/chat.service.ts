@@ -16,7 +16,6 @@ export class ChatService implements OnDestroy {
 
   connect() {
     this.cleanup();
-
     this.socket = new WebSocket(this.getUri());
     this.socket.onmessage = this.onMessage.bind(this);
     this.socket.onerror = this.onError.bind(this);
@@ -35,7 +34,6 @@ export class ChatService implements OnDestroy {
     console.log('Open', { event });
     const now = new Date();
     // const ping = now.getTime() - this.connectTime.getTime();
-
     // this.appState.myConnection.setValue({ connected: true, pingMs: ping });
   }
 

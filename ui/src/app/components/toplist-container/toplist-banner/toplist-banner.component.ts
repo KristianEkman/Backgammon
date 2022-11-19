@@ -87,7 +87,7 @@ export class ToplistBannerComponent implements OnChanges {
         this.started = true;
         this.rollingState = 'shown';
         clearTimeout(this.timeoutHandle);
-      }, 2000);
+      }, 1000);
     }
   }
 

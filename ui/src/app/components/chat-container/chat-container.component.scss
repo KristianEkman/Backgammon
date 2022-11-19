@@ -89,6 +89,7 @@
   color: var(--chat-text-color);
   padding: 10px;
   font-weight: 700;
+  line-height: 20px;
 }
 
 form {
@@ -129,6 +130,7 @@ textarea,
 input {
   border: none;
 }
+
 textarea:focus,
 input:focus {
   outline: none;
