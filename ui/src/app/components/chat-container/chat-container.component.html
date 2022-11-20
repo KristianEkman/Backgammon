@@ -40,8 +40,11 @@
         [placeholder]="'chat.entermessage' | translate"
         maxlength="150"
       />
-      <!-- todo translate -->
-      <button class="return-button flat-button">
+      <!-- Not setting focus to the button so it stays open in mobile view -->
+      <button
+        (mousedown)="$event.preventDefault()"
+        class="return-button flat-button"
+      >
         <i class="fas fa-share"></i>
       </button>
       <button (click)="onClickClose()" class="close-button flat-button">
