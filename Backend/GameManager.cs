@@ -617,10 +617,9 @@ namespace Backend
         {
             if (action.moves == null || action.moves.Length == 0)
                 return;
-
+            
             var firstMove = action.moves[0].ToMove(Game);
             var validMove = Game.ValidMoves.SingleOrDefault(m => firstMove.Equals(m));
-
             for (int i = 0; i < action.moves.Length; i++)
             {
                 var moveDto = action.moves[i];

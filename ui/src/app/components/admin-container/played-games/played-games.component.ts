@@ -19,7 +19,7 @@ export class PlayedGamesComponent implements OnInit {
 
   PlayerColor = PlayerColor;
 
-  formatDate(utcDate: any): string {
+  formatDate(utcDate: Date): string {
     if (!utcDate) {
       return '';
     }

@@ -25,8 +25,10 @@ namespace Backend.Db
         {
 #if DEBUG
             return File.ReadAllText("fbapptoken.txt");
-#endif
+#else
+
             return config.GetValue<string>("FbAppToken");
+#endif
         }
     }
 }

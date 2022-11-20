@@ -1,5 +1,7 @@
 <div
-  [ngStyle]="{ visibility: started ? 'visible' : 'hidden' }"
+  [ngStyle]="{
+    visibility: started && !(chatOpen$ | async) ? 'visible' : 'hidden'
+  }"
   #banner
   class="toplist-banner"
   (click)="bannerClick()"

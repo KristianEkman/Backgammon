@@ -173,5 +173,8 @@
   "unsubscribe": {
     "stopped": "Vous ne recevrez plus de courriels de Backgammon.",
     "error": "Désolé.Quelque chose s'est mal passé."
+  },
+  "chat": {
+    "entermessage": "Discuter ici"
   }
 }

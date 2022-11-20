@@ -1,0 +1,55 @@
+<div
+  class="app-chat"
+  [ngClass]="{
+    'app-chat__open': open$ | async,
+    'app-chat__close': !(open$ | async)
+  }"
+>
+  <div *ngIf="!(open$ | async)" class="open-button">
+    <button (click)="onClickOpen()" class="flat-button">
+      <i class="fas fa-comments"></i>
+      <span *ngIf="othersInChat" class="app-chat__counter">{{
+        usersCount
+      }}</span>
+    </button>
+  </div>
+  <div class="grid" [ngClass]="{ 'grid-hidden': !(open$ | async) }">
+    <textarea
+      class="conversation"
+      readonly
+      [textContent]="chatMessages$ | async"
+      tabindex="-1"
+    ></textarea>
+    <textarea
+      class="users"
+      readonly
+      [textContent]="users$ | async"
+      tabindex="-1"
+    ></textarea>
+    <form
+      [formGroup]="formGroup"
+      (submit)="onSubmit()"
+      autocomplete="chrome-off"
+      class="input-form"
+    >
+      <input
+        #msginput
+        formControlName="message"
+        type="text"
+        class="msginput"
+        [placeholder]="'chat.entermessage' | translate"
+        maxlength="150"
+      />
+      <!-- Not setting focus to the button so it stays open in mobile view -->
+      <button
+        (mousedown)="$event.preventDefault()"
+        class="return-button flat-button"
+      >
+        <i class="fas fa-share"></i>
+      </button>
+      <button (click)="onClickClose()" class="close-button flat-button">
+        X
+      </button>
+    </form>
+  </div>
+</div>

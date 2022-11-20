@@ -6,8 +6,11 @@
   --title-color: #999;
   --anchor-color: rgb(158, 158, 255);
   --error-color: rgb(253, 82, 82);
+  --chat-users-color: #c75720;
   --message-bg-color: #333;
   --input-bg-color: #bbb;
+  --chat-text-color: #eee;
+  --chat-bg-color: rgba(37, 37, 37, 0.8);
 
   select {
     background-color: var(--input-bg-color);
@@ -22,8 +25,11 @@
   --title-color: rgb(255, 255, 255);
   --anchor-color: rgb(71, 71, 112);
   --error-color: #962b2b;
+  --chat-users-color: #c75720;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
+  --chat-bg-color: rgba(136, 136, 136, 0.5);
 }
 
 // ******************* Blue Theme ********************
@@ -34,8 +40,11 @@
   --title-color: rgb(255, 255, 255);
   --anchor-color: rgb(71, 71, 112);
   --error-color: #962b2b;
+  --chat-users-color: #c75720;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
+  --chat-bg-color: rgba(136, 136, 153, 0.5);
 }
 
 // ******************* Pink Theme ********************
@@ -46,10 +55,12 @@
   --title-color: rgb(255, 255, 255);
   --anchor-color: rgb(112, 71, 71);
   --error-color: #962b2b;
+  --chat-users-color: #c75720;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
+  --chat-bg-color: rgba(153, 136, 136, 0.5);
 }
-
 
 // ******************* Green Theme ********************
 .green {
@@ -59,8 +70,11 @@
   --title-color: rgb(255, 255, 255);
   --anchor-color: rgb(71, 112, 71);
   --error-color: #962b2b;
+  --chat-users-color: #c75720;
   --message-bg-color: #eee;
   --input-bg-color: white;
+  --chat-text-color: black;
+  --chat-bg-color: rgba(136, 153, 136, 0.5);
 }
 
 body {
@@ -87,7 +101,14 @@ button {
 }
 
 .banner-gradient {
-  background-image: linear-gradient(to right, var(--app-bg-color), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), rgba(255, 0, 0, 0), var(--app-bg-color));
+  background-image: linear-gradient(
+    to right,
+    var(--app-bg-color),
+    rgba(255, 0, 0, 0),
+    rgba(255, 0, 0, 0),
+    rgba(255, 0, 0, 0),
+    var(--app-bg-color)
+  );
 }
 
 .title-color {

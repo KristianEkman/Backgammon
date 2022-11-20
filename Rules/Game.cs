@@ -157,7 +157,7 @@ namespace Backend.Rules
 
             // CloseToVictory();
             // DebugBar();
-            // DebugBlocked();
+            //DebugBlocked();
             // DebugBearingOff();
             // AtHomeAndOtherAtBar();
             // AtHomeAndOtherAtBar2();

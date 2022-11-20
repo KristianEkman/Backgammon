@@ -29,7 +29,7 @@
         >
           <label
             >{{ 'accountedit.loginname' | translate }}<br />
-            <input readonly="readonly" value="{{ user?.localLoginName }}"
+            <input readonly="readonly" value="{{ user.localLoginName }}"
           /></label>
         </div>
       </div>
@@ -68,7 +68,7 @@
               <app-theme
                 ngDefaultControl
                 formControlName="theme"
-                [currentTheme]="user?.theme"
+                [currentTheme]="user.theme"
               ></app-theme>
             </label>
           </div>

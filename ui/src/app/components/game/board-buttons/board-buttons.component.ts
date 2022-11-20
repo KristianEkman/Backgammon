@@ -38,6 +38,7 @@ export class BoardButtonsComponent {
   }
 
   sendMoves(): void {
+    this.sendVisible = false;
     this.onSendMoves.emit();
   }
 

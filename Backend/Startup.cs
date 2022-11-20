@@ -30,7 +30,7 @@ namespace Backend
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            
+
             Db.BgDbContext.ConnectionsString = configuration.GetSection("ConnectionStrings");
         }
 
@@ -52,7 +52,7 @@ namespace Backend
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<GameManager> logger, IHostApplicationLifetime applicationLifetime)
-        {            
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -68,7 +68,7 @@ namespace Backend
             .AllowAnyMethod()
             .AllowAnyHeader()
             .AllowAnyOrigin()
-            );            
+            );
 
             app.UseHttpsRedirection();
             app.UseRouting();
@@ -76,7 +76,7 @@ namespace Backend
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();                
+                endpoints.MapControllers();
             });
             app.UseWebSockets();
             app.UseDefaultFiles();
@@ -86,23 +86,18 @@ namespace Backend
                 {
                     if (context.WebSockets.IsWebSocketRequest)
                     {
-                        logger.LogInformation($"New web socket request.");
-
-                        var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        var userId = context.Request.Query.FirstOrDefault(q => q.Key == "userId").Value;
-                        var gameId = context.Request.Query.FirstOrDefault(q => q.Key == "gameId").Value;
-                        var playAi = context.Request.Query.FirstOrDefault(q => q.Key == "playAi").Value == "true";
-                        var forGold = context.Request.Query.FirstOrDefault(q => q.Key == "forGold").Value == "true";
-                        try
-                        {
-                            await GamesService.Connect(webSocket, context, logger, userId, gameId, playAi, forGold);
-                        }
-                        catch (Exception exc)
-                        {
-                            logger.LogError(exc.ToString());
-                            await context.Response.WriteAsync(exc.Message, CancellationToken.None);
-                            context.Response.StatusCode = 400;
-                        }
+                        await ConnectGame(logger, context);
+                    }
+                    else
+                    {
+                        context.Response.StatusCode = 400;
+                    }
+                }
+                else if (context.Request.Path == "/ws/chat")
+                {
+                    if (context.WebSockets.IsWebSocketRequest)
+                    {
+                        await ConnectChat(logger, context);
                     }
                     else
                     {
@@ -122,7 +117,7 @@ namespace Backend
                         await next();
                     }
                 }
-            });                        
+            });
 
             app.UseEndpoints(endpoints =>
             {
@@ -130,7 +125,46 @@ namespace Backend
             });
 
             app.UseStaticFiles();
-        }               
+        }
+
+        private static async Task ConnectGame(ILogger<GameManager> logger, HttpContext context)
+        {
+            logger.LogInformation($"New web socket request.");
+
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            var userId = context.Request.Query.FirstOrDefault(q => q.Key == "userId").Value;
+            var gameId = context.Request.Query.FirstOrDefault(q => q.Key == "gameId").Value;
+            var playAi = context.Request.Query.FirstOrDefault(q => q.Key == "playAi").Value == "true";
+            var forGold = context.Request.Query.FirstOrDefault(q => q.Key == "forGold").Value == "true";
+            try
+            {
+                await GamesService.Connect(webSocket, context, logger, userId, gameId, playAi, forGold);
+            }
+            catch (Exception exc)
+            {
+                logger.LogError(exc.ToString());
+                await context.Response.WriteAsync(exc.Message, CancellationToken.None);
+                context.Response.StatusCode = 400;
+            }
+        }
+
+        private static async Task ConnectChat(ILogger<GameManager> logger, HttpContext context)
+        {
+            logger.LogInformation($"New chat web socket request.");
+
+            var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+            var userId = context.Request.Query.FirstOrDefault(q => q.Key == "userId").Value;
+            try
+            {
+                await ChatService.Connect(webSocket, context, logger, userId);
+            }
+            catch (Exception exc)
+            {
+                logger.LogError(exc.ToString());
+                await context.Response.WriteAsync(exc.Message, CancellationToken.None);
+                context.Response.StatusCode = 400;
+            }
+        }
 
         private void TryRestoreState(ILogger<GameManager> logger)
         {
@@ -182,7 +216,7 @@ namespace Backend
                 return;
 
             var allowed = new List<string>();
-            allowed.Add("https://backgammon.azurewebsites.net");            
+            allowed.Add("https://backgammon.azurewebsites.net");
             allowed.Add("https://backgammon-slot1.azurewebsites.net");
 #if DEBUG
             allowed.Add("http://localhost");
