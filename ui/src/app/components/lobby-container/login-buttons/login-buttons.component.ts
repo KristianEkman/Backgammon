@@ -26,11 +26,16 @@ export class LoginButtonsComponent implements AfterViewInit {
   }
 
   initFacebook() {
-    const FB = (window as any).FB;
-    FB.getLoginStatus((response: any) => {
-      console.log('FB init response', response);
-      this.facebookLoginResponse = response;
-    });
+    const id = setInterval(() => {
+      const FB = (window as any).FB;
+      if (FB) {
+        FB.getLoginStatus((response: any) => {
+          // console.log('FB init response', response);
+          this.facebookLoginResponse = response;
+        });
+        clearInterval(id);
+      }
+    }, 2000);
   }
 
   initGoogle() {
