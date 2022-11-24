@@ -1,5 +1,5 @@
 ﻿/* Auto Generated */
 
 export interface ChatDto {
-    type: string;
+  type: string;
 }

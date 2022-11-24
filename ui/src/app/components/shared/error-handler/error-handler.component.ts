@@ -24,7 +24,10 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
   @Output() save = new EventEmitter<ErrorReportDto>();
   formGroup: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder, private appState: AppStateService) {
+  constructor(
+    private fb: UntypedFormBuilder,
+    private appState: AppStateService
+  ) {
     this.showErrors.bind(this);
     this.formGroup = this.fb.group({
       errors: ['']
