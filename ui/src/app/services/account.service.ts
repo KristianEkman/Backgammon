@@ -74,7 +74,6 @@ export class AccountService {
         if (userDto) {
           this.topListService.loadToplist();
           this.messageService.loadMessages();
-          this.chatService.connect();
         }
       });
   }
@@ -108,7 +107,6 @@ export class AccountService {
     if (user) {
       this.appState.changeTheme(user.theme);
       this.synchUser();
-      this.chatService.connect();
     }
   }
 
