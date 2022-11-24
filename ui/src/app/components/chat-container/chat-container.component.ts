@@ -34,8 +34,12 @@ export class ChatContainerComponent {
 
     this.chatMessages$.subscribe(() => {
       setTimeout(() => {
-        const textarea = document.getElementsByClassName('conversation')[0]!;
-        textarea.scrollTop = textarea.scrollHeight;
+        const elements = document.getElementsByClassName('conversation');
+        if (elements.length > 0)
+        {
+          const textarea = elements[0]!;
+          textarea.scrollTop = textarea.scrollHeight;
+        }
       }, 1);
     });
   }
@@ -120,5 +124,9 @@ export class ChatContainerComponent {
       this.onClickClose();
     }
     this.wasInside = false;
+  }
+
+  isLoggedIn() {
+    return !!this.stateService.user.getValue();
   }
 }

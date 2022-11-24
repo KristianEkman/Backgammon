@@ -89,8 +89,12 @@ export class ChatService implements OnDestroy {
 
   disconnect() {
     var users = [...this.appState.chatUsers.getValue()];
-    var index = users.indexOf(this.appState.user.getValue().name);
-    users.splice(index, 1);
+    const user = this.appState.user.getValue();
+    if (user)
+    {
+      var index = users.indexOf(user.name);
+      users.splice(index, 1);
+    }
 
     const dto: LeftChatDto = {
       users: users,

@@ -1,4 +1,4 @@
-<div
+<div *ngIf="isLoggedIn()"
   class="app-chat"
   [ngClass]="{
     'app-chat__open': open$ | async,
