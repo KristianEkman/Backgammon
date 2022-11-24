@@ -88,12 +88,14 @@ export class ChatContainerComponent {
       }, 1);
     }
     this.changeDetector.detectChanges();
+    this.chatService.connect();
   }
 
   onClickClose() {
     this.stateService.chatOpen.setValue(false);
     this.stateService.chatMessages.setValue([]);
     this.changeDetector.detectChanges();
+    this.chatService.disconnect();
   }
 
   onSubmit() {
