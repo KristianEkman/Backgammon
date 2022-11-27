@@ -345,4 +345,4 @@ healthchecksdb
 /Backend/fbapptoken.txt
 *.bin
 /FibsIntegration/fibspw.txt
-.DS_Store
+.DS_Store*
