@@ -8,15 +8,15 @@ public class GenerateMovesUnitTests
     [TestInitialize]
     public void Setup()
     {
-        Engine = new();
+        Board = new();
     }
-    private Engine Engine = new();
+    private Board Board = new();
 
     [TestMethod]
     public void White1()
     {
         var gen = new Generation(2, 1);
-        Engine.CreateMoves(gen, Engine.White);
+        Board.CreateMoves(gen, Board.White);
         gen.PrintMoves();
 
         Assert.AreEqual(18, gen.GeneratedCount);
@@ -53,7 +53,7 @@ public class GenerateMovesUnitTests
     public void WhiteDouble()
     {
         var gen = new Generation(2, 2);
-        Engine.CreateMoves(gen, Engine.White);
+        Board.CreateMoves(gen, Board.White);
         Assert.AreEqual(42, gen.GeneratedCount);
         gen.PrintMoves();
     }
@@ -62,7 +62,7 @@ public class GenerateMovesUnitTests
     public void Black1()
     {
         var gen = new Generation(2, 1);
-        Engine.CreateMoves(gen, Engine.Black);
+        Board.CreateMoves(gen, Board.Black);
 
         gen.PrintMoves();
 
@@ -74,7 +74,7 @@ public class GenerateMovesUnitTests
     public void BlackDouble()
     {
         var gen = new Generation(2, 2);
-        Engine.CreateMoves(gen, Engine.Black);
+        Board.CreateMoves(gen, Board.Black);
         Assert.AreEqual(42, gen.GeneratedCount);
 
         for (int i = 0; i < gen.GeneratedCount; i++)
@@ -91,10 +91,10 @@ public class GenerateMovesUnitTests
     [TestMethod]
     public void WhiteHit()
     {
-        Engine.Board.Spots[0] = 2;
-        Engine.Board.Spots[24] = 0;
+        Board.Spots[0] = 2;
+        Board.Spots[24] = 0;
         var gen = new Generation(1, 3);
-        Engine.CreateMoves(gen, Engine.White);
+        Board.CreateMoves(gen, Board.White);
 
         Assert.IsTrue(gen.MoveSets.Take(gen.GeneratedCount).ToArray()
             .All(m => m.Take(2).All(x => x.From == 0)));}
@@ -102,10 +102,10 @@ public class GenerateMovesUnitTests
     [TestMethod]
     public void BlackHit()
     {
-        Engine.Board.Spots[25] = -2;
-        Engine.Board.Spots[1] = 0;
+        Board.Spots[25] = -2;
+        Board.Spots[1] = 0;
         var gen = new Generation(1, 3);
-        Engine.CreateMoves(gen, Engine.Black);
+        Board.CreateMoves(gen, Board.Black);
         gen.PrintMoves();
 
         Assert.IsTrue(gen.MoveSets.Take(gen.GeneratedCount).ToArray()
@@ -116,7 +116,7 @@ public class GenerateMovesUnitTests
     public void White56()
     {
         var gen = new Generation(5, 6);
-        Engine.CreateMoves(gen, Engine.White);
+        Board.CreateMoves(gen, Board.White);
         gen.PrintMoves();
     }
 
@@ -124,26 +124,25 @@ public class GenerateMovesUnitTests
     public void BearOff()
     {
         var gen = new Generation(5, 6);
-        Engine.Clear();
-        Engine.Board.Spots[20] = 3;
-        Engine.Board.Spots[21] = 3;
-        Engine.Board.Spots[22] = 3;
-        Engine.Board.Spots[23] = 3;
-        Engine.Board.Spots[24] = 3;
+        Board.Clear();
+        Board.Spots[20] = 3;
+        Board.Spots[21] = 3;
+        Board.Spots[22] = 3;
+        Board.Spots[23] = 3;
+        Board.Spots[24] = 3;
 
-        Engine.Board.Spots[1] = -3;
-        Engine.Board.Spots[2] = -3;
-        Engine.Board.Spots[3] = -3;
-        Engine.Board.Spots[4] = -3;
-        Engine.Board.Spots[5] = -3;
-
-        Engine.CreateMoves(gen, Engine.White);
+        Board.Spots[1] = -3;
+        Board.Spots[2] = -3;
+        Board.Spots[3] = -3;
+        Board.Spots[4] = -3;
+        Board.Spots[5] = -3;        
+        Board.CreateMoves(gen, Board.White);
         gen.PrintMoves();
 
         Assert.AreEqual(1, gen.GeneratedCount);
         Assert.IsTrue(gen.MoveSets.Take(1).All(ms => ms.Take(2).All( m => m.ToString() == "20-25 White")));
 
-        Engine.CreateMoves(gen, Engine.Black);
+        Board.CreateMoves(gen, Board.Black);
         gen.PrintMoves();
 
         Assert.AreEqual(1, gen.GeneratedCount);
