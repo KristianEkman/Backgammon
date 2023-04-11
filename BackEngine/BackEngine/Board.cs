@@ -43,25 +43,29 @@ public class Board
         Spots[24] = -2;
 
         CountPips();
-        SetFirsts();
+        SetFirstWhite();
+        SetFirstBlack();
     }
 
-    private void SetFirsts()
+    private void SetFirstBlack()
     {
-        for(int i = 0;i < 26; i++)
-        {
-            if (Spots[i] > 1)
-            {
-                FirstWhite = i;
-                break;
-            }
-        }
-
         for (int i = 25; i >= 1; i--)
         {
             if (Spots[i] < 0)
             {
                 FirstBlack = i;
+                break;
+            }
+        }
+    }
+
+    private void SetFirstWhite()
+    {
+        for (int i = 0; i < 26; i++)
+        {
+            if (Spots[i] > 0)
+            {
+                FirstWhite = i;
                 break;
             }
         }
@@ -118,13 +122,24 @@ public class Board
         {
             WhitePip -= (move.To - move.From);
             if (hit)
+            {
                 BlackPip += move.To;
+                FirstBlack = 25;
+            }
+            if (move.From == FirstWhite && Spots[FirstWhite] == 0)
+                SetFirstWhite();
         }
         else
         {
             BlackPip -= (move.From - move.To);
             if (hit)
+            {
                 WhitePip += 25 - move.To;
+                FirstWhite = 0;
+            }
+
+            if (move.From == FirstBlack && Spots[FirstBlack] == 0)
+                SetFirstBlack();
         }
         return hit;
     }
@@ -153,6 +168,7 @@ public class Board
             Spots[move.To] = (sbyte)-move.Side;
         }
         Spots[move.From] += move.Side;
+
         if (!off && !hit)
             Spots[move.To] -= move.Side;
 
@@ -160,13 +176,24 @@ public class Board
         {
             WhitePip += move.To - move.From;
             if (hit)
+            {
                 BlackPip -= move.To;
+                SetFirstBlack(); 
+                // todo: there might be a smarter way to do this... return a undo struct.
+            }
+            if (move.From < FirstWhite)
+                FirstWhite = move.From;
         }
         else
         {
             BlackPip += move.From - move.To;
             if (hit)
+            {
                 WhitePip -= 25 - move.To;
+                SetFirstWhite();
+            }
+            if (move.From > FirstBlack)
+                FirstBlack = move.From;
         }
     }
 

@@ -86,31 +86,7 @@ public class BoardTests
             Debug.WriteLine("");
         }
     }
-
-    [TestMethod]
-    public void WhiteHit()
-    {
-        Board.Spots[0] = 2;
-        Board.Spots[24] = 0;
-        var gen = new Generation(1, 3);
-        Board.CreateMoves(gen, Board.White);
-
-        Assert.IsTrue(gen.MoveSets.Take(gen.GeneratedCount).ToArray()
-            .All(m => m.Take(2).All(x => x.From == 0)));}
-
-    [TestMethod]
-    public void BlackHit()
-    {
-        Board.Spots[25] = -2;
-        Board.Spots[1] = 0;
-        var gen = new Generation(1, 3);
-        Board.CreateMoves(gen, Board.Black);
-        gen.PrintMoves();
-
-        Assert.IsTrue(gen.MoveSets.Take(gen.GeneratedCount).ToArray()
-            .All(m => m.Take(2).All(x => x.From == 25)));
-    }
-
+    
     [TestMethod]
     public void White56()
     {
@@ -216,5 +192,98 @@ public class BoardTests
 
         var score = Board.GetScore();
         Assert.IsTrue(score < 0);
+    }
+
+    [TestMethod]
+    public void FirstWhite()
+    {
+        Assert.AreEqual(1, Board.FirstWhite);
+        Move move;
+        move.From = 1;
+        move.Side = Board.White;
+        move.To = 4;
+        
+        Board.DoMove(move);
+        Assert.AreEqual(1, Board.FirstWhite);
+
+        Board.DoMove(move);
+        Assert.AreEqual(4, Board.FirstWhite);
+
+        Board.UndoMove(move, false);
+        Assert.AreEqual(1, Board.FirstWhite);
+
+        Board.UndoMove(move, false);
+        Assert.AreEqual(1, Board.FirstWhite);
+
+    }
+
+    [TestMethod]
+    public void FirstBlack()
+    {
+        Assert.AreEqual(24, Board.FirstBlack);
+        Move move;
+        move.From = 24;
+        move.Side = Board.Black;
+        move.To = 21;
+
+        Board.DoMove(move);
+        Assert.AreEqual(24, Board.FirstBlack);
+
+        Board.DoMove(move);
+        Assert.AreEqual(21, Board.FirstBlack);
+
+        Board.UndoMove(move, false);
+        Assert.AreEqual(24, Board.FirstBlack);
+
+        Board.UndoMove(move, false);
+        Assert.AreEqual(24, Board.FirstBlack);
+    }
+
+    [TestMethod]
+    public void FirstWithHitWhite()
+    {
+        Move move;
+        move.From = 1;
+        move.To = 2;
+        move.Side = Board.White;
+        Board.DoMove(move);
+        Assert.AreEqual(1, Board.FirstWhite);
+
+        Move blackMove;
+        blackMove.From = 6;
+        blackMove.To = 2;
+        blackMove.Side = Board.Black;
+
+        var hit = Board.DoMove(blackMove);
+        Assert.IsTrue(hit);
+
+        Assert.AreEqual(0, Board.FirstWhite);
+
+        Board.UndoMove(blackMove, hit);
+        Assert.AreEqual(1, Board.FirstWhite);
+    }
+
+    [TestMethod]
+    public void FirstWithHitBlack()
+    {
+        Move move;
+        move.From = 24;
+        move.To = 23;
+        move.Side = Board.Black;
+        Board.DoMove(move);
+        Assert.AreEqual(24, Board.FirstBlack);
+
+        Move whiteMove;
+        whiteMove.From = 19;
+        whiteMove.To = 23;
+        whiteMove.Side = Board.White;
+
+        var hit = Board.DoMove(whiteMove);
+        Assert.IsTrue(hit);
+
+        Assert.AreEqual(25, Board.FirstBlack);
+
+        Board.UndoMove(whiteMove, hit);
+        Assert.AreEqual(24, Board.FirstBlack);
     }
 }

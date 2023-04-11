@@ -24,5 +24,14 @@ namespace BackEngine
             return id;
         }
     }
+
+    public struct Undid
+    {
+        public byte FirstWhite;
+        public byte FirstBlack;
+        public ushort WhitePip;
+        public ushort BlackPip;
+        public bool Hit;
+    }
 }
 

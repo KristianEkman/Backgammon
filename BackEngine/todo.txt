@@ -1,5 +1,6 @@
-FirstWhite and FirstBlack.
-Tests and implementation
+
+Assert all moves.
+Assert checker sum.
 
 BoardScore
 	Blots thretend
