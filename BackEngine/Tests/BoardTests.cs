@@ -167,10 +167,15 @@ public class BoardTests
         Board.Spots[23] = -2;
         Board.Spots[24] = -2;
 
+        Board.WhiteHome = 4;
+
+
         var gen = new Generation(4, 5);
         Board.CreateMoves(gen, Board.White);
         gen.PrintMoves();
         Assert.AreEqual(2, gen.GeneratedCount);
+        Assert.AreEqual("empty", gen.MoveSets[0][1].ToString());
+        Assert.AreEqual("empty", gen.MoveSets[1][1].ToString());
     }
 
     [TestMethod]

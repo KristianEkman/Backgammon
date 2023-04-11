@@ -90,6 +90,9 @@ public class Board
     /// <returns>True if oponent checker was hit.</returns>
     public bool DoMove(Move move)
     {
+#if DEBUG
+        AssertBoard(move);
+#endif
         var hit = false;
         var off = false;
         if (move.To == 25)
@@ -144,6 +147,31 @@ public class Board
         return hit;
     }
 
+    private void AssertBoard(Move move)
+    {
+        Debug.Assert(Spots[move.From] * move.Side > 0, "No checker of correct color found on FromSpot");
+        if (move.Side == White)
+            Debug.Assert(Spots[move.To] > -2, "ToSpot was blocked");
+        if (move.Side == Black)
+            Debug.Assert(Spots[move.To] < 2, "ToSpot was blocked");
+        AssertSum();
+    }
+
+    private void AssertSum()
+    {
+        var blackSum = BlackHome;
+        var whiteSum = WhiteHome;
+        for (int i = 0; i < 26; i++)
+        {
+            if (Spots[i] > 0)
+                whiteSum += Spots[i];
+            if (Spots[i] < 0)
+                blackSum -= Spots[i];
+        }
+        Debug.Assert(whiteSum == 15, "White checker(s) missing");
+        Debug.Assert(blackSum == 15, "Black checker(s) missing");
+    }
+
     public void UndoMove(Move move, bool hit)
     {
         var off = false;
@@ -195,6 +223,9 @@ public class Board
             if (move.From > FirstBlack)
                 FirstBlack = move.From;
         }
+#if DEBUG
+        AssertSum();
+#endif
     }
 
     public void CreateMoves(Generation gen, sbyte side)
@@ -232,7 +263,6 @@ public class Board
             gen.GeneratedCount = gen.MoveSets.Length;
         }
     }
-
 
     private void CreateMovesWhite(Generation gen, int currentDiceIdx)
     {
