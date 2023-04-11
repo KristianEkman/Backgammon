@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace Tests;
 
@@ -147,5 +148,55 @@ public class GenerateMovesUnitTests
 
         Assert.AreEqual(1, gen.GeneratedCount);
         Assert.IsTrue(gen.MoveSets.Take(1).All(ms => ms.Take(2).All(m => m.ToString() == "5-0 Black")));
+    }
+
+    [TestMethod]
+    public void PlayBothDiceIfPossible()
+    {
+        Board.Clear();
+
+        Board.Spots[1] = 2;
+        Board.Spots[12] = 5;
+        Board.Spots[18] = 3;
+        Board.Spots[19] = 5;
+        
+        Board.Spots[23] = -2;
+        Board.Spots[22] = -2;
+        Board.Spots[16] = -2;
+        Board.Spots[6] = -3;
+        Board.Spots[5] = -2;
+        Board.Spots[3] = -2;
+        Board.Spots[2] = -2;
+
+        var gen = new Generation(4, 6);
+        Board.CreateMoves(gen, Board.White);
+        gen.PrintMoves();
+        Assert.AreEqual(1, gen.GeneratedCount);
+
+        Assert.IsFalse(gen.MoveSets.Any(ms => ms.Any(m => m.From == 12 && m.To == 18)));
+    }
+
+    [TestMethod]
+    public void OnlyOneDicePlayable()
+    {
+        Board.Clear();
+
+        Board.Spots[1] = 2;
+        Board.Spots[2] = -2;
+        Board.Spots[3] = -2;
+        Board.Spots[5] = -2;
+        Board.Spots[6] = -3;
+
+        Board.Spots[7] = 1;
+        Board.Spots[16] = -2;
+        Board.Spots[19] = 8;
+        Board.Spots[23] = -2;
+        Board.Spots[24] = -2;
+
+        var gen = new Generation(4, 5);
+        Board.CreateMoves(gen, Board.White);
+        gen.PrintMoves();
+
+        Assert.AreEqual(2, gen.GeneratedCount);
     }
 }

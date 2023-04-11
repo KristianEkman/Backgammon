@@ -15,6 +15,9 @@ namespace BackEngine
 			{
 				Dice = new int[] { dice1, dice2 };
             }
+
+			// This class is supposed to be reused between generations
+			// Thats why extra memory is used.
             MoveSets = new Move[1000][];
             for (int i = 0; i < MoveSets.Length; i++)
                 MoveSets[i] = new Move[4];
@@ -26,6 +29,9 @@ namespace BackEngine
 
 		// Keeps track of number of moves generated for current dice. Faster than list.
 		public int GeneratedCount { get; set; }
+
+        public bool HasFullSets { get; set; }
+        public bool HasPartialSets { get; set; }
 
         /// <summary>
 		/// [moveindex][diceIdx]

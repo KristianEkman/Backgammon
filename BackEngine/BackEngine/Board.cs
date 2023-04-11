@@ -102,13 +102,16 @@ public class Board
     {
         gen.HashSet.Clear();
         gen.GeneratedCount = 0;
+        gen.HasFullSets = false;
 
         if (side == White)
         {
             CreateMovesWhite(gen, 0);
             if (gen.Dice.Length == 2) // dice are not the same
             {
-                (gen.Dice[1], gen.Dice[0]) = (gen.Dice[0], gen.Dice[1]);
+                var dice0 = gen.Dice[0];
+                gen.Dice[0] = gen.Dice[1];
+                gen.Dice[1] = dice0;                
                 CreateMovesWhite(gen, 0);
             }
         }
@@ -122,6 +125,12 @@ public class Board
                 gen.Dice[1] = dice0;
                 CreateMovesBlack(gen, 0);
             }
+        }
+
+        if (gen.HasPartialSets && gen.HasFullSets)
+        {
+            gen.MoveSets = gen.MoveSets.Take(gen.GeneratedCount).ToList().Where(ms => ms.Take(gen.Dice.Length).All(m => m.Side != 0)).ToArray();
+            gen.GeneratedCount = gen.MoveSets.Length;
         }
     }
 
@@ -140,6 +149,7 @@ public class Board
             }
         }
 
+        var canMove = false;
         for (int i = firstCheckerIndex; i < 25; i++)
         {
             if (Spots[i] < 1) // no white here
@@ -161,6 +171,7 @@ public class Board
                 if (i > 0 && Spots[0] > 0)
                     break;
             }
+            canMove = true;
             Move move;
             move.From = (byte)i;
             move.To = (byte)to;
@@ -169,6 +180,7 @@ public class Board
 
             if (currentDiceIdx == gen.Dice.Length - 1) //last dice
             {
+                // if not all dice are found the set should be generated anyway
                 gen.GeneratedCount++;
                 for (int d = 0; d < currentDiceIdx; d++)
                 {
@@ -178,12 +190,29 @@ public class Board
 
                 if (!gen.KeepSet())
                     gen.GeneratedCount--;
+                else
+                    gen.HasFullSets = true;
                 continue;
             }
             // Recurse to next dice
             var hit = DoMove(move);
             CreateMovesWhite(gen, currentDiceIdx + 1);
             UndoMove(move, hit);
+        }
+
+        if (!canMove && currentDiceIdx > 0)
+        {
+            gen.GeneratedCount++;
+            gen.HasPartialSets = true;
+
+            for (int d = 0; d < currentDiceIdx; d++)
+            {
+                gen.MoveSets[gen.GeneratedCount][d] =
+                    gen.MoveSets[gen.GeneratedCount - 1][d];
+            }
+
+            if (!gen.KeepSet())
+                gen.GeneratedCount--;
         }
     }
 
@@ -201,6 +230,7 @@ public class Board
             }
         }
 
+        var canMove = false;
         for (int i = firstCheckerIndex; i > 0; i--)
         {
             if (Spots[i] > -1) //no black here
@@ -222,7 +252,7 @@ public class Board
                 if (i < 25 && Spots[25] < 0)
                     break;
             }
-
+            canMove = true;
             Move move;
             move.From = (byte)i;
             move.To = (byte)to;
@@ -239,12 +269,28 @@ public class Board
                 }
                 if (!gen.KeepSet())
                     gen.GeneratedCount--;
+                else
+                    gen.HasFullSets = true;
                 continue;
             }
             // Recurse to next dice
             var hit = DoMove(move);
             CreateMovesBlack(gen, currentDiceIdx + 1);
             UndoMove(move, hit);
+        }
+
+        if (!canMove && currentDiceIdx > 0)
+        {
+            gen.HasPartialSets = true;
+            gen.GeneratedCount++;
+            for (int d = 0; d < currentDiceIdx; d++)
+            {
+                gen.MoveSets[gen.GeneratedCount][d] =
+                    gen.MoveSets[gen.GeneratedCount - 1][d];
+            }
+
+            if (!gen.KeepSet())
+                gen.GeneratedCount--;
         }
     }
 
