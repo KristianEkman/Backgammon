@@ -1,10 +1,11 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace Tests;
 
 [TestClass]
-public class GenerateMovesUnitTests
+public class BoardTests
 {
     [TestInitialize]
     public void Setup()
@@ -14,7 +15,7 @@ public class GenerateMovesUnitTests
     private Board Board = new();
 
     [TestMethod]
-    public void White1()
+    public void WhiteMoves1()
     {
         var gen = new Generation(2, 1);
         Board.CreateMoves(gen, Board.White);
@@ -60,15 +61,12 @@ public class GenerateMovesUnitTests
     }
 
     [TestMethod]
-    public void Black1()
+    public void BlackMoves1()
     {
         var gen = new Generation(2, 1);
         Board.CreateMoves(gen, Board.Black);
-
         gen.PrintMoves();
-
         Assert.AreEqual(18, gen.GeneratedCount);
-
     }
 
     [TestMethod]
@@ -196,7 +194,27 @@ public class GenerateMovesUnitTests
         var gen = new Generation(4, 5);
         Board.CreateMoves(gen, Board.White);
         gen.PrintMoves();
-
         Assert.AreEqual(2, gen.GeneratedCount);
+    }
+
+    [TestMethod]
+    public void BoardScoreBlackBlot()
+    {
+        Board.Spots[24] = -1;
+        Board.Spots[23] = -1;
+        Board.CountPips();
+        var score = Board.GetScore();
+        Assert.IsTrue(score > 0);
+    }
+
+    [TestMethod]
+    public void BoardScoreWhiteBlot()
+    {
+        Board.Spots[1] = 1;
+        Board.Spots[2] = 1;
+        Board.CountPips();
+
+        var score = Board.GetScore();
+        Assert.IsTrue(score < 0);
     }
 }

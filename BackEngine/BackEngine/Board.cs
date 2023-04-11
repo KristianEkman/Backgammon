@@ -26,6 +26,9 @@ public class Board
     public int WhitePip { get; set; }
     public int BlackPip { get; set; }
 
+    public int FirstWhite { get; set; }
+    public int FirstBlack { get; set; }
+
     public void SetStartPosition()
     {
         for (int i = 0; i < 26; i++)
@@ -40,9 +43,31 @@ public class Board
         Spots[24] = -2;
 
         CountPips();
+        SetFirsts();
     }
 
-    private void CountPips()
+    private void SetFirsts()
+    {
+        for(int i = 0;i < 26; i++)
+        {
+            if (Spots[i] > 1)
+            {
+                FirstWhite = i;
+                break;
+            }
+        }
+
+        for (int i = 25; i >= 1; i--)
+        {
+            if (Spots[i] < 0)
+            {
+                FirstBlack = i;
+                break;
+            }
+        }
+    }
+
+    public void CountPips()
     {
         var black = 0;
         var white = 0;
@@ -349,5 +374,37 @@ public class Board
         }
         BlackHome = 0;
         WhiteHome = 0;
+    }
+
+    /// <summary>
+    /// Positive for White, neg for black
+    /// </summary>
+    /// <returns>Score</returns>
+    public int GetScore()
+    {
+        const int pipFactor = 4;
+        const int blotFactor = -5;
+
+        const int blockFactor = 3;
+        const int bigStackFactor = -1;
+
+        var score = WhitePip * pipFactor - BlackPip * pipFactor;
+        for (int i = 1; i < 25; i++)
+        {
+            var checkers = Spots[i]; // neg for black
+            if (checkers == 0)
+                continue;
+            if (checkers > 0) // white
+            {
+                if (i < FirstBlack)
+                    score += blotFactor;
+            }
+            else // Balck
+            {
+                if (i > FirstWhite)
+                    score -= blotFactor;
+            }
+        }
+        return score;
     }
 }

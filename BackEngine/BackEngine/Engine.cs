@@ -6,22 +6,22 @@ namespace BackEngine
 	public class Engine
 	{
         public Board Board { get; private set; } = new Board();
-		private readonly (byte D1, byte D2)[] AllDice = new (byte D1, byte D2)[21];
+		private readonly (int D1, int D2)[] AllDice = new (int D1, int D2)[21];
 
         public Engine() 
 		{
 			SetDiceCombinations();
 		}
 
-        void SetDiceCombinations()
+        private void SetDiceCombinations()
         {
             int i = 0;
             for (int a = 1; a < 7; a++)
                 for (int b = a; b < 7; b++)
-                    AllDice[i++] = ((byte)a, (byte)b);                    
+                    AllDice[i++] = (a, b);                    
         }
 
-        public Move[] SearchBestMoveSet(byte dice1, byte dice2, int depth = 1)
+        public Move[] SearchBestMoveSet(int dice1, int dice2, int depth = 1)
 		{
 			// Iterate Depth Alpha beta search best move, w pruning.
 			return new Move[0];

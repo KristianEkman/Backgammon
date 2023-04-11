@@ -1,0 +1,17 @@
+FirstWhite and FirstBlack.
+Tests and implementation
+
+BoardScore
+	Blots thretend
+	Blocks
+	LargeStacks > 3 
+
+Evaluation
+	Search depth 1
+
+
+Benchmark
+
+Translate to C
+
+Compare performance
