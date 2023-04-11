@@ -33,32 +33,32 @@ public class MoveUnitTests
         whiteMove.From = 1;
         whiteMove.To = 3;
         whiteMove.Side = Board.White;
-        var blackHit = Board.DoMove(whiteMove);
+        var undid1 = Board.DoMove(whiteMove);
         Assert.AreEqual((165, 167), (Board.WhitePip, Board.BlackPip));
 
         Assert.AreEqual(1, Board.Spots[1]);
         Assert.AreEqual(1, Board.Spots[3]);
-        Assert.IsFalse(blackHit);
+        Assert.IsFalse(undid1.Hit);
 
         Move blackMove;
         blackMove.From = 24;
         blackMove.To = 22;
         blackMove.Side = Board.Black;
-        var whiteHit = Board.DoMove(blackMove);
+        var undid2 = Board.DoMove(blackMove);
         Assert.AreEqual((165, 165), (Board.WhitePip, Board.BlackPip));
 
         Assert.AreEqual(-1, Board.Spots[24]);
         Assert.AreEqual(-1, Board.Spots[22]);
         
-        Assert.IsFalse(whiteHit);
+        Assert.IsFalse(undid2.Hit);
 
-        Board.UndoMove(blackMove, whiteHit);
+        Board.UndoMove(blackMove, undid2);
         Assert.AreEqual((165, 167), (Board.WhitePip, Board.BlackPip));
 
         Assert.AreEqual(-2, Board.Spots[24]);
         Assert.AreEqual(0, Board.Spots[22]);
 
-        Board.UndoMove(whiteMove, blackHit);
+        Board.UndoMove(whiteMove, undid1);
         Assert.AreEqual((167, 167), (Board.WhitePip, Board.BlackPip));
 
         Assert.AreEqual(2, Board.Spots[1]);
@@ -80,14 +80,14 @@ public class MoveUnitTests
         whiteMove.From = 19;
         whiteMove.To = 23;
         whiteMove.Side = Board.White;
-        var blackHit = Board.DoMove(whiteMove);
+        var undid = Board.DoMove(whiteMove);
         Assert.AreEqual(4, Board.Spots[19]);
         Assert.AreEqual(1, Board.Spots[23]);
         Assert.AreEqual(-1, Board.Spots[25]);
-        Assert.IsTrue(blackHit);
+        Assert.IsTrue(undid.Hit);
         Assert.AreEqual((163, 189), (Board.WhitePip, Board.BlackPip));
 
-        Board.UndoMove(whiteMove, blackHit);
+        Board.UndoMove(whiteMove, undid);
         Assert.AreEqual(5, Board.Spots[19]);
         Assert.AreEqual(-1, Board.Spots[23]);
         Assert.AreEqual(0, Board.Spots[25]);
@@ -108,15 +108,15 @@ public class MoveUnitTests
         blackMove.From = 6;
         blackMove.To = 2;
         blackMove.Side = Board.Black;
-        var whiteHit = Board.DoMove(blackMove);
+        var undid = Board.DoMove(blackMove);
         Assert.AreEqual(-4, Board.Spots[6]);
         Assert.AreEqual(-1, Board.Spots[2]);
         Assert.AreEqual(1, Board.Spots[0]);
-        Assert.IsTrue(whiteHit);
+        Assert.IsTrue(undid.Hit);
         Assert.AreEqual((189, 163), (Board.WhitePip, Board.BlackPip));
 
 
-        Board.UndoMove(blackMove, whiteHit);
+        Board.UndoMove(blackMove, undid);
         Assert.AreEqual(-5, Board.Spots[6]);
         Assert.AreEqual(1, Board.Spots[2]);
         Assert.AreEqual(0, Board.Spots[0]);
@@ -144,13 +144,13 @@ public class MoveUnitTests
         whiteMove.From = 20;
         whiteMove.To = 25;
         whiteMove.Side = Board.White;
-        var blackHit = Board.DoMove(whiteMove);
-        Assert.IsFalse(blackHit);
+        var undid = Board.DoMove(whiteMove);
+        Assert.IsFalse(undid.Hit);
         Assert.AreEqual(0, Board.Spots[25]);
         Assert.AreEqual(1, Board.WhiteHome);
         Assert.AreEqual(2, Board.Spots[20]);
 
-        Board.UndoMove(whiteMove, blackHit);
+        Board.UndoMove(whiteMove, undid);
         Assert.AreEqual(0, Board.Spots[25]);
         Assert.AreEqual(0, Board.WhiteHome);
         Assert.AreEqual(3, Board.Spots[20]);
@@ -177,13 +177,13 @@ public class MoveUnitTests
         blackMove.From = 3;
         blackMove.To = 0;
         blackMove.Side = Board.Black;
-        var whiteHit = Board.DoMove(blackMove);
-        Assert.IsFalse(whiteHit);
+        var undid = Board.DoMove(blackMove);
+        Assert.IsFalse(undid.Hit);
         Assert.AreEqual(0, Board.Spots[0]);
         Assert.AreEqual(1, Board.BlackHome);
         Assert.AreEqual(-2, Board.Spots[3]);
 
-        Board.UndoMove(blackMove, whiteHit);
+        Board.UndoMove(blackMove, undid);
         Assert.AreEqual(0, Board.Spots[0]);
         Assert.AreEqual(0, Board.BlackHome);
         Assert.AreEqual(-3, Board.Spots[3]);

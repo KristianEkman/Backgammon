@@ -88,8 +88,14 @@ public class Board
     }
 
     /// <returns>True if oponent checker was hit.</returns>
-    public bool DoMove(Move move)
+    public Undid DoMove(Move move)
     {
+        Undid undid;
+        undid.FirstBlack = (byte)FirstBlack;
+        undid.FirstWhite = (byte)FirstWhite;
+        undid.WhitePip = (ushort)WhitePip;
+        undid.BlackPip = (ushort)BlackPip;
+
 #if DEBUG
         AssertBoard(move);
 #endif
@@ -144,7 +150,8 @@ public class Board
             if (move.From == FirstBlack && Spots[FirstBlack] == 0)
                 SetFirstBlack();
         }
-        return hit;
+        undid.Hit = hit;
+        return undid;
     }
 
     private void AssertBoard(Move move)
@@ -172,9 +179,10 @@ public class Board
         Debug.Assert(blackSum == 15, "Black checker(s) missing");
     }
 
-    public void UndoMove(Move move, bool hit)
+    public void UndoMove(Move move, Undid undid)
     {
         var off = false;
+        var hit = undid.Hit;
         if (move.To == 25)
         {
             Debug.Assert(move.Side == White);
@@ -200,29 +208,11 @@ public class Board
         if (!off && !hit)
             Spots[move.To] -= move.Side;
 
-        if (move.Side == White)
-        {
-            WhitePip += move.To - move.From;
-            if (hit)
-            {
-                BlackPip -= move.To;
-                SetFirstBlack(); 
-                // todo: there might be a smarter way to do this... return a undo struct.
-            }
-            if (move.From < FirstWhite)
-                FirstWhite = move.From;
-        }
-        else
-        {
-            BlackPip += move.From - move.To;
-            if (hit)
-            {
-                WhitePip -= 25 - move.To;
-                SetFirstWhite();
-            }
-            if (move.From > FirstBlack)
-                FirstBlack = move.From;
-        }
+        WhitePip = undid.WhitePip;
+        BlackPip = undid.BlackPip;
+        FirstWhite = undid.FirstWhite;
+        FirstBlack = undid.FirstBlack;
+        
 #if DEBUG
         AssertSum();
 #endif

@@ -208,16 +208,16 @@ public class BoardTests
         move.Side = Board.White;
         move.To = 4;
         
-        Board.DoMove(move);
+        var undid1 = Board.DoMove(move);
         Assert.AreEqual(1, Board.FirstWhite);
 
-        Board.DoMove(move);
+        var undid2 = Board.DoMove(move);
         Assert.AreEqual(4, Board.FirstWhite);
 
-        Board.UndoMove(move, false);
+        Board.UndoMove(move, undid2);
         Assert.AreEqual(1, Board.FirstWhite);
 
-        Board.UndoMove(move, false);
+        Board.UndoMove(move, undid1);
         Assert.AreEqual(1, Board.FirstWhite);
 
     }
@@ -231,16 +231,16 @@ public class BoardTests
         move.Side = Board.Black;
         move.To = 21;
 
-        Board.DoMove(move);
+        var undid1 = Board.DoMove(move);
         Assert.AreEqual(24, Board.FirstBlack);
 
-        Board.DoMove(move);
+        var undid2 = Board.DoMove(move);
         Assert.AreEqual(21, Board.FirstBlack);
 
-        Board.UndoMove(move, false);
+        Board.UndoMove(move, undid2);
         Assert.AreEqual(24, Board.FirstBlack);
 
-        Board.UndoMove(move, false);
+        Board.UndoMove(move, undid1);
         Assert.AreEqual(24, Board.FirstBlack);
     }
 
@@ -259,12 +259,12 @@ public class BoardTests
         blackMove.To = 2;
         blackMove.Side = Board.Black;
 
-        var hit = Board.DoMove(blackMove);
-        Assert.IsTrue(hit);
+        var undid = Board.DoMove(blackMove);
+        Assert.IsTrue(undid.Hit);
 
         Assert.AreEqual(0, Board.FirstWhite);
 
-        Board.UndoMove(blackMove, hit);
+        Board.UndoMove(blackMove, undid);
         Assert.AreEqual(1, Board.FirstWhite);
     }
 
@@ -283,12 +283,12 @@ public class BoardTests
         whiteMove.To = 23;
         whiteMove.Side = Board.White;
 
-        var hit = Board.DoMove(whiteMove);
-        Assert.IsTrue(hit);
+        var undid = Board.DoMove(whiteMove);
+        Assert.IsTrue(undid.Hit);
 
         Assert.AreEqual(25, Board.FirstBlack);
 
-        Board.UndoMove(whiteMove, hit);
+        Board.UndoMove(whiteMove, undid);
         Assert.AreEqual(24, Board.FirstBlack);
     }
 }
