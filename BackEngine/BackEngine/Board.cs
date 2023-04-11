@@ -23,6 +23,9 @@ public class Board
     public const sbyte Black = -1;
     public const sbyte White = 1;
 
+    public int WhitePip { get; set; }
+    public int BlackPip { get; set; }
+
     public void SetStartPosition()
     {
         for (int i = 0; i < 26; i++)
@@ -35,6 +38,24 @@ public class Board
         Spots[17] = 3;
         Spots[19] = 5;
         Spots[24] = -2;
+
+        CountPips();
+    }
+
+    private void CountPips()
+    {
+        var black = 0;
+        var white = 0;
+        for(int i = 0;i < 26; i++)
+        {
+            var x = Spots[i];
+            if (x < 0)
+                black += i * -Spots[i]; // Remeber, black cant have checkers on Spot[0], thats whites bar, and vv.
+            if (x > 0)
+                white += (25 - i) * Spots[i];
+        }
+        WhitePip = white;
+        BlackPip = black;
     }
 
     /// <returns>True if oponent checker was hit.</returns>
@@ -54,7 +75,7 @@ public class Board
             BlackHome++;
             off = true;
         }
-        else if (Spots[move.To] == -move.Side)
+        else if (Spots[move.To] == -move.Side) //one checker of oposite color on that spot.
         {
             if (move.Side == Black)
                 Spots[0]++;
@@ -67,6 +88,19 @@ public class Board
 
         if (!off)
             Spots[move.To] += move.Side;
+
+        if (move.Side == White)
+        {
+            WhitePip -= (move.To - move.From);
+            if (hit)
+                BlackPip += move.To;
+        }
+        else
+        {
+            BlackPip -= (move.From - move.To);
+            if (hit)
+                WhitePip += 25 - move.To;
+        }
         return hit;
     }
 
@@ -96,6 +130,19 @@ public class Board
         Spots[move.From] += move.Side;
         if (!off && !hit)
             Spots[move.To] -= move.Side;
+
+        if (move.Side == White)
+        {
+            WhitePip += move.To - move.From;
+            if (hit)
+                BlackPip -= move.To;
+        }
+        else
+        {
+            BlackPip += move.From - move.To;
+            if (hit)
+                WhitePip -= 25 - move.To;
+        }
     }
 
     public void CreateMoves(Generation gen, sbyte side)

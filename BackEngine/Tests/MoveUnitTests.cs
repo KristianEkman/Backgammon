@@ -27,11 +27,15 @@ public class MoveUnitTests
     [TestMethod]
     public void TestMove()
     {
+        Assert.AreEqual((167, 167), (Board.WhitePip, Board.BlackPip));
+
         Move whiteMove;
         whiteMove.From = 1;
         whiteMove.To = 3;
         whiteMove.Side = Board.White;
         var blackHit = Board.DoMove(whiteMove);
+        Assert.AreEqual((165, 167), (Board.WhitePip, Board.BlackPip));
+
         Assert.AreEqual(1, Board.Spots[1]);
         Assert.AreEqual(1, Board.Spots[3]);
         Assert.IsFalse(blackHit);
@@ -41,15 +45,22 @@ public class MoveUnitTests
         blackMove.To = 22;
         blackMove.Side = Board.Black;
         var whiteHit = Board.DoMove(blackMove);
+        Assert.AreEqual((165, 165), (Board.WhitePip, Board.BlackPip));
+
         Assert.AreEqual(-1, Board.Spots[24]);
         Assert.AreEqual(-1, Board.Spots[22]);
+        
         Assert.IsFalse(whiteHit);
 
         Board.UndoMove(blackMove, whiteHit);
+        Assert.AreEqual((165, 167), (Board.WhitePip, Board.BlackPip));
+
         Assert.AreEqual(-2, Board.Spots[24]);
         Assert.AreEqual(0, Board.Spots[22]);
 
         Board.UndoMove(whiteMove, blackHit);
+        Assert.AreEqual((167, 167), (Board.WhitePip, Board.BlackPip));
+
         Assert.AreEqual(2, Board.Spots[1]);
         Assert.AreEqual(0, Board.Spots[3]);
     }
@@ -62,6 +73,8 @@ public class MoveUnitTests
         blackMove.To = 23;
         blackMove.Side = Board.Black;
         _ = Board.DoMove(blackMove);
+        Assert.AreEqual((167, 166), (Board.WhitePip, Board.BlackPip));
+
 
         Move whiteMove;
         whiteMove.From = 19;
@@ -72,11 +85,13 @@ public class MoveUnitTests
         Assert.AreEqual(1, Board.Spots[23]);
         Assert.AreEqual(-1, Board.Spots[25]);
         Assert.IsTrue(blackHit);
+        Assert.AreEqual((163, 189), (Board.WhitePip, Board.BlackPip));
 
         Board.UndoMove(whiteMove, blackHit);
         Assert.AreEqual(5, Board.Spots[19]);
         Assert.AreEqual(-1, Board.Spots[23]);
         Assert.AreEqual(0, Board.Spots[25]);
+        Assert.AreEqual((167, 166), (Board.WhitePip, Board.BlackPip));
     }
 
     [TestMethod]
@@ -87,6 +102,7 @@ public class MoveUnitTests
         whiteMove.To = 2;
         whiteMove.Side = Board.White;
         _ = Board.DoMove(whiteMove);
+        Assert.AreEqual((166, 167), (Board.WhitePip, Board.BlackPip));
 
         Move blackMove;
         blackMove.From = 6;
@@ -97,11 +113,14 @@ public class MoveUnitTests
         Assert.AreEqual(-1, Board.Spots[2]);
         Assert.AreEqual(1, Board.Spots[0]);
         Assert.IsTrue(whiteHit);
+        Assert.AreEqual((189, 163), (Board.WhitePip, Board.BlackPip));
+
 
         Board.UndoMove(blackMove, whiteHit);
         Assert.AreEqual(-5, Board.Spots[6]);
         Assert.AreEqual(1, Board.Spots[2]);
         Assert.AreEqual(0, Board.Spots[0]);
+        Assert.AreEqual((166, 167), (Board.WhitePip, Board.BlackPip));
     }
 
     [TestMethod]
