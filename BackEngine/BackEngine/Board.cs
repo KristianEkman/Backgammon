@@ -424,7 +424,7 @@ public class Board
     }
 
     /// <summary>
-    /// Positive for White, neg for black
+    /// Positive good for White, neg good for Black.
     /// </summary>
     /// <returns>Score</returns>
     public int GetScore()
@@ -435,7 +435,7 @@ public class Board
         const int blockFactor = 3;
         const int bigStackFactor = -1;
 
-        var score = WhitePip * pipFactor - BlackPip * pipFactor;
+        var score = BlackPip * pipFactor - WhitePip * pipFactor;
         for (int i = 1; i < 25; i++)
         {
             var checkers = Spots[i]; // neg for black
