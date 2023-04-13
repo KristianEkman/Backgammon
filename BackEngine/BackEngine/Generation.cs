@@ -5,16 +5,10 @@ namespace BackEngine
 {
 	public class Generation
 	{
+
 		public Generation(int dice1, int dice2)
 		{
-			if (dice1 == dice2)
-			{
-				Dice = new int[] { dice1, dice1, dice2, dice2 };
-			}
-			else
-			{
-				Dice = new int[] { dice1, dice2 };
-            }
+			SetDice(dice1, dice2);
 
 			// This class is supposed to be reused between generations
 			// Thats why extra memory is used.
@@ -23,7 +17,20 @@ namespace BackEngine
                 MoveSets[i] = new Move[4];
         }
 
-		private static Randoms Randoms = new Randoms();
+		public void SetDice(int dice1, int dice2)
+		{
+			// todo: always keep them and have a DiceLength
+            if (dice1 == dice2)
+            {
+                Dice = new int[] { dice1, dice1, dice2, dice2 };
+            }
+            else
+            {
+                Dice = new int[] { dice1, dice2 };
+            }
+        }
+
+		private static Randoms Randoms = new();
 
 		public int[] Dice { get; set; }
 

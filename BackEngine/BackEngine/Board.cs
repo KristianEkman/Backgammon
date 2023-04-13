@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace BackEngine;
 public class Board
@@ -20,8 +19,8 @@ public class Board
     public sbyte BlackHome;
     public sbyte WhiteHome;
 
-    public const sbyte Black = -1;
-    public const sbyte White = 1;
+    public const int Black = -1;
+    public const int White = 1;
 
     public int WhitePip { get; set; }
     public int BlackPip { get; set; }
@@ -75,7 +74,7 @@ public class Board
     {
         var black = 0;
         var white = 0;
-        for(int i = 0;i < 26; i++)
+        for (int i = 0; i < 26; i++)
         {
             var x = Spots[i];
             if (x < 0)
@@ -162,6 +161,8 @@ public class Board
         if (move.Side == Black)
             Debug.Assert(Spots[move.To] < 2, "ToSpot was blocked");
         AssertSum();
+
+        // todo assert off - moves
     }
 
     private void AssertSum()
@@ -212,13 +213,13 @@ public class Board
         BlackPip = undid.BlackPip;
         FirstWhite = undid.FirstWhite;
         FirstBlack = undid.FirstBlack;
-        
+
 #if DEBUG
         AssertSum();
 #endif
     }
 
-    public void CreateMoves(Generation gen, sbyte side)
+    public void CreateMoves(Generation gen, int side)
     {
         gen.HashSet.Clear();
         gen.GeneratedCount = 0;
@@ -231,7 +232,7 @@ public class Board
             {
                 var dice0 = gen.Dice[0];
                 gen.Dice[0] = gen.Dice[1];
-                gen.Dice[1] = dice0;                
+                gen.Dice[1] = dice0;
                 CreateMovesWhite(gen, 0);
             }
         }
@@ -424,7 +425,7 @@ public class Board
     }
 
     /// <summary>
-    /// Positive for White, neg for black
+    /// Positive good for White, neg good for black.
     /// </summary>
     /// <returns>Score</returns>
     public int GetScore()
@@ -435,7 +436,7 @@ public class Board
         const int blockFactor = 3;
         const int bigStackFactor = -1;
 
-        var score = WhitePip * pipFactor - BlackPip * pipFactor;
+        var score = BlackPip * pipFactor - WhitePip * pipFactor;
         for (int i = 1; i < 25; i++)
         {
             var checkers = Spots[i]; // neg for black
@@ -443,13 +444,31 @@ public class Board
                 continue;
             if (checkers > 0) // white
             {
-                if (i < FirstBlack)
-                    score += blotFactor;
+                if (checkers == 1)
+                {
+                    if (i < FirstBlack)
+                        score += blotFactor;
+                }
+                else // a block
+                {
+                    score += blockFactor;
+                    if (checkers > 3)
+                        score += bigStackFactor;
+                }
             }
-            else // Balck
+            else // Black
             {
-                if (i > FirstWhite)
-                    score -= blotFactor;
+                if (checkers == -1)
+                {
+                    if (i > FirstWhite)
+                        score -= blotFactor;
+                }
+                else // a block
+                {
+                    score -= blockFactor;
+                    if (checkers < -3)
+                        score -= bigStackFactor;
+                }
             }
         }
         return score;

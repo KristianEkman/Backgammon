@@ -1,6 +1,4 @@
 
-Assert all moves.
-Assert checker sum.
 
 BoardScore
 	Blots thretend
