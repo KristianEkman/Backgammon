@@ -425,7 +425,7 @@ public class Board
     }
 
     /// <summary>
-    /// Positive good for White, neg good for black.
+    /// Positive good for White, neg good for Black.
     /// </summary>
     /// <returns>Score</returns>
     public int GetScore()
