@@ -25,8 +25,7 @@ namespace BackEngine
         public Move[] GetBestMoveSet(int dice1, int dice2, int side)
 		{
 			// this is probably the bottleneck with managed language
-			// I think C is much faster to allocation abunch of memory.
-			// Its just not possible to re
+			// I think C is much faster to allocation abunch of memory.			
 			var gen = new Generation(dice1, dice2);
 			gen.SetDice(dice1, dice2);
 			Board.CreateMoves(gen, side);

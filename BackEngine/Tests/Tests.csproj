@@ -20,6 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BackEngine\BackEngine.csproj" />
+    <ProjectReference Include="..\BackEngine\Engine2.csproj" />
   </ItemGroup>
 </Project>

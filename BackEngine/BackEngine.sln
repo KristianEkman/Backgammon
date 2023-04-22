@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackEngine", "BackEngine\BackEngine.csproj", "{00DE26C8-A3DA-4171-8515-6B007737605F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Engine2", "BackEngine\Engine2.csproj", "{00DE26C8-A3DA-4171-8515-6B007737605F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj", "{B60F8022-5208-42EC-B5E0-68F7B130CF53}"
 EndProject

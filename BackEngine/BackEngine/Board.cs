@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 namespace BackEngine;
 public class Board
@@ -347,9 +348,19 @@ public class Board
 
                 var undid = DoMove(move);
                 if (!gen.KeepSet(Hash))
+                {
                     gen.GeneratedCount--;
+#if DEBUG
+                    Debug.Assert(!gen.DebugKeepSet(this.ToString()));
+#endif
+                }
                 else
+                {
                     gen.HasFullSets = true;
+#if DEBUG
+                    Debug.Assert(gen.DebugKeepSet(this.ToString()));
+#endif
+                }
                 UndoMove(move, undid);
                 continue;
             }
@@ -428,9 +439,19 @@ public class Board
 
                 var undid = DoMove(move);
                 if (!gen.KeepSet(Hash))
+                {
                     gen.GeneratedCount--;
+#if DEBUG
+                    Debug.Assert(!gen.DebugKeepSet(this.ToString()));
+#endif
+                }
                 else
+                {
                     gen.HasFullSets = true;
+#if DEBUG
+                    Debug.Assert(gen.DebugKeepSet(this.ToString()));
+#endif
+                }
                 UndoMove(move, undid);
                 continue;
             }
@@ -511,5 +532,11 @@ public class Board
             }
         }
         return score;
+    }
+
+    public override string ToString()
+    {
+        var s = string.Join(' ', Spots) + "";
+        return s;
     }
 }

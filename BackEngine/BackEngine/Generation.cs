@@ -46,7 +46,18 @@ namespace BackEngine
 		/// </summary>
         public Move[][] MoveSets { get; set; }
 
-		public HashSet<uint> HashSet = new();
+#if DEBUG
+        public HashSet<string> DebugHashSet = new();
+        internal bool DebugKeepSet(string board)
+        {
+            if (DebugHashSet.Contains(board))
+                return false;
+            DebugHashSet.Add(board);
+            return true;
+        }
+#endif
+
+        public HashSet<uint> HashSet = new();
 
         internal bool KeepSet(uint hash)
         {				
