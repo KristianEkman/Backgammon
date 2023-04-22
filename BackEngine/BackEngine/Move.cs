@@ -32,6 +32,7 @@ namespace BackEngine
         public ushort WhitePip;
         public ushort BlackPip;
         public bool Hit;
+        public uint Hash;
     }
 }
 

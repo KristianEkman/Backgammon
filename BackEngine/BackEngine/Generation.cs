@@ -48,16 +48,8 @@ namespace BackEngine
 
 		public HashSet<uint> HashSet = new();
 
-        internal bool KeepSet()
-        {
-			// 1-3, 3-6 or 1-4, 4-6, not same thing
-			// but 1-3, 2-5 or 2-5, 1-3, is always same set.
-			var hash = Randoms.Start;
-			for (int i = 0; i < Dice.Length; i++)
-			{
-				var move = MoveSets[GeneratedCount - 1][i];
-                hash ^= Randoms.FromTo[move.From, move.To];
-			}
+        internal bool KeepSet(uint hash)
+        {				
 			if (HashSet.Contains(hash))
 				return false;
 			HashSet.Add(hash);
@@ -84,20 +76,21 @@ namespace BackEngine
 		{
 			var rnd = new Random(1000);
 			Start = (uint)rnd.Next();
-            FromTo = new uint[26, 26];
+            PlaceCount = new uint[26, 31];
 			for (int x = 0; x < 26; x++)
 			{
-				for (int y = 0; y < 26; y++)
+				for (int y = 0; y < 31; y++)
 				{
-					FromTo[x, y] = (uint)rnd.Next();
+                    PlaceCount[x, y] = (uint)rnd.Next();
                 }
 			}
 		}
 
-		//Random big numbers for every combination of from, to.
+		//Random big numbers for every combination of checkourcount, place.
 		//Relying on them to be unique.
-		//Used for Zobrits hashing a set of moves.
-		public uint[,] FromTo
+		//Used for Zobrits hashing a board position.
+		//Xor when checker is put on or off.
+		public uint[,] PlaceCount
 		{
 			get;
 			private set;

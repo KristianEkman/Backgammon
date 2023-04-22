@@ -7,6 +7,8 @@ public class Board
     {
         SetStartPosition();
     }
+
+    private static Randoms Randoms = new();
     /// <summary>
     /// Negative number is number of black checkers.
     /// Positive is white.
@@ -28,6 +30,8 @@ public class Board
     public int FirstWhite { get; set; }
     public int FirstBlack { get; set; }
 
+    public uint Hash { get; set; }
+
     public void SetStartPosition()
     {
         for (int i = 0; i < 26; i++)
@@ -44,6 +48,20 @@ public class Board
         CountPips();
         SetFirstWhite();
         SetFirstBlack();
+        InitHash();
+    }
+
+    private void InitHash()
+    {
+        var hash = Randoms.Start;
+        for (int i = 0; i < 26; i++)
+        {
+            for (int j = 0; j < Spots[i] + 15; j++)
+            {
+                hash ^= Randoms.PlaceCount[i, j];
+            }
+        }
+        Hash = hash;
     }
 
     private void SetFirstBlack()
@@ -94,6 +112,7 @@ public class Board
         undid.FirstWhite = (byte)FirstWhite;
         undid.WhitePip = (ushort)WhitePip;
         undid.BlackPip = (ushort)BlackPip;
+        undid.Hash = Hash;
 
 #if DEBUG
         AssertBoard(move);
@@ -115,16 +134,27 @@ public class Board
         else if (Spots[move.To] == -move.Side) //one checker of oposite color on that spot.
         {
             if (move.Side == Black)
+            {
                 Spots[0]++;
+                UpdateHash(0);
+            }
             else
+            {
                 Spots[25]--; // Black hit checkers have negative value, even on the bar.
+                UpdateHash(25);
+            }
+            UpdateHash(move.To);
             Spots[move.To] = 0;
             hit = true;
         }
+        UpdateHash(move.From);
         Spots[move.From] -= move.Side;
 
         if (!off)
+        {
             Spots[move.To] += move.Side;
+            UpdateHash(move.To);
+        }
 
         if (move.Side == White)
         {
@@ -151,6 +181,12 @@ public class Board
         }
         undid.Hit = hit;
         return undid;
+    }
+
+    private void UpdateHash(int spotIdx)
+    {
+        // Offsetting checker count by 15 since they range from -15 to 15 --> 0 to 30
+        Hash ^= Randoms.PlaceCount[spotIdx, Spots[spotIdx] + 15];
     }
 
     private void AssertBoard(Move move)
@@ -213,6 +249,7 @@ public class Board
         BlackPip = undid.BlackPip;
         FirstWhite = undid.FirstWhite;
         FirstBlack = undid.FirstBlack;
+        Hash = undid.Hash;
 
 #if DEBUG
         AssertSum();
@@ -298,9 +335,9 @@ public class Board
             move.Side = White;
             gen.MoveSets[gen.GeneratedCount][currentDiceIdx] = move;
 
-            if (currentDiceIdx == gen.Dice.Length - 1) //last dice
+            if (currentDiceIdx == gen.Dice.Length - 1) //Last dice
             {
-                // if not all dice are found the set should be generated anyway
+                // If not all dice are found the set should be generated anyway
                 gen.GeneratedCount++;
                 for (int d = 0; d < currentDiceIdx; d++)
                 {
@@ -308,18 +345,22 @@ public class Board
                         gen.MoveSets[gen.GeneratedCount - 1][d];
                 }
 
-                if (!gen.KeepSet())
+                var undid = DoMove(move);
+                if (!gen.KeepSet(Hash))
                     gen.GeneratedCount--;
                 else
                     gen.HasFullSets = true;
+                UndoMove(move, undid);
                 continue;
             }
+
             // Recurse to next dice
             var hit = DoMove(move);
             CreateMovesWhite(gen, currentDiceIdx + 1);
             UndoMove(move, hit);
         }
 
+        // Special case when not all dice can be used
         if (!canMove && currentDiceIdx > 0)
         {
             gen.GeneratedCount++;
@@ -330,9 +371,6 @@ public class Board
                 gen.MoveSets[gen.GeneratedCount][d] =
                     gen.MoveSets[gen.GeneratedCount - 1][d];
             }
-
-            if (!gen.KeepSet())
-                gen.GeneratedCount--;
         }
     }
 
@@ -387,10 +425,13 @@ public class Board
                     gen.MoveSets[gen.GeneratedCount][d] =
                         gen.MoveSets[gen.GeneratedCount - 1][d];
                 }
-                if (!gen.KeepSet())
+
+                var undid = DoMove(move);
+                if (!gen.KeepSet(Hash))
                     gen.GeneratedCount--;
                 else
                     gen.HasFullSets = true;
+                UndoMove(move, undid);
                 continue;
             }
             // Recurse to next dice
@@ -399,6 +440,7 @@ public class Board
             UndoMove(move, hit);
         }
 
+        // Special case when not all dice can be used
         if (!canMove && currentDiceIdx > 0)
         {
             gen.HasPartialSets = true;
@@ -408,9 +450,6 @@ public class Board
                 gen.MoveSets[gen.GeneratedCount][d] =
                     gen.MoveSets[gen.GeneratedCount - 1][d];
             }
-
-            if (!gen.KeepSet())
-                gen.GeneratedCount--;
         }
     }
 
@@ -430,7 +469,7 @@ public class Board
     /// <returns>Score</returns>
     public int GetScore()
     {
-        const int pipFactor = 4;
+        const int pipFactor = 1;
         const int blotFactor = -5;
 
         const int blockFactor = 3;

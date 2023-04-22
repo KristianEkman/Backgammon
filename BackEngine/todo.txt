@@ -1,16 +1,17 @@
 
 
 BoardScore
-	Blots thretend
-	Blocks
-	LargeStacks > 3 
 
 Evaluation
-	Search depth 1
+	depth 2
 
+Search
+	Testa att inte använda alla tärningskombinationer
 
 Benchmark
 
 Translate to C
 
 Compare performance
+
+Testa mot 

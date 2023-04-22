@@ -22,8 +22,6 @@ namespace BackEngine
                     AllDice[i++] = (a, b);                    
         }
 
-
-
         public Move[] GetBestMoveSet(int dice1, int dice2, int side)
 		{
 			// this is probably the bottleneck with managed language

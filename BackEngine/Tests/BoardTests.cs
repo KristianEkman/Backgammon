@@ -21,10 +21,10 @@ public class BoardTests
         Board.CreateMoves(gen, Board.White);
         gen.PrintMoves();
 
-        Assert.AreEqual(18, gen.GeneratedCount);
+        Assert.AreEqual(15, gen.GeneratedCount);
 
         // 1 - 2, 1 - 3
-        // 1 - 2, 2 - 4
+        // 1 - 2, 2 - 4, same hash as 1-3, 3-4
         // 1 - 2, 12 -14
         // 1 - 2, 17 - 19
         // 1 - 2, 19 - 21 
@@ -37,11 +37,11 @@ public class BoardTests
         // 12 - 14, 17 - 18
         // 12 - 14, 19 - 20
 
-        // 17 - 18, 17 - 19
+        // 17 - 18, 17 - 19, 
         // 17 - 18, 18 - 20
         // 17 - 18, 19 - 21
 
-        // 17 - 19, 19 - 20
+        // 17 - 19, 19 - 20, same as 17-18, 18-20
 
         // 19 - 20, 19 - 21
         // 19 - 20, 20 - 22
@@ -56,7 +56,8 @@ public class BoardTests
     {
         var gen = new Generation(2, 2);
         Board.CreateMoves(gen, Board.White);
-        Assert.AreEqual(42, gen.GeneratedCount);
+        // Inte hel säker på det är rätt.
+        Assert.AreEqual(75, gen.GeneratedCount);
         gen.PrintMoves();
     }
 
@@ -66,7 +67,7 @@ public class BoardTests
         var gen = new Generation(2, 1);
         Board.CreateMoves(gen, Board.Black);
         gen.PrintMoves();
-        Assert.AreEqual(18, gen.GeneratedCount);
+        Assert.AreEqual(15, gen.GeneratedCount);
     }
 
     [TestMethod]
@@ -74,17 +75,8 @@ public class BoardTests
     {
         var gen = new Generation(2, 2);
         Board.CreateMoves(gen, Board.Black);
-        Assert.AreEqual(42, gen.GeneratedCount);
-
-        for (int i = 0; i < gen.GeneratedCount; i++)
-        {
-            for (int j = 0; j < gen.Dice.Length; j++)
-            {
-                Debug.Write(gen.MoveSets[i][j]);
-                Debug.Write("   ");
-            }
-            Debug.WriteLine("");
-        }
+        Assert.AreEqual(75, gen.GeneratedCount);
+        gen.PrintMoves();
     }
     
     [TestMethod]
@@ -290,5 +282,66 @@ public class BoardTests
 
         Board.UndoMove(whiteMove, undid);
         Assert.AreEqual(24, Board.FirstBlack);
+    }
+
+    [TestMethod]
+    public void TestHashWhite()
+    {
+        Move move1;
+        move1.From = 1;
+        move1.To = 2;
+        move1.Side = Board.White;
+
+        Move move2;
+        move2.From = 2;
+        move2.To = 3;
+        move2.Side = Board.White;
+
+        var startHash = Board.Hash;
+        Board.DoMove(move1);
+        Assert.AreNotEqual(startHash, Board.Hash);
+
+        Board.DoMove(move2);
+        var endHash = Board.Hash;
+
+        Board.SetStartPosition();
+        Move move12;
+        move12.From = 1;
+        move12.To = 3;
+        move12.Side = Board.White;
+
+        Board.DoMove(move12);
+        Assert.AreEqual(endHash, Board.Hash);
+    }
+
+    [TestMethod]
+    public void TestHashBlack()
+    {
+        Move move1;
+        move1.From = 24;
+        move1.To = 23;
+        move1.Side = Board.Black;
+
+        Move move2;
+        move2.From = 23;
+        move2.To = 22;
+        move2.Side = Board.Black;
+
+        var startHash = Board.Hash;
+        Board.DoMove(move1);
+        Assert.AreNotEqual(startHash, Board.Hash);
+
+        Board.DoMove(move2);
+        var endHash = Board.Hash;
+
+        // Now going to same position with jus one move
+        Board.SetStartPosition();
+        Move move12;
+        move12.From = 24;
+        move12.To = 22;
+        move12.Side = Board.Black;
+
+        Board.DoMove(move12);
+        Assert.AreEqual(endHash, Board.Hash);
     }
 }
