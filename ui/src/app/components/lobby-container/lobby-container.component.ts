@@ -55,11 +55,6 @@ export class LobbyContainerComponent implements OnInit {
     this.router.navigate(['password']);
   }
 
-  loginFacebook(token: string): void {
-    this.loginClicked = true;
-    this.accountService.signIn(token, 'FACEBOOK');
-  }
-
   loginGoogle(token: string) {
     this.loginClicked = true;
     this.accountService.signIn(token, 'GOOGLE');
