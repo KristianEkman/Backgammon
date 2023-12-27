@@ -13,29 +13,13 @@ import {
 })
 export class LoginButtonsComponent implements AfterViewInit {
   @Output() loggedinGoogle = new EventEmitter<string>();
-  @Output() loggedinFacebook = new EventEmitter<string>();
   @Output() loggedinPassword = new EventEmitter<void>();
   @Input() isLoggedIn: boolean | undefined = false;
 
   show = false;
-  facebookLoginResponse: any;
 
   ngAfterViewInit(): void {
-    this.initGoogle();
-    this.initFacebook();
-  }
-
-  initFacebook() {
-    const id = setInterval(() => {
-      const FB = (window as any).FB;
-      if (FB) {
-        FB.getLoginStatus((response: any) => {
-          // console.log('FB init response', response);
-          this.facebookLoginResponse = response;
-        });
-        clearInterval(id);
-      }
-    }, 2000);
+    this.initGoogle();    
   }
 
   initGoogle() {
@@ -66,29 +50,5 @@ export class LoginButtonsComponent implements AfterViewInit {
   passwordLoginClick(): void {
     this.show = false;
     this.loggedinPassword.emit();
-  }
-
-  facebookLoginClick() {
-    this.show = false;
-    const FB = (window as any).FB;
-    if (
-      this.facebookLoginResponse &&
-      this.facebookLoginResponse.status === 'connected'
-    ) {
-      const token = this.facebookLoginResponse.authResponse.accessToken;
-      this.loggedinFacebook.emit(token);
-      return;
-    }
-
-    // calling login when connected will raise an error.
-    FB.login((respons: any) => {
-      if (
-        respons?.status === 'connected' &&
-        respons.authResponse?.accessToken
-      ) {
-        const token = respons.authResponse.accessToken;
-        this.loggedinFacebook.emit(token);
-      }
-    });
   }
 }

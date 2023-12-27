@@ -48,11 +48,6 @@ export class AccountService {
     // Google user data is fetched by the backend.
     let userDto = { socialProvider: provider };
 
-    if (provider === 'FACEBOOK') {
-      // Getting some info from the provider. Only name email and photo.
-      userDto = await this.getFacebookUser();
-    }
-
     this.appState.showBusy();
     this.http
       .post<UserDto>(`${this.url}/signin`, userDto, options)
@@ -76,21 +71,6 @@ export class AccountService {
           this.messageService.loadMessages();
         }
       });
-  }
-
-  async getFacebookUser(): Promise<UserDto> {
-    const FB = (window as any).FB;
-    let userDto: UserDto;
-    const promise = new Promise<UserDto>((reslove) => {
-      FB.api('/me?fields=id,name,email,picture', (response: any) => {
-        userDto = { ...response };
-        userDto.photoUrl = response?.picture?.data?.url;
-        userDto.socialProvider = 'FACEBOOK';
-        userDto.socialProviderId = response.id;
-        return reslove(userDto);
-      });
-    });
-    return await promise;
   }
 
   signOut(): void {
