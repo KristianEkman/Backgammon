@@ -28,7 +28,7 @@
     "ngx-webstorage-service": "^5.0.0",
     "rxjs": "^7.5.7",
     "tslib": "^2.0.0",
-    "zone.js": "~0.13.3"
+    "zone.js": "^0.14.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^16.2.10",
@@ -50,9 +50,8 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0",
-    "protractor": "~7.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "5.1",
+    "typescript": "^5.3.3",
     "yarn": "^1.22.21"
   }
 }
