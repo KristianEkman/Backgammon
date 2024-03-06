@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
 import {
   LocalAccountStatus,
@@ -13,11 +15,14 @@ import {
   NewLocalUserDto
 } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
+import { ButtonComponent } from '../shared/button/button.component';
 
 @Component({
   selector: 'app-password-container',
+  standalone: true,
   templateUrl: './password-container.component.html',
-  styleUrls: ['./password-container.component.scss']
+  styleUrls: ['./password-container.component.scss'],
+  imports: [CommonModule, ButtonComponent, ReactiveFormsModule, TranslateModule]
 })
 export class PasswordContainerComponent {
   create = false;
@@ -61,6 +66,7 @@ export class PasswordContainerComponent {
 
   submit(): void {
     this.submitClicked = true;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const me = this;
     if (!this.formGroup.valid) {
       // console.log(this.formGroup);
@@ -99,7 +105,7 @@ export class PasswordContainerComponent {
   }
 
   hash(value: string): number {
-    var hash = 0,
+    let hash = 0,
       i,
       chr;
 

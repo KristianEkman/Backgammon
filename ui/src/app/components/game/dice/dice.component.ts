@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,8 +10,10 @@ import {
 
 @Component({
   selector: 'app-dice',
+  standalone: true,
   templateUrl: './dice.component.html',
   styleUrls: ['./dice.component.scss'],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DiceComponent implements OnChanges {
@@ -35,7 +38,7 @@ export class DiceComponent implements OnChanges {
 
   randomTransform = {};
 
-  getColorStyle(v: number): any {
+  getColorStyle(v: number) {
     let c = 'w';
     let color = 'white';
     if (this.color == 'black') {
@@ -53,7 +56,7 @@ export class DiceComponent implements OnChanges {
     };
   }
 
-  getDisabledStyle(): any {
+  getDisabledStyle() {
     if (this.disabled) {
       return {
         opacity: '0.2'

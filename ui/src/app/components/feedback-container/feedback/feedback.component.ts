@@ -1,14 +1,19 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-feedback',
+  standalone: true,
   templateUrl: './feedback.component.html',
-  styleUrls: ['./feedback.component.scss']
+  styleUrls: ['./feedback.component.scss'],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule]
 })
 export class FeedbackComponent {
   constructor(private formBuilder: UntypedFormBuilder) {

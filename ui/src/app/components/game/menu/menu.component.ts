@@ -1,9 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-menu',
+  standalone: true,
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss']
+  styleUrls: ['./menu.component.scss'],
+  imports: [CommonModule, TranslateModule]
 })
 export class MenuComponent {
   @Output() rotate = new EventEmitter<void>();

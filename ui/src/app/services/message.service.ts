@@ -12,7 +12,10 @@ import { AppStateService } from '../state/app-state.service';
 })
 export class MessageService {
   url: string;
-  constructor(private http: HttpClient, private appState: AppStateService) {
+  constructor(
+    private http: HttpClient,
+    private appState: AppStateService
+  ) {
     this.url = `${environment.apiServiceUrl}/message`;
   }
 
@@ -53,7 +56,7 @@ export class MessageService {
       });
   }
 
-  emailUnsubscribe(id: string): Observable<Object> {
+  emailUnsubscribe(id: string): Observable<unknown> {
     return this.http.get(this.url + `/unsubscribe?id=${id}`);
   }
 }

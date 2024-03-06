@@ -1,5 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import {
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PlayedGameListDto, SummaryDto } from 'src/app/dto';
@@ -7,13 +12,24 @@ import { MassMailDto } from 'src/app/dto/message';
 import { MessageService } from 'src/app/services';
 import { AdminService } from 'src/app/services/admin.service';
 import { AppStateService } from 'src/app/state/app-state.service';
+import { AdminSummaryComponent } from './admin-summary/admin-summary.component';
+import { PlayedGamesComponent } from './played-games/played-games.component';
+import { MailingComponent } from './mailing/mailing.component';
 
 @Component({
   selector: 'app-admin-container',
+  standalone: true,
   templateUrl: './admin-container.component.html',
-  styleUrls: ['./admin-container.component.scss']
+  styleUrls: ['./admin-container.component.scss'],
+  imports: [
+    CommonModule,
+    AdminSummaryComponent,
+    PlayedGamesComponent,
+    MailingComponent,
+    ReactiveFormsModule
+  ]
 })
-export class AdminContainerComponent implements OnInit {
+export class AdminContainerComponent {
   constructor(
     private adminSerivce: AdminService,
     public router: Router,
@@ -36,7 +52,6 @@ export class AdminContainerComponent implements OnInit {
   loadMore(): void {
     this.adminSerivce.loadPlayedGames();
   }
-  ngOnInit(): void {}
 
   addSharePrompts(): void {
     this.messageService.addallsharepromptmessages();

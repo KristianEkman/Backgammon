@@ -7,10 +7,13 @@ import { AppStateService } from '../state/app-state.service';
   providedIn: 'root'
 })
 export class TutorialService {
-  constructor(private router: Router, private appState: AppStateService) {}
+  constructor(
+    private router: Router,
+    private appState: AppStateService
+  ) {}
 
   nextStep() {
-    var step = this.appState.tutorialStep.getValue();
+    let step = this.appState.tutorialStep.getValue();
     step++;
     if (step == 10) {
       this.router.navigate(['/']);
@@ -22,7 +25,7 @@ export class TutorialService {
   }
 
   previousStep() {
-    var step = this.appState.tutorialStep.getValue();
+    let step = this.appState.tutorialStep.getValue();
     step--;
     this.appState.tutorialStep.setValue(step);
     this.setBoard(step);
@@ -99,7 +102,7 @@ export class TutorialService {
   }
 
   addChecker(game: GameDto, color: PlayerColor, point: number, count: number) {
-    for (var i = 0; i < count; i++)
+    for (let i = 0; i < count; i++)
       game.points[point].checkers.push({ color: color });
   }
 
@@ -125,24 +128,24 @@ export class TutorialService {
 
   bearingOffExample() {
     const game: GameDto = this.emptyGame();
-    for (var i = 0; i < 2; i++)
+    for (let i = 0; i < 2; i++)
       game.points[19].checkers.push({ color: PlayerColor.black });
-    for (var i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++)
       game.points[20].checkers.push({ color: PlayerColor.black });
-    for (var i = 0; i < 3; i++)
+    for (let i = 0; i < 3; i++)
       game.points[21].checkers.push({ color: PlayerColor.black });
-    for (var i = 0; i < 3; i++)
+    for (let i = 0; i < 3; i++)
       game.points[22].checkers.push({ color: PlayerColor.black });
-    for (var i = 0; i < 2; i++)
+    for (let i = 0; i < 2; i++)
       game.points[25].checkers.push({ color: PlayerColor.black });
 
-    for (var i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++)
       game.points[6].checkers.push({ color: PlayerColor.white });
-    for (var i = 0; i < 3; i++)
+    for (let i = 0; i < 3; i++)
       game.points[8].checkers.push({ color: PlayerColor.white });
-    for (var i = 0; i < 5; i++)
+    for (let i = 0; i < 5; i++)
       game.points[13].checkers.push({ color: PlayerColor.white });
-    for (var i = 0; i < 2; i++)
+    for (let i = 0; i < 2; i++)
       game.points[2].checkers.push({ color: PlayerColor.white });
     this.appState.myColor.setValue(PlayerColor.black);
     this.appState.game.setValue(game);

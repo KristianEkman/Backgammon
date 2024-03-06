@@ -46,7 +46,7 @@ export class AccountService {
     // Gets or creates the user in backgammon database.
 
     // Google user data is fetched by the backend.
-    let userDto = { socialProvider: provider };
+    const userDto = { socialProvider: provider };
 
     this.appState.showBusy();
     this.http
@@ -156,7 +156,7 @@ export class AccountService {
     this.appState.showBusy();
     return this.http.post(`${this.url}/newlocal`, dto).pipe(
       map((response) => {
-        var userDto = response as UserDto;
+        const userDto = response as UserDto;
         this.storage.set(Keys.loginKey, userDto);
         this.appState.user.setValue(userDto);
         if (userDto) return LocalAccountStatus.success;
@@ -173,7 +173,7 @@ export class AccountService {
     this.appState.showBusy();
     return this.http.post(`${this.url}/signinlocal`, dto).pipe(
       map((response) => {
-        var userDto = response as UserDto;
+        const userDto = response as UserDto;
         this.storage.set(Keys.loginKey, userDto);
         this.appState.user.setValue(userDto);
         if (userDto) {

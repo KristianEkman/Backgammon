@@ -1,17 +1,22 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  ViewChild
+} from '@angular/core';
 
 @Component({
   selector: 'app-input-copy',
+  standalone: true,
   templateUrl: './input-copy.component.html',
   styleUrls: ['./input-copy.component.scss']
 })
-export class InputCopyComponent implements OnInit {
+export class InputCopyComponent implements OnChanges {
   constructor() {}
 
   @ViewChild('linkText', { static: false }) linkText: ElementRef | undefined;
   @Input() text: string | null = '';
-
-  ngOnInit(): void {}
 
   ngOnChanges() {
     if (this.text) {

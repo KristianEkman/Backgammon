@@ -22,12 +22,16 @@ import {
   LightTheme,
   PinkTheme
 } from './themes';
-declare var $: any;
+import { CommonModule } from '@angular/common';
+
+declare const $: any;
 
 @Component({
   selector: 'app-game-board',
+  standalone: true,
   templateUrl: './game-board.component.html',
   styleUrls: ['./game-board.component.scss'],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GameBoardComponent implements AfterViewInit, OnChanges {
@@ -333,10 +337,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const chWidth = this.getCheckerWidth();
     const arrowSize = chWidth / 3;
     // First arrow from pos 1
-    var area = this.checkerAreas.filter((r) => r.pointIdx === 1)[0];
+    let area = this.checkerAreas.filter((r) => r.pointIdx === 1)[0];
     cx.beginPath();
-    var x = area.x + area.width / 2;
-    var y = area.y + chWidth;
+    let x = area.x + area.width / 2;
+    let y = area.y + chWidth;
     cx.moveTo(x, y);
     x -= area.width * 2;
     cx.lineTo(x, y);
@@ -387,10 +391,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
   drawHomeArrow(cx: CanvasRenderingContext2D) {
     const chWidth = this.getCheckerWidth();
     const arrowSize = chWidth / 3;
-    var area = this.checkerAreas.filter((r) => r.pointIdx === 22)[0];
+    const area = this.checkerAreas.filter((r) => r.pointIdx === 22)[0];
     cx.beginPath();
-    var x = area.x + area.width / 2;
-    var y = area.y + area.height - chWidth;
+    let x = area.x + area.width / 2;
+    const y = area.y + area.height - chWidth;
     cx.moveTo(x, y);
     x += area.width * 3;
     cx.lineTo(x, y);
@@ -399,7 +403,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     cx.lineTo(x, y); // -1.5 is a hack. Must be a way to make arrows look better.
     cx.stroke();
 
-    var area1 = this.checkerAreas.filter((r) => r.pointIdx === 19)[0];
+    const area1 = this.checkerAreas.filter((r) => r.pointIdx === 19)[0];
     cx.setLineDash([3, 3]);
     cx.strokeRect(area1.x, area1.y, area1.width * 6, area1.height);
     cx.setLineDash([]);
@@ -409,10 +413,10 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     const chWidth = this.getCheckerWidth();
     const arrowSize = chWidth / 3;
     // First arrow from pos 24
-    var area = this.checkerAreas.filter((r) => r.pointIdx === 24)[0];
+    let area = this.checkerAreas.filter((r) => r.pointIdx === 24)[0];
     cx.beginPath();
-    var x = area.x + area.width / 2;
-    var y = area.y + area.height - chWidth;
+    let x = area.x + area.width / 2;
+    let y = area.y + area.height - chWidth;
     cx.moveTo(x, y);
     x -= area.width * 2;
     cx.lineTo(x, y);
@@ -1326,7 +1330,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
 
     if (!this.game) return;
 
-    const { xDown, yDown, fromIdx, color } = this.dragging;
+    const { fromIdx, color } = this.dragging;
 
     const allRects: CheckerArea[] = [...this.checkerAreas];
     if (color === PlayerColor.black) {
@@ -1343,9 +1347,9 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
         continue;
       }
 
-      let ptIdx = rect.pointIdx;
+      const ptIdx = rect.pointIdx;
 
-      let move: MoveDto = {
+      const move: MoveDto = {
         color: this.dragging.color,
         from: fromIdx,
         nextMoves: [],
@@ -1382,7 +1386,7 @@ export class GameBoardComponent implements AfterViewInit, OnChanges {
     this.setCanBeMovedTo(x, y);
   }
 
-  onTouchEnd(event: TouchEvent): void {
+  onTouchEnd(): void {
     // console.log('touchend', event);
     // console.log(this.cursor);
 

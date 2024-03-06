@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,11 +6,14 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-board-buttons',
+  standalone: true,
   templateUrl: './board-buttons.component.html',
   styleUrls: ['./board-buttons.component.scss'],
+  imports: [CommonModule, TranslateModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoardButtonsComponent {

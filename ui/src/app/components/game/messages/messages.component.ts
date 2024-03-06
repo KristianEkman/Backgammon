@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import {
   trigger,
   state,
@@ -13,11 +7,14 @@ import {
   transition
 } from '@angular/animations';
 import { StatusMessage, MessageLevel } from '../../../dto/local/status-message';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-messages',
+  standalone: true,
   templateUrl: './messages.component.html',
   styleUrls: ['./messages.component.scss'],
+  imports: [CommonModule],
   animations: [
     trigger('showHide', [
       state(
@@ -54,7 +51,7 @@ import { StatusMessage, MessageLevel } from '../../../dto/local/status-message';
     ])
   ]
 })
-export class MessagesComponent implements OnChanges, OnInit {
+export class MessagesComponent implements OnChanges {
   @Input() message: StatusMessage | null = StatusMessage.getDefault();
 
   // changing the coordinates will affect all animations coordinates.
@@ -68,10 +65,6 @@ export class MessagesComponent implements OnChanges, OnInit {
     if (changes['message']) {
       this.animate();
     }
-  }
-
-  ngOnInit(): void {
-    // this.animate();
   }
 
   animate(): void {

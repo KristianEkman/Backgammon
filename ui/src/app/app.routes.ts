@@ -15,7 +15,7 @@ import { ToplistContainerComponent } from './components/toplist-container/toplis
 import { UnsubscribeContainerComponent } from './components/unsubscribe-container/unsubscribe-container.component';
 import { GoldGuard, LoginGuard } from './guards';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'lobby',
     component: LobbyContainerComponent

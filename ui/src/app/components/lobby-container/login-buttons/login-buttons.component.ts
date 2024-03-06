@@ -5,11 +5,15 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { ButtonComponent } from '../../shared/button/button.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login-buttons',
+  standalone: true,
   templateUrl: './login-buttons.component.html',
-  styleUrls: ['./login-buttons.component.scss']
+  styleUrls: ['./login-buttons.component.scss'],
+  imports: [ButtonComponent, CommonModule]
 })
 export class LoginButtonsComponent implements AfterViewInit {
   @Output() loggedinGoogle = new EventEmitter<string>();
@@ -19,7 +23,7 @@ export class LoginButtonsComponent implements AfterViewInit {
   show = false;
 
   ngAfterViewInit(): void {
-    this.initGoogle();    
+    this.initGoogle();
   }
 
   initGoogle() {

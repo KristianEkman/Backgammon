@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectorRef,
   Component,
@@ -5,15 +6,18 @@ import {
   HostListener,
   ViewChild
 } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 import { ChatService } from 'src/app/services/chat.service';
 import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-chat-container',
+  standalone: true,
   templateUrl: './chat-container.component.html',
-  styleUrls: ['./chat-container.component.scss']
+  styleUrls: ['./chat-container.component.scss'],
+  imports: [CommonModule, TranslateModule, ReactiveFormsModule]
 })
 export class ChatContainerComponent {
   constructor(
@@ -35,8 +39,7 @@ export class ChatContainerComponent {
     this.chatMessages$.subscribe(() => {
       setTimeout(() => {
         const elements = document.getElementsByClassName('conversation');
-        if (elements.length > 0)
-        {
+        if (elements.length > 0) {
           const textarea = elements[0]!;
           textarea.scrollTop = textarea.scrollHeight;
         }

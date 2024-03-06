@@ -1,13 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FeedbackDto } from 'src/app/dto';
 import { FeedbackService } from 'src/app/services';
 import { AppStateService } from 'src/app/state/app-state.service';
+import { FeedbackComponent } from './feedback/feedback.component';
+import { FeedbackListComponent } from './feedback-list/feedback-list.component';
 
 @Component({
   selector: 'app-feedback-container',
+  standalone: true,
   templateUrl: './feedback-container.component.html',
-  styleUrls: ['./feedback-container.component.scss']
+  styleUrls: ['./feedback-container.component.scss'],
+  imports: [CommonModule, FeedbackComponent, FeedbackListComponent]
 })
 export class FeedbackContainerComponent {
   constructor(

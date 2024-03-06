@@ -1,16 +1,13 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  OnInit
-} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { PlayerDto } from 'src/app/dto';
 
 @Component({
   selector: 'app-player',
+  standalone: true,
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlayerComponent {

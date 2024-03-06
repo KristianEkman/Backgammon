@@ -1,6 +1,11 @@
 <div *ngIf="playerDto" class="player" [title]="playerDto.name">
   <div>Score {{ playerDto.elo }}</div>
-  <img *ngIf="playerDto.photoUrl" class="user-photo" [src]="getPhotoUrl()" />
+  <img
+    *ngIf="playerDto.photoUrl"
+    class="user-photo"
+    [src]="getPhotoUrl()"
+    alt="User Photo"
+  />
   <div *ngIf="!playerDto.photoUrl" class="initials">
     {{ getInitials() }}
   </div>

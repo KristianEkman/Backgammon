@@ -76,7 +76,7 @@ export class GameService implements OnDestroy {
     this.socket.onclose = this.onClose.bind(this);
   }
 
-  onOpen(event: Event): void {
+  onOpen(): void {
     // console.log('Open', { event });
     const now = new Date();
     const ping = now.getTime() - this.connectTime.getTime();
@@ -93,7 +93,7 @@ export class GameService implements OnDestroy {
     this.statusMessageService.setMyConnectionLost('');
   }
 
-  onClose(event: CloseEvent): void {
+  onClose(): void {
     // console.log('Close', { event });
     const cnn = this.appState.myConnection.getValue();
     this.appState.myConnection.setValue({ ...cnn, connected: false });

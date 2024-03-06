@@ -84,7 +84,7 @@
 </button>
 
 <button
-  *ngIf="!(hasNewVersion$ | async) && isLoggedIn()"
+  *ngIf="(hasNewVersion$ | async) !== true && isLoggedIn()"
   class="feedback-button flat-button"
   (click)="feedbackClick()"
 >
@@ -92,5 +92,4 @@
   {{ 'feedback.title' | translate }}
 </button>
 
-<app-chat-container></app-chat-container>
-
+<app-chat-container />

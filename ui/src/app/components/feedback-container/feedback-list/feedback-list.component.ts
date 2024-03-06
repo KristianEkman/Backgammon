@@ -1,10 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FeedbackDto } from 'src/app/dto';
 
 @Component({
   selector: 'app-feedback-list',
+  standalone: true,
   templateUrl: './feedback-list.component.html',
-  styleUrls: ['./feedback-list.component.scss']
+  styleUrls: ['./feedback-list.component.scss'],
+  imports: [CommonModule]
 })
 export class FeedbackListComponent {
   constructor() {}

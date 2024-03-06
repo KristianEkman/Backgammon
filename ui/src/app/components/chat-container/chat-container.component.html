@@ -1,11 +1,12 @@
-<div *ngIf="isLoggedIn()"
+<div
+  *ngIf="isLoggedIn()"
   class="app-chat"
   [ngClass]="{
     'app-chat__open': open$ | async,
-    'app-chat__close': !(open$ | async)
+    'app-chat__close': (open$ | async) !== true
   }"
 >
-  <div *ngIf="!(open$ | async)" class="open-button">
+  <div *ngIf="(open$ | async) !== true" class="open-button">
     <button (click)="onClickOpen()" class="flat-button">
       <i class="fas fa-comments"></i>
       <span *ngIf="othersInChat" class="app-chat__counter">{{
@@ -13,7 +14,7 @@
       }}</span>
     </button>
   </div>
-  <div class="grid" [ngClass]="{ 'grid-hidden': !(open$ | async) }">
+  <div class="grid" [ngClass]="{ 'grid-hidden': (open$ | async) !== true }">
     <textarea
       class="conversation"
       readonly

@@ -14,7 +14,7 @@
   </thead>
 </table>
 <div class="table-container" (scroll)="onScroll($event)">
-  <table *ngIf="list != null">
+  <table *ngIf="list !== null">
     <tbody>
       <tr *ngFor="let game of list.games">
         <td class="col1">{{ formatDate(game.utcStarted) }}</td>

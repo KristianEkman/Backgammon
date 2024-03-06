@@ -5,15 +5,31 @@ import { Observable } from 'rxjs';
 import { ErrorState } from './state/ErrorState';
 import { ErrorReportDto } from './dto';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
-import { DOCUMENT } from '@angular/common';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import {
+  NavigationEnd,
+  NavigationStart,
+  Router,
+  RouterModule
+} from '@angular/router';
 import { Language } from './utils';
 import { Busy } from './state/busy';
+import { HomeButtonComponent } from './components/shared/home-button/home-button.component';
+import { BusyComponent } from './components/shared/busy/busy.component';
+import { ErrorHandlerComponent } from './components/shared/error-handler/error-handler.component';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  imports: [
+    CommonModule,
+    HomeButtonComponent,
+    BusyComponent,
+    ErrorHandlerComponent,
+    RouterModule
+  ]
 })
 export class AppComponent {
   title = 'Backgammon';
@@ -67,7 +83,7 @@ export class AppComponent {
   }
 
   @HostListener('document:keydown.escape', ['$event'])
-  onKeydownHandler(event: KeyboardEvent) {
+  onKeydownHandler() {
     this.appState.chatOpen.setValue(false);
   }
 

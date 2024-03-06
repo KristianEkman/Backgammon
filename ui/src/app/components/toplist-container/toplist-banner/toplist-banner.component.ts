@@ -15,13 +15,16 @@ import {
   transition
 } from '@angular/animations';
 import { Toplist, ToplistResult } from 'src/app/dto';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AppStateService } from 'src/app/state/app-state.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-toplist-banner',
+  standalone: true,
   templateUrl: './toplist-banner.component.html',
   styleUrls: ['./toplist-banner.component.scss'],
+  imports: [CommonModule, TranslateModule],
   animations: [
     trigger('scrollBanner', [
       state(

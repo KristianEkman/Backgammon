@@ -1,6 +1,8 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 <div
   [ngStyle]="{
-    visibility: started && !(chatOpen$ | async) ? 'visible' : 'hidden'
+    visibility: started && (chatOpen$ | async) === false ? 'visible' : 'hidden'
   }"
   #banner
   class="toplist-banner"

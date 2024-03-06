@@ -1,11 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageDto } from 'src/app/dto';
 
 @Component({
   selector: 'app-new-messages',
+  standalone: true,
   templateUrl: './new-messages.component.html',
-  styleUrls: ['./new-messages.component.scss']
+  styleUrls: ['./new-messages.component.scss'],
+  imports: [CommonModule]
 })
 export class NewMessagesComponent {
   @Input() messages: MessageDto[] | null = null;

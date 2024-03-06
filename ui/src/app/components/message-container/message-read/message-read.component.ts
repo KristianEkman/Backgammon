@@ -1,14 +1,19 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MessageDto, MessageType } from 'src/app/dto';
 import { MessageTypeText } from './messageTypeTexts';
+import { SharePromptComponent } from '../share-prompt/share-prompt.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-message-read',
+  standalone: true,
   templateUrl: './message-read.component.html',
-  styleUrls: ['./message-read.component.scss']
+  styleUrls: ['./message-read.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush
+  imports: [SharePromptComponent, TranslateModule, CommonModule]
 })
-export class MessageReadComponent implements OnInit {
+export class MessageReadComponent {
   @Input() messages: MessageDto[] | null = null;
   @Output() delete = new EventEmitter<number>();
   MessageType = MessageType;
@@ -17,8 +22,6 @@ export class MessageReadComponent implements OnInit {
   deleteAnim = false;
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   deleteClick(): void {
     if (this.messages) {

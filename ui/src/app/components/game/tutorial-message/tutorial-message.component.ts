@@ -5,11 +5,16 @@ import {
   Input,
   Output
 } from '@angular/core';
+import { ButtonComponent } from '../../shared/button/button.component';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-tutorial-message',
+  standalone: true,
   templateUrl: './tutorial-message.component.html',
-  styleUrls: ['./tutorial-message.component.scss']
+  styleUrls: ['./tutorial-message.component.scss'],
+  imports: [ButtonComponent, CommonModule, TranslateModule]
 })
 export class TutorialMessageComponent implements AfterViewInit {
   ngAfterViewInit(): void {

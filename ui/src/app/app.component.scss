@@ -28,10 +28,10 @@
 }
 
 .hide {
-  opacity: 0;
+  opacity: 0.1;
 }
 
 .show {
   opacity: 1;
-  animation: fadein 1.5s;
+  transition: opacity 0.5s linear;
 }

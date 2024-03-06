@@ -1,10 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { Language } from 'src/app/utils';
 
 @Component({
   selector: 'app-language-hint',
+  standalone: true,
   templateUrl: './language-hint.component.html',
-  styleUrls: ['./language-hint.component.scss']
+  styleUrls: ['./language-hint.component.scss'],
+  imports: [CommonModule, TranslateModule]
 })
 export class LanguageHintComponent implements OnChanges {
   @Input() acceptedLangs: string[] | null = [];
@@ -15,7 +19,7 @@ export class LanguageHintComponent implements OnChanges {
   show = false;
 
   ngOnChanges(): void {
-    var accLangs = this.acceptedLangs;
+    const accLangs = this.acceptedLangs;
     if (!accLangs || !this.selectedLang) return;
 
     this.show = false;

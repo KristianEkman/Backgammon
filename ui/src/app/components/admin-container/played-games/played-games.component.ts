@@ -1,21 +1,22 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { format, formatISO, parseISO } from 'date-fns';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { format } from 'date-fns';
 import { PlayedGameListDto, PlayerColor } from 'src/app/dto';
-import { AdminService } from 'src/app/services/admin.service';
+import { ButtonComponent } from '../../shared/button/button.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-played-games',
+  standalone: true,
   templateUrl: './played-games.component.html',
-  styleUrls: ['./played-games.component.scss']
+  styleUrls: ['./played-games.component.scss'],
+  imports: [ButtonComponent, CommonModule]
 })
-export class PlayedGamesComponent implements OnInit {
+export class PlayedGamesComponent {
   @Input() list: PlayedGameListDto | null = null;
   @Output() loadMore = new EventEmitter<void>();
   @Output() reload = new EventEmitter<void>();
 
   constructor() {}
-
-  ngOnInit(): void {}
 
   PlayerColor = PlayerColor;
 

@@ -1,6 +1,6 @@
 <app-invite
   *ngIf="!inviteId"
-  (start)="startInvitedGame($event)"
+  (started)="startInvitedGame($event)"
   (cancel)="cancelInvite()"
   [gameId]="(invite$ | async)?.gameId"
 >

@@ -1,5 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MessageDto, UserDto } from 'src/app/dto';
@@ -9,11 +10,31 @@ import {
   AppUpdateService
 } from 'src/app/services';
 import { AppStateService } from 'src/app/state/app-state.service';
+import { ButtonComponent } from '../shared/button/button.component';
+import { LoginButtonsComponent } from './login-buttons/login-buttons.component';
+import { ToplistContainerComponent } from '../toplist-container/toplist-container.component';
+import { ChatContainerComponent } from '../chat-container/chat-container.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { AccountMenuComponent } from '../account/account-menu/account-menu.component';
+import { GoldButtonComponent } from '../shared/gold-button/gold-button.component';
+import { NewMessagesComponent } from '../shared/new-messages/new-messages.component';
 
 @Component({
   selector: 'app-lobby-container',
+  standalone: true,
   templateUrl: './lobby-container.component.html',
-  styleUrls: ['./lobby-container.component.scss']
+  styleUrls: ['./lobby-container.component.scss'],
+  imports: [
+    CommonModule,
+    ButtonComponent,
+    LoginButtonsComponent,
+    ToplistContainerComponent,
+    ChatContainerComponent,
+    TranslateModule,
+    AccountMenuComponent,
+    GoldButtonComponent,
+    NewMessagesComponent
+  ]
 })
 export class LobbyContainerComponent implements OnInit {
   constructor(

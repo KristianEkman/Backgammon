@@ -1,10 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserDto } from 'src/app/dto';
 
 @Component({
   selector: 'app-account-menu',
+  standalone: true,
   templateUrl: './account-menu.component.html',
-  styleUrls: ['./account-menu.component.scss']
+  styleUrls: ['./account-menu.component.scss'],
+  imports: [CommonModule, TranslateModule]
 })
 export class AccountMenuComponent {
   @Input() user: UserDto | null = null;

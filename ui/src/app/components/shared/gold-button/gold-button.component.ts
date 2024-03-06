@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,8 +20,10 @@ import { UserDto } from 'src/app/dto';
 
 @Component({
   selector: 'app-gold-button',
+  standalone: true,
   templateUrl: './gold-button.component.html',
   styleUrls: ['./gold-button.component.scss'],
+  imports: [CommonModule],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GoldButtonComponent implements OnDestroy, OnInit {

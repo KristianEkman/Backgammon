@@ -1,20 +1,34 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import {
+  ReactiveFormsModule,
   UntypedFormBuilder,
   UntypedFormGroup,
   Validators
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserDto } from 'src/app/dto';
 import { AccountService } from 'src/app/services';
 import { AppStateService } from 'src/app/state/app-state.service';
 import { Language } from '../../../utils';
+import { CommonModule } from '@angular/common';
+import { LanguageHintComponent } from './language-hint/language-hint.component';
+import { ButtonComponent } from '../../shared/button/button.component';
+import { ThemeComponent } from '../theme/theme.component';
 
 @Component({
   selector: 'app-account-edit-container',
+  standalone: true,
   templateUrl: './account-edit-container.component.html',
-  styleUrls: ['./account-edit-container.component.scss']
+  styleUrls: ['./account-edit-container.component.scss'],
+  imports: [
+    CommonModule,
+    TranslateModule,
+    ReactiveFormsModule,
+    LanguageHintComponent,
+    ButtonComponent,
+    ThemeComponent
+  ]
 })
 export class AccountEditContainerComponent {
   constructor(

@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/services';
 import { AppStateService } from 'src/app/state/app-state.service';
 
 @Component({
   selector: 'app-unsubscribe-container',
+  standalone: true,
   templateUrl: './unsubscribe-container.component.html',
-  styleUrls: ['./unsubscribe-container.component.scss']
+  styleUrls: ['./unsubscribe-container.component.scss'],
+  imports: [CommonModule, TranslateModule]
 })
-export class UnsubscribeContainerComponent implements OnInit {
+export class UnsubscribeContainerComponent {
   constructor(
     messageService: MessageService,
     route: ActivatedRoute,
@@ -38,6 +42,4 @@ export class UnsubscribeContainerComponent implements OnInit {
 
   show = false;
   hasError = false;
-
-  ngOnInit(): void {}
 }

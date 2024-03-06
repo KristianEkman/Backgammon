@@ -28,11 +28,36 @@ import { AppStateService } from 'src/app/state/app-state.service';
 import { StatusMessage } from 'src/app/dto/local/status-message';
 import { StatusMessageService } from 'src/app/services/status-message.service';
 import { map } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { MessagesComponent } from '../messages/messages.component';
+import { ButtonComponent } from '../../shared/button/button.component';
+import { MenuComponent } from '../menu/menu.component';
+import { PlayerComponent } from '../player/player.component';
+import { GameBoardComponent } from '../game-board/game-board.component';
+import { DicesComponent } from '../dices/dices.component';
+import { BoardButtonsComponent } from '../board-buttons/board-buttons.component';
+import { PlayAiQuestionComponent } from '../play-ai-question/play-ai-question.component';
+import { TutorialMessageComponent } from '../tutorial-message/tutorial-message.component';
+import { InputCopyComponent } from '../../shared/input-copy/input-copy.component';
 
 @Component({
   selector: 'app-game',
+  standalone: true,
   templateUrl: './game-container.component.html',
-  styleUrls: ['./game-container.component.scss']
+  styleUrls: ['./game-container.component.scss'],
+  imports: [
+    CommonModule,
+    MessagesComponent,
+    ButtonComponent,
+    MenuComponent,
+    PlayerComponent,
+    GameBoardComponent,
+    DicesComponent,
+    BoardButtonsComponent,
+    PlayAiQuestionComponent,
+    TutorialMessageComponent,
+    InputCopyComponent
+  ]
 })
 export class GameContainerComponent implements OnDestroy, AfterViewInit {
   constructor(
@@ -482,7 +507,7 @@ export class GameContainerComponent implements OnDestroy, AfterViewInit {
   }
 
   @HostListener('window:beforeunload', ['$event'])
-  unloadHandler(event: Event) {
+  unloadHandler() {
     return !this.started;
   }
 

@@ -1,5 +1,4 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Router, UrlSerializer } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { ChatMessageDto } from '../dto/chat/chatMessageDto';
 import { ChatUsersDto } from '../dto/chat/joinedChatDto';
@@ -32,7 +31,7 @@ export class ChatService implements OnDestroy {
 
   onOpen(event: Event): void {
     console.log('Open', { event });
-    const now = new Date();
+    // const now = new Date();
     // const ping = now.getTime() - this.connectTime.getTime();
     // this.appState.myConnection.setValue({ connected: true, pingMs: ping });
   }
@@ -88,11 +87,10 @@ export class ChatService implements OnDestroy {
   }
 
   disconnect() {
-    var users = [...this.appState.chatUsers.getValue()];
+    const users = [...this.appState.chatUsers.getValue()];
     const user = this.appState.user.getValue();
-    if (user)
-    {
-      var index = users.indexOf(user.name);
+    if (user) {
+      const index = users.indexOf(user.name);
       users.splice(index, 1);
     }
 

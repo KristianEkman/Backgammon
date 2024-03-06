@@ -1,3 +1,5 @@
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 <div class="about-container">
   <h1>
     {{ 'about.aboutbackgammon' | translate }}
@@ -47,12 +49,12 @@
     <div class="version">
       Version: {{ version }}&nbsp;<i
         class="fas fa-info-circle"
-        (mouseenter)="versionInfo = true"
-        (mouseleave)="versionInfo = false"
+        (mouseenter)="showInfo = true"
+        (mouseleave)="showInfo = false"
       ></i>
-      <div *ngIf="versionInfo" class="versionInfo">
+      <div *ngIf="showInfo" class="versionInfo">
         <ul>
-          <li>Social login re-write</li>
+          <li>Angular 17 and standalone components.</li>
         </ul>
       </div>
     </div>

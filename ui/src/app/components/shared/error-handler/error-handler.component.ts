@@ -1,24 +1,31 @@
+import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  Output,
-  SimpleChanges
+  Output
 } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import {
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup
+} from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { ErrorReportDto } from 'src/app/dto';
 import { AppStateService } from 'src/app/state/app-state.service';
 import { ErrorState } from 'src/app/state/ErrorState';
 
 @Component({
   selector: 'app-error-handler',
+  standalone: true,
   templateUrl: './error-handler.component.html',
-  styleUrls: ['./error-handler.component.scss']
+  styleUrls: ['./error-handler.component.scss'],
+  imports: [CommonModule, ReactiveFormsModule, TranslateModule]
+
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
+export class ErrorHandlerComponent implements OnChanges {
   textVisible = false;
   @Input() errors: ErrorState | null = new ErrorState('');
   @Output() save = new EventEmitter<ErrorReportDto>();
@@ -34,15 +41,9 @@ export class ErrorHandlerComponent implements AfterViewInit, OnChanges {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     // console.log(changes);
     this.setTextAreaValue();
-  }
-
-  ngAfterViewInit(): void {
-    // setInterval(() => {
-    //   throw new Error('interval');
-    // }, 3000);
   }
 
   showErrors(): void {

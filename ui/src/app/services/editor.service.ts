@@ -28,7 +28,6 @@ export class EditorService {
   doMove(move: MoveDto) {
     const prevGame = this.appState.game.getValue();
     const gameClone = JSON.parse(JSON.stringify(prevGame)) as GameDto;
-    const isWhite = move.color === PlayerColor.white;
     const from = move.from;
     const to = move.to;
 
@@ -52,7 +51,7 @@ export class EditorService {
   }
 
   setStartPosition(): void {
-    var game: GameDto = {
+    const game: GameDto = {
       id: '15f126cb-e84d-4fe7-9782-8767109eed49',
       blackPlayer: {
         name: 'Guest',
