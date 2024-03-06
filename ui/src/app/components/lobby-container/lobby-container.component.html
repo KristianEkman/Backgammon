@@ -1,5 +1,5 @@
 <div class="lobby-container">
-  <div class="top-list" *ngIf="user$ | async">
+  <div class="top-list" *ngIf="isLoggedIn()">
     <app-toplist-container
       [banner]="true"
       (bannerClick)="topListBannerClick()"

@@ -2,7 +2,7 @@
 <!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
 <div
   [ngStyle]="{
-    visibility: started && (chatOpen$ | async) === false ? 'visible' : 'hidden'
+    visibility: started && (chatOpen$ | async) !== true ? 'visible' : 'hidden'
   }"
   #banner
   class="toplist-banner"
