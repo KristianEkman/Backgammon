@@ -1,5 +1,9 @@
 {
     "cSpell.words": [
         "fadein"
+    ],
+    "i18n-ally.localesPaths": [
+        "src/assets/i18n",
+        "src/app/components/game/messages"
     ]
 }
